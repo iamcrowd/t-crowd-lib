@@ -11,6 +11,6 @@ package it.gilia.ervt.encode;
  * @param json
  * @return
  */
-public class json2tdl {
+public class Json2tdl {
 
 }
