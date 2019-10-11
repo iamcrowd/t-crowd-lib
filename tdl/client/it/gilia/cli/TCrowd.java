@@ -43,9 +43,9 @@ public class TCrowd {
                          * visible commands
                          */
                         TCrowdVersion.class,
-                        TCrowdHelp.class
-/**                        OntopQuery.class,
-                        OntopMaterialize.class,
+                        TCrowdHelp.class,
+                        TCrowdTDLLiteFPX.class
+                        /**                       OntopMaterialize.class,
                         OntopBootstrap.class,
                         OntopValidate.class,
                         OntopEndpoint.class,
