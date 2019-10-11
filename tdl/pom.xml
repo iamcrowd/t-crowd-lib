@@ -41,6 +41,12 @@
         </developer>
     </developers>
     
+    <contributors>
+    	<contributor>
+			<name>Marco Gario</name>
+    	</contributor>
+  </contributors>
+    
   <dependencies>
     <dependency>
     	<groupId>junit</groupId>
