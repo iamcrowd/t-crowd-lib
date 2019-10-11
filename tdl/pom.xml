@@ -1,14 +1,62 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
-  <groupId>crowd.tdl</groupId>
+  <groupId>it.gilia</groupId>
   <artifactId>tdl</artifactId>
   <version>0.0.1-SNAPSHOT</version>
-  <name>crowd.tdl</name>
+  
+<!-- https://maven.apache.org/pom.html -->
+  
+  <name>t-crowd</name>
+  
+  <url>http://crowd.fi.uncoma.edu.ar</url>
+
+    <licenses>
+        <license>
+            <name>The Apache Software License, Version 2.0</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+
+    <inceptionYear>2019</inceptionYear>
+
+    <organization>
+        <name>Universidad Nacional del Comahue</name>
+        <url>https://www.uncoma.edu.ar/</url>
+    </organization>
+ 
+
+    <developers>
+        <developer>
+            <id>germanbraun</id>
+            <name>Germán Braun</name>
+            <email>german.braun@fi.uncoma.edu.ar</email>
+            <organization>Facultad de Informática</organization>
+        </developer>
+        <developer>
+            <id>alessandroartale</id>
+            <name>Alessandro Artale</name>
+            <email>artale@inf.unibz.it</email>
+            <organization>Free University of Bozen-Bolzano</organization>
+        </developer>
+    </developers>
+    
   <dependencies>
+    <dependency>
+    	<groupId>junit</groupId>
+        <artifactId>junit</artifactId>
+        <version>4.12</version>
+    </dependency>
   	<dependency>
   		<groupId>com.github.rvesse</groupId>
   		<artifactId>airline</artifactId>
   		<version>2.7.2</version>
   	</dependency>
+    <dependency>
+ 	   <groupId>com.github.rvesse</groupId>
+       <artifactId>airline-help-bash</artifactId>
+       <version>2.7.2</version>
+    </dependency>
   </dependencies>
+  
 </project>
