@@ -1,0 +1,5 @@
+#!/bin/bash
+
+$java -cp target/dependency/t-crowd-cli-4.0.0-SNAPSHOT.jar  \ it.gilia.tcrowd.cli.TCrowd $@
+
+#java -cp target/dependency/t-crowd-cli-4.0.0-SNAPSHOT.jar it.gilia.tcrowd.cli.TCrowd

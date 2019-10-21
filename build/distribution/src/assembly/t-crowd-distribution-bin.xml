@@ -1,0 +1,40 @@
+<?xml version="1.0"?>
+<assembly>
+	<id>bin</id>
+	<formats>
+		<format>zip</format>
+	</formats>
+	<includeBaseDirectory>false</includeBaseDirectory>
+
+	<fileSets>
+		<fileSet>
+			<directory>${project.basedir}/../../licenses</directory>
+			<outputDirectory>/copyright</outputDirectory>
+			<includes>
+				<include>*</include>
+			</includes>
+		</fileSet>
+		<fileSet>
+			<directory>${project.basedir}/../../build/distribution/src/main/resources/log
+			</directory>
+			<outputDirectory>/log</outputDirectory>
+			<includes>
+				<include>logback.xml</include>
+			</includes>
+		</fileSet>
+
+        <fileSet>
+            <directory>${project.basedir}/../../client/it.gilia.cli/resources/
+            </directory>
+            <outputDirectory>/</outputDirectory>
+            <includes>
+                <include>*</include>
+            </includes>
+        </fileSet>
+
+	</fileSets>
+
+	<dependencySets>
+	</dependencySets>
+
+</assembly>

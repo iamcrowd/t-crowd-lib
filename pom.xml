@@ -1,0 +1,291 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>it.gilia.tcrowd</groupId>
+  <artifactId>t-crowd</artifactId>
+  <packaging>pom</packaging>
+  <version>4.0.0-SNAPSHOT</version>
+  
+<!-- https://maven.apache.org/pom.html -->
+  
+  <name>t-crowd</name>
+  
+  <url>http://crowd.fi.uncoma.edu.ar</url>
+
+    <licenses>
+        <license>
+            <name>The Apache Software License, Version 2.0</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+
+    <inceptionYear>2019</inceptionYear>
+
+    <organization>
+        <name>Universidad Nacional del Comahue</name>
+        <url>https://www.uncoma.edu.ar/</url>
+    </organization>
+ 
+
+    <developers>
+        <developer>
+            <id>germanbraun</id>
+            <name>Germán Braun</name>
+            <email>german.braun@fi.uncoma.edu.ar</email>
+            <organization>Facultad de Informática</organization>
+        </developer>
+        <developer>
+            <id>alessandroartale</id>
+            <name>Alessandro Artale</name>
+            <email>artale@inf.unibz.it</email>
+            <organization>Free University of Bozen-Bolzano</organization>
+        </developer>
+    </developers>
+    
+    <contributors>
+    	<contributor>
+			<name>Marco Gario</name>
+    	</contributor>
+  	</contributors>
+ 
+    <modules>
+        <module>client</module>
+        <module>build</module>
+        <module>logics</module>
+        <module>outputs</module>
+    </modules>
+ 
+     <profiles>
+        <profile>
+            <id>release-sign-artifacts</id>
+            <activation>
+                <property>
+                    <name>performRelease</name>
+                    <value>true</value>
+                </property>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-gpg-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>sign-artifacts</id>
+                                <phase>verify</phase>
+                                <goals>
+                                    <goal>sign</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+        <profile>
+            <id>doclint-java8-disable</id>
+            <activation>
+                <jdk>[1.8,</jdk>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-javadoc-plugin</artifactId>
+                        <configuration>
+                            <additionalparam>-Xdoclint:none</additionalparam>
+                        </configuration>
+                        <executions>
+        					<execution>
+             	 				<id>attach-javadoc</id>
+              					<phase>verify</phase>
+              					<goals>
+                 					<goal>jar</goal>
+              					</goals>
+        					</execution>
+    					</executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
+ 
+     <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <airline.version>2.7.2</airline.version>
+     </properties>
+     
+   <build>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-jar-plugin</artifactId>
+                    <version>2.6</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-clean-plugin</artifactId>
+                    <version>3.0.0</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-install-plugin</artifactId>
+                    <version>2.5.2</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-jxr-plugin</artifactId>
+                    <version>2.5</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-project-info-reports-plugin</artifactId>
+                    <version>2.9</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-surefire-report-plugin</artifactId>
+                    <version>2.20</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-site-plugin</artifactId>
+                    <version>3.6</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-deploy-plugin</artifactId>
+                    <version>2.8.2</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-javadoc-plugin</artifactId>
+                    <version>2.10.4</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-compiler-plugin</artifactId>
+                    <version>3.6.1</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-source-plugin</artifactId>
+                    <version>2.4</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-resources-plugin</artifactId>
+                    <version>3.0.2</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-surefire-plugin</artifactId>
+                    <version>2.20</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.felix</groupId>
+                    <artifactId>maven-bundle-plugin</artifactId>
+                    <version>3.3.0</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-gpg-plugin</artifactId>
+                    <version>1.6</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-release-plugin</artifactId>
+                    <version>2.5.3</version>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>1.8</source>
+                    <target>1.8</target>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <configuration>
+                    <archive>
+                        <manifest>
+                            <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+                            <addDefaultSpecificationEntries>true</addDefaultSpecificationEntries>
+                        </manifest>
+                    </archive>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <artifactId>maven-source-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>attach-sources</id>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>attach-javadocs</id>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+<!--  	    <plugin>
+        		<groupId>org.apache.maven.plugins</groupId>
+        		<artifactId>maven-assembly-plugin</artifactId>
+        		<version>2.2-beta-5</version>
+    		</plugin>-->	
+    
+            <plugin>
+                <!-- explicitly define maven-deploy-plugin after other to force exec
+                    order -->
+                <artifactId>maven-deploy-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>deploy</id>
+                        <phase>deploy</phase>
+                        <goals>
+                            <goal>deploy</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+    
+  <dependencies>
+    <dependency>
+    	<groupId>junit</groupId>
+        <artifactId>junit</artifactId>
+        <version>4.12</version>
+    </dependency>
+            <dependency>
+                <groupId>com.github.rvesse</groupId>
+                <artifactId>airline</artifactId>
+                <version>${airline.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.github.rvesse</groupId>
+                <artifactId>airline-help-bash</artifactId>
+                <version>${airline.version}</version>
+            </dependency>
+  </dependencies>
+  
+</project>
