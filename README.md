@@ -44,3 +44,19 @@ OPTIONS
 `$ java -cp target/dependency/t-crowd-cli-4.0.0-SNAPSHOT.jar it.gilia.tcrowd.cli.TCrowd ltl -t value.json`
 
 `$ java -cp target/dependency/t-crowd-cli-4.0.0-SNAPSHOT.jar it.gilia.tcrowd.cli.TCrowd NuSMV -t value.json`
+
+
+## For Developers
+
+#### JAVA 8 (at least)
+#### MAVEN 3.6 (at least)
+
+#### Using Maven for creating JAR and dependencies
+
+```
+$ mvn clean verify -Dmaven.javadoc.skip=true
+
+$ mvn clean dependency:copy-dependencies package -Dmaven.javadoc.skip=true
+
+```
+
