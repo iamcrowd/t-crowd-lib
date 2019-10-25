@@ -43,12 +43,11 @@ public class TCrowd {
                          */
                         TCrowdVersion.class,
                         TCrowdHelp.class,
-                        TCrowdTDLLiteFPX.class
-                        /**                       OntopMaterialize.class,
-                        OntopBootstrap.class,
-                        OntopValidate.class,
-                        OntopEndpoint.class,
-                        OntopCompile.class **/
+                        TCrowdTDLLiteFPX.class,
+                        TCrowdQTLZ.class,
+                        TCrowdQTLN.class,
+                        TCrowdLTL.class,
+                        TCrowdNuSMV.class
                 );
 
 /**
