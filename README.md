@@ -8,7 +8,12 @@ usage: tcrowd <command> [ <args> ]
 Commands are:
     --version    Show version of t-crowd
     help         Display help information
+    ltl          Encode ERvt model in LTL formulae
+    NuSMV        Encode ERvt model in LTL formulae and return a LTL file together with a NuSMV file
+    qtln         Encode ERvt model in QTL formulae over natural numbers
+    qtlz         Encode ERvt model in QTL formulae over integers
     tdllitefpx   Encode ERvt model as a KB in TDL DL-Litefpx
+
 
 See 'tcrowd help <command>' for more information on a specific command.
 ```
@@ -32,3 +37,10 @@ OPTIONS
 
 `$ java -cp target/dependency/t-crowd-cli-4.0.0-SNAPSHOT.jar it.gilia.tcrowd.cli.TCrowd tdllitefpx -t value.json`
 
+`$ java -cp target/dependency/t-crowd-cli-4.0.0-SNAPSHOT.jar it.gilia.tcrowd.cli.TCrowd qtlz -t value.json`
+
+`$ java -cp target/dependency/t-crowd-cli-4.0.0-SNAPSHOT.jar it.gilia.tcrowd.cli.TCrowd qtln -t value.json`
+
+`$ java -cp target/dependency/t-crowd-cli-4.0.0-SNAPSHOT.jar it.gilia.tcrowd.cli.TCrowd ltl -t value.json`
+
+`$ java -cp target/dependency/t-crowd-cli-4.0.0-SNAPSHOT.jar it.gilia.tcrowd.cli.TCrowd NuSMV -t value.json`
