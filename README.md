@@ -8,10 +8,10 @@ usage: tcrowd <command> [ <args> ]
 Commands are:
     --version    Show version of t-crowd
     help         Display help information
-    ltl          Encode ERvt model in LTL formulae
-    NuSMV        Encode ERvt model in LTL formulae and return a LTL file together with a NuSMV file
-    qtln         Encode ERvt model in QTL formulae over natural numbers
-    qtlz         Encode ERvt model in QTL formulae over integers
+    ltl          Encode ERvt model into LTL formulae
+    NuSMV        Encode ERvt model into LTL formulae and return a LTL file together with a NuSMV file
+    qtln         Encode ERvt model into QTL formulae over natural numbers
+    qtlz         Encode ERvt model into QTL formulae over integers
     tdllitefpx   Encode ERvt model as a KB in TDL DL-Litefpx
 
 
