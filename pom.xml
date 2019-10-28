@@ -53,6 +53,7 @@
         <module>build</module>
         <module>logics</module>
         <module>outputs</module>
+        <module>ervt</module>
     </modules>
  
      <profiles>
@@ -286,6 +287,12 @@
                 <artifactId>airline-help-bash</artifactId>
                 <version>${airline.version}</version>
             </dependency>
+<!-- https://mvnrepository.com/artifact/com.googlecode.json-simple/json-simple -->
+			<dependency>
+    			<groupId>com.googlecode.json-simple</groupId>
+    			<artifactId>json-simple</artifactId>
+    			<version>1.1.1</version>
+			</dependency>
   </dependencies>
   
 </project>
