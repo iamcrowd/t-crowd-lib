@@ -5,9 +5,15 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.junit.jupiter.api.Test;
 import org.json.*;
 
+import it.unibz.inf.tdllitefpx.tbox.TBox;
+import it.unibz.inf.tdllitefpx.tbox.ConceptInclusionAssertion;
+
+import java.util.LinkedList;
+import java.util.Iterator;
+
 public class DefaultStrategyTest{
 	
-	@Test
+/*	@Test
 	public void testBasicJSONReader() {
 		JSONObject obj = new JSONObject();
         JSONArray entities = new JSONArray();
@@ -31,9 +37,9 @@ public class DefaultStrategyTest{
         obj.put("links", links);
         
         DefaultStrategy strategy = new DefaultStrategy();
-        strategy.to_dllitefpx(obj.toString());
+        strategy.inputJSON(obj);
 
-	}
+	} */
 	
 	@Test
 	public void testERvtEntitiesToDL() {
@@ -46,7 +52,15 @@ public class DefaultStrategyTest{
         obj.put("entities", entities);
         
         DefaultStrategy strategy = new DefaultStrategy();
-        strategy.to_dllitefpx_entities(obj);
+        TBox tbox = strategy.to_dllitefpx_entities(obj);
+	    // print the list
+	    System.out.println("LinkedList:" + tbox);
+
+	    Iterator<ConceptInclusionAssertion> iterator = tbox.iterator();
+	     while(iterator.hasNext()){
+	       ConceptInclusionAssertion ci = iterator.next();
+	       System.out.println(ci.getLHS()+" -> "+ci.getRHS());
+	     }
 
 	}
 	

@@ -15,17 +15,32 @@ import it.unibz.inf.qtl1.NaturalTranslator;
 import it.unibz.inf.qtl1.formulae.Formula;
 import it.unibz.inf.qtl1.output.LatexDocumentCNF;
 import it.unibz.inf.qtl1.output.NuSMVOutput;
-import it.unibz.inf.tdllitefpx.concepts.*;
 import it.unibz.inf.tdllitefpx.TDLLiteFPXConverter;
 import it.unibz.inf.tdllitefpx.output.LatexOutputDocument;
+import it.unibz.inf.tdllitefpx.concepts.AtomicConcept;
+import it.unibz.inf.tdllitefpx.concepts.BottomConcept;
+import it.unibz.inf.tdllitefpx.concepts.Concept;
+import it.unibz.inf.tdllitefpx.concepts.NegatedConcept;
+import it.unibz.inf.tdllitefpx.concepts.QuantifiedRole;
+import it.unibz.inf.tdllitefpx.concepts.temporal.AlwaysFuture;
+import it.unibz.inf.tdllitefpx.concepts.temporal.AlwaysPast;
+import it.unibz.inf.tdllitefpx.concepts.temporal.NextFuture;
+import it.unibz.inf.tdllitefpx.concepts.temporal.SometimeFuture;
+import it.unibz.inf.tdllitefpx.concepts.temporal.SometimePast;
+import it.unibz.inf.tdllitefpx.roles.AtomicLocalRole;
+import it.unibz.inf.tdllitefpx.roles.AtomicRigidRole;
+import it.unibz.inf.tdllitefpx.roles.PositiveRole;
+import it.unibz.inf.tdllitefpx.roles.Role;
+import it.unibz.inf.tdllitefpx.tbox.ConceptInclusionAssertion;
 import it.unibz.inf.tdllitefpx.tbox.TBox;
+
 
 public class DefaultStrategy{
 	
-	TBox myTBox;
+	TBox myTBox = new TBox();
 	
 	public DefaultStrategy() {
-		TBox myTBox = new TBox();
+		
 	}
 	
 	public TBox getTBox() {
@@ -37,7 +52,7 @@ public class DefaultStrategy{
 	 * @param ervt_json A JSON object representing an ERvt temporal model only 
 	 * containing entities.
 	 */
-	public void to_dllitefpx_entities(JSONObject ervt_json) {
+	public TBox to_dllitefpx_entities(JSONObject ervt_json) {
 		//https://www.mkyong.com/java/json-simple-example-read-and-write-json/		
 		ervt_json.keys().forEachRemaining(key -> {
 	        Object value = ervt_json.get(key);
@@ -45,12 +60,12 @@ public class DefaultStrategy{
 	        System.out.println("Key: {0}..."+key);
 	        arr.iterator().forEachRemaining(element -> {
 	        	System.out.println("Element: {0}..."+element);
-	        	Concept cpt = new AtomicConcept(element.toString());
-	        	this.myTBox.add(cpt);
+	        	Concept acpt = new AtomicConcept(element.toString());
+	        	this.myTBox.add(new ConceptInclusionAssertion(acpt, new AtomicConcept("Top")));
 	        });
 	    });
-		System.out.println("TBox..."+this.getTBox());
-		
+		System.out.println("TBox stats..."+this.getTBox().getStats());
+		return this.getTBox();
 	}
 	
 }
