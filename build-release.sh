@@ -22,6 +22,10 @@
 
 # Run Java class from JAR: java -cp target/your_file.jar your.package.name.YourClass
 # java -cp target/dependency/t-crowd-cli-4.0.0-SNAPSHOT.jar it.gilia.tcrowd.cli.TCrowd
+#
+# Test
+# https://www.petrikainulainen.net/programming/testing/junit-5-tutorial-running-unit-tests-with-maven/
+# mvn clean test
 ########################################################################
 
 # user could invoke the script as 'sh build-release.sh'
