@@ -5,14 +5,13 @@ package it.gilia.tcrowd.encoding;
  * 
  * @see Read paper "A Cookbook for Temporal Conceptual Data Modelling" (Artale et.al) for more details about formalisation. 
  * 
- * 
  */
-
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
+
 
 public class DefaultStrategy{
 	
