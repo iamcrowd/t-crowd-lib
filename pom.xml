@@ -114,6 +114,8 @@
      <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <airline.version>2.7.2</airline.version>
+        <junit.jupiter.version>5.4.2</junit.jupiter.version>
+		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
      </properties>
      
    <build>
@@ -146,11 +148,6 @@
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-surefire-report-plugin</artifactId>
-                    <version>2.20</version>
-                </plugin>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-site-plugin</artifactId>
                     <version>3.6</version>
                 </plugin>
@@ -180,11 +177,6 @@
                     <version>3.0.2</version>
                 </plugin>
                 <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-surefire-plugin</artifactId>
-                    <version>2.20</version>
-                </plugin>
-                <plugin>
                     <groupId>org.apache.felix</groupId>
                     <artifactId>maven-bundle-plugin</artifactId>
                     <version>3.3.0</version>
@@ -210,7 +202,16 @@
                     <target>1.8</target>
                 </configuration>
             </plugin>
-
+			<plugin>
+            	<groupId>org.apache.maven.plugins</groupId>
+            	<artifactId>maven-surefire-plugin</artifactId>
+            	<version>2.22.1</version>
+        	</plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-surefire-report-plugin</artifactId>
+                    <version>2.22.1</version>
+                </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
@@ -245,17 +246,8 @@
                         </goals>
                     </execution>
                 </executions>
-            </plugin>
-
-<!--  	    <plugin>
-        		<groupId>org.apache.maven.plugins</groupId>
-        		<artifactId>maven-assembly-plugin</artifactId>
-        		<version>2.2-beta-5</version>
-    		</plugin>-->	
-    
+            </plugin>	
             <plugin>
-                <!-- explicitly define maven-deploy-plugin after other to force exec
-                    order -->
                 <artifactId>maven-deploy-plugin</artifactId>
                 <executions>
                     <execution>
@@ -271,30 +263,18 @@
     </build>
     
   <dependencies>
-	<dependency>
+ 	<dependency>
         <groupId>org.junit.jupiter</groupId>
         <artifactId>junit-jupiter-api</artifactId>
-        <version>5.5.2</version>
+        <version>5.4.2</version>
         <scope>test</scope>
     </dependency>
     <dependency>
         <groupId>org.junit.jupiter</groupId>
         <artifactId>junit-jupiter-engine</artifactId>
-        <version>5.5.2</version>
+        <version>5.4.2</version>
         <scope>test</scope>
     </dependency>
-	<dependency>
-    	<groupId>org.junit.platform</groupId>
-    	<artifactId>junit-platform-launcher</artifactId>
-    	<version>1.5.1</version>
-    	<scope>test</scope>
-	</dependency>
-	<dependency>
-    	<groupId>org.junit.vintage</groupId>
-    	<artifactId>junit-vintage-engine</artifactId>
-    	<version>5.5.2</version>
-    	<scope>test</scope>
-	</dependency>    
             <dependency>
                 <groupId>com.github.rvesse</groupId>
                 <artifactId>airline</artifactId>
