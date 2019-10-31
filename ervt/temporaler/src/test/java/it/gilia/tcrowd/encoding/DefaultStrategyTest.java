@@ -3,7 +3,7 @@ package it.gilia.tcrowd.encoding;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.junit.jupiter.api.Test;
-import org.json.simple.*;
+import org.json.*;
 
 public class DefaultStrategyTest{
 	
@@ -11,19 +11,19 @@ public class DefaultStrategyTest{
 	public void testBasicJSONReader() {
 		JSONObject obj = new JSONObject();
         JSONArray entities = new JSONArray();
-        entities.add("entitiy 1");
-        entities.add("entitiy 2");
-        entities.add("entitiy 3");
+        entities.put("entitiy 1");
+        entities.put("entitiy 2");
+        entities.put("entitiy 3");
  
         JSONArray attributes = new JSONArray();
-        attributes.add("attribute 1");
-        attributes.add("attribute 2");
-        attributes.add("attribute 3");
+        attributes.put("attribute 1");
+        attributes.put("attribute 2");
+        attributes.put("attribute 3");
 
         JSONArray links = new JSONArray();
-        links.add("link 1");
-        links.add("link 2");
-        links.add("link 3");
+        links.put("link 1");
+        links.put("link 2");
+        links.put("link 3");
 
 
         obj.put("entities", entities);
@@ -31,7 +31,22 @@ public class DefaultStrategyTest{
         obj.put("links", links);
         
         DefaultStrategy strategy = new DefaultStrategy();
-        strategy.to_dllitefpx(obj.toJSONString());
+        strategy.to_dllitefpx(obj.toString());
+
+	}
+	
+	@Test
+	public void testERvtEntitiesToDL() {
+		JSONObject obj = new JSONObject();
+        JSONArray entities = new JSONArray();
+        entities.put("entitiy 1");
+        entities.put("entitiy 2");
+        entities.put("entitiy 3");
+
+        obj.put("entities", entities);
+        
+        DefaultStrategy strategy = new DefaultStrategy();
+        strategy.to_dllitefpx_entities(obj);
 
 	}
 	

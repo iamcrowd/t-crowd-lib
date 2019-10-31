@@ -7,45 +7,49 @@ package it.gilia.tcrowd.encoding;
  * 
  */
 
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
+import org.json.JSONArray;
+import org.json.JSONObject;
+import org.json.JSONException;
 
+import it.unibz.inf.qtl1.NaturalTranslator;
+import it.unibz.inf.qtl1.formulae.Formula;
+import it.unibz.inf.qtl1.output.LatexDocumentCNF;
+import it.unibz.inf.qtl1.output.NuSMVOutput;
+import it.unibz.inf.tdllitefpx.concepts.*;
+import it.unibz.inf.tdllitefpx.TDLLiteFPXConverter;
+import it.unibz.inf.tdllitefpx.output.LatexOutputDocument;
+import it.unibz.inf.tdllitefpx.tbox.TBox;
 
 public class DefaultStrategy{
 	
+	TBox myTBox;
 	
 	public DefaultStrategy() {
-		
+		TBox myTBox = new TBox();
+	}
+	
+	public TBox getTBox() {
+		return myTBox;
 	}
 	
 	/**
 	 * 
-	 * @param ervt_json A JSON object representing an ERvt temporal model.
+	 * @param ervt_json A JSON object representing an ERvt temporal model only 
+	 * containing entities.
 	 */
-	public void to_dllitefpx(String ervt_json) {
-		//https://www.mkyong.com/java/json-simple-example-read-and-write-json/
-		//JSONParser parser = new JSONParser();
-		//JSONObject jsonObject = (JSONObject)parser.parse(ervt_json);
-      //  System.out.println("Parsing JSON..."+jsonObject);
-        System.out.println("Parsing JSON..."+ervt_json);
-
-  /*      String entities = (String) jsonObject.get("entities");
-        System.out.println(entities);
-
-        String attributes = (String) jsonObject.get("attributes");
-        System.out.println(attributes);
-
-        String links = (String) jsonObject.get("links");
-        System.out.println(links); */
-
-        // loop array
-        // JSONArray msg = (JSONArray) jsonObject.get("messages");
-        // Iterator<String> iterator = msg.iterator();
-        // while (iterator.hasNext()) {
-           // System.out.println(iterator.next());
-        //}
+	public void to_dllitefpx_entities(JSONObject ervt_json) {
+		//https://www.mkyong.com/java/json-simple-example-read-and-write-json/		
+		ervt_json.keys().forEachRemaining(key -> {
+	        Object value = ervt_json.get(key);
+	        JSONArray arr = ervt_json.getJSONArray(key);
+	        System.out.println("Key: {0}..."+key);
+	        arr.iterator().forEachRemaining(element -> {
+	        	System.out.println("Element: {0}..."+element);
+	        	Concept cpt = new AtomicConcept(element.toString());
+	        	this.myTBox.add(cpt);
+	        });
+	    });
+		System.out.println("TBox..."+this.getTBox());
 		
 	}
 	
