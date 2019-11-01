@@ -59,4 +59,9 @@ $ mvn clean verify -Dmaven.javadoc.skip=true
 $ mvn clean dependency:copy-dependencies package -Dmaven.javadoc.skip=true
 
 ```
+### Tests
+#### JUnit 5
+https://www.petrikainulainen.net/programming/testing/junit-5-tutorial-running-unit-tests-with-maven/
+
+`$ mvn clean test`
 
