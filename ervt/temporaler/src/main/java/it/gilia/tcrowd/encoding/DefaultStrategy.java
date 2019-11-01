@@ -9,6 +9,8 @@ package it.gilia.tcrowd.encoding;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.json.JSONStringer;
+import org.json.JSONTokener;
 import org.json.JSONException;
 
 import it.unibz.inf.qtl1.NaturalTranslator;
@@ -51,16 +53,27 @@ public class DefaultStrategy{
 	 * 
 	 * @param ervt_json A JSON object representing an ERvt temporal model only 
 	 * containing entities.
+	 * 
+	 * @apiNote {"entities":[
+        	{"name":"Entity1","timestamp":"snapshot","position":{"x":625,"y":183}},
+        	{"name":"Entity2","timestamp":"temporal","position":{"x":328,"y":411}},
+        	{"name":"Entity3","timestamp":"","position":{"x":809,"y":432}},
+        	{"name":"Entity4","timestamp":"","position":{"x":259,"y":187}},
+        	{"name":"Entity5","timestamp":"","position":{"x":151,"y":412}}],
 	 */
 	public TBox to_dllitefpx_entities(JSONObject ervt_json) {
-		//https://www.mkyong.com/java/json-simple-example-read-and-write-json/		
+		//https://www.mkyong.com/java/json-simple-example-read-and-write-json/
+		System.out.println("Starting JSON: "+ervt_json);
+		
 		ervt_json.keys().forEachRemaining(key -> {
 	        Object value = ervt_json.get(key);
 	        JSONArray arr = ervt_json.getJSONArray(key);
 	        System.out.println("Key: {0}..."+key);
 	        arr.iterator().forEachRemaining(element -> {
-	        	System.out.println("Element: {0}..."+element);
-	        	Concept acpt = new AtomicConcept(element.toString());
+	        	JSONTokener t = new JSONTokener(element.toString());
+	        	JSONObject jo = new JSONObject(t);
+	        	System.out.println("Element: {0}..."+jo.get("name"));
+		        Concept acpt = new AtomicConcept(jo.get("name").toString());
 	        	this.myTBox.add(new ConceptInclusionAssertion(acpt, new AtomicConcept("Top")));
 	        });
 	    });

@@ -45,11 +45,50 @@ public class DefaultStrategyTest{
 	public void testERvtEntitiesToDL() {
 		JSONObject obj = new JSONObject();
         JSONArray entities = new JSONArray();
-        entities.put("entitiy 1");
-        entities.put("entitiy 2");
-        entities.put("entitiy 3");
+        
+        String jsonEntity = new JSONStringer()
+                .object()
+                .key("name")
+                .value("entity 1")
+                .key("timestamp")
+                .value("")
+                .key("position")
+                .object()
+                .key("x")
+                .value("600")
+                .key("y")
+                .value("800")
+                .endObject()
+                .endObject()
+                .toString();
+  
+        entities.put(jsonEntity);
 
         obj.put("entities", entities);
+        
+        DefaultStrategy strategy = new DefaultStrategy();
+        TBox tbox = strategy.to_dllitefpx_entities(obj);
+	    // print the list
+	    System.out.println("LinkedList:" + tbox);
+
+	    Iterator<ConceptInclusionAssertion> iterator = tbox.iterator();
+	     while(iterator.hasNext()){
+	       ConceptInclusionAssertion ci = iterator.next();
+	       assertEquals("entity 1 -> Top", ci.getLHS()+" -> "+ci.getRHS());
+	       System.out.println(ci.getLHS()+" -> "+ci.getRHS());
+	     }
+
+	}
+	
+//	@Test
+/*	public void testERvtSnapEntitiesToDL() {
+		JSONObject obj = new JSONObject();
+        JSONArray snap_entities = new JSONArray();
+        snap_entities.put("entitiy 1");
+        snap_entities.put("entitiy 2");
+        snap_entities.put("entitiy 3");
+
+        obj.put("entities", snap_entities);
         
         DefaultStrategy strategy = new DefaultStrategy();
         TBox tbox = strategy.to_dllitefpx_entities(obj);
@@ -62,7 +101,7 @@ public class DefaultStrategyTest{
 	       System.out.println(ci.getLHS()+" -> "+ci.getRHS());
 	     }
 
-	}
+	} */
 	
 }
 
