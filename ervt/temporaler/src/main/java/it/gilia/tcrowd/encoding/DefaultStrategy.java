@@ -71,13 +71,10 @@ public class DefaultStrategy{
 		ervt_json.keys().forEachRemaining(key -> {
 	        Object value = ervt_json.get(key);
 	        JSONArray arr = ervt_json.getJSONArray(key);
-	        System.out.println("Key: {0}..."+key);
 	        
 	        arr.iterator().forEachRemaining(element -> {
 	        	JSONTokener t = new JSONTokener(element.toString());
 	        	JSONObject jo = new JSONObject(t);
-	        	System.out.println("Element: {0}..."+jo.get("name"));
-	        	System.out.println("Element: {0}..."+jo.get("timestamp"));
 	        	
 	        	if (jo.get("timestamp").toString().equals("")){
 	        		Concept acpt = new AtomicConcept(jo.get("name").toString());
@@ -100,6 +97,11 @@ public class DefaultStrategy{
 		
 		System.out.println("TBox stats..."+this.getTBox().getStats());
 		return this.getTBox();
+	}
+
+	public void to_dllitefpx_isa(JSONObject ervt_json) {
+		//https://www.mkyong.com/java/json-simple-example-read-and-write-json/
+		System.out.println("Starting JSON: "+ervt_json);
 	}
 	
 }
