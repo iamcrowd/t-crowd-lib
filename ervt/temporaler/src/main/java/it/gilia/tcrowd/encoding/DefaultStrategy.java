@@ -59,7 +59,10 @@ public class DefaultStrategy{
         	{"name":"Entity2","timestamp":"temporal","position":{"x":328,"y":411}},
         	{"name":"Entity3","timestamp":"","position":{"x":809,"y":432}},
         	{"name":"Entity4","timestamp":"","position":{"x":259,"y":187}},
-        	{"name":"Entity5","timestamp":"","position":{"x":151,"y":412}}],
+        	{"name":"Entity5","timestamp":"","position":{"x":151,"y":412}}]}
+     *   	
+     * Entity1 -> \box_f \box_p Entity1 
+     * \neg \bot -> \Diamond_f \Diamond_p \neg Entity2 
 	 */
 	public TBox to_dllitefpx_entities(JSONObject ervt_json) {
 		//https://www.mkyong.com/java/json-simple-example-read-and-write-json/
@@ -69,14 +72,32 @@ public class DefaultStrategy{
 	        Object value = ervt_json.get(key);
 	        JSONArray arr = ervt_json.getJSONArray(key);
 	        System.out.println("Key: {0}..."+key);
+	        
 	        arr.iterator().forEachRemaining(element -> {
 	        	JSONTokener t = new JSONTokener(element.toString());
 	        	JSONObject jo = new JSONObject(t);
 	        	System.out.println("Element: {0}..."+jo.get("name"));
-		        Concept acpt = new AtomicConcept(jo.get("name").toString());
-	        	this.myTBox.add(new ConceptInclusionAssertion(acpt, new AtomicConcept("Top")));
+	        	System.out.println("Element: {0}..."+jo.get("timestamp"));
+	        	
+	        	if (jo.get("timestamp").toString().equals("")){
+	        		Concept acpt = new AtomicConcept(jo.get("name").toString());
+		        	this.myTBox.add(new ConceptInclusionAssertion(acpt, new AtomicConcept("Top")));
+		        	
+	        	}else if (jo.get("timestamp").toString().equals("snapshot")) {
+	        		Concept acpt = new AtomicConcept(jo.get("name").toString());
+		        	this.myTBox.add(new ConceptInclusionAssertion(
+		    				acpt,
+		    				new AlwaysFuture(new AlwaysPast(acpt))));
+		        	
+				}else if (jo.get("timestamp").toString().equals("temporal")) {
+	        		Concept acpt = new AtomicConcept(jo.get("name").toString());
+		        	this.myTBox.add(new ConceptInclusionAssertion(
+		    				new NegatedConcept(new BottomConcept()),
+		    				new SometimeFuture(new SometimePast(new NegatedConcept(acpt)))));
+				}
 	        });
 	    });
+		
 		System.out.println("TBox stats..."+this.getTBox().getStats());
 		return this.getTBox();
 	}
