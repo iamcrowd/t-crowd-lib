@@ -43,6 +43,7 @@ public class DefaultStrategy{
 	
 	TBox myTBox = new TBox();
 	List<Concept> list_ac = new ArrayList<Concept>();
+	List<Role> list_role = new ArrayList<Role>();
 	
 	public DefaultStrategy() {
 		
@@ -119,6 +120,7 @@ public class DefaultStrategy{
 					}
 					
 					Role role_a = new PositiveRole(new AtomicLocalRole(jo.get("name").toString()));
+					this.list_role.add(role_a);
 					
 					this.myTBox.add(new ConceptInclusionAssertion(
 									new QuantifiedRole(role_a.getInverse(), 1),
@@ -140,7 +142,7 @@ public class DefaultStrategy{
 						this.to_dllitefpx_isa(jo);
 						break;
 					case "attribute":
-
+						this.to_dllitefpx_attr(jo);
 					break;
 					case "attribute_rel":
 
@@ -179,7 +181,6 @@ public class DefaultStrategy{
 	 * @apiNote {"name":"s2","parent":"Entity1","entities":["Entity3"],"type":"isa","constraint":[],"position":{"x":793,"y":333}}
 	 */
 	public void to_dllitefpx_isa(JSONObject ervt_isa) {
-		//https://www.mkyong.com/java/json-simple-example-read-and-write-json/
 		System.out.println("Starting JSON: "+ervt_isa);
 		
 		Concept parent = new AtomicConcept(ervt_isa.get("parent").toString());
@@ -192,7 +193,17 @@ public class DefaultStrategy{
 		});
 		
 	}
-	
+
+	/**
+	 * 
+	 * @param ervt_attr
+	 * 
+	 * @apiNote {"name":"AttrA","entity":["Entity1"],"attribute":["A"],"type":"attribute"}
+	 */
+	public void to_dllitefpx_isa(JSONObject ervt_attr) {
+		System.out.println("Starting JSON: "+ervt_attr);
+		
+	}
 	
 	
 }
