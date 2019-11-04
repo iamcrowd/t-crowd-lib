@@ -19,6 +19,8 @@ public class DefaultStrategyTest{
 	@DisplayName("Entities")
 	public void testERvtEntitiesToDL() {
 		JSONObject obj = new JSONObject();
+        JSONArray links = new JSONArray();
+        JSONArray attributes = new JSONArray();
         JSONArray entities = new JSONArray();
         
         String jsonEntity = new JSONStringer()
@@ -40,9 +42,11 @@ public class DefaultStrategyTest{
         entities.put(jsonEntity);
 
         obj.put("entities", entities);
+        obj.put("attributes", attributes);
+        obj.put("links", links);
         
         DefaultStrategy strategy = new DefaultStrategy();
-        TBox tbox = strategy.to_dllitefpx_entities(obj);
+        TBox tbox = strategy.to_dllitefpx(obj);
 	    // print the list
 	    System.out.println("LinkedList:" + tbox);
 
@@ -59,6 +63,8 @@ public class DefaultStrategyTest{
 	@DisplayName("Snapshot Entities")
 	public void testERvtSnapEntitiesToDL() {
 		JSONObject obj = new JSONObject();
+        JSONArray links = new JSONArray();
+        JSONArray attributes = new JSONArray();
         JSONArray entities = new JSONArray();
         
         String jsonEntity = new JSONStringer()
@@ -80,9 +86,11 @@ public class DefaultStrategyTest{
         entities.put(jsonEntity);
 
         obj.put("entities", entities);
+        obj.put("attributes", attributes);
+        obj.put("links", links);
         
         DefaultStrategy strategy = new DefaultStrategy();
-        TBox tbox = strategy.to_dllitefpx_entities(obj);
+        TBox tbox = strategy.to_dllitefpx(obj);
         
 	    System.out.println("LinkedList:" + tbox);
 
@@ -99,6 +107,8 @@ public class DefaultStrategyTest{
 	@DisplayName("Temporal Entities")
 	public void testERvtTempEntitiesToDL() {
 		JSONObject obj = new JSONObject();
+        JSONArray links = new JSONArray();
+        JSONArray attributes = new JSONArray();
         JSONArray entities = new JSONArray();
         
         String jsonEntity = new JSONStringer()
@@ -120,9 +130,11 @@ public class DefaultStrategyTest{
         entities.put(jsonEntity);
 
         obj.put("entities", entities);
+        obj.put("attributes", attributes);
+        obj.put("links", links);
         
         DefaultStrategy strategy = new DefaultStrategy();
-        TBox tbox = strategy.to_dllitefpx_entities(obj);
+        TBox tbox = strategy.to_dllitefpx(obj);
         
 	    System.out.println("LinkedList:" + tbox);
 
@@ -133,14 +145,116 @@ public class DefaultStrategyTest{
 	       System.out.println(ci.getLHS()+" -> "+ci.getRHS());
 	     }
 	}
-
+	
 	@Test
-	@DisplayName("ISA: default, composed (disjoint, covering)")
-	public void testERvtISAtoDL() {
+	@DisplayName("Entities with attributes")
+	public void testERvtEntitiesWithAttrToDL() {
 		JSONObject obj = new JSONObject();
         JSONArray links = new JSONArray();
+        JSONArray attributes = new JSONArray();
+        JSONArray entities = new JSONArray();
         
         String jsonEntity = new JSONStringer()
+                .object()
+                .key("name")
+                .value("entity 1")
+                .key("timestamp")
+                .value("")
+                .key("position")
+                .object()
+                .key("x")
+                .value("600")
+                .key("y")
+                .value("800")
+                .endObject()
+                .endObject()
+                .toString();
+        
+        String jsonAttribute = new JSONStringer()
+                .object()
+                .key("name")
+                .value("attribute 1")
+                .key("type")
+                .value("key")
+                .key("datatype")
+                .value("Integer")
+                .key("timestamp")
+                .value("")
+                .key("position")
+                .object()
+                .key("x")
+                .value("600")
+                .key("y")
+                .value("800")
+                .endObject()
+                .endObject()
+                .toString();
+  
+        entities.put(jsonEntity);
+        attributes.put(jsonAttribute);
+
+        obj.put("entities", entities);
+        obj.put("attributes", attributes);
+        obj.put("links", links);
+        
+        DefaultStrategy strategy = new DefaultStrategy();
+        TBox tbox = strategy.to_dllitefpx(obj);
+	    // print the list
+	    System.out.println("LinkedList:" + tbox);
+
+	    Iterator<ConceptInclusionAssertion> iterator = tbox.iterator();
+	     while(iterator.hasNext()){
+	       ConceptInclusionAssertion ci = iterator.next();
+	    //   assertEquals("entity 1 -> Top", ci.getLHS()+" -> "+ci.getRHS());
+	       System.out.println(ci.getLHS()+" -> "+ci.getRHS());
+	     }
+
+	}
+
+	@Test
+	@DisplayName("ISA simple")
+	public void testERvtSimpleISAtoDL() {
+		JSONObject obj = new JSONObject();
+        JSONArray links = new JSONArray();
+        JSONArray attributes = new JSONArray();
+        JSONArray entities = new JSONArray();
+        
+        String jsonEntity = new JSONStringer()
+                .object()
+                .key("name")
+                .value("entity 1")
+                .key("timestamp")
+                .value("")
+                .key("position")
+                .object()
+                .key("x")
+                .value("600")
+                .key("y")
+                .value("800")
+                .endObject()
+                .endObject()
+                .toString();
+        
+        String jsonEntity2 = new JSONStringer()
+                .object()
+                .key("name")
+                .value("entity 2")
+                .key("timestamp")
+                .value("")
+                .key("position")
+                .object()
+                .key("x")
+                .value("600")
+                .key("y")
+                .value("800")
+                .endObject()
+                .endObject()
+                .toString();
+  
+        entities.put(jsonEntity);
+        entities.put(jsonEntity2);
+        
+        String jsonLinks = new JSONStringer()
                 .object()
                 .key("name")
                 .value("isa1")
@@ -164,21 +278,23 @@ public class DefaultStrategyTest{
                 .endObject()
                 .toString();
   
-        links.put(jsonEntity);
+        links.put(jsonLinks);
 
+        obj.put("entities", entities);
+        obj.put("attributes", attributes);
         obj.put("links", links);
         
         DefaultStrategy strategy = new DefaultStrategy();
-        strategy.to_dllitefpx_isa(obj);
-        /*TBox tbox = strategy.to_dllitefpx_entities(obj);
+        TBox tbox = strategy.to_dllitefpx(obj);
+        
 	    System.out.println("LinkedList:" + tbox);
 
 	    Iterator<ConceptInclusionAssertion> iterator = tbox.iterator();
 	     while(iterator.hasNext()){
 	       ConceptInclusionAssertion ci = iterator.next();
-	       assertEquals("entity 1 -> Top", ci.getLHS()+" -> "+ci.getRHS());
+	       //assertEquals(actual_s, ci.getLHS()+" -> "+ci.getRHS());
 	       System.out.println(ci.getLHS()+" -> "+ci.getRHS());
-	     }*/
+	     }
 
 	}
 	

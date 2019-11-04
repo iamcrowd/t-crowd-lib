@@ -64,44 +64,119 @@ public class DefaultStrategy{
      * Entity1 -> \box_f \box_p Entity1 
      * \neg \bot -> \Diamond_f \Diamond_p \neg Entity2 
 	 */
-	public TBox to_dllitefpx_entities(JSONObject ervt_json) {
+	public TBox to_dllitefpx(JSONObject ervt_json) {
 		//https://www.mkyong.com/java/json-simple-example-read-and-write-json/
 		System.out.println("Starting JSON: "+ervt_json);
 		
 		ervt_json.keys().forEachRemaining(key -> {
-	        Object value = ervt_json.get(key);
-	        JSONArray arr = ervt_json.getJSONArray(key);
+			
+			if (key.equals("entities")) {
+				Object value = ervt_json.get(key);
+				JSONArray arr = ervt_json.getJSONArray(key);
 	        
-	        arr.iterator().forEachRemaining(element -> {
-	        	JSONTokener t = new JSONTokener(element.toString());
-	        	JSONObject jo = new JSONObject(t);
+				arr.iterator().forEachRemaining(element -> {
+					JSONTokener t = new JSONTokener(element.toString());
+					JSONObject jo = new JSONObject(t);
 	        	
-	        	if (jo.get("timestamp").toString().equals("")){
-	        		Concept acpt = new AtomicConcept(jo.get("name").toString());
-		        	this.myTBox.add(new ConceptInclusionAssertion(acpt, new AtomicConcept("Top")));
+					if (jo.get("timestamp").toString().equals("")){
+						Concept acpt = new AtomicConcept(jo.get("name").toString());
+						this.myTBox.add(new ConceptInclusionAssertion(acpt, new AtomicConcept("Top")));
 		        	
-	        	}else if (jo.get("timestamp").toString().equals("snapshot")) {
-	        		Concept acpt = new AtomicConcept(jo.get("name").toString());
-		        	this.myTBox.add(new ConceptInclusionAssertion(
-		    				acpt,
-		    				new AlwaysFuture(new AlwaysPast(acpt))));
+					}else if (jo.get("timestamp").toString().equals("snapshot")) {
+						Concept acpt = new AtomicConcept(jo.get("name").toString());
+						this.myTBox.add(new ConceptInclusionAssertion(
+								acpt,
+								new AlwaysFuture(new AlwaysPast(acpt))));
 		        	
-				}else if (jo.get("timestamp").toString().equals("temporal")) {
-	        		Concept acpt = new AtomicConcept(jo.get("name").toString());
-		        	this.myTBox.add(new ConceptInclusionAssertion(
-		    				new NegatedConcept(new BottomConcept()),
-		    				new SometimeFuture(new SometimePast(new NegatedConcept(acpt)))));
-				}
-	        });
+					}else if (jo.get("timestamp").toString().equals("temporal")) {
+						Concept acpt = new AtomicConcept(jo.get("name").toString());
+						this.myTBox.add(new ConceptInclusionAssertion(
+								new NegatedConcept(new BottomConcept()),
+								new SometimeFuture(new SometimePast(new NegatedConcept(acpt)))));
+					}
+				});
+				
+			}else if (key.equals("attributes")) {
+				Object value = ervt_json.get(key);
+				JSONArray arr = ervt_json.getJSONArray(key);
+	        
+				arr.iterator().forEachRemaining(element -> {
+					JSONTokener t = new JSONTokener(element.toString());
+					JSONObject jo = new JSONObject(t);
+					
+					Concept acdt = new AtomicConcept(jo.get("datatype").toString());
+					Role role_a = new PositiveRole(new AtomicLocalRole(jo.get("name").toString()));
+
+					System.out.println("datatype: "+acdt);
+					System.out.println("role: "+role_a);
+				});
+				
+			}else if (key.equals("links")) {
+				Object value = ervt_json.get(key);
+				JSONArray arr = ervt_json.getJSONArray(key);
+	        
+				arr.iterator().forEachRemaining(element -> {
+					JSONTokener t = new JSONTokener(element.toString());
+					JSONObject jo = new JSONObject(t);
+	        	
+					switch (jo.get("type").toString()) {
+					case "isa":
+						this.to_dllitefpx_isa(jo);
+						break;
+					case "attribute":
+
+					break;
+					case "attribute_rel":
+
+					break;
+					case "relationship":
+
+					break;
+					case "tex":
+
+					break;
+					case "dev":
+
+					break;
+					case "dexminus":
+
+					break;
+					case "pex":
+
+					break;
+					default:
+
+						break;
+					}
+				});
+			}
 	    });
 		
 		System.out.println("TBox stats..."+this.getTBox().getStats());
 		return this.getTBox();
 	}
 
-	public void to_dllitefpx_isa(JSONObject ervt_json) {
+	/**
+	 * 
+	 * @param ervt_isa
+	 * 
+	 * @apiNote {"name":"s2","parent":"Entity1","entities":["Entity3"],"type":"isa","constraint":[],"position":{"x":793,"y":333}}
+	 */
+	public void to_dllitefpx_isa(JSONObject ervt_isa) {
 		//https://www.mkyong.com/java/json-simple-example-read-and-write-json/
-		System.out.println("Starting JSON: "+ervt_json);
+		System.out.println("Starting JSON: "+ervt_isa);
+		
+		Concept parent = new AtomicConcept(ervt_isa.get("parent").toString());
+		
+		System.out.println(ervt_isa.get("entities"));
+		
+		ervt_isa.getJSONArray("entities").iterator().forEachRemaining(element -> {
+			Concept child = new AtomicConcept(element.toString());
+			this.myTBox.add(new ConceptInclusionAssertion(child, parent));
+		});
+		
 	}
+	
+	
 	
 }
