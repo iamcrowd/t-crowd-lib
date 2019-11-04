@@ -13,6 +13,8 @@ import org.json.JSONStringer;
 import org.json.JSONTokener;
 import org.json.JSONException;
 
+import java.util.*;
+
 import it.unibz.inf.qtl1.NaturalTranslator;
 import it.unibz.inf.qtl1.formulae.Formula;
 import it.unibz.inf.qtl1.output.LatexDocumentCNF;
@@ -40,6 +42,7 @@ import it.unibz.inf.tdllitefpx.tbox.TBox;
 public class DefaultStrategy{
 	
 	TBox myTBox = new TBox();
+	List<Concept> list_ac = new ArrayList<Concept>();
 	
 	public DefaultStrategy() {
 		
@@ -80,20 +83,25 @@ public class DefaultStrategy{
 	        	
 					if (jo.get("timestamp").toString().equals("")){
 						Concept acpt = new AtomicConcept(jo.get("name").toString());
+						this.list_ac.add(acpt);
 						this.myTBox.add(new ConceptInclusionAssertion(acpt, new AtomicConcept("Top")));
 		        	
 					}else if (jo.get("timestamp").toString().equals("snapshot")) {
 						Concept acpt = new AtomicConcept(jo.get("name").toString());
+						this.list_ac.add(acpt);
 						this.myTBox.add(new ConceptInclusionAssertion(
 								acpt,
 								new AlwaysFuture(new AlwaysPast(acpt))));
 		        	
 					}else if (jo.get("timestamp").toString().equals("temporal")) {
 						Concept acpt = new AtomicConcept(jo.get("name").toString());
+						this.list_ac.add(acpt);
 						this.myTBox.add(new ConceptInclusionAssertion(
 								new NegatedConcept(new BottomConcept()),
 								new SometimeFuture(new SometimePast(new NegatedConcept(acpt)))));
 					}
+					
+					System.out.println("All AtomicConcepts: "+this.list_ac);
 				});
 				
 			}else if (key.equals("attributes")) {
