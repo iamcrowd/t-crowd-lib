@@ -99,15 +99,23 @@ public class DefaultStrategy{
 			}else if (key.equals("attributes")) {
 				Object value = ervt_json.get(key);
 				JSONArray arr = ervt_json.getJSONArray(key);
+				
+				Concept integer_c = new AtomicConcept("Integer");
 	        
 				arr.iterator().forEachRemaining(element -> {
 					JSONTokener t = new JSONTokener(element.toString());
 					JSONObject jo = new JSONObject(t);
 					
-					Concept acdt = new AtomicConcept(jo.get("datatype").toString());
+					if (!jo.get("datatype").toString().equals("Integer")) {
+						Concept acdt = new AtomicConcept(jo.get("datatype").toString());
+					}
+					
 					Role role_a = new PositiveRole(new AtomicLocalRole(jo.get("name").toString()));
+					
+					this.myTBox.add(new ConceptInclusionAssertion(
+									new QuantifiedRole(role_a.getInverse(), 1),
+									integer_c));
 
-					System.out.println("datatype: "+acdt);
 					System.out.println("role: "+role_a);
 				});
 				
