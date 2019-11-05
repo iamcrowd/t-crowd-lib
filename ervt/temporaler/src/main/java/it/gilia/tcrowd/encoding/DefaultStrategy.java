@@ -55,18 +55,33 @@ public class DefaultStrategy{
 	
 	/**
 	 * 
-	 * @param ervt_json A JSON object representing an ERvt temporal model only 
-	 * containing entities.
+	 * @param ervt_json A JSON object representing an ERvt temporal model 
+	 * containing entities (regular, snapshot and temporal), attributes (regular, snapshot, temporal) and
+	 * links meaning for visual lines between entities, entities and attributes and relationships with roles.
 	 * 
-	 * @apiNote {"entities":[
+	 * @code{json} {"entities":[
         	{"name":"Entity1","timestamp":"snapshot","position":{"x":625,"y":183}},
         	{"name":"Entity2","timestamp":"temporal","position":{"x":328,"y":411}},
         	{"name":"Entity3","timestamp":"","position":{"x":809,"y":432}},
         	{"name":"Entity4","timestamp":"","position":{"x":259,"y":187}},
-        	{"name":"Entity5","timestamp":"","position":{"x":151,"y":412}}]}
-     *   	
-     * Entity1 -> \box_f \box_p Entity1 
-     * \neg \bot -> \Diamond_f \Diamond_p \neg Entity2 
+        	{"name":"Entity5","timestamp":"","position":{"x":151,"y":412}}]
+		"attributes":[
+        	{"name":"A","type":"key","datatype":"integer","timestamp":"snapshot","position":{"x":625,"y":183}},
+        	{"name":"B","type":"normal","datatype":"string","timestamp":"temporal","position":{"x":809,"y":432}},
+        	{"name":"C","type":"normal","datatype":"string","timestamp":"","position":{"x":809,"y":432}}],
+		"links":[
+        	{"name":"AttrA","entity":"Entity1","attribute":"A","type":"attribute"},
+        	{"name":"AttrB","entity":"Entity2","attribute":"B","type":"attribute"},
+        	{"name":"AttrC","relationship":"R1","attribute":"C","type":"attribute_rel"},
+        	{"name":"R","entities":["Entity4","Entity1"],"cardinality":["1..4","3..5"],"roles":["entity4","entity1"],"timestamp":"temporal","type":"relationship"},
+        	{"name":"R1","entities":["Entity2","Entity3"],"cardinality":["0..*","0..*"],"roles":["entity2","entity3"],"timestamp":"snapshot","type":"relationship"},
+        	{"name":"s1","parent":"Entity4","entities":["Entity2","Entity5"],"type":"isa","constraint":["disjoint","covering"]},
+        	{"name":"s2","parent":"Entity1","entities":["Entity3"],"type":"isa","constraint":[]},
+        	{"name":"tex1","entities":["Entity2","Entity3"],"type":"tex"},
+        	{"name":"dev1","entities":["Entity4","Entity5"],"type":"dev"},
+        	{"name":"dexminus1","entities":["Entity1","Entity2"],"type":"dexminus"},
+        	{"name":"pex1","entity":"Entity1","type":"pex"}]}
+        @endcode
 	 */
 	public TBox to_dllitefpx(JSONObject ervt_json) {
 		//https://www.mkyong.com/java/json-simple-example-read-and-write-json/
@@ -103,6 +118,10 @@ public class DefaultStrategy{
 					}
 					
 					System.out.println("All AtomicConcepts: "+this.list_ac);
+					
+					// Integer "magic" concept must be disjoint with each atomic concept
+					
+					
 				});
 				
 			}else if (key.equals("attributes")) {
@@ -175,6 +194,7 @@ public class DefaultStrategy{
 	}
 
 	/**
+	 * ISA links
 	 * 
 	 * @param ervt_isa
 	 * 
@@ -195,10 +215,11 @@ public class DefaultStrategy{
 	}
 
 	/**
+	 * Attribute links
 	 * 
 	 * @param ervt_attr
 	 * 
-	 * @apiNote {"name":"AttrA","entity":["Entity1"],"attribute":["A"],"type":"attribute"}
+	 * @apiNote {"name":"AttrA","entity":"Entity1","attribute":"A","type":"attribute"}
 	 */
 	public void to_dllitefpx_attr(JSONObject ervt_attr) {
 		System.out.println("Starting JSON: "+ervt_attr);
