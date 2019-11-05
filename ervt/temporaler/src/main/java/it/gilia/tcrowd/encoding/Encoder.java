@@ -43,17 +43,17 @@ import it.unibz.inf.tdllitefpx.tbox.TBox;
     	],
 	"links":
     	[
-        	{"name":"AttrA","entity":["Entity1"],"attribute":["A"],"type":"attribute"},
-        	{"name":"AttrB","entity":["Entity2"],"attribute":["B"],"type":"attribute"},
-        	{"name":"AttrC","relationship":["R1"],"attribute":["C"],"type":"attribute_rel"},
+        	{"name":"AttrA","entity":"Entity1","attribute":"A","type":"attribute"},
+        	{"name":"AttrB","entity":"Entity2","attribute":"B","type":"attribute"},
+        	{"name":"AttrC","relationship":"R1","attribute":"C","type":"attribute_rel"},
         	{"name":"R","entities":["Entity4","Entity1"],"cardinality":["1..4","3..5"],"roles":["entity4","entity1"],"timestamp":"temporal","type":"relationship"},
         	{"name":"R1","entities":["Entity2","Entity3"],"cardinality":["0..*","0..*"],"roles":["entity2","entity3"],"timestamp":"snapshot","type":"relationship"},
-        	{"name":"s1","parent":"Entity4","entities":["Entity2","Entity5"],"type":"isa","constraint":["disjoint","covering"],"position":{"x":278,"y":335}},
-        	{"name":"s2","parent":"Entity1","entities":["Entity3"],"type":"isa","constraint":[],"position":{"x":793,"y":333}},
+        	{"name":"s1","parent":"Entity4","entities":["Entity2","Entity5"],"type":"isa","constraint":["disjoint","covering"]},
+        	{"name":"s2","parent":"Entity1","entities":["Entity3"],"type":"isa","constraint":[]},
         	{"name":"tex1","entities":["Entity2","Entity3"],"type":"tex"},
         	{"name":"dev1","entities":["Entity4","Entity5"],"type":"dev"},
         	{"name":"dexminus1","entities":["Entity1","Entity2"],"type":"dexminus"},
-        	{"name":"pex1","entity":["Entity1"],"type":"pex"},        
+        	{"name":"pex1","entity":"Entity1","type":"pex"},        
     	]
 	}
    @endcode

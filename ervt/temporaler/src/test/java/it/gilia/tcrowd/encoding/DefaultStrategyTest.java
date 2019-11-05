@@ -147,7 +147,7 @@ public class DefaultStrategyTest{
 	}
 	
 	@Test
-	@DisplayName("Entities with attributes")
+	@DisplayName("Entities with a key attribute")
 	public void testERvtEntitiesWithAttrToDL() {
 		JSONObject obj = new JSONObject();
         JSONArray links = new JSONArray();
@@ -192,6 +192,21 @@ public class DefaultStrategyTest{
   
         entities.put(jsonEntity);
         attributes.put(jsonAttribute);
+        
+        String jsonLinks = new JSONStringer()
+                .object()
+                .key("name")
+                .value("attrA")
+                .key("entity")
+                .value("entity 1")
+                .key("attribute")
+                .value("attribute 1")
+                .key("type")
+                .value("attribute")
+                .endObject()
+                .toString();
+  
+        links.put(jsonLinks);
 
         obj.put("entities", entities);
         obj.put("attributes", attributes);
@@ -268,13 +283,6 @@ public class DefaultStrategyTest{
                 .value("isa")
                 .key("constraint")
                 .value(new JSONArray())
-                .key("position")
-                .object()
-                .key("x")
-                .value("600")
-                .key("y")
-                .value("800")
-                .endObject()
                 .endObject()
                 .toString();
   

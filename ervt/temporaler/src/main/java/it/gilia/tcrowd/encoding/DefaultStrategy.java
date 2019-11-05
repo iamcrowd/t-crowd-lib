@@ -200,8 +200,19 @@ public class DefaultStrategy{
 	 * 
 	 * @apiNote {"name":"AttrA","entity":["Entity1"],"attribute":["A"],"type":"attribute"}
 	 */
-	public void to_dllitefpx_isa(JSONObject ervt_attr) {
+	public void to_dllitefpx_attr(JSONObject ervt_attr) {
 		System.out.println("Starting JSON: "+ervt_attr);
+		
+		this.myTBox.add(new ConceptInclusionAssertion(
+				new AtomicConcept(ervt_attr.get("entity").toString()),
+				new QuantifiedRole(
+						new PositiveRole(
+								new AtomicLocalRole(ervt_attr.get("attribute").toString())), 1)));
+		this.myTBox.add(new ConceptInclusionAssertion(
+				new AtomicConcept(ervt_attr.get("entity").toString()),
+				new NegatedConcept(new QuantifiedRole(
+						new PositiveRole(
+								new AtomicLocalRole(ervt_attr.get("attribute").toString())), 2))));
 		
 	}
 	
