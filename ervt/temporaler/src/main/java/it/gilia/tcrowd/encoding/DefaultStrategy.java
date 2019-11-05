@@ -117,11 +117,13 @@ public class DefaultStrategy{
 								new SometimeFuture(new SometimePast(new NegatedConcept(acpt)))));
 					}
 					
-					System.out.println("All AtomicConcepts: "+this.list_ac);
-					
-					// Integer "magic" concept must be disjoint with each atomic concept
-					
-					
+				});
+				
+				// Integer "magic" concept must be disjoint with each atomic concept
+				
+				this.list_ac.forEach(atomic -> {
+					this.myTBox.add(new ConceptInclusionAssertion(
+							new AtomicConcept("Integer"), new NegatedConcept(atomic)));
 				});
 				
 			}else if (key.equals("attributes")) {
@@ -144,8 +146,6 @@ public class DefaultStrategy{
 					this.myTBox.add(new ConceptInclusionAssertion(
 									new QuantifiedRole(role_a.getInverse(), 1),
 									integer_c));
-
-					System.out.println("role: "+role_a);
 				});
 				
 			}else if (key.equals("links")) {
@@ -201,11 +201,7 @@ public class DefaultStrategy{
 	 * @apiNote {"name":"s2","parent":"Entity1","entities":["Entity3"],"type":"isa","constraint":[],"position":{"x":793,"y":333}}
 	 */
 	public void to_dllitefpx_isa(JSONObject ervt_isa) {
-		System.out.println("Starting JSON: "+ervt_isa);
-		
 		Concept parent = new AtomicConcept(ervt_isa.get("parent").toString());
-		
-		System.out.println(ervt_isa.get("entities"));
 		
 		ervt_isa.getJSONArray("entities").iterator().forEachRemaining(element -> {
 			Concept child = new AtomicConcept(element.toString());
@@ -222,8 +218,6 @@ public class DefaultStrategy{
 	 * @apiNote {"name":"AttrA","entity":"Entity1","attribute":"A","type":"attribute"}
 	 */
 	public void to_dllitefpx_attr(JSONObject ervt_attr) {
-		System.out.println("Starting JSON: "+ervt_attr);
-		
 		this.myTBox.add(new ConceptInclusionAssertion(
 				new AtomicConcept(ervt_attr.get("entity").toString()),
 				new QuantifiedRole(
