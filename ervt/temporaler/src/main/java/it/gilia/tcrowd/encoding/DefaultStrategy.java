@@ -167,7 +167,7 @@ public class DefaultStrategy{
 
 					break;
 					case "relationship":
-
+						this.to_dllitefpx_rel(jo);
 					break;
 					case "tex":
 
@@ -198,7 +198,8 @@ public class DefaultStrategy{
 	 * 
 	 * @param ervt_isa
 	 * 
-	 * @apiNote {"name":"s2","parent":"Entity1","entities":["Entity3"],"type":"isa","constraint":[],"position":{"x":793,"y":333}}
+	 * @apiNote {"name":"s2","parent":"Entity1","entities":["Entity3"],"type":"isa","constraint":[]}
+	 * @see {"name":"s1","parent":"Entity4","entities":["Entity2","Entity5"],"type":"isa","constraint":["disjoint","covering"]}
 	 */
 	public void to_dllitefpx_isa(JSONObject ervt_isa) {
 		Concept parent = new AtomicConcept(ervt_isa.get("parent").toString());
@@ -207,7 +208,6 @@ public class DefaultStrategy{
 			Concept child = new AtomicConcept(element.toString());
 			this.myTBox.add(new ConceptInclusionAssertion(child, parent));
 		});
-		
 	}
 
 	/**
@@ -230,6 +230,96 @@ public class DefaultStrategy{
 								new AtomicLocalRole(ervt_attr.get("attribute").toString())), 2))));
 		
 	}
-	
+
+	/**
+	 * Binary Relationship links
+	 * 
+	 * @param ervt_rel
+	 * 
+	 * @apiNote {"name":"R","entities":["Entity4","Entity1"],"cardinality":["1..4","3..5"],"roles":["entity4","entity1"],"timestamp":"","type":"relationship"},
+	 * @apiNote {"name":"R","entities":["Entity4","Entity1"],"cardinality":["1..4","3..5"],"roles":["entity4","entity1"],"timestamp":"temporal","type":"relationship"},
+     * @apiNote {"name":"R1","entities":["Entity2","Entity3"],"cardinality":["0..*","0..*"],"roles":["entity2","entity3"],"timestamp":"snapshot","type":"relationship"},
+	 * @apiNote rel origin = entities[0]. rel target = entities[1]
+	 */
+	public void to_dllitefpx_rel(JSONObject ervt_rel) {
+		
+		Concept reification = new AtomicConcept(ervt_rel.get("name").toString());
+		this.myTBox.add(new ConceptInclusionAssertion(
+				new AtomicConcept("Integer"), reification));
+		
+		Concept origin = new AtomicConcept(
+				ervt_rel.getJSONArray("entities").get(0).toString());
+		Role role_origin = new PositiveRole(
+				new AtomicLocalRole(ervt_rel.getJSONArray("roles").get(0).toString()));
+		
+		int card_min_role_o = Character.getNumericValue(ervt_rel.getJSONArray("cardinality")
+				.get(0)
+				.toString()
+				.charAt(0));
+		int card_max_role_o = Character.getNumericValue(ervt_rel.getJSONArray("cardinality")
+				.get(0)
+				.toString()
+				.charAt(3));
+		
+		this.myTBox.add(new ConceptInclusionAssertion(
+				reification, new QuantifiedRole(role_origin, card_min_role_o)));
+		this.myTBox.add(new ConceptInclusionAssertion(
+				new QuantifiedRole(role_origin, card_min_role_o),
+				reification));
+		this.myTBox.add(new ConceptInclusionAssertion(
+				new QuantifiedRole(role_origin, card_max_role_o + 1),
+				new BottomConcept()));
+		this.myTBox.add(new ConceptInclusionAssertion(
+				new QuantifiedRole(role_origin.getInverse(), card_min_role_o),
+				origin));
+		this.myTBox.add(new ConceptInclusionAssertion(
+				origin,
+				new QuantifiedRole(role_origin.getInverse(), card_min_role_o)));
+		this.myTBox.add(new ConceptInclusionAssertion(
+				origin,
+				new NegatedConcept(new QuantifiedRole(role_origin.getInverse(), card_max_role_o + 1))));
+		
+		System.out.println(origin);
+		System.out.println(role_origin);
+		System.out.println(card_min_role_o);
+		System.out.println(card_max_role_o);
+		
+		Concept target = new AtomicConcept(
+				ervt_rel.getJSONArray("entities").get(1).toString());
+		Role role_target = new PositiveRole(
+				new AtomicLocalRole(ervt_rel.getJSONArray("roles").get(1).toString()));
+		
+		int card_min_role_t = Character.getNumericValue(ervt_rel.getJSONArray("cardinality")
+				.get(1)
+				.toString()
+				.charAt(0));
+		int card_max_role_t = Character.getNumericValue(ervt_rel.getJSONArray("cardinality")
+				.get(1)
+				.toString()
+				.charAt(3));
+		
+		this.myTBox.add(new ConceptInclusionAssertion(
+				reification, new QuantifiedRole(role_target, card_min_role_t)));
+		this.myTBox.add(new ConceptInclusionAssertion(
+				new QuantifiedRole(role_target, card_min_role_t),
+				reification));
+		this.myTBox.add(new ConceptInclusionAssertion(
+				new QuantifiedRole(role_target, card_max_role_t + 1),
+				new BottomConcept()));
+		this.myTBox.add(new ConceptInclusionAssertion(
+				new QuantifiedRole(role_target.getInverse(), card_min_role_t),
+				target));
+		this.myTBox.add(new ConceptInclusionAssertion(
+				target,
+				new QuantifiedRole(role_target.getInverse(), card_min_role_t)));
+		this.myTBox.add(new ConceptInclusionAssertion(
+				target,
+				new NegatedConcept(new QuantifiedRole(role_target.getInverse(), card_max_role_t + 1))));
+		
+		System.out.println(target);
+		System.out.println(role_target);
+		System.out.println(card_min_role_t);
+		System.out.println(card_max_role_t);
+	}
 	
 }
