@@ -278,11 +278,7 @@ public class DefaultStrategy{
 		this.myTBox.add(new ConceptInclusionAssertion(
 				origin,
 				new NegatedConcept(new QuantifiedRole(role_origin.getInverse(), card_max_role_o + 1))));
-		
-		System.out.println(origin);
-		System.out.println(role_origin);
-		System.out.println(card_min_role_o);
-		System.out.println(card_max_role_o);
+
 		
 		Concept target = new AtomicConcept(
 				ervt_rel.getJSONArray("entities").get(1).toString());
@@ -316,10 +312,6 @@ public class DefaultStrategy{
 				target,
 				new NegatedConcept(new QuantifiedRole(role_target.getInverse(), card_max_role_t + 1))));
 		
-		System.out.println(target);
-		System.out.println(role_target);
-		System.out.println(card_min_role_t);
-		System.out.println(card_max_role_t);
 	}
 	
 }

@@ -302,7 +302,7 @@ public class DefaultStrategyTest{
 	}
 	
 	@Test
-	@DisplayName("Binary Rel simple with cardinalities less and greater than 0")
+	@DisplayName("Binary Rel simple with cardinalities greater than 0")
 	public void testERvtSimpleReltoDL() {
 		JSONObject obj = new JSONObject();
         JSONArray links = new JSONArray();
