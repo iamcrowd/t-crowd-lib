@@ -177,7 +177,7 @@ public class DefaultStrategy{
 						this.to_dllitefpx_rel(jo);
 					break;
 					case "tex":
-						this.to_dllitefpx_rel(jo);
+						this.to_dllitefpx_tex(jo);
 					break;
 					case "dev":
 
@@ -323,6 +323,24 @@ public class DefaultStrategy{
 				target,
 				new NegatedConcept(new QuantifiedRole(role_target.getInverse(), card_max_role_t + 1))));
 		
+	}
+	
+	/**
+	 * 
+	 * @param ervt_tex JSONObject containing a visual definition of TEX constraints
+	 * 
+	 * @apiNote TEX (Transition EXtension) is a quantitative evolution constraint, meaning how objects evolve 
+	 * between two entities in exactly one time unit.
+	 * @apiNote {"name":"tex1","entities":["Entity2","Entity3"],"type":"tex"}
+	 */
+	public void to_dllitefpx_tex(JSONObject ervt_tex) {
+		Concept entity1 = new AtomicConcept(
+				ervt_tex.getJSONArray("entities").get(0).toString());
+		Concept entity2 = new AtomicConcept(
+				ervt_tex.getJSONArray("entities").get(1).toString());
+		this.myTBox.add(new ConceptInclusionAssertion(
+				entity1,
+				new NextFuture(entity2)));
 	}
 	
 }
