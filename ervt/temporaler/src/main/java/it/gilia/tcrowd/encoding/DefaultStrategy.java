@@ -38,7 +38,11 @@ import it.unibz.inf.tdllitefpx.roles.Role;
 import it.unibz.inf.tdllitefpx.tbox.ConceptInclusionAssertion;
 import it.unibz.inf.tdllitefpx.tbox.TBox;
 
-
+/**
+ * 
+ * @author gab
+ *
+ */
 public class DefaultStrategy{
 	
 	TBox myTBox = new TBox();
@@ -82,6 +86,8 @@ public class DefaultStrategy{
         	{"name":"dexminus1","entities":["Entity1","Entity2"],"type":"dexminus"},
         	{"name":"pex1","entity":"Entity1","type":"pex"}]}
         @endcode
+     *
+	 * @implNote temporal and snapshot attributes missing
 	 */
 	public TBox to_dllitefpx(JSONObject ervt_json) {
 		//https://www.mkyong.com/java/json-simple-example-read-and-write-json/
@@ -200,6 +206,8 @@ public class DefaultStrategy{
 	 * 
 	 * @apiNote {"name":"s2","parent":"Entity1","entities":["Entity3"],"type":"isa","constraint":[]}
 	 * @see {"name":"s1","parent":"Entity4","entities":["Entity2","Entity5"],"type":"isa","constraint":["disjoint","covering"]}
+	 *
+	 * @implNote disjoint and covering constraints missing
 	 */
 	public void to_dllitefpx_isa(JSONObject ervt_isa) {
 		Concept parent = new AtomicConcept(ervt_isa.get("parent").toString());
@@ -240,6 +248,8 @@ public class DefaultStrategy{
 	 * @apiNote {"name":"R","entities":["Entity4","Entity1"],"cardinality":["1..4","3..5"],"roles":["entity4","entity1"],"timestamp":"temporal","type":"relationship"},
      * @apiNote {"name":"R1","entities":["Entity2","Entity3"],"cardinality":["0..*","0..*"],"roles":["entity2","entity3"],"timestamp":"snapshot","type":"relationship"},
 	 * @apiNote rel origin = entities[0]. rel target = entities[1]
+	 * 
+	 * @implNote 0..N cardinalities missing
 	 */
 	public void to_dllitefpx_rel(JSONObject ervt_rel) {
 		
