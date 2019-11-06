@@ -180,7 +180,7 @@ public class DefaultStrategy{
 						this.to_dllitefpx_tex(jo);
 					break;
 					case "dev":
-
+						this.to_dllitefpx_dev(jo);
 					break;
 					case "dexminus":
 
@@ -330,7 +330,7 @@ public class DefaultStrategy{
 	 * @param ervt_tex JSONObject containing a visual definition of TEX constraints
 	 * 
 	 * @apiNote TEX (Transition EXtension) is a quantitative evolution constraint, meaning how objects evolve 
-	 * between two entities in exactly one time unit.
+	 * between two entities in exactly one time unit. Next Feature.
 	 * @apiNote {"name":"tex1","entities":["Entity2","Entity3"],"type":"tex"}
 	 */
 	public void to_dllitefpx_tex(JSONObject ervt_tex) {
@@ -343,4 +343,22 @@ public class DefaultStrategy{
 				new NextFuture(entity2)));
 	}
 	
+	/**
+	 * 
+	 * @param ervt_dev JSONObject containing a visual definition of DEV constraints
+	 * 
+	 * @apiNote DEV (Dynamic EVolution) is a qualitative evolution constraint meaning that every 
+	 * object will eventually become an instance of another entity. Sometime in the future.
+	 * @apiNote {"name":"dev1","entities":["Entity2","Entity3"],"type":"dev"}
+	 */
+	public void to_dllitefpx_dev(JSONObject ervt_dev) {
+		Concept entity1 = new AtomicConcept(
+				ervt_dev.getJSONArray("entities").get(0).toString());
+		Concept entity2 = new AtomicConcept(
+				ervt_dev.getJSONArray("entities").get(1).toString());
+		this.myTBox.add(new ConceptInclusionAssertion(
+				entity1,
+				new SometimeFuture(entity2)));
+		
+	}
 }

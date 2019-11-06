@@ -454,7 +454,7 @@ public class DefaultStrategyTest{
         DefaultStrategy strategy = new DefaultStrategy();
         TBox tbox = strategy.to_dllitefpx(obj);
 
-	    System.out.println("TBox Test 7");
+	    System.out.println("TBox Test 7 TEX");
 	    Iterator<ConceptInclusionAssertion> iterator = tbox.iterator();
 	     while(iterator.hasNext()){
 	       ConceptInclusionAssertion ci = iterator.next();
@@ -463,7 +463,80 @@ public class DefaultStrategyTest{
 	     }
 	}
 	
-	
+	@Test
+	@DisplayName("DEV (Dynamic EVolution)")
+	public void testERvtDEVtoDL() {
+		JSONObject obj = new JSONObject();
+        JSONArray links = new JSONArray();
+        JSONArray attributes = new JSONArray();
+        JSONArray entities = new JSONArray();
+        
+        String jsonEntity = new JSONStringer()
+                .object()
+                .key("name")
+                .value("entity 1")
+                .key("timestamp")
+                .value("")
+                .key("position")
+                .object()
+                .key("x")
+                .value("600")
+                .key("y")
+                .value("800")
+                .endObject()
+                .endObject()
+                .toString();
+        
+        String jsonEntity2 = new JSONStringer()
+                .object()
+                .key("name")
+                .value("entity 2")
+                .key("timestamp")
+                .value("")
+                .key("position")
+                .object()
+                .key("x")
+                .value("600")
+                .key("y")
+                .value("800")
+                .endObject()
+                .endObject()
+                .toString();
+  
+        entities.put(jsonEntity);
+        entities.put(jsonEntity2);
+        
+        String jsonLinks = new JSONStringer()
+                .object()
+                .key("name")
+                .value("dev1")
+                .key("entities")
+                .value(new JSONArray()
+                		.put("entity 1")
+                		.put("entity 2")
+                		)
+                .key("type")
+                .value("dev")
+                .endObject()
+                .toString();
+  
+        links.put(jsonLinks);
+
+        obj.put("entities", entities);
+        obj.put("attributes", attributes);
+        obj.put("links", links);
+        
+        DefaultStrategy strategy = new DefaultStrategy();
+        TBox tbox = strategy.to_dllitefpx(obj);
+
+	    System.out.println("TBox Test 8 DEV");
+	    Iterator<ConceptInclusionAssertion> iterator = tbox.iterator();
+	     while(iterator.hasNext()){
+	       ConceptInclusionAssertion ci = iterator.next();
+	       //assertEquals(actual_s, ci.getLHS()+" -> "+ci.getRHS());
+	       System.out.println(ci.getLHS()+" -> "+ci.getRHS());
+	     }
+	}	
 	
 }
 
