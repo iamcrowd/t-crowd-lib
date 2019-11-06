@@ -53,7 +53,7 @@ import it.unibz.inf.tdllitefpx.tbox.TBox;
         	{"name":"tex1","entities":["Entity2","Entity3"],"type":"tex"},
         	{"name":"dev1","entities":["Entity4","Entity5"],"type":"dev"},
         	{"name":"dexminus1","entities":["Entity1","Entity2"],"type":"dexminus"},
-        	{"name":"pex1","entity":"Entity1","type":"pex"},        
+        	{"name":"pex1","entities":"Entity1","type":"pex"},        
     	]
 	}
    @endcode

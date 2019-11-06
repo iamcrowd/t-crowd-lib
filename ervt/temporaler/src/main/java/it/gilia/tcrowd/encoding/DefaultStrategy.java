@@ -183,10 +183,10 @@ public class DefaultStrategy{
 						this.to_dllitefpx_dev(jo);
 					break;
 					case "dexminus":
-
+						this.to_dllitefpx_dexminus(jo);
 					break;
 					case "pex":
-
+						this.to_dllitefpx_pex(jo);
 					break;
 					default:
 
@@ -361,4 +361,41 @@ public class DefaultStrategy{
 				new SometimeFuture(entity2)));
 		
 	}
+	
+	/**
+	 * 
+	 * @param ervt_dexminus JSONObject containing a visual definition of DEV constraints
+	 * 
+	 * @apiNote DEX (Dynamic EXtension) is a qualitative evolution constraint meaning that every 
+	 * object was once an instance of another entity. Sometime in the past.
+	 * @apiNote {"name":"dev1","entities":["Entity2","Entity3"],"type":"dexminus"}
+	 */
+	public void to_dllitefpx_dexminus(JSONObject ervt_dexminus) {
+		Concept entity1 = new AtomicConcept(
+				ervt_dexminus.getJSONArray("entities").get(0).toString());
+		Concept entity2 = new AtomicConcept(
+				ervt_dexminus.getJSONArray("entities").get(1).toString());
+		this.myTBox.add(new ConceptInclusionAssertion(
+				entity1,
+				new SometimePast(entity2)));
+		
+	}
+	
+	/**
+	 * 
+	 * @param ervt_pex JSONObject containing a visual definition of PEX constraints
+	 * 
+	 * @apiNote PEX (Persistent EXtension) is a qualitative evolution constraint meaning that every 
+	 * object will always be an instance of its entity. Always in the future.
+	 * @apiNote {"name":"dev1","entities":"Entity2","type":"pex"}
+	 */
+	public void to_dllitefpx_pex(JSONObject ervt_pex) {
+		Concept entity = new AtomicConcept(
+				ervt_pex.getJSONArray("entities").get(0).toString());
+		this.myTBox.add(new ConceptInclusionAssertion(
+				entity,
+				new AlwaysFuture(entity)));
+		
+	}
+	
 }
