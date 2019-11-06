@@ -88,6 +88,7 @@ public class DefaultStrategy{
         @endcode
      *
 	 * @implNote temporal and snapshot attributes missing
+	 * @implNote attributes in relationships missing
 	 */
 	public TBox to_dllitefpx(JSONObject ervt_json) {
 		//https://www.mkyong.com/java/json-simple-example-read-and-write-json/
@@ -176,7 +177,7 @@ public class DefaultStrategy{
 						this.to_dllitefpx_rel(jo);
 					break;
 					case "tex":
-
+						this.to_dllitefpx_rel(jo);
 					break;
 					case "dev":
 
