@@ -89,9 +89,13 @@ public class DefaultStrategy{
      *
 	 * @implNote temporal and snapshot attributes missing
 	 * @implNote attributes in relationships missing
+	 * @implNote For attributes:
+	 * (a) Every point with at least q'  R-successors has at least q R-successors, for each q < q'  .
+	 * (b) If R is a rigid role, then every point with at least q R-successors at some moment has at least q R-successors at all moments of time.
+	 * (c) If the domain of a role is not empty, then its range is not empty either.
+	 * @see if attributes are not key so (c) is not needed?
 	 */
 	public TBox to_dllitefpx(JSONObject ervt_json) {
-		//https://www.mkyong.com/java/json-simple-example-read-and-write-json/
 		System.out.println("Starting JSON: "+ervt_json);
 		
 		ervt_json.keys().forEachRemaining(key -> {
@@ -153,6 +157,25 @@ public class DefaultStrategy{
 					this.myTBox.add(new ConceptInclusionAssertion(
 									new QuantifiedRole(role_a.getInverse(), 1),
 									integer_c));
+					
+					if (jo.get("timestamp").toString().equals("snapshot")) {
+						this.myTBox.add(new ConceptInclusionAssertion(
+								new QuantifiedRole(role_a, 2),
+								new QuantifiedRole(role_a, 1)
+						));
+						this.myTBox.add(new ConceptInclusionAssertion(
+								new QuantifiedRole(role_a, 1),
+								new AlwaysPast(new AlwaysFuture(new QuantifiedRole(role_a, 1)))));
+						this.myTBox.add(new ConceptInclusionAssertion(
+								new QuantifiedRole(role_a, 2),
+								new AlwaysPast(new AlwaysFuture(new QuantifiedRole(role_a, 2)))));
+						
+					}else if (jo.get("timestamp").toString().equals("temporal")) {
+						this.myTBox.add(new ConceptInclusionAssertion(
+											new QuantifiedRole(role_a, 2),
+											new QuantifiedRole(role_a, 1)
+									));
+					}
 				});
 				
 			}else if (key.equals("links")) {
