@@ -13,7 +13,20 @@ import it.unibz.inf.tdllitefpx.ExampleTDL;
 import it.unibz.inf.tdllitefpx.output.LatexOutputDocument;
 import it.unibz.inf.tdllitefpx.tbox.TBox;
 
+import it.gilia.tcrowd.encoding.DefaultStrategy;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
+import org.json.JSONStringer;
+import org.json.JSONTokener;
+import org.json.JSONException;
+
 import java.util.Objects;
+
+import java.io.InputStream;
+import java.io.FileInputStream;
+import org.apache.commons.io.IOUtils;
+
 
 @Command(name = "tdllitefpx",
         description = "Encode ERvt model as a KB in TDL DL-Litefpx")
@@ -24,15 +37,26 @@ public class TCrowdTDLLiteFPX extends TCrowdEncodingERvtRelatedCommand {
 
         try {
             Objects.requireNonNull(tModel, "JSON temporal model file must not be null");
+            
+            InputStream is = new FileInputStream(tModel);
+                       
+            if (is == null) {
+                throw new NullPointerException("Cannot find resource file " + tModel);
+            }
+            
+            String jsonTxt = IOUtils.toString(is, "UTF-8");
+            System.out.println(jsonTxt);
 
-    		String fileName="tdl2TDLLiteFPX";
+            JSONObject object = new JSONObject(jsonTxt);
     		
-    		TBox tBox = new ExampleTDL().getTBox();
+    		DefaultStrategy strategy = new DefaultStrategy();
+            TBox tbox = strategy.to_dllitefpx(object);
     		
-    		System.out.println("Saving in "+fileName);
-    		
+    		String fileNameOut="tdl2TDLLiteFPX";
+    		System.out.println("Saving in "+fileNameOut);
     		System.out.println("Original TBox...");
-    		(new LatexOutputDocument(tBox)).toFile(fileName+"_tbox.tex");
+    		
+    		(new LatexOutputDocument(tbox)).toFile(fileNameOut+"_tbox.tex");
 
         } catch (Exception e) {
             System.err.println("Error occurred during encoding: "
