@@ -124,12 +124,6 @@ public class DefaultStrategy extends Strategy{
 				if (arr.length() > 0) {
 				
 					Concept integer_c = this.giveMeAconcept("Integer");
-					
-					// Integer "magic" concept must be disjoint with each atomic concept	
-					this.list_ac.forEach(atomic -> {
-						this.myTBox.add(new ConceptInclusionAssertion(
-								integer_c, new NegatedConcept(atomic)));
-					});
 	        
 					arr.iterator().forEachRemaining(element -> {
 						JSONTokener t = new JSONTokener(element.toString());
@@ -166,6 +160,29 @@ public class DefaultStrategy extends Strategy{
 						}
 					});
 				}
+				
+			}else if (key.equals("relationships")) {
+				Object value = ervt_json.get(key);
+				JSONArray arr = ervt_json.getJSONArray(key);
+	        
+				arr.iterator().forEachRemaining(element -> {
+					JSONTokener t = new JSONTokener(element.toString());
+					JSONObject jo = new JSONObject(t);
+					
+					Concept acpt = this.giveMeAconcept(jo.get("name").toString()); 
+					
+					if (jo.get("timestamp").toString().equals("snapshot")) {
+						this.myTBox.add(new ConceptInclusionAssertion(
+								acpt,
+								new AlwaysFuture(new AlwaysPast(acpt))));
+		        	
+					}else if (jo.get("timestamp").toString().equals("temporal")) {
+						this.myTBox.add(new ConceptInclusionAssertion(
+								new NegatedConcept(new BottomConcept()),
+								new SometimeFuture(new SometimePast(new NegatedConcept(acpt)))));
+					}
+					
+				});
 				
 			}else if (key.equals("links")) {
 				Object value = ervt_json.get(key);
@@ -208,8 +225,24 @@ public class DefaultStrategy extends Strategy{
 			}
 	    });
 		
+		this.tBoxClousure();
 		System.out.println("TBox stats..."+this.getTBox().getStats());
 		return this.getTBox();
+	}
+	
+	/**
+	 * tBoxClousure asserts background axioms in order to define the disjointness of the "Integer" concept with any other
+	 * concept in the current KB.
+	 */
+	public void tBoxClousure() {
+	// Integer "magic" concept must be disjoint with each atomic concept
+		Concept integer_c = this.giveMeAconcept("Integer");
+		this.list_ac.forEach(atomic -> {
+			if (!atomic.toString().equals("Integer")) {
+				this.myTBox.add(new ConceptInclusionAssertion(
+						integer_c, new NegatedConcept(atomic)));
+			}
+		});
 	}
 
 	/**
@@ -267,9 +300,6 @@ public class DefaultStrategy extends Strategy{
 	public void to_dllitefpx_rel(JSONObject ervt_rel) {
 		
 		Concept reification = this.giveMeAconcept(ervt_rel.get("name").toString());
-		
-		this.myTBox.add(new ConceptInclusionAssertion(
-				this.giveMeAconcept("Integer"), reification));
 		
 		Concept origin = this.giveMeAconcept(
 				ervt_rel.getJSONArray("entities").get(0).toString());
