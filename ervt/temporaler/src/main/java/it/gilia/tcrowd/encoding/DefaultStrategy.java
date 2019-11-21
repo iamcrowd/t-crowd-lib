@@ -43,18 +43,10 @@ import it.unibz.inf.tdllitefpx.tbox.TBox;
  * @author gab
  *
  */
-public class DefaultStrategy{
-	
-	TBox myTBox = new TBox();
-	List<Concept> list_ac = new ArrayList<Concept>();
-	List<Role> list_role = new ArrayList<Role>();
+public class DefaultStrategy extends Strategy{
 	
 	public DefaultStrategy() {
-		
-	}
-	
-	public TBox getTBox() {
-		return myTBox;
+		super();
 	}
 	
 	/**
@@ -73,6 +65,7 @@ public class DefaultStrategy{
         	{"name":"A","type":"key","datatype":"integer","timestamp":"snapshot","position":{"x":625,"y":183}},
         	{"name":"B","type":"normal","datatype":"string","timestamp":"temporal","position":{"x":809,"y":432}},
         	{"name":"C","type":"normal","datatype":"string","timestamp":"","position":{"x":809,"y":432}}],
+        "relationships":[],
 		"links":[
         	{"name":"AttrA","entity":"Entity1","attribute":"A","type":"attribute"},
         	{"name":"AttrB","entity":"Entity2","attribute":"B","type":"attribute"},
@@ -107,22 +100,15 @@ public class DefaultStrategy{
 				arr.iterator().forEachRemaining(element -> {
 					JSONTokener t = new JSONTokener(element.toString());
 					JSONObject jo = new JSONObject(t);
-	        	
-					if (jo.get("timestamp").toString().equals("")){
-						Concept acpt = new AtomicConcept(jo.get("name").toString());
-						this.list_ac.add(acpt);
-						this.myTBox.add(new ConceptInclusionAssertion(acpt, new AtomicConcept("Top")));
-		        	
-					}else if (jo.get("timestamp").toString().equals("snapshot")) {
-						Concept acpt = new AtomicConcept(jo.get("name").toString());
-						this.list_ac.add(acpt);
+					
+					Concept acpt = this.giveMeAconcept(jo.get("name").toString()); 
+					
+					if (jo.get("timestamp").toString().equals("snapshot")) {
 						this.myTBox.add(new ConceptInclusionAssertion(
 								acpt,
 								new AlwaysFuture(new AlwaysPast(acpt))));
 		        	
 					}else if (jo.get("timestamp").toString().equals("temporal")) {
-						Concept acpt = new AtomicConcept(jo.get("name").toString());
-						this.list_ac.add(acpt);
 						this.myTBox.add(new ConceptInclusionAssertion(
 								new NegatedConcept(new BottomConcept()),
 								new SometimeFuture(new SometimePast(new NegatedConcept(acpt)))));
@@ -137,7 +123,7 @@ public class DefaultStrategy{
 				
 				if (arr.length() > 0) {
 				
-					Concept integer_c = new AtomicConcept("Integer");
+					Concept integer_c = this.giveMeAconcept("Integer");
 					
 					// Integer "magic" concept must be disjoint with each atomic concept	
 					this.list_ac.forEach(atomic -> {
@@ -150,7 +136,7 @@ public class DefaultStrategy{
 						JSONObject jo = new JSONObject(t);
 					
 						if (!jo.get("datatype").toString().equals("Integer")) {
-							Concept acdt = new AtomicConcept(jo.get("datatype").toString());
+							Concept acdt = this.giveMeAconcept(jo.get("datatype").toString());
 						}
 					
 						Role role_a = new PositiveRole(new AtomicLocalRole(jo.get("name").toString()));
@@ -237,10 +223,10 @@ public class DefaultStrategy{
 	 * @implNote disjoint and covering constraints missing
 	 */
 	public void to_dllitefpx_isa(JSONObject ervt_isa) {
-		Concept parent = new AtomicConcept(ervt_isa.get("parent").toString());
+		Concept parent = this.giveMeAconcept(ervt_isa.get("parent").toString());
 		
 		ervt_isa.getJSONArray("entities").iterator().forEachRemaining(element -> {
-			Concept child = new AtomicConcept(element.toString());
+			Concept child = this.giveMeAconcept(element.toString());
 			this.myTBox.add(new ConceptInclusionAssertion(child, parent));
 		});
 	}
@@ -254,12 +240,12 @@ public class DefaultStrategy{
 	 */
 	public void to_dllitefpx_attr(JSONObject ervt_attr) {
 		this.myTBox.add(new ConceptInclusionAssertion(
-				new AtomicConcept(ervt_attr.get("entity").toString()),
+				this.giveMeAconcept(ervt_attr.get("entity").toString()),
 				new QuantifiedRole(
 						new PositiveRole(
 								new AtomicLocalRole(ervt_attr.get("attribute").toString())), 1)));
 		this.myTBox.add(new ConceptInclusionAssertion(
-				new AtomicConcept(ervt_attr.get("entity").toString()),
+				this.giveMeAconcept(ervt_attr.get("entity").toString()),
 				new NegatedConcept(new QuantifiedRole(
 						new PositiveRole(
 								new AtomicLocalRole(ervt_attr.get("attribute").toString())), 2))));
@@ -271,20 +257,21 @@ public class DefaultStrategy{
 	 * 
 	 * @param ervt_rel
 	 * 
-	 * @apiNote {"name":"R","entities":["Entity4","Entity1"],"cardinality":["1..4","3..5"],"roles":["entity4","entity1"],"timestamp":"","type":"relationship"},
-	 * @apiNote {"name":"R","entities":["Entity4","Entity1"],"cardinality":["1..4","3..5"],"roles":["entity4","entity1"],"timestamp":"temporal","type":"relationship"},
-     * @apiNote {"name":"R1","entities":["Entity2","Entity3"],"cardinality":["0..*","0..*"],"roles":["entity2","entity3"],"timestamp":"snapshot","type":"relationship"},
+	 * @apiNote {"name":"R","entities":["Entity4","Entity1"],"cardinality":["1..4","3..5"],"roles":["entity4","entity1"],"type":"relationship"},
+	 * @apiNote {"name":"R","entities":["Entity4","Entity1"],"cardinality":["1..4","3..5"],"roles":["entity4","entity1"],"type":"relationship"},
+     * @apiNote {"name":"R1","entities":["Entity2","Entity3"],"cardinality":["0..*","0..*"],"roles":["entity2","entity3"],"type":"relationship"},
 	 * @apiNote rel origin = entities[0]. rel target = entities[1]
 	 * 
 	 * @implNote 0..N cardinalities missing
 	 */
 	public void to_dllitefpx_rel(JSONObject ervt_rel) {
 		
-		Concept reification = new AtomicConcept(ervt_rel.get("name").toString());
-		this.myTBox.add(new ConceptInclusionAssertion(
-				new AtomicConcept("Integer"), reification));
+		Concept reification = this.giveMeAconcept(ervt_rel.get("name").toString());
 		
-		Concept origin = new AtomicConcept(
+		this.myTBox.add(new ConceptInclusionAssertion(
+				this.giveMeAconcept("Integer"), reification));
+		
+		Concept origin = this.giveMeAconcept(
 				ervt_rel.getJSONArray("entities").get(0).toString());
 		Role role_origin = new PositiveRole(
 				new AtomicLocalRole(ervt_rel.getJSONArray("roles").get(0).toString()));
@@ -317,7 +304,7 @@ public class DefaultStrategy{
 				new NegatedConcept(new QuantifiedRole(role_origin.getInverse(), card_max_role_o + 1))));
 
 		
-		Concept target = new AtomicConcept(
+		Concept target = this.giveMeAconcept(
 				ervt_rel.getJSONArray("entities").get(1).toString());
 		Role role_target = new PositiveRole(
 				new AtomicLocalRole(ervt_rel.getJSONArray("roles").get(1).toString()));
@@ -360,9 +347,9 @@ public class DefaultStrategy{
 	 * @apiNote {"name":"tex1","entities":["Entity2","Entity3"],"type":"tex"}
 	 */
 	public void to_dllitefpx_tex(JSONObject ervt_tex) {
-		Concept entity1 = new AtomicConcept(
+		Concept entity1 = this.giveMeAconcept(
 				ervt_tex.getJSONArray("entities").get(0).toString());
-		Concept entity2 = new AtomicConcept(
+		Concept entity2 = this.giveMeAconcept(
 				ervt_tex.getJSONArray("entities").get(1).toString());
 		this.myTBox.add(new ConceptInclusionAssertion(
 				entity1,
@@ -378,9 +365,9 @@ public class DefaultStrategy{
 	 * @apiNote {"name":"dev1","entities":["Entity2","Entity3"],"type":"dev"}
 	 */
 	public void to_dllitefpx_dev(JSONObject ervt_dev) {
-		Concept entity1 = new AtomicConcept(
+		Concept entity1 = this.giveMeAconcept(
 				ervt_dev.getJSONArray("entities").get(0).toString());
-		Concept entity2 = new AtomicConcept(
+		Concept entity2 = this.giveMeAconcept(
 				ervt_dev.getJSONArray("entities").get(1).toString());
 		this.myTBox.add(new ConceptInclusionAssertion(
 				entity1,
@@ -397,9 +384,9 @@ public class DefaultStrategy{
 	 * @apiNote {"name":"dev1","entities":["Entity2","Entity3"],"type":"dexminus"}
 	 */
 	public void to_dllitefpx_dexminus(JSONObject ervt_dexminus) {
-		Concept entity1 = new AtomicConcept(
+		Concept entity1 = this.giveMeAconcept(
 				ervt_dexminus.getJSONArray("entities").get(0).toString());
-		Concept entity2 = new AtomicConcept(
+		Concept entity2 = this.giveMeAconcept(
 				ervt_dexminus.getJSONArray("entities").get(1).toString());
 		this.myTBox.add(new ConceptInclusionAssertion(
 				entity1,
@@ -416,7 +403,7 @@ public class DefaultStrategy{
 	 * @apiNote {"name":"dev1","entities":"Entity2","type":"pex"}
 	 */
 	public void to_dllitefpx_pex(JSONObject ervt_pex) {
-		Concept entity = new AtomicConcept(
+		Concept entity = this.giveMeAconcept(
 				ervt_pex.getJSONArray("entities").get(0).toString());
 		this.myTBox.add(new ConceptInclusionAssertion(
 				entity,
