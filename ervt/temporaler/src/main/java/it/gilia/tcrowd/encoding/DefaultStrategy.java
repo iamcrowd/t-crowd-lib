@@ -130,53 +130,56 @@ public class DefaultStrategy{
 					
 				});
 				
-				// Integer "magic" concept must be disjoint with each atomic concept
-				
-				this.list_ac.forEach(atomic -> {
-					this.myTBox.add(new ConceptInclusionAssertion(
-							new AtomicConcept("Integer"), new NegatedConcept(atomic)));
-				});
 				
 			}else if (key.equals("attributes")) {
 				Object value = ervt_json.get(key);
 				JSONArray arr = ervt_json.getJSONArray(key);
 				
-				Concept integer_c = new AtomicConcept("Integer");
+				if (arr.length() > 0) {
+				
+					Concept integer_c = new AtomicConcept("Integer");
+					
+					// Integer "magic" concept must be disjoint with each atomic concept	
+					this.list_ac.forEach(atomic -> {
+						this.myTBox.add(new ConceptInclusionAssertion(
+								integer_c, new NegatedConcept(atomic)));
+					});
 	        
-				arr.iterator().forEachRemaining(element -> {
-					JSONTokener t = new JSONTokener(element.toString());
-					JSONObject jo = new JSONObject(t);
+					arr.iterator().forEachRemaining(element -> {
+						JSONTokener t = new JSONTokener(element.toString());
+						JSONObject jo = new JSONObject(t);
 					
-					if (!jo.get("datatype").toString().equals("Integer")) {
-						Concept acdt = new AtomicConcept(jo.get("datatype").toString());
-					}
+						if (!jo.get("datatype").toString().equals("Integer")) {
+							Concept acdt = new AtomicConcept(jo.get("datatype").toString());
+						}
 					
-					Role role_a = new PositiveRole(new AtomicLocalRole(jo.get("name").toString()));
-					this.list_role.add(role_a);
+						Role role_a = new PositiveRole(new AtomicLocalRole(jo.get("name").toString()));
+						this.list_role.add(role_a);
 					
-					this.myTBox.add(new ConceptInclusionAssertion(
+						this.myTBox.add(new ConceptInclusionAssertion(
 									new QuantifiedRole(role_a.getInverse(), 1),
 									integer_c));
 					
-					if (jo.get("timestamp").toString().equals("snapshot")) {
-						this.myTBox.add(new ConceptInclusionAssertion(
-								new QuantifiedRole(role_a, 2),
-								new QuantifiedRole(role_a, 1)
-						));
-						this.myTBox.add(new ConceptInclusionAssertion(
+						if (jo.get("timestamp").toString().equals("snapshot")) {
+							this.myTBox.add(new ConceptInclusionAssertion(
+									new QuantifiedRole(role_a, 2),
+									new QuantifiedRole(role_a, 1)
+									));
+							this.myTBox.add(new ConceptInclusionAssertion(
 								new QuantifiedRole(role_a, 1),
 								new AlwaysPast(new AlwaysFuture(new QuantifiedRole(role_a, 1)))));
-						this.myTBox.add(new ConceptInclusionAssertion(
+							this.myTBox.add(new ConceptInclusionAssertion(
 								new QuantifiedRole(role_a, 2),
 								new AlwaysPast(new AlwaysFuture(new QuantifiedRole(role_a, 2)))));
 						
-					}else if (jo.get("timestamp").toString().equals("temporal")) {
-						this.myTBox.add(new ConceptInclusionAssertion(
+						}else if (jo.get("timestamp").toString().equals("temporal")) {
+							this.myTBox.add(new ConceptInclusionAssertion(
 											new QuantifiedRole(role_a, 2),
 											new QuantifiedRole(role_a, 1)
 									));
-					}
-				});
+						}
+					});
+				}
 				
 			}else if (key.equals("links")) {
 				Object value = ervt_json.get(key);
