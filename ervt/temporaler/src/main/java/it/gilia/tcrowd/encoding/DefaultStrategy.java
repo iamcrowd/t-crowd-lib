@@ -211,7 +211,7 @@ public class DefaultStrategy extends Strategy{
 					case "dev":
 						this.to_dllitefpx_dev(jo);
 					break;
-					case "dexminus":
+					case "dex-":
 						this.to_dllitefpx_dexminus(jo);
 					break;
 					case "pex":
@@ -232,17 +232,20 @@ public class DefaultStrategy extends Strategy{
 	
 	/**
 	 * tBoxClousure asserts background axioms in order to define the disjointness of the "Integer" concept with any other
-	 * concept in the current KB.
+	 * concept in the current KB. This is done if "Integer" previously asserted in the KB. 
+	 * Otherwise, the clousure does not make sense.
 	 */
 	public void tBoxClousure() {
 	// Integer "magic" concept must be disjoint with each atomic concept
-		Concept integer_c = this.giveMeAconcept("Integer");
-		this.list_ac.forEach(atomic -> {
-			if (!atomic.toString().equals("Integer")) {
-				this.myTBox.add(new ConceptInclusionAssertion(
-						integer_c, new NegatedConcept(atomic)));
-			}
-		});
+		if (this.getConceptByNameIndex("Integer") != -1) {
+			Concept integer_c = this.giveMeAconcept("Integer");
+			this.list_ac.forEach(atomic -> {
+				if (!atomic.toString().equals("Integer")) {
+					this.myTBox.add(new ConceptInclusionAssertion(
+							integer_c, new NegatedConcept(atomic)));
+				}
+			});
+		}
 	}
 
 	/**
@@ -411,7 +414,7 @@ public class DefaultStrategy extends Strategy{
 	 * 
 	 * @apiNote DEX (Dynamic EXtension) is a qualitative evolution constraint meaning that every 
 	 * object was once an instance of another entity. Sometime in the past.
-	 * @apiNote {"name":"dev1","entities":["Entity2","Entity3"],"type":"dexminus"}
+	 * @apiNote {"name":"dev1","entities":["Entity2","Entity3"],"type":"dex-"}
 	 */
 	public void to_dllitefpx_dexminus(JSONObject ervt_dexminus) {
 		Concept entity1 = this.giveMeAconcept(

@@ -874,7 +874,7 @@ public class DefaultStrategyTest{
                 		.put("entity 2")
                 		)
                 .key("type")
-                .value("dexminus")
+                .value("dex-")
                 .endObject()
                 .toString();
   
