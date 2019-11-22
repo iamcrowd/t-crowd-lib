@@ -14,6 +14,7 @@ import it.unibz.inf.tdllitefpx.output.LatexOutputDocument;
 import it.unibz.inf.tdllitefpx.tbox.TBox;
 
 import it.gilia.tcrowd.encoding.DefaultStrategy;
+import it.gilia.tcrowd.utils.*;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -44,6 +45,10 @@ public class TCrowdTDLLiteFPX extends TCrowdEncodingERvtRelatedCommand {
                 throw new NullPointerException("Cannot find resource file " + tModel);
             }
             
+            PathsManager pathMan = new PathsManager();
+            String pathToTemp = pathMan.getPathToTmp(tModel);
+    		String fileNameOut = pathToTemp+"tcrowdOut";
+            
             String jsonTxt = IOUtils.toString(is, "UTF-8");
             System.out.println(jsonTxt);
 
@@ -52,7 +57,6 @@ public class TCrowdTDLLiteFPX extends TCrowdEncodingERvtRelatedCommand {
     		DefaultStrategy strategy = new DefaultStrategy();
             TBox tbox = strategy.to_dllitefpx(object);
     		
-    		String fileNameOut="tdl2TDLLiteFPX";
     		System.out.println("Saving in "+fileNameOut);
     		System.out.println("Original TBox...");
     		

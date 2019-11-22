@@ -14,6 +14,7 @@ import it.unibz.inf.tdllitefpx.output.LatexOutputDocument;
 import it.unibz.inf.tdllitefpx.tbox.TBox;
 
 import it.gilia.tcrowd.encoding.DefaultStrategy;
+import it.gilia.tcrowd.utils.*;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -36,14 +37,16 @@ public class TCrowdNuSMV extends TCrowdEncodingERvtRelatedCommand {
 
         try {
             Objects.requireNonNull(tModel, "JSON temporal model file must not be null");
-
-    		String fileNameOut="tcrowdOut";
     		
             InputStream is = new FileInputStream(tModel);
             
             if (is == null) {
                 throw new NullPointerException("Cannot find resource file " + tModel);
             }
+            
+            PathsManager pathMan = new PathsManager();
+            String pathToTemp = pathMan.getPathToTmp(tModel);
+    		String fileNameOut = pathToTemp+"tcrowdOut";
             
             String jsonTxt = IOUtils.toString(is, "UTF-8");
             System.out.println(jsonTxt);
