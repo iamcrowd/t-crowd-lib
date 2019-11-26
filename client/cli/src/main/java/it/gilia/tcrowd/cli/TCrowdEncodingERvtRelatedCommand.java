@@ -13,13 +13,13 @@ abstract class TCrowdEncodingERvtRelatedCommand implements TCrowdCommand {
             description = "JSON file input containing a temporal model")
     @BashCompletion(behaviour = CompletionBehaviour.FILENAMES)
     String tModel;
-
+/**
     @Option(type = OptionType.COMMAND, name = {"-q", "--query"}, title = "query file",
             description = "Plain Query file (.txt)")
     @Required
     @BashCompletion(behaviour = CompletionBehaviour.FILENAMES)
     String queryF;
-/**
+
     @Option(type = OptionType.COMMAND, name = {"-p", "--properties"}, title = "properties file",
             description = "Properties file")
     @Required

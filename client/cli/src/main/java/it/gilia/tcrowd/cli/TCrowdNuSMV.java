@@ -3,6 +3,11 @@ package it.gilia.tcrowd.cli;
 import com.github.rvesse.airline.annotations.Command;
 //import com.github.rvesse.airline.annotations.Option;
 //import com.github.rvesse.airline.annotations.OptionType;
+import com.github.rvesse.airline.annotations.Option;
+import com.github.rvesse.airline.annotations.OptionType;
+import com.github.rvesse.airline.annotations.help.BashCompletion;
+import com.github.rvesse.airline.annotations.restrictions.Required;
+import com.github.rvesse.airline.help.cli.bash.CompletionBehaviour;
 
 import it.unibz.inf.qtl1.NaturalTranslator;
 import it.unibz.inf.qtl1.formulae.Formula;
@@ -41,7 +46,14 @@ import java.io.IOException;
         description = "Encode ERvt model into LTL formulae and return a LTL file together with a NuSMV file including"
         		+ "the query given as an input file. If file is empty, TBox is to be checked for satisifiability."
         		+ "Otherwise, query must be a concept to be checked.")
+
 public class TCrowdNuSMV extends TCrowdEncodingERvtRelatedCommand {
+	
+	@Option(type = OptionType.COMMAND, name = {"-q", "--query"}, title = "query file",
+			description = "Plain Query file (.txt)")
+			@Required
+			@BashCompletion(behaviour = CompletionBehaviour.FILENAMES)
+			String queryF;
 
     @Override
     public void run() {
