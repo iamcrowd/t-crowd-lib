@@ -260,22 +260,6 @@ public class DefaultStrategy extends Strategy{
 	 * @param ervt_attr
 	 * 
 	 * @apiNote {"name":"AttrA","entity":"Entity1","attribute":"A","type":"attribute"}
-	 * @implNote
-	 * 							this.myTBox.add(new ConceptInclusionAssertion(
-									new QuantifiedRole(role_a, 2),
-									new QuantifiedRole(role_a, 1)
-									));
-							this.myTBox.add(new ConceptInclusionAssertion(
-								new QuantifiedRole(role_a, 1),
-								new AlwaysPast(new AlwaysFuture(new QuantifiedRole(role_a, 1)))));
-							this.myTBox.add(new ConceptInclusionAssertion(
-								new QuantifiedRole(role_a, 2),
-								new AlwaysPast(new AlwaysFuture(new QuantifiedRole(role_a, 2)))));
-								
-						    this.myTBox.add(new ConceptInclusionAssertion(
-											new QuantifiedRole(role_a, 2),
-											new QuantifiedRole(role_a, 1)
-									));
 	 */
 	public void to_dllitefpx_attr(JSONObject ervt_attr) {
 		List<PositiveRole> listRR = this.getRigidRoleList();
@@ -322,8 +306,8 @@ public class DefaultStrategy extends Strategy{
 		
 		Concept origin = this.giveMeAconcept(
 				ervt_rel.getJSONArray("entities").get(0).toString());
-		Role role_origin = new PositiveRole(
-				new AtomicLocalRole(ervt_rel.getJSONArray("roles").get(0).toString()));
+		
+		Role role_origin = this.giveMeArole(ervt_rel.getJSONArray("roles").get(0).toString());		
 		
 		int card_min_role_o = Character.getNumericValue(ervt_rel.getJSONArray("cardinality")
 				.get(0)
@@ -355,8 +339,8 @@ public class DefaultStrategy extends Strategy{
 		
 		Concept target = this.giveMeAconcept(
 				ervt_rel.getJSONArray("entities").get(1).toString());
-		Role role_target = new PositiveRole(
-				new AtomicLocalRole(ervt_rel.getJSONArray("roles").get(1).toString()));
+		
+		Role role_target = this.giveMeArole(ervt_rel.getJSONArray("roles").get(1).toString());
 		
 		int card_min_role_t = Character.getNumericValue(ervt_rel.getJSONArray("cardinality")
 				.get(1)
