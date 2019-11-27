@@ -35,6 +35,7 @@ import it.unibz.inf.tdllitefpx.roles.AtomicLocalRole;
 import it.unibz.inf.tdllitefpx.roles.AtomicRigidRole;
 import it.unibz.inf.tdllitefpx.roles.PositiveRole;
 import it.unibz.inf.tdllitefpx.roles.Role;
+import it.unibz.inf.tdllitefpx.roles.AtomicRole;
 import it.unibz.inf.tdllitefpx.tbox.ConceptInclusionAssertion;
 import it.unibz.inf.tdllitefpx.tbox.TBox;
 
@@ -47,7 +48,9 @@ public class Strategy{
 	
 	TBox myTBox = new TBox();
 	List<Concept> list_ac = new ArrayList<Concept>();
-	List<Role> list_role = new ArrayList<Role>();
+	List<Concept> list_domains = new ArrayList<Concept>();
+	List<PositiveRole> list_role = new ArrayList<PositiveRole>();
+	List<PositiveRole> list_rigidRole = new ArrayList<PositiveRole>();
 	
 	public Strategy() {
 		
@@ -57,18 +60,52 @@ public class Strategy{
 		return myTBox;
 	}
 	
+	/**
+	 * 
+	 * @return a list of atomic concepts
+	 */
 	public List<Concept> getConceptList(){
 		return this.list_ac;
 	}
 	
-	public List<Role> getRoleList(){
+	/**
+	 * 
+	 * @return a list of atomic domain concepts (Integer, String, Boolean, Date)
+	 */
+	public List<Concept> getConceptDomainList(){
+		return this.list_domains;
+	}
+	
+	/**
+	 * 
+	 * @return a list of atomic local roles
+	 */
+	public List<PositiveRole> getRoleList(){
 		return this.list_role;
 	}
 	
+	/**
+	 * 
+	 * @return a list of atomic rigid roles
+	 */
+	public List<PositiveRole> getRigidRoleList(){
+		return this.list_rigidRole;
+	}
+	
+	/**
+	 * 
+	 * @param ac an object representing an atomic concept
+	 * @return true if the atomic concept given as parameter has been already asserted in the current KB
+	 */
 	public boolean existsConcept(Concept ac) {
 		return this.getConceptList().contains(ac);
 	}
 	
+	/**
+	 * 
+	 * @param nameAc an atomic concept name
+	 * @return the concept list index if nameAc is the name of an existing atomic concept. Otherwise, it returns -1.
+	 */
 	public int getConceptByNameIndex(String nameAc) {
 		List<Concept> list = this.getConceptList();
 		int i = 0;
@@ -82,6 +119,11 @@ public class Strategy{
 		return index;
 	}
 	
+	/**
+	 * 
+	 * @param name a String atomic concept name
+	 * @return a new object representing an atomic concept with name.
+	 */
 	public Concept giveMeAconcept(String name) {
 		int exists = this.getConceptByNameIndex(name);
 		if (exists != -1) {
@@ -94,17 +136,138 @@ public class Strategy{
 		}
 	}
 	
+	/**
+	 * 
+	 * @param ac an object representing an atomic domain concept
+	 * @return true if the atomic domain concept given as parameter has been already asserted in the current KB
+	 */
+	public boolean existsConceptDomain(Concept ac) {
+		return this.getConceptDomainList().contains(ac);
+	}
+	
+	/**
+	 * 
+	 * @param nameAc an atomic domain concept name
+	 * @return the domain concept list index if nameAc is the name of an existing concept. Otherwise, it returns -1.
+	 */
+	public int getConceptDomainByNameIndex(String nameAc) {
+		List<Concept> list = this.getConceptDomainList();
+		int i = 0;
+		int index = -1;
+		while (i < list.size()) {
+			if (nameAc.equals(list.get(i).toString())) {
+				index = i;
+			}
+			i++;
+		}
+		return index;
+	}
+	
+	/**
+	 * 
+	 * @param name a String atomic domain concept name
+	 * @return a new object representing an atomic domain concept with name.
+	 */
+	public Concept giveMeAdomainConcept(String name) {
+		int exists = this.getConceptDomainByNameIndex(name);
+		if (exists != -1) {
+			return this.getConceptDomainList().get(exists);
+		}
+		else {
+			Concept acpt = new AtomicConcept(name);
+			this.list_domains.add(acpt);
+			return acpt;
+		}
+	}
+	
+	/**
+	 * 
+	 * @param ro an object representing an atomic local role
+	 * @return true if the atomic local role given as parameter has been already asserted in the current KB
+	 */
 	public boolean existsRole(Role ro) {
 		return this.getRoleList().contains(ro);
 	}
 	
-/*	public Role getRoleByName(String nameRo) {
-		this.getRoleList().iterator().forEachRemaining(element -> {
-			if (nameRo.equals(element.toString())) {
-				return element;
+	/**
+	 * 
+	 * @param nameRo an atomic local role name
+	 * @return the local role list index if nameRo is the name of an existing role. Otherwise, it returns -1.
+	 */
+	public int getRoleByNameIndex(String nameRo) {
+		List<PositiveRole> list = this.getRoleList();
+		int i = 0;
+		int index = -1;
+		while (i < list.size()) {
+			if (nameRo.equals(list.get(i).toString())) {
+				index = i;
 			}
-		});		
-	}*/
+			i++;
+		}
+		return index;
+	}
+	
+	/**
+	 * 
+	 * @param name a String atomic local role name
+	 * @return a new object representing an atomic local role with name.
+	 */
+	public PositiveRole giveMeArole(String name) {
+		int exists = this.getRoleByNameIndex(name);
+		if (exists != -1) {
+			return this.getRoleList().get(exists);
+		}
+		else {
+			PositiveRole ro = new PositiveRole(new AtomicLocalRole(name));
+			this.list_role.add(ro);
+			return ro;
+		}
+	}
+	
+	/**
+	 * 
+	 * @param rRo an object representing an atomic rigid role
+	 * @return true if the atomic rigid role given as parameter has been already asserted in the current KB
+	 */
+	public boolean existsRigidRole(Role rRo) {
+		return this.getRigidRoleList().contains(rRo);
+	}
+	
+	/**
+	 * 
+	 * @param nameRro an atomic rigid role name
+	 * @return the rigid role list index if nameRro is the name of an existing role. Otherwise, it returns -1.
+	 */
+	public int getRigidRoleByNameIndex(String nameRro) {
+		List<PositiveRole> list = this.getRigidRoleList();
+		int i = 0;
+		int index = -1;
+		while (i < list.size()) {
+			if (nameRro.equals(list.get(i).toString())) {
+				index = i;
+			}
+			i++;
+		}
+		return index;
+	}
+	
+	/**
+	 * 
+	 * @param name a String atomic rigid role name
+	 * @return a new object representing an atomic rigid role with name.
+	 */
+	public PositiveRole giveMeArigidRole(String name) {
+		int exists = this.getRigidRoleByNameIndex(name);
+		if (exists != -1) {
+			return this.getRigidRoleList().get(exists);
+		}
+		else {
+			PositiveRole rRo = new PositiveRole(new AtomicRigidRole(name));
+			this.list_rigidRole.add(rRo);
+			return rRo;
+		}
+	}
+
 	
 
 }

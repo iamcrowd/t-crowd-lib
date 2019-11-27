@@ -35,6 +35,7 @@ import it.unibz.inf.tdllitefpx.roles.AtomicLocalRole;
 import it.unibz.inf.tdllitefpx.roles.AtomicRigidRole;
 import it.unibz.inf.tdllitefpx.roles.PositiveRole;
 import it.unibz.inf.tdllitefpx.roles.Role;
+import it.unibz.inf.tdllitefpx.roles.AtomicRole;
 import it.unibz.inf.tdllitefpx.tbox.ConceptInclusionAssertion;
 import it.unibz.inf.tdllitefpx.tbox.TBox;
 
@@ -87,6 +88,7 @@ public class DefaultStrategy extends Strategy{
 	 * (b) If R is a rigid role, then every point with at least q R-successors at some moment has at least q R-successors at all moments of time.
 	 * (c) If the domain of a role is not empty, then its range is not empty either.
 	 * @see if attributes are not key so (c) is not needed?
+	 * @implNote This impl manages a list of rigid roles and a list for remaining ones.
 	 */
 	public TBox to_dllitefpx(JSONObject ervt_json) {
 		System.out.println("Starting JSON: "+ervt_json);
@@ -122,42 +124,27 @@ public class DefaultStrategy extends Strategy{
 				JSONArray arr = ervt_json.getJSONArray(key);
 				
 				if (arr.length() > 0) {
-				
-					Concept integer_c = this.giveMeAconcept("Integer");
 	        
+					/* assert axioms >= 1 attInv \sqsubseteq domain */
 					arr.iterator().forEachRemaining(element -> {
 						JSONTokener t = new JSONTokener(element.toString());
 						JSONObject jo = new JSONObject(t);
-					
-						if (!jo.get("datatype").toString().equals("Integer")) {
-							Concept acdt = this.giveMeAconcept(jo.get("datatype").toString());
-						}
-					
-						Role role_a = new PositiveRole(new AtomicLocalRole(jo.get("name").toString()));
-						this.list_role.add(role_a);
-					
-						this.myTBox.add(new ConceptInclusionAssertion(
-									new QuantifiedRole(role_a.getInverse(), 1),
-									integer_c));
+
+						Concept domain = this.giveMeAdomainConcept(jo.get("datatype").toString());
 					
 						if (jo.get("timestamp").toString().equals("snapshot")) {
+							PositiveRole pRole = this.giveMeArigidRole(jo.get("name").toString());
 							this.myTBox.add(new ConceptInclusionAssertion(
-									new QuantifiedRole(role_a, 2),
-									new QuantifiedRole(role_a, 1)
-									));
-							this.myTBox.add(new ConceptInclusionAssertion(
-								new QuantifiedRole(role_a, 1),
-								new AlwaysPast(new AlwaysFuture(new QuantifiedRole(role_a, 1)))));
-							this.myTBox.add(new ConceptInclusionAssertion(
-								new QuantifiedRole(role_a, 2),
-								new AlwaysPast(new AlwaysFuture(new QuantifiedRole(role_a, 2)))));
+									new QuantifiedRole(pRole.getInverse(), 1),
+									domain));
 						
-						}else if (jo.get("timestamp").toString().equals("temporal")) {
+						}else {
+							PositiveRole pRole = this.giveMeArole(jo.get("name").toString());
 							this.myTBox.add(new ConceptInclusionAssertion(
-											new QuantifiedRole(role_a, 2),
-											new QuantifiedRole(role_a, 1)
-									));
+									new QuantifiedRole(pRole.getInverse(), 1),
+									domain));
 						}
+						
 					});
 				}
 				
@@ -273,19 +260,48 @@ public class DefaultStrategy extends Strategy{
 	 * @param ervt_attr
 	 * 
 	 * @apiNote {"name":"AttrA","entity":"Entity1","attribute":"A","type":"attribute"}
+	 * @implNote
+	 * 							this.myTBox.add(new ConceptInclusionAssertion(
+									new QuantifiedRole(role_a, 2),
+									new QuantifiedRole(role_a, 1)
+									));
+							this.myTBox.add(new ConceptInclusionAssertion(
+								new QuantifiedRole(role_a, 1),
+								new AlwaysPast(new AlwaysFuture(new QuantifiedRole(role_a, 1)))));
+							this.myTBox.add(new ConceptInclusionAssertion(
+								new QuantifiedRole(role_a, 2),
+								new AlwaysPast(new AlwaysFuture(new QuantifiedRole(role_a, 2)))));
+								
+						    this.myTBox.add(new ConceptInclusionAssertion(
+											new QuantifiedRole(role_a, 2),
+											new QuantifiedRole(role_a, 1)
+									));
 	 */
 	public void to_dllitefpx_attr(JSONObject ervt_attr) {
-		this.myTBox.add(new ConceptInclusionAssertion(
-				this.giveMeAconcept(ervt_attr.get("entity").toString()),
-				new QuantifiedRole(
-						new PositiveRole(
-								new AtomicLocalRole(ervt_attr.get("attribute").toString())), 1)));
-		this.myTBox.add(new ConceptInclusionAssertion(
-				this.giveMeAconcept(ervt_attr.get("entity").toString()),
-				new NegatedConcept(new QuantifiedRole(
-						new PositiveRole(
-								new AtomicLocalRole(ervt_attr.get("attribute").toString())), 2))));
-		
+		List<PositiveRole> listRR = this.getRigidRoleList();
+		List<PositiveRole> listR = this.getRoleList();
+		int i = 0;
+		int j = 0;
+
+		while (i < listRR.size()) {
+			this.myTBox.add(new ConceptInclusionAssertion(
+					this.giveMeAconcept(ervt_attr.get("entity").toString()),
+					new QuantifiedRole(listRR.get(i), 1)));
+			this.myTBox.add(new ConceptInclusionAssertion(
+					this.giveMeAconcept(ervt_attr.get("entity").toString()),
+					new NegatedConcept(new QuantifiedRole(listRR.get(i), 2))));
+			i++;
+		}
+
+		while (j < listR.size()) {
+			this.myTBox.add(new ConceptInclusionAssertion(
+					this.giveMeAconcept(ervt_attr.get("entity").toString()),
+					new QuantifiedRole(listR.get(i), 1)));
+			this.myTBox.add(new ConceptInclusionAssertion(
+					this.giveMeAconcept(ervt_attr.get("entity").toString()),
+					new NegatedConcept(new QuantifiedRole(listR.get(i), 2))));
+			j++;
+		}
 	}
 
 	/**
