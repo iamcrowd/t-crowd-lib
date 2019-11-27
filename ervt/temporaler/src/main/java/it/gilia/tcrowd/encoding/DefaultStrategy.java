@@ -224,17 +224,17 @@ public class DefaultStrategy extends Strategy{
 	 */
 	public void tBoxClousure() {
 	// Integer "magic" concept must be disjoint with each atomic concept
-		if (this.getConceptByNameIndex("Integer") != -1) {
-			Concept integer_c = this.giveMeAconcept("Integer");
-			this.list_ac.forEach(atomic -> {
-				if (!atomic.toString().equals("Integer")) {
+		this.getConceptDomainList().forEach(domain -> {
+			this.getConceptList().forEach(atomicC -> {
+				if (!atomicC.toString().equals(domain.toString())) {
 					this.myTBox.add(new ConceptInclusionAssertion(
-							integer_c, new NegatedConcept(atomic)));
+							domain, new NegatedConcept(atomicC)));
 				}
 			});
-		}
+		});
+		
 	}
-
+	
 	/**
 	 * ISA links
 	 * 
