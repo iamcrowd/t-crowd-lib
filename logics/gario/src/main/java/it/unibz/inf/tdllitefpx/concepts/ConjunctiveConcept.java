@@ -30,12 +30,14 @@ public class ConjunctiveConcept extends Concept {
 		StringBuilder sb = new StringBuilder();
 		Iterator<Concept> it = conjuncts.iterator();
 		if(it.hasNext()){
+			sb.append(" ( ");
 			Concept c = it.next();
 			sb.append(c.toString());
 			while(it.hasNext()){
-				sb.append(it.next().toString());
 				sb.append(" /\\ ");
+				sb.append(it.next().toString());
 			}
+			sb.append(" ) ");
 		}
 		return sb.toString();
 			
