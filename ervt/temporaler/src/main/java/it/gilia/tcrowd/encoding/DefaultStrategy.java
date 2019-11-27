@@ -22,6 +22,7 @@ import it.unibz.inf.qtl1.output.NuSMVOutput;
 import it.unibz.inf.tdllitefpx.TDLLiteFPXConverter;
 import it.unibz.inf.tdllitefpx.output.LatexOutputDocument;
 import it.unibz.inf.tdllitefpx.concepts.AtomicConcept;
+import it.unibz.inf.tdllitefpx.concepts.ConjunctiveConcept;
 import it.unibz.inf.tdllitefpx.concepts.BottomConcept;
 import it.unibz.inf.tdllitefpx.concepts.Concept;
 import it.unibz.inf.tdllitefpx.concepts.NegatedConcept;
@@ -268,6 +269,30 @@ public class DefaultStrategy extends Strategy{
 						j++;
 					}
 					i++;
+				}
+			}
+			
+			if (cons.equals("total")) {
+				
+				if (list_childs.size() == 1) {
+					this.myTBox.add(new ConceptInclusionAssertion(
+							parent, list_childs.get(0)));
+					
+				}else if (list_childs.size() > 1) {
+					ConjunctiveConcept cc = new ConjunctiveConcept(
+							new NegatedConcept(list_childs.get(0)),
+							new NegatedConcept(list_childs.get(1)));
+					
+					if (list_childs.size() > 2) {
+						int i = 2;
+						while (i < list_childs.size()) {
+							cc.add(new NegatedConcept(list_childs.get(i)));
+							i++;
+						}
+					}
+					
+					this.myTBox.add(new ConceptInclusionAssertion(
+							parent, new NegatedConcept(cc)));
 				}
 			}
 		});
