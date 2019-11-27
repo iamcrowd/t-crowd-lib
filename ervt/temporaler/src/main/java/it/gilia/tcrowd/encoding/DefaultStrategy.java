@@ -241,16 +241,35 @@ public class DefaultStrategy extends Strategy{
 	 * @param ervt_isa
 	 * 
 	 * @apiNote {"name":"s2","parent":"Entity1","entities":["Entity3"],"type":"isa","constraint":[]}
-	 * @see {"name":"s1","parent":"Entity4","entities":["Entity2","Entity5"],"type":"isa","constraint":["disjoint","covering"]}
+	 * @see {"name":"s1","parent":"Entity4","entities":["Entity2","Entity5"],"type":"isa","constraint":["exclusive","total"]}
 	 *
 	 * @implNote disjoint and covering constraints missing
 	 */
 	public void to_dllitefpx_isa(JSONObject ervt_isa) {
+		List<Concept> list_childs = new ArrayList<Concept>();
 		Concept parent = this.giveMeAconcept(ervt_isa.get("parent").toString());
 		
 		ervt_isa.getJSONArray("entities").iterator().forEachRemaining(element -> {
 			Concept child = this.giveMeAconcept(element.toString());
+			list_childs.add(child);
 			this.myTBox.add(new ConceptInclusionAssertion(child, parent));
+		});
+		
+		ervt_isa.getJSONArray("constraint").iterator().forEachRemaining(cons -> {
+			
+			if (cons.equals("exclusive")) {
+				int i = 0;
+				while (i < list_childs.size()) {
+					int j = i + 1;
+
+					while (j < list_childs.size()) {
+						this.myTBox.add(new ConceptInclusionAssertion(
+								list_childs.get(i), new NegatedConcept(list_childs.get(j))));
+						j++;
+					}
+					i++;
+				}
+			}
 		});
 	}
 
