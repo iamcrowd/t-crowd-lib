@@ -305,6 +305,88 @@ public class DefaultStrategyTest{
 	}
 	
 	@Test
+	@DisplayName("Entities with a snapshot key string attribute. It returns an extended TBox")
+	public void testERvtEntitiesWithStringAttrToDLExtended() {
+		JSONObject obj = new JSONObject();
+        JSONArray links = new JSONArray();
+        JSONArray attributes = new JSONArray();
+        JSONArray entities = new JSONArray();
+        
+        String jsonEntity = new JSONStringer()
+                .object()
+                .key("name")
+                .value("entity 1")
+                .key("timestamp")
+                .value("")
+                .key("position")
+                .object()
+                .key("x")
+                .value("600")
+                .key("y")
+                .value("800")
+                .endObject()
+                .endObject()
+                .toString();
+        
+        String jsonAttribute = new JSONStringer()
+                .object()
+                .key("name")
+                .value("attribute 1")
+                .key("type")
+                .value("key")
+                .key("datatype")
+                .value("String")
+                .key("timestamp")
+                .value("snapshot")
+                .key("position")
+                .object()
+                .key("x")
+                .value("600")
+                .key("y")
+                .value("800")
+                .endObject()
+                .endObject()
+                .toString();
+  
+        entities.put(jsonEntity);
+        attributes.put(jsonAttribute);
+        
+        String jsonLinks = new JSONStringer()
+                .object()
+                .key("name")
+                .value("attrA")
+                .key("entity")
+                .value("entity 1")
+                .key("attribute")
+                .value("attribute 1")
+                .key("type")
+                .value("attribute")
+                .endObject()
+                .toString();
+  
+        links.put(jsonLinks);
+
+        obj.put("entities", entities);
+        obj.put("attributes", attributes);
+        obj.put("links", links);
+        
+        DefaultStrategy strategy = new DefaultStrategy();
+        TBox tbox = strategy.to_dllitefpx(obj);
+        
+        tbox.addExtensionConstraints();
+
+	    System.out.println("---------------------------------------------Snap String Attr Extended TBox Test");
+	    
+		Iterator<ConceptInclusionAssertion> iterator = tbox.iterator();
+		  while(iterator.hasNext()){
+		    ConceptInclusionAssertion ci = iterator.next();
+		   //   assertEquals("entity 1 -> Top", ci.getLHS()+" -> "+ci.getRHS());
+
+		    System.out.println(ci.getLHS()+" -> "+ci.getRHS());
+		  }
+	}
+	
+	@Test
 	@DisplayName("Entities with a temporal key attribute. It returns an extended TBox")
 	public void testERvtEntitiesWithTempAttrToDLExtended() {
 		JSONObject obj = new JSONObject();
