@@ -801,7 +801,113 @@ public class DefaultStrategyTest{
         DefaultStrategy strategy = new DefaultStrategy();
         TBox tbox = strategy.to_dllitefpx(obj);
 
-	    System.out.println("TBox Test 6");
+	    System.out.println("--------------------------------------- Bin Rel Not Extended TBox Test");
+	    Iterator<ConceptInclusionAssertion> iterator = tbox.iterator();
+	     while(iterator.hasNext()){
+	       ConceptInclusionAssertion ci = iterator.next();
+	       //assertEquals(actual_s, ci.getLHS()+" -> "+ci.getRHS());
+	       System.out.println(ci.getLHS()+" -> "+ci.getRHS());
+	     }
+	}
+	
+	@Test
+	@DisplayName("Binary Rel simple with cardinalities greater than 0. Extended TBox returned")
+	public void testERvtSimpleReltoDLExtendedTbox() {
+		JSONObject obj = new JSONObject();
+        JSONArray links = new JSONArray();
+        JSONArray attributes = new JSONArray();
+        JSONArray entities = new JSONArray();
+        JSONArray relationships = new JSONArray();
+        
+        String jsonEntity = new JSONStringer()
+                .object()
+                .key("name")
+                .value("entity 1")
+                .key("timestamp")
+                .value("")
+                .key("position")
+                .object()
+                .key("x")
+                .value("600")
+                .key("y")
+                .value("800")
+                .endObject()
+                .endObject()
+                .toString();
+        
+        String jsonEntity2 = new JSONStringer()
+                .object()
+                .key("name")
+                .value("entity 2")
+                .key("timestamp")
+                .value("")
+                .key("position")
+                .object()
+                .key("x")
+                .value("600")
+                .key("y")
+                .value("800")
+                .endObject()
+                .endObject()
+                .toString();
+        
+        String jsonRel = new JSONStringer()
+                .object()
+                .key("name")
+                .value("rel1")
+                .key("timestamp")
+                .value("")
+                .key("position")
+                .object()
+                .key("x")
+                .value("600")
+                .key("y")
+                .value("800")
+                .endObject()
+                .endObject()
+                .toString();
+  
+        entities.put(jsonEntity);
+        entities.put(jsonEntity2);
+        relationships.put(jsonRel);
+        
+        String jsonLinks = new JSONStringer()
+                .object()
+                .key("name")
+                .value("rel1")
+                .key("entities")
+                .value(new JSONArray()
+                		.put("entity 1")
+                		.put("entity 2")
+                		)
+                .key("cardinality")
+                .value(new JSONArray()
+                		.put("1..4")
+                		.put("3..5")
+                		)
+                .key("roles")
+                .value(new JSONArray()
+                		.put("e1")
+                		.put("e2")
+                		)
+                .key("type")
+                .value("relationship")
+                .endObject()
+                .toString();
+  
+        links.put(jsonLinks);
+
+        obj.put("entities", entities);
+        obj.put("attributes", attributes);
+        obj.put("relationships", relationships);
+        obj.put("links", links);
+        
+        DefaultStrategy strategy = new DefaultStrategy();
+        TBox tbox = strategy.to_dllitefpx(obj);
+        
+        tbox.addExtensionConstraints();
+
+	    System.out.println("------------------------------------------ Bin Rel Extended TBox Test 6");
 	    Iterator<ConceptInclusionAssertion> iterator = tbox.iterator();
 	     while(iterator.hasNext()){
 	       ConceptInclusionAssertion ci = iterator.next();
