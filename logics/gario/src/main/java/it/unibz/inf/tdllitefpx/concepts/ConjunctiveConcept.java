@@ -58,25 +58,44 @@ public class ConjunctiveConcept extends Concept {
 	@Override
 	public String toString(OutputFormat fmt) throws SymbolUndefinedException{
 		StringBuilder sb = new StringBuilder();
+		
 		if(fmt.getSymbolPosition(this)==OutputSymbolType.PREFIX){
 			if(fmt.hasParenthesis(this)){
 				sb.append("(");
 			}
 			sb.append(fmt.getSymbol(this));
-			for(Concept c: conjuncts)
+			for(Concept c: conjuncts) {
 				sb.append(c.toString(fmt)+" ");
+			}
+			
 			if(fmt.hasParenthesis(this)){
 				sb.append(")");
 			}
+			
 		}else if(fmt.getSymbolPosition(this)==OutputSymbolType.INFIX){
+			System.out.println("INFIX NOTAION");
 			if(fmt.hasParenthesis(this)){
 				sb.append("(");
 			}
+
+			
 			Iterator<Concept> itC = conjuncts.iterator();
-			Concept c = itC.next();
-			sb.append(c);
-			while(itC.hasNext())
-				sb.append(" "+fmt.getSymbol(this) +  c.toString(fmt));
+			System.out.println("INFIX NOTAION"+itC);
+			if(itC.hasNext()){
+				Concept c = itC.next();
+				System.out.println("INFIX NOTAION"+c);
+				sb.append(c.toString(fmt));
+
+				while(itC.hasNext()){
+					sb.append(" ");
+					sb.append(fmt.getSymbol(this));
+					sb.append(" ");
+					sb.append(itC.next().toString());
+				}
+			}
+			
+			System.out.println("INFIX NOTAION"+ fmt.getSymbol(this));
+			
 			if(fmt.hasParenthesis(this)){
 				sb.append(")");
 			}

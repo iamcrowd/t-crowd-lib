@@ -3,6 +3,7 @@ package it.unibz.inf.tdllitefpx.output;
 
 import it.unibz.inf.tdllitefpx.concepts.BottomConcept;
 import it.unibz.inf.tdllitefpx.concepts.NegatedConcept;
+import it.unibz.inf.tdllitefpx.concepts.ConjunctiveConcept;
 import it.unibz.inf.tdllitefpx.concepts.QuantifiedRole;
 import it.unibz.inf.tdllitefpx.concepts.temporal.AlwaysFuture;
 import it.unibz.inf.tdllitefpx.concepts.temporal.AlwaysPast;
@@ -48,6 +49,7 @@ public class LatexFormat extends OutputFormat {
 		
 		setSymbol(TBox.class.toString(),"$\\\\ \n $");
 		setSymbol(ConceptInclusionAssertion.class.toString()," \\sqsubseteq ");
+		setSymbol(ConjunctiveConcept.class.toString()," \\sqcap ");
 		
 		
 	}
