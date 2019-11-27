@@ -707,6 +707,122 @@ public class DefaultStrategyTest{
 	}
 	
 	@Test
+	@DisplayName("Exclusive ISA")
+	public void testERvtSimpleExclusiveISAtoDL() {
+		JSONObject obj = new JSONObject();
+        JSONArray links = new JSONArray();
+        JSONArray attributes = new JSONArray();
+        JSONArray entities = new JSONArray();
+        
+        String jsonEntity = new JSONStringer()
+                .object()
+                .key("name")
+                .value("entity 1")
+                .key("timestamp")
+                .value("")
+                .key("position")
+                .object()
+                .key("x")
+                .value("600")
+                .key("y")
+                .value("800")
+                .endObject()
+                .endObject()
+                .toString();
+        
+        String jsonEntity2 = new JSONStringer()
+                .object()
+                .key("name")
+                .value("entity 2")
+                .key("timestamp")
+                .value("")
+                .key("position")
+                .object()
+                .key("x")
+                .value("600")
+                .key("y")
+                .value("800")
+                .endObject()
+                .endObject()
+                .toString();
+        
+        String jsonEntity3 = new JSONStringer()
+                .object()
+                .key("name")
+                .value("entity 3")
+                .key("timestamp")
+                .value("")
+                .key("position")
+                .object()
+                .key("x")
+                .value("600")
+                .key("y")
+                .value("800")
+                .endObject()
+                .endObject()
+                .toString();
+        
+        String jsonEntity4 = new JSONStringer()
+                .object()
+                .key("name")
+                .value("entity 4")
+                .key("timestamp")
+                .value("")
+                .key("position")
+                .object()
+                .key("x")
+                .value("600")
+                .key("y")
+                .value("800")
+                .endObject()
+                .endObject()
+                .toString();
+  
+        entities.put(jsonEntity);
+        entities.put(jsonEntity2);
+        entities.put(jsonEntity3);
+        entities.put(jsonEntity4);
+        
+        String jsonLinks = new JSONStringer()
+                .object()
+                .key("name")
+                .value("isa1")
+                .key("parent")
+                .value("entity 1")
+                .key("entities")
+                .value(new JSONArray()
+                		.put("entity 2")
+                		.put("entity 3")
+                		.put("entity 4")
+                		)
+                .key("type")
+                .value("isa")
+                .key("constraint")
+                .value(new JSONArray()
+                		.put("exclusive")
+                		)
+                .endObject()
+                .toString();
+  
+        links.put(jsonLinks);
+
+        obj.put("entities", entities);
+        obj.put("attributes", attributes);
+        obj.put("links", links);
+        
+        DefaultStrategy strategy = new DefaultStrategy();
+        TBox tbox = strategy.to_dllitefpx(obj);
+
+	    System.out.println("----------------------------------------------------Exclusive ISA TBox Test 5");
+	    Iterator<ConceptInclusionAssertion> iterator = tbox.iterator();
+	     while(iterator.hasNext()){
+	       ConceptInclusionAssertion ci = iterator.next();
+	       //assertEquals(actual_s, ci.getLHS()+" -> "+ci.getRHS());
+	       System.out.println(ci.getLHS()+" -> "+ci.getRHS());
+	     }
+	}
+	
+	@Test
 	@DisplayName("Binary Rel simple with cardinalities greater than 0")
 	public void testERvtSimpleReltoDL() {
 		JSONObject obj = new JSONObject();
