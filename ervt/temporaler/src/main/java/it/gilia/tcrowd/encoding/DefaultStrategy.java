@@ -188,7 +188,7 @@ public class DefaultStrategy extends Strategy{
 						this.to_dllitefpx_attr(jo);
 					break;
 					case "attribute_rel":
-
+						
 					break;
 					case "relationship":
 						this.to_dllitefpx_rel(jo);
@@ -206,7 +206,6 @@ public class DefaultStrategy extends Strategy{
 						this.to_dllitefpx_pex(jo);
 					break;
 					default:
-
 						break;
 					}
 				});
@@ -306,30 +305,33 @@ public class DefaultStrategy extends Strategy{
 	 * @apiNote {"name":"AttrA","entity":"Entity1","attribute":"A","type":"attribute"}
 	 */
 	public void to_dllitefpx_attr(JSONObject ervt_attr) {
-		List<PositiveRole> listRR = this.getRigidRoleList();
-		List<PositiveRole> listR = this.getRoleList();
-		int i = 0;
-		int j = 0;
-
-		while (i < listRR.size()) {
-			this.myTBox.add(new ConceptInclusionAssertion(
-					this.giveMeAconcept(ervt_attr.get("entity").toString()),
-					new QuantifiedRole(listRR.get(i), 1)));
-			this.myTBox.add(new ConceptInclusionAssertion(
-					this.giveMeAconcept(ervt_attr.get("entity").toString()),
-					new NegatedConcept(new QuantifiedRole(listRR.get(i), 2))));
-			i++;
+		
+		int ro = this.getRoleByNameIndex(ervt_attr.get("attribute").toString());
+		
+		
+		if (ro != -1) {
+			 PositiveRole proleN = this.getRoleList().get(ro);
+			 this.myTBox.add(new ConceptInclusionAssertion(
+						this.giveMeAconcept(ervt_attr.get("entity").toString()),
+											new QuantifiedRole(proleN, 1)));
+			 this.myTBox.add(new ConceptInclusionAssertion(
+						this.giveMeAconcept(ervt_attr.get("entity").toString()),
+											new NegatedConcept(new QuantifiedRole(proleN, 2))));
+		} else {
+			ro = this.getRigidRoleByNameIndex(ervt_attr.get("attribute").toString());
+			
+			if (ro != -1) {
+				 PositiveRole proleR = this.getRigidRoleList().get(ro);
+				 this.myTBox.add(new ConceptInclusionAssertion(
+							this.giveMeAconcept(ervt_attr.get("entity").toString()),
+												new QuantifiedRole(proleR, 1)));
+				 this.myTBox.add(new ConceptInclusionAssertion(
+							this.giveMeAconcept(ervt_attr.get("entity").toString()),
+												new NegatedConcept(new QuantifiedRole(proleR, 2))));
+			}
 		}
-
-		while (j < listR.size()) {
-			this.myTBox.add(new ConceptInclusionAssertion(
-					this.giveMeAconcept(ervt_attr.get("entity").toString()),
-					new QuantifiedRole(listR.get(i), 1)));
-			this.myTBox.add(new ConceptInclusionAssertion(
-					this.giveMeAconcept(ervt_attr.get("entity").toString()),
-					new NegatedConcept(new QuantifiedRole(listR.get(i), 2))));
-			j++;
-		}
+			 
+		
 	}
 
 	/**

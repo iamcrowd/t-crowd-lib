@@ -185,7 +185,7 @@ public class Strategy{
 	 * @param ro an object representing an atomic local role
 	 * @return true if the atomic local role given as parameter has been already asserted in the current KB
 	 */
-	public boolean existsRole(Role ro) {
+	public boolean existsRole(PositiveRole ro) {
 		return this.getRoleList().contains(ro);
 	}
 	
@@ -215,7 +215,7 @@ public class Strategy{
 	public PositiveRole giveMeArole(String name) {
 		int exists = this.getRoleByNameIndex(name);
 		if (exists != -1) {
-			return this.getRoleList().get(exists);
+			return this.list_role.get(exists);
 		}
 		else {
 			PositiveRole ro = new PositiveRole(new AtomicLocalRole(name));
@@ -229,7 +229,7 @@ public class Strategy{
 	 * @param rRo an object representing an atomic rigid role
 	 * @return true if the atomic rigid role given as parameter has been already asserted in the current KB
 	 */
-	public boolean existsRigidRole(Role rRo) {
+	public boolean existsRigidRole(PositiveRole rRo) {
 		return this.getRigidRoleList().contains(rRo);
 	}
 	
@@ -259,7 +259,7 @@ public class Strategy{
 	public PositiveRole giveMeArigidRole(String name) {
 		int exists = this.getRigidRoleByNameIndex(name);
 		if (exists != -1) {
-			return this.getRigidRoleList().get(exists);
+			return this.list_rigidRole.get(exists);
 		}
 		else {
 			PositiveRole rRo = new PositiveRole(new AtomicRigidRole(name));
