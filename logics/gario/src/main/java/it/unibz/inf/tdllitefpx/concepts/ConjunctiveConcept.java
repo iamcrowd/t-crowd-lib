@@ -73,26 +73,24 @@ public class ConjunctiveConcept extends Concept {
 			}
 			
 		}else if(fmt.getSymbolPosition(this)==OutputSymbolType.INFIX){
-			System.out.println("INFIX NOTAION");
+
 			if(fmt.hasParenthesis(this)){
 				sb.append("(");
 			}
 
-			
-			Iterator<Concept> itC = conjuncts.iterator();
-			
-			if(itC.hasNext()){
-				Concept c = itC.next();
-
+			Iterator<Concept> it = conjuncts.iterator();
+			if(it.hasNext()){
+				sb.append(" ( ");
+				Concept c = it.next();
 				sb.append(c.toString(fmt));
-
-				while(itC.hasNext()){
-					sb.append(" " + sb.append(fmt.getSymbol(this)) + " ");
-					sb.append(itC.next().toString(fmt));
+				while(it.hasNext()){
+					sb.append("  ");
+					sb.append(fmt.getSymbol(this));
+					sb.append("  ");
+					sb.append(it.next().toString(fmt));
 				}
+				sb.append(" ) ");
 			}
-			
-			sb.append(")");
 			
 			if(fmt.hasParenthesis(this)){
 				sb.append(")");
