@@ -222,7 +222,7 @@ public class DefaultStrategyTest{
 	}
 	
 	@Test
-	@DisplayName("Entities with a key attribute and a normal one")
+	@DisplayName("Entities with a key attribute and a normal one without temporality timestamps.")
 	public void testERvtEntitiesWithAttrKandNToDL() {
 		JSONObject obj = new JSONObject();
         JSONArray links = new JSONArray();
@@ -305,7 +305,7 @@ public class DefaultStrategyTest{
         String jsonLinksN = new JSONStringer()
                 .object()
                 .key("name")
-                .value("attrA")
+                .value("attrB")
                 .key("entity")
                 .value("entity 1")
                 .key("attribute")
@@ -324,6 +324,8 @@ public class DefaultStrategyTest{
         
         DefaultStrategy strategy = new DefaultStrategy();
         TBox tbox = strategy.to_dllitefpx(obj);
+        
+        tbox.addExtensionConstraints();
 
 	    System.out.println("--------------------------------------------Key and Normal Attr TBox Test");
 	    Iterator<ConceptInclusionAssertion> iterator = tbox.iterator();
@@ -649,6 +651,8 @@ public class DefaultStrategyTest{
         
         DefaultStrategy strategy = new DefaultStrategy();
         TBox tbox = strategy.to_dllitefpx(obj);
+        
+        tbox.addExtensionConstraints();
 
 	    System.out.println("TBox with SNAPSHOT ATTRIBUTES");
 	    Iterator<ConceptInclusionAssertion> iterator = tbox.iterator();
@@ -730,6 +734,8 @@ public class DefaultStrategyTest{
         DefaultStrategy strategy = new DefaultStrategy();
         TBox tbox = strategy.to_dllitefpx(obj);
 
+        tbox.addExtensionConstraints();
+        
 	    System.out.println("TBox with TEMPORAL ATTRIBUTES");
 	    Iterator<ConceptInclusionAssertion> iterator = tbox.iterator();
 	     while(iterator.hasNext()){
@@ -1350,7 +1356,7 @@ public class DefaultStrategyTest{
         TBox tbox = strategy.to_dllitefpx(obj);
         
         tbox.addExtensionConstraints();
-
+        
 	    System.out.println("------------------------------------------ Bin Rel Extended TBox Test 6");
 	    Iterator<ConceptInclusionAssertion> iterator = tbox.iterator();
 	     while(iterator.hasNext()){
