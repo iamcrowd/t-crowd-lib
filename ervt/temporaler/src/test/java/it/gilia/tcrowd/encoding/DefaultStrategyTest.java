@@ -219,7 +219,120 @@ public class DefaultStrategyTest{
 
 	       System.out.println(ci.getLHS()+" -> "+ci.getRHS());
 	     }
+	}
+	
+	@Test
+	@DisplayName("Entities with a key attribute and a normal one")
+	public void testERvtEntitiesWithAttrKandNToDL() {
+		JSONObject obj = new JSONObject();
+        JSONArray links = new JSONArray();
+        JSONArray attributes = new JSONArray();
+        JSONArray entities = new JSONArray();
+        
+        String jsonEntity = new JSONStringer()
+                .object()
+                .key("name")
+                .value("entity 1")
+                .key("timestamp")
+                .value("")
+                .key("position")
+                .object()
+                .key("x")
+                .value("600")
+                .key("y")
+                .value("800")
+                .endObject()
+                .endObject()
+                .toString();
+        
+        String jsonAttributeK = new JSONStringer()
+                .object()
+                .key("name")
+                .value("attribute 1")
+                .key("type")
+                .value("key")
+                .key("datatype")
+                .value("Integer")
+                .key("timestamp")
+                .value("")
+                .key("position")
+                .object()
+                .key("x")
+                .value("600")
+                .key("y")
+                .value("800")
+                .endObject()
+                .endObject()
+                .toString();
+        
+        String jsonAttributeN = new JSONStringer()
+                .object()
+                .key("name")
+                .value("attribute 2")
+                .key("type")
+                .value("key")
+                .key("datatype")
+                .value("Integer")
+                .key("timestamp")
+                .value("")
+                .key("position")
+                .object()
+                .key("x")
+                .value("600")
+                .key("y")
+                .value("800")
+                .endObject()
+                .endObject()
+                .toString();
+  
+        entities.put(jsonEntity);
+        attributes.put(jsonAttributeK);
+        attributes.put(jsonAttributeN);
+        
+        String jsonLinksK = new JSONStringer()
+                .object()
+                .key("name")
+                .value("attrA")
+                .key("entity")
+                .value("entity 1")
+                .key("attribute")
+                .value("attribute 1")
+                .key("type")
+                .value("attribute")
+                .endObject()
+                .toString();
+        
+        String jsonLinksN = new JSONStringer()
+                .object()
+                .key("name")
+                .value("attrA")
+                .key("entity")
+                .value("entity 1")
+                .key("attribute")
+                .value("attribute 2")
+                .key("type")
+                .value("attribute")
+                .endObject()
+                .toString();
+  
+        links.put(jsonLinksK);
+        links.put(jsonLinksN);
 
+        obj.put("entities", entities);
+        obj.put("attributes", attributes);
+        obj.put("links", links);
+        
+        DefaultStrategy strategy = new DefaultStrategy();
+        TBox tbox = strategy.to_dllitefpx(obj);
+
+	    System.out.println("--------------------------------------------Key and Normal Attr TBox Test");
+	    Iterator<ConceptInclusionAssertion> iterator = tbox.iterator();
+	     while(iterator.hasNext()){
+	       ConceptInclusionAssertion ci = iterator.next();
+	    //   assertEquals("entity 1 -> Top", ci.getLHS()+" -> "+ci.getRHS());
+
+	       System.out.println(ci.getLHS()+" -> "+ci.getRHS());
+	     }
 	}
 	
 	@Test
