@@ -134,13 +134,13 @@ public class DefaultStrategy extends Strategy{
 						Concept domain = this.giveMeAdomainConcept(jo.get("datatype").toString());
 					
 						if (jo.get("timestamp").toString().equals("snapshot")) {
-							PositiveRole pRole = this.giveMeArigidRole(jo.get("name").toString());
+							Role pRole = this.giveMeArigidRole(jo.get("name").toString());
 							this.myTBox.add(new ConceptInclusionAssertion(
 									new QuantifiedRole(pRole.getInverse(), 1),
 									domain));
 						
 						}else {
-							PositiveRole pRole = this.giveMeArole(jo.get("name").toString());
+							Role pRole = this.giveMeArole(jo.get("name").toString());
 							this.myTBox.add(new ConceptInclusionAssertion(
 									new QuantifiedRole(pRole.getInverse(), 1),
 									domain));
@@ -308,29 +308,15 @@ public class DefaultStrategy extends Strategy{
 		
 		int ro = this.getRoleByNameIndex(ervt_attr.get("attribute").toString());
 		
-		
 		if (ro != -1) {
-			 PositiveRole proleN = this.getRoleList().get(ro);
+			 Role prole = this.getRoleList().get(ro);
 			 this.myTBox.add(new ConceptInclusionAssertion(
 						this.giveMeAconcept(ervt_attr.get("entity").toString()),
-											new QuantifiedRole(proleN, 1)));
+											new QuantifiedRole(prole, 1)));
 			 this.myTBox.add(new ConceptInclusionAssertion(
 						this.giveMeAconcept(ervt_attr.get("entity").toString()),
-											new NegatedConcept(new QuantifiedRole(proleN, 2))));
-		} else {
-			ro = this.getRigidRoleByNameIndex(ervt_attr.get("attribute").toString());
-			
-			if (ro != -1) {
-				 PositiveRole proleR = this.getRigidRoleList().get(ro);
-				 this.myTBox.add(new ConceptInclusionAssertion(
-							this.giveMeAconcept(ervt_attr.get("entity").toString()),
-												new QuantifiedRole(proleR, 1)));
-				 this.myTBox.add(new ConceptInclusionAssertion(
-							this.giveMeAconcept(ervt_attr.get("entity").toString()),
-												new NegatedConcept(new QuantifiedRole(proleR, 2))));
-			}
+											new NegatedConcept(new QuantifiedRole(prole, 2))));
 		}
-			 
 		
 	}
 
