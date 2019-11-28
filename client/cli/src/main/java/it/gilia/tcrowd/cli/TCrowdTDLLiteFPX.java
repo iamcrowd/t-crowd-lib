@@ -56,6 +56,8 @@ public class TCrowdTDLLiteFPX extends TCrowdEncodingERvtRelatedCommand {
     		
     		DefaultStrategy strategy = new DefaultStrategy();
             TBox tbox = strategy.to_dllitefpx(object);
+            
+            tbox.addExtensionConstraints();
     		
     		System.out.println("Saving in "+fileNameOut);
     		System.out.println("Original TBox...");
