@@ -142,5 +142,12 @@ public class TBox extends LinkedList<ConceptInclusionAssertion> implements Forma
 		}
 		
 	}
+	/*
+	public void addABoxExtension() {
+		Set<AboxConcept> c = getConcepts();
+		Set<QuantifiedRole> qRoles = getQuantifiedRoles();
+		
+		
+	}*/
 
 }

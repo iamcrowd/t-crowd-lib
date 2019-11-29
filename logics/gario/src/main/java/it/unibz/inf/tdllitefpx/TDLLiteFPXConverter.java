@@ -33,11 +33,13 @@ import it.unibz.inf.tdllitefpx.tbox.TBox;
 public class TDLLiteFPXConverter {
 	
 	TBox tbox;
+//	Abox abox;
 	Alphabet a;
 	Variable x;
 	
 	public TDLLiteFPXConverter(TBox tbox){
 		this.tbox  =tbox;
+	//	this.abox = abox;
 		a = new Alphabet();
 		x = new Variable("x");
 		
