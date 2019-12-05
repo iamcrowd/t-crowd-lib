@@ -47,7 +47,8 @@ public class TCrowd {
                         TCrowdQTLZ.class,
                         TCrowdQTLN.class,
                         TCrowdLTL.class,
-                        TCrowdNuSMV.class
+                        TCrowdNuSMV.class,
+                        TCrowdAboxSat.class
                 );
 
 /**

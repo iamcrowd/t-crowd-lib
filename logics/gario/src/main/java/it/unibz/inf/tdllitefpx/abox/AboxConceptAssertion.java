@@ -20,36 +20,41 @@ public class AboxConceptAssertion implements FormattableObj{
 	String value;
 	
 	public AboxConceptAssertion(Concept c, String v){
+		// A(x) A(y) G A(maria)
 		this.c = c;
 		this.value = v;
-		
-		// A(x) A(y) G A(maria)
 	}
 
-	public Formula getFormula() 
-	{
+	public Formula getFormula() {
 		Variable x = new Variable("x");
-		Formula fa=new Atom(c.toString(), x);
+		Formula fa = new Atom(c.toString(), x);
 		//System.out.println("insertion:"+fa);
 		return fa;
 		//UniversalFormula a1 = new UniversalFormula(conceptToFormula(this.c), x);
 	}
 	
-	
-	public Formula makeAssertionPropositional()
-	{
-	
-	Variable x = new Variable("x");
-	Formula fa= this.getFormula();
-	fa.substitute(x, new Constant(value));
-	System.out.println("insertionltl:"+fa);
-	return fa;
+	public Concept getAboxConceptAssertion() {
+		return this.c;
 	}
+	
+	public String getAboxValueAssertion() {
+		return this.value;
+	}
+	
+	public Formula makeAssertionPropositional(){
+		Variable x = new Variable("x");
+		Formula fa = this.getFormula();
+		fa.substitute(x, new Constant(value));
+		System.out.println("insertionltl:"+fa);
+		return fa;
+	}
+	
 	@Override
 	public String toString(OutputFormat fmt) throws SymbolUndefinedException {
+		//return this.toString();
 		
-		return this.toString();
-		
+		return getAboxConceptAssertion().toString(fmt) +
+		"(" + getAboxValueAssertion().toString() + ")";
 	}
 
 }
