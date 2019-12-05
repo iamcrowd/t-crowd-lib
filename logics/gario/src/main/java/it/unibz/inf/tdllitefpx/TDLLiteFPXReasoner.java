@@ -14,6 +14,9 @@ import it.unibz.inf.tdllitefpx.concepts.AtomicConcept;
 import it.unibz.inf.tdllitefpx.output.LatexOutputDocument;
 import it.unibz.inf.tdllitefpx.tbox.TBox;
 
+import it.unibz.inf.tdllitefpx.abox.Abox;
+import it.unibz.inf.tdllitefpx.abox.AboxConceptAssertion;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -49,8 +52,85 @@ public class TDLLiteFPXReasoner {
 		TDLLiteFPXReasoner.buildCheck(t, verbose, prefix, CheckType.entity_consistency, param);
 	}
 	
-	public static void buildCheckAboxtSatisfiability(TBox t,boolean verbose,String prefix,Map<String,Object> Abox ) throws Exception{
-		TDLLiteFPXReasoner.buildCheck(t, verbose, prefix, CheckType.Abox_consistency, Abox);
+	public static void buildCheckAboxtSatisfiability(TBox t,boolean verbose,String prefix, Abox abox) throws Exception{
+		boolean data = true;
+		TDLLiteFPXReasoner.buildAboxCheck(t, verbose, prefix, CheckType.Abox_consistency, abox);
+	}
+	
+	private static void buildAboxCheck(
+			TBox t,
+			boolean verbose, String prefix, CheckType type, Abox abox) throws Exception{
+		long total_time = System.currentTimeMillis();
+		long start_time;
+		
+		// Extends the TBox, adding the delta_R and G
+		t.addExtensionConstraints();
+		
+		if(verbose)
+			(new LatexOutputDocument(t)).toFile(prefix+"tbox.tex");
+		
+		System.out.print("TBox -> Qtl :");
+		start_time = System.currentTimeMillis();
+		
+		TDLLiteFPXConverter conv = new TDLLiteFPXConverter(t);
+		Formula qtl = conv.getFormula();
+		qtl = qtl.makeTemporalStrict();
+		
+		System.out.println(System.currentTimeMillis()-start_time + "ms");		
+		
+		if(type == CheckType.Abox_consistency){
+			/* Add entity consistency check:
+			 * 	This means verifying TBox /\ ABox 
+			 * 	for the entity E and a brand new constant c 
+			 */
+			if(qtl instanceof UniversalFormula){
+				
+			    Set<Constant> constsAbox = abox.getConstantsAbox();
+				Set<Constant> consts = qtl.getConstants();
+				consts.addAll(constsAbox);
+				
+				System.out.println("les nouvelles constantes:"+consts);
+				//Abox.toString();
+				Formula o = (Formula) abox;
+				o = o.makeTemporalStrict();
+			
+				//ArrayList Abox1=(List) Abox;
+				System.out.println("la taille de la Abox est:"+abox.size());
+				
+				Variable x = ((UniversalFormula) qtl).getQuantifiedVar();
+				qtl = new UniversalFormula(new ConjunctiveFormula(
+				qtl.getSubFormulae().get(0),
+					o),
+					x);
+				
+				//qtl.add(new Formula(Abox));
+				//Abox.addConjunct(qtl);
+				//qtl=Abox;
+				//System.out.println(qtl);
+				
+			}else
+				throw new Exception("Undefined consistency check for qtl not in factorized form");
+		}
+		
+		if(verbose)
+			(new LatexDocumentCNF(qtl)).toFile(prefix+"qtl.tex");
+		
+		System.out.print("Qtl N -> LTL:");
+		start_time = System.currentTimeMillis();
+	
+		Formula ltl = qtl.makePropositional();
+		
+		System.out.println(System.currentTimeMillis()-start_time + "ms");
+		
+		if(verbose)
+			(new LatexDocumentCNF(ltl)).toFile(prefix+"ltl.tex");
+		
+		System.out.println("Generating NuSMV file...");
+		(new NuSMVOutput(ltl)).toFile(prefix+".smv");
+
+		System.out.println("Done! Total time:" + (System.currentTimeMillis()-total_time) + "ms");
+		System.out.println("Num of Propositions: "+ltl.getPropositions().size());		
+			
 	}
 	
 	private static void buildCheck(
@@ -94,34 +174,6 @@ public class TDLLiteFPXReasoner {
 				qtl = new UniversalFormula(new ConjunctiveFormula(
 					qtl.getSubFormulae().get(0),
 					cAtom),
-					x);
-			}else
-				throw new Exception("Undefined consistency check for qtl not in factorized form");
-		}
-		if(type == CheckType.Abox_consistency){
-			/* Add Abox consistency check:
-			 * 	This means verifying TBox /\ ABox 
-			 * 	for the entity E and a brand new constant c 
-			 */
-			if(qtl instanceof UniversalFormula){
-				Concept c = new AtomicConcept("Person");
-				String noun = "john";
-				Constant john=new Constant ("john");
-				Constant kennedy=new Constant ("kennedy");
-			    Atom Name = new Atom("Name", john,kennedy);
-				
-				Set<Constant> consts = qtl.getConstants();
-				while(consts.contains(new Constant(noun))){
-					noun = noun +"0";
-				}
-			
-				Variable x = ((UniversalFormula) qtl).getQuantifiedVar();
-				Atom cAtom = (Atom) conv.conceptToFormula(c);
-				cAtom.substitute(x, new Constant(noun));
-				ConjunctiveFormula cAtoms=new ConjunctiveFormula(cAtom, Name);
-				qtl = new UniversalFormula(new ConjunctiveFormula(
-					qtl.getSubFormulae().get(0),
-					cAtoms),
 					x);
 			}else
 				throw new Exception("Undefined consistency check for qtl not in factorized form");
