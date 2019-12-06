@@ -51,8 +51,8 @@ public class TCrowdAboxSat extends TCrowdEncodingERvtRelatedCommand {
     		/*	TDLLiteFPXReasoner.buildCheckSatisfiability(
     					exTDL.getTBox(),
     					true, 
-    					"Status5");  */
-    			exTDL.getABox();
+    					"Status5");  
+    			exTDL.getABox();*/
     			TDLLiteFPXReasoner.buildCheckAboxtSatisfiability(
     					exTDL.getTBox(),
     					true, 
