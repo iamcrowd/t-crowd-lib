@@ -10,7 +10,7 @@ import org.gario.code.output.SymbolUndefinedException;
 
 import it.unibz.inf.tdllitefpx.concepts.Concept;
 
-public class AboxRoleAssertion implements FormattableObj{
+public class ABoxRoleAssertion implements FormattableObj{
 	/*Role ro;
 	List<Constant> values = new ArrayList<Constant>();
 	

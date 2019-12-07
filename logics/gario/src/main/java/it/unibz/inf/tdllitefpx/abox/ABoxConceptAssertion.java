@@ -15,11 +15,11 @@ import it.unibz.inf.tdllitefpx.concepts.Concept;
 import it.unibz.inf.qtl1.formulae.Formula;
 import it.unibz.inf.qtl1.terms.Variable;
 
-public class AboxConceptAssertion implements FormattableObj{
+public class ABoxConceptAssertion implements FormattableObj{
 	Concept c;
 	String value;
 	
-	public AboxConceptAssertion(Concept c, String v){
+	public ABoxConceptAssertion(Concept c, String v){
 		// A(x) A(y) G A(maria)
 		this.c = c;
 		this.value = v;

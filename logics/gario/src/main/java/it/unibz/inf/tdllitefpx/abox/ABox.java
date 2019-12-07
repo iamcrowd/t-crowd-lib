@@ -29,7 +29,7 @@ import it.unibz.inf.tdllitefpx.roles.Role;
 import it.unibz.inf.tdllitefpx.tbox.ConceptInclusionAssertion;
 
 
-public class Abox extends ConjunctiveFormula implements FormattableObj{
+public class ABox extends ConjunctiveFormula implements FormattableObj{
 		/**
 		 * 
 		 */

@@ -8,8 +8,8 @@ import it.unibz.inf.qtl1.formulae.Formula;
 import it.unibz.inf.qtl1.terms.Constant;
 import it.unibz.inf.tdllitefpx.TDLLiteFPXReasoner;
 
-import it.unibz.inf.tdllitefpx.abox.Abox;
-import it.unibz.inf.tdllitefpx.abox.AboxConceptAssertion;
+import it.unibz.inf.tdllitefpx.abox.ABox;
+import it.unibz.inf.tdllitefpx.abox.ABoxConceptAssertion;
 
 import it.unibz.inf.tdllitefpx.concepts.AtomicConcept;
 import it.unibz.inf.tdllitefpx.concepts.BottomConcept;
@@ -70,14 +70,14 @@ public class TestAbox1 {
 
 	
 	
-	public Abox getABox(){
+	public ABox getABox(){
 		
-		Abox A = new Abox();
-		AboxConceptAssertion a1= new AboxConceptAssertion(new NextFuture(Person),"john");
+		ABox A = new ABox();
+		ABoxConceptAssertion a1= new ABoxConceptAssertion(new NextFuture(Person),"john");
 		Formula ltlfa1 = a1.makeAssertionPropositional();
 		A.add(ltlfa1);
 		
-		AboxConceptAssertion a2= new AboxConceptAssertion(Person,"Maria");
+		ABoxConceptAssertion a2= new ABoxConceptAssertion(Person,"Maria");
 		Formula ltlfa2 = a2.makeAssertionPropositional();
 		A.add(ltlfa2);
 	

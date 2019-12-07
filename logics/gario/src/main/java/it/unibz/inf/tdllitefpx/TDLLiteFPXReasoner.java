@@ -14,8 +14,8 @@ import it.unibz.inf.tdllitefpx.concepts.AtomicConcept;
 import it.unibz.inf.tdllitefpx.output.LatexOutputDocument;
 import it.unibz.inf.tdllitefpx.tbox.TBox;
 
-import it.unibz.inf.tdllitefpx.abox.Abox;
-import it.unibz.inf.tdllitefpx.abox.AboxConceptAssertion;
+import it.unibz.inf.tdllitefpx.abox.ABox;
+import it.unibz.inf.tdllitefpx.abox.ABoxConceptAssertion;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -52,14 +52,14 @@ public class TDLLiteFPXReasoner {
 		TDLLiteFPXReasoner.buildCheck(t, verbose, prefix, CheckType.entity_consistency, param);
 	}
 	
-	public static void buildCheckAboxtSatisfiability(TBox t,boolean verbose,String prefix, Abox abox) throws Exception{
+	public static void buildCheckAboxtSatisfiability(TBox t,boolean verbose,String prefix, ABox abox) throws Exception{
 		boolean data = true;
 		TDLLiteFPXReasoner.buildAboxCheck(t, verbose, prefix, CheckType.Abox_consistency, abox);
 	}
 	
 	private static void buildAboxCheck(
 			TBox t,
-			boolean verbose, String prefix, CheckType type, Abox abox) throws Exception{
+			boolean verbose, String prefix, CheckType type, ABox abox) throws Exception{
 		long total_time = System.currentTimeMillis();
 		long start_time;
 		
