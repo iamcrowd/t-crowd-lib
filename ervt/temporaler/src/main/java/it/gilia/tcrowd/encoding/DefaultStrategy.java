@@ -14,6 +14,7 @@ import org.json.JSONTokener;
 import org.json.JSONException;
 
 import java.util.*;
+import java.text.*;
 
 import it.unibz.inf.qtl1.NaturalTranslator;
 import it.unibz.inf.qtl1.formulae.Formula;
@@ -52,6 +53,8 @@ public class DefaultStrategy extends Strategy{
 	}
 	
 	/**
+	 * TDLLiteFPX TBox
+	 * 
 	 * 
 	 * @param ervt_json A JSON object representing an ERvt temporal model 
 	 * containing entities (regular, snapshot and temporal), attributes (regular, snapshot, temporal) and
@@ -92,7 +95,7 @@ public class DefaultStrategy extends Strategy{
 	 * @implNote This impl manages a list of rigid roles and a list for remaining ones.
 	 */
 	public TBox to_dllitefpx(JSONObject ervt_json) {
-		System.out.println("Starting JSON: "+ervt_json);
+		System.out.println("Starting TBox JSON: "+ervt_json);
 		
 		ervt_json.keys().forEachRemaining(key -> {
 			
@@ -476,4 +479,114 @@ public class DefaultStrategy extends Strategy{
 		
 	}
 	
+	
+	
+	
+	/**
+	 * TDLLiteFPX ABox
+	 * 
+	 * @param ervtABox_json A JSON object representing temporal data 
+	 * containing concept and role assertions.
+	 * 
+	 * @code{json} 	{"concepts":
+	 * 					[{"concept":"Person", "instance":"Maria", "timestamp":"1"},
+	 * 					 {"concept":"Person", "instance":"Maria", "timestamp":"2"}]
+	 * 				 "roles":
+	 * 					[{"role":"Surname", "from":"Maria", "to":"Clinton", "timestamp":"1"},
+	 * 					 {"role":"Salary", "from":"Maria", "to":"1000", "timestamp":"2"}]
+	 * 			 	}
+       @endcode
+     *
+	 */
+	public void to_dllitefpxABox(JSONObject ervtABox_json) {
+		System.out.println("Starting ABox JSON: "+ervtABox_json);
+		
+		ervtABox_json.keys().forEachRemaining(key -> {
+			
+			if (key.equals("concepts")) {
+				Object value = ervtABox_json.get(key);
+				JSONArray arr = ervtABox_json.getJSONArray(key);
+	        
+				arr.iterator().forEachRemaining(element -> {
+					JSONTokener t = new JSONTokener(element.toString());
+					JSONObject jo = new JSONObject(t);
+					this.getABoxConceptAssertion(jo);
+					
+				});
+				
+			}else if (key.equals("roles")) {
+				Object value = ervtABox_json.get(key);
+				JSONArray arr = ervtABox_json.getJSONArray(key);
+				
+				if (arr.length() > 0) {
+
+					arr.iterator().forEachRemaining(element -> {
+						JSONTokener t = new JSONTokener(element.toString());
+						JSONObject jo = new JSONObject(t);
+						this.getABoxRoleAssertion(jo);
+						
+					});
+				}
+			}
+		});
+	}
+	
+	public void getABoxConceptAssertion(JSONObject assertion) {
+		System.out.println(assertion);
+		System.out.println("Concept: "+assertion.get("concept"));
+		System.out.println("Instance: "+assertion.get("instance"));
+		System.out.println("Timestamp: "+assertion.get("timestamp"));
+		
+		String concept = new String(assertion.get("concept").toString());
+		String instance = new String(assertion.get("instance").toString());
+		
+		int numberOfNext = Integer.parseInt(assertion.get("timestamp").toString());
+		System.out.println("Integer: "+numberOfNext);
+		
+		if (numberOfNext == 0) {
+			System.out.println("Asserted Concept: "+assertion.get("concept")+"("+assertion.get("instance")+")");
+			
+		}else if (numberOfNext > 0) {
+			int countNext = 1;
+			String atNextTime = new String(concept+"("+instance+")");
+			while (countNext <= numberOfNext) {
+				String tconcept = "X "+atNextTime;
+				atNextTime = tconcept;
+				countNext++;
+			}
+			System.out.println("Asserted Concept at more than 0 time: "+atNextTime);
+		}
+	}
+	
+	
+	public void getABoxRoleAssertion(JSONObject assertion) {
+		System.out.println(assertion);
+		System.out.println("Role: "+assertion.get("role"));
+		System.out.println("from: "+assertion.get("from"));
+		System.out.println("to: "+assertion.get("to"));
+		System.out.println("Timestamp: "+assertion.get("timestamp"));
+		
+		String role = new String(assertion.get("role").toString());
+		String from = new String(assertion.get("from").toString());
+		String to = new String(assertion.get("to").toString());
+		
+		int numberOfNext = Integer.parseInt(assertion.get("timestamp").toString());
+		System.out.println("Integer: "+numberOfNext);
+		
+		if (numberOfNext == 0) {
+			System.out.println("Asserted Role: "+assertion.get("role")+"("+assertion.get("from")+","+assertion.get("to")+")");
+			
+		}else if (numberOfNext > 0) {
+			int countNext = 1;
+			String atNextTime = new String(role+"("+from+","+to+")");
+			while (countNext <= numberOfNext) {
+				String trole = "X "+atNextTime;
+				atNextTime = trole;
+				countNext++;
+			}
+			System.out.println("Asserted Role at more than 0 time: "+atNextTime);
+		}
+		
+	}
+
 }

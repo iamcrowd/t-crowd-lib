@@ -38,6 +38,7 @@ import it.unibz.inf.tdllitefpx.roles.Role;
 import it.unibz.inf.tdllitefpx.roles.AtomicRole;
 import it.unibz.inf.tdllitefpx.tbox.ConceptInclusionAssertion;
 import it.unibz.inf.tdllitefpx.tbox.TBox;
+import it.unibz.inf.tdllitefpx.abox.ABox;
 
 /**
  * 
@@ -47,6 +48,7 @@ import it.unibz.inf.tdllitefpx.tbox.TBox;
 public class Strategy{
 	
 	TBox myTBox = new TBox();
+	ABox myABox = new ABox();
 	List<Concept> list_ac = new ArrayList<Concept>();
 	List<Concept> list_domains = new ArrayList<Concept>();
 	List<Role> list_role = new ArrayList<Role>();
@@ -55,8 +57,20 @@ public class Strategy{
 		
 	}
 	
+	/**
+	 * 
+	 * @return a TBox object
+	 */
 	public TBox getTBox() {
 		return myTBox;
+	}
+	
+	/**
+	 * 
+	 * @return a ABox object
+	 */
+	public ABox getABox() {
+		return myABox;
 	}
 	
 	/**
