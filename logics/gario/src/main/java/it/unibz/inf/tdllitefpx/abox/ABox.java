@@ -16,44 +16,172 @@ import org.gario.code.output.OutputFormat;
 import org.gario.code.output.SymbolUndefinedException;
 
 import it.unibz.inf.qtl1.NotGroundException;
+import it.unibz.inf.qtl1.atoms.Atom;
+import it.unibz.inf.qtl1.atoms.Bot;
+import it.unibz.inf.qtl1.formulae.Alphabet;
 import it.unibz.inf.qtl1.formulae.ConjunctiveFormula;
 import it.unibz.inf.qtl1.formulae.Formula;
+import it.unibz.inf.qtl1.formulae.NegatedFormula;
+import it.unibz.inf.qtl1.formulae.quantified.UniversalFormula;
 import it.unibz.inf.qtl1.terms.Constant;
 import it.unibz.inf.qtl1.terms.Variable;
+import it.unibz.inf.tdllitefpx.concepts.AtomicConcept;
+import it.unibz.inf.tdllitefpx.concepts.BottomConcept;
 import it.unibz.inf.tdllitefpx.concepts.Concept;
+import it.unibz.inf.tdllitefpx.concepts.ConjunctiveConcept;
+import it.unibz.inf.tdllitefpx.concepts.NegatedConcept;
 import it.unibz.inf.tdllitefpx.concepts.QuantifiedRole;
 import it.unibz.inf.tdllitefpx.concepts.temporal.AlwaysFuture;
 import it.unibz.inf.tdllitefpx.concepts.temporal.AlwaysPast;
+import it.unibz.inf.tdllitefpx.concepts.temporal.NextFuture;
+import it.unibz.inf.tdllitefpx.concepts.temporal.NextPast;
+import it.unibz.inf.tdllitefpx.concepts.temporal.SometimeFuture;
+import it.unibz.inf.tdllitefpx.concepts.temporal.SometimePast;
+import it.unibz.inf.tdllitefpx.concepts.temporal.TemporalConcept;
 import it.unibz.inf.tdllitefpx.roles.AtomicRigidRole;
 import it.unibz.inf.tdllitefpx.roles.Role;
 import it.unibz.inf.tdllitefpx.tbox.ConceptInclusionAssertion;
+import it.unibz.inf.tdllitefpx.tbox.TBox;
+import it.unibz.inf.tdllitefpx.abox.ABoxRoleAssertion;
 
+public class ABox extends ConjunctiveFormula implements FormattableObj {
 
-public class ABox extends ConjunctiveFormula implements FormattableObj{
-		/**
-		 * 
-		 */
+	Set<ABoxConceptAssertion> ConceptsAssertion = new HashSet<ABoxConceptAssertion>();
+	Set<ABoxRoleAssertion> RolesAssertion = new HashSet<ABoxRoleAssertion>();
+	Set<Formula> ABoxFormula = new HashSet<Formula>();
+
+	Alphabet a = new Alphabet();
+	Variable x = new Variable("x");
+
 	private static final long serialVersionUID = 1L;
-		
-	public void add(Formula f){
-	//	isExtended = false; // TODO: Check if this is really the case
-		super.add(f); 
+
+	/**
+	 * Create the list of Concepts Assertion	
+	 * @param c an ABox Concept Assertion
+	 */
+	public void addConceptsAssertion(ABoxConceptAssertion c) {
+		ConceptsAssertion.add(c);
 	}
-		
-	public Set<Constant> getConstantsAbox() {
+
+	/**
+	 * Create the list of Concepts Assertion
+	 * @param r an ABox Role Assertion
+	 */
+	public void addABoxRoleAssertion(ABoxRoleAssertion r) {
+		RolesAssertion.add(r);
+	}
+
+	public Set<Constant> getConstantsABox() {
 		// isExtended = false; // TODO: Check if this is really the case
-		return super.getConstants();
+		Set<Constant> consts = new HashSet<Constant>();
+
+		for (ABoxConceptAssertion c : ConceptsAssertion) {
+			consts.add(c.getConstant());
+		}
+
+		for (ABoxRoleAssertion r : RolesAssertion) {
+			consts.add(r.getx());
+			consts.add(r.gety());
+		}
+		return consts;
+	}
+
+	public Set<Role> getRolesABox() {
+		HashSet<Role> roles = new HashSet<Role>();
+		for (ABoxRoleAssertion r : RolesAssertion) {
+			roles.add(r.ro);
+		}
+		return roles;
+	}
+
+	public Map<String, String> getStatsABox() {
+		HashMap<String, String> stats = new HashMap<String, String>();
+
+		stats.put("Concept_Assertion:", " " + ConceptsAssertion.size());
+		stats.put("Roles_Assertion:", " " + RolesAssertion.size());
+		return stats;
+	}
+
+	public void addExtensionConstraintsABox(TBox tbox) {
+		Set<QuantifiedRole> qRoles = tbox.getQuantifiedRoles();
+		// Set <Role> Roles=getRolesABox();
+		/*
+		 * >= 2.Name(John) >= 1.Name(John) /*>= 2.NameInv(Kennedy) >= 1.NameInv(Kennedy)
+		 */
+		for (QuantifiedRole qR : qRoles) {
+			for (ABoxRoleAssertion r : RolesAssertion){
+				if (qR.getRole() == r.ro) {
+					QuantifiedRole qRinv = new QuantifiedRole(r.ro.getInverse(), qR.getQ());
+					addConceptsAssertion(new ABoxConceptAssertion(qR, r.getx().toString()));
+					addConceptsAssertion(new ABoxConceptAssertion(qRinv, r.gety().toString()));
+					// System.out.println(" role ABox: "+qR.toString());
+				}
+
+			}
+		}
+	}
+
+	public Formula getABoxFormula() {
+		ConjunctiveFormula qtl = new ConjunctiveFormula();
+		for (ABoxConceptAssertion c : ConceptsAssertion) {
+			Formula cf = conceptToFormula(c.c);
+			cf.substitute(x, new Constant(c.value));
+			qtl.addConjunct(cf);
+		}
+		System.out.println("ABoxconceptFormula:" + qtl);
+		return qtl;
+	}
+
+	public Formula conceptToFormula(Concept c) {
+		if (c instanceof AtomicConcept)
+			return new Atom(c.toString(), x);
+		else if (c instanceof QuantifiedRole) {
+			QuantifiedRole qE = (QuantifiedRole) c;
+			Atom atom = a.get("E" + qE.getQ() + qE.getRole().toString(), 1);
+			atom.setArg(0, x);
+			return atom;
+		} else if (c instanceof QuantifiedRole) {
+			QuantifiedRole qE = (QuantifiedRole) c;
+			Atom atom = a.get("E" + qE.getQ() + qE.getRole().getInverse().toString(), 1);
+			atom.setArg(0, x);
+			return atom;
+		} else if (c instanceof BottomConcept)
+			return Bot.getStatic();
+		else if (c instanceof NegatedConcept) {
+			NegatedConcept nc = (NegatedConcept) c;
+			return new NegatedFormula(conceptToFormula(nc.getRefersTo()));
+		} else if (c instanceof ConjunctiveConcept) {
+			ConjunctiveConcept cc = (ConjunctiveConcept) c;
+			ConjunctiveFormula cf = new ConjunctiveFormula();
+			for (Concept d : cc.getConjuncts()) {
+				cf.addConjunct(conceptToFormula(d));
+			}
+			return cf;
+		} else if (c instanceof TemporalConcept) {
+			TemporalConcept d = (TemporalConcept) c;
+			if (c instanceof NextFuture) {
+				return new it.unibz.inf.qtl1.formulae.temporal.NextFuture(conceptToFormula(d.getRefersTo()));
+			} else if (c instanceof NextPast) {
+				return new it.unibz.inf.qtl1.formulae.temporal.NextPast(conceptToFormula(d.getRefersTo()));
+			} else if (c instanceof AlwaysPast) {
+				return new it.unibz.inf.qtl1.formulae.temporal.AlwaysPast(conceptToFormula(d.getRefersTo()));
+			} else if (c instanceof AlwaysFuture) {
+				return new it.unibz.inf.qtl1.formulae.temporal.AlwaysFuture(conceptToFormula(d.getRefersTo()));
+			} else if (c instanceof SometimePast) {
+				return new it.unibz.inf.qtl1.formulae.temporal.SometimePast(conceptToFormula(d.getRefersTo()));
+			} else if (c instanceof SometimeFuture) {
+				return new it.unibz.inf.qtl1.formulae.temporal.SometimeFuture(conceptToFormula(d.getRefersTo()));
+			}
+
+		}
+
+		System.err.println("Unexpected case " + c.getClass().toString());
+		return null;
 	}
 
 	public String toString(OutputFormat fmt) throws SymbolUndefinedException {
 		// TODO Auto-generated method stub
 		return this.toString();
-	}
-
-	@Override
-	public Set<Constant> getConstants() {
-		// TODO Auto-generated method stub
-		return null;
 	}
 
 	@Override
@@ -116,123 +244,3 @@ public class ABox extends ConjunctiveFormula implements FormattableObj{
 	}
 
 }
-
-	
-/*		public Set<Role> getRoles(){
-		
-		HashSet<Role> roles = new HashSet<Role>();
-		for(ConceptInclusionAssertion ci: this){
-			roles.addAll(ci.getLHS().getRoles());
-			roles.addAll(ci.getRHS().getRoles());
-		}
-		return roles;
-	}
-
-	@Override
-	public String toString(OutputFormat fmt) throws SymbolUndefinedException {
-		StringBuilder sb = new StringBuilder();
-		for (ConceptInclusionAssertion ci: this){
-			sb.append(ci.toString(fmt)+
-					fmt.getSymbol(this));
-		}
-		return sb.toString();
-	}
-	
-	public Map<String, String> getStats(){
-		HashMap<String, String> stats = new HashMap<String, String>();
-		
-		stats.put("CIs:", " "+this.size());
-		stats.put("Basic Concepts:", " "+this.getAtomicConcepts().size());
-		stats.put("Roles:", " "+this.getRoles().size());
-		return stats;
-	}
-	
-	public Set<QuantifiedRole> getQuantifiedRoles(){
-		Set<Concept> concepts = getAtomicConcepts();
-		Set<QuantifiedRole> qR = new HashSet<QuantifiedRole>();
-		
-		for(Concept c: concepts){
-			if(c instanceof QuantifiedRole){
-				qR.add((QuantifiedRole) c);
-			}
-		}
-		
-		return qR;
-	}
-	
-	public Set<Concept> getAtomicConcepts(){
-		HashSet<Concept> concepts = new HashSet<Concept>();
-
-		for(ConceptInclusionAssertion ci: this){
-			concepts.addAll(ci.getLHS().getBasicConcepts());
-			concepts.addAll(ci.getRHS().getBasicConcepts());
-		}
-		return concepts;
-	}
-	
-	private boolean isExtended = false;
-	public boolean isExtended(){
-		System.out.println("is extended?"+isExtended);
-		return isExtended;}
-	
-	/***
-	 * Transforms the TBox into an extended TBox as explained in the report.
-	 */
-/*		public void addExtensionConstraints(){
-		isExtended = true;
-		System.out.println("is extended:"+isExtended);
-		Set<QuantifiedRole> qRoles = getQuantifiedRoles();
-		
-		/* delta: + >qR \subseteq >q'R
-		 * for q > qì and >qR, >q'R in T an thre's no q'' s.t. q>q''>q' and q''R \in T
-		 */
-/*			Map<Role,List<QuantifiedRole>> qRMap = new HashMap<Role, List<QuantifiedRole>>();
-		for(QuantifiedRole qR : qRoles){
-			List<QuantifiedRole> list = qRMap.get(qR.getRole());
-			if(list == null){
-				list = new ArrayList<QuantifiedRole>();
-				qRMap.put(qR.getRole(),list);
-			}
-			list.add(qR);
-		}
-		
-		for(Entry<Role, List<QuantifiedRole>> e: qRMap.entrySet()){
-			List<QuantifiedRole> qrL = e.getValue();
-			Collections.sort(qrL, new Comparator<QuantifiedRole>() {
-				@Override
-				public int compare(QuantifiedRole o1, QuantifiedRole o2) {
-					return o2.getQ()-o1.getQ();
-				}
-			});
-			
-			for(int i=0;i<qrL.size()-1;i++){
-				this.add(new ConceptInclusionAssertion(
-						qrL.get(i),
-						qrL.get(i+1)));
-				System.out.println(qrL.get(i)+" "+qrL.get(i+1));
-			}
-		}
-		
-		/* G: + >qR \subseteq BOX >qR 
-		 * for >qR \in T an R is rigid role
-		 * 
-		 * TODO: Avoid duplications
-		 */
-/*			for(QuantifiedRole qR : qRoles){
-			if(qR.getRole().getRefersTo() instanceof AtomicRigidRole){
-				this.add(new ConceptInclusionAssertion(
-					qR, 
-					//new Always(qR)));
-					new AlwaysFuture(new AlwaysPast(qR))));
-				    System.out.println("quantified role: "+qR);
-			}
-		}
-		
-	}
-*/		/*
-	public String toString(OutputFormat fmt) throws SymbolUndefinedException {
-	StringBuilder sb = new StringBuilder();
-	for (ConjunctiveFormula fi: this){
-	sb.append(fi.toString(fmt)+ fmt.getSymbol(this));
-	}
-	return sb.toString();*/

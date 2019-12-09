@@ -14,47 +14,48 @@ import it.unibz.inf.qtl1.terms.Variable;
 import it.unibz.inf.tdllitefpx.concepts.Concept;
 import it.unibz.inf.qtl1.formulae.Formula;
 import it.unibz.inf.qtl1.terms.Variable;
+import it.unibz.inf.tdllitefpx.TDLLiteFPXConverter;
 
 public class ABoxConceptAssertion implements FormattableObj{
 	Concept c;
 	String value;
 	
 	public ABoxConceptAssertion(Concept c, String v){
-		// A(x) A(y) G A(maria)
 		this.c = c;
 		this.value = v;
-	}
-
-	public Formula getFormula() {
-		Variable x = new Variable("x");
-		Formula fa = new Atom(c.toString(), x);
-		//System.out.println("insertion:"+fa);
-		return fa;
-		//UniversalFormula a1 = new UniversalFormula(conceptToFormula(this.c), x);
+		// A(x) A(y) G A(maria)
 	}
 	
-	public Concept getAboxConceptAssertion() {
+	public Concept getConceptAssertion(){
 		return this.c;
 	}
 	
-	public String getAboxValueAssertion() {
-		return this.value;
+	public Constant getConstant(){
+		return new Constant (this.value);
 	}
 	
+	
+	public Formula getFormula(){
+		Variable x = new Variable("x");
+		Formula fa=new Atom(c.toString(), x);
+		//Formula fc=conceptToFormula(c);
+		//UniversalFormula fa = new UniversalFormula(fc, x);
+		return fa;
+	}
+	
+
 	public Formula makeAssertionPropositional(){
 		Variable x = new Variable("x");
-		Formula fa = this.getFormula();
+		Formula fa= this.getFormula();
 		fa.substitute(x, new Constant(value));
 		System.out.println("insertionltl:"+fa);
 		return fa;
 	}
 	
 	@Override
+	
 	public String toString(OutputFormat fmt) throws SymbolUndefinedException {
-		//return this.toString();
-		
-		return getAboxConceptAssertion().toString(fmt) +
-		"(" + getAboxValueAssertion().toString() + ")";
+		return this.toString();
 	}
 
 }

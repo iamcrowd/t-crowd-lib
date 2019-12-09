@@ -4,44 +4,40 @@ import org.gario.code.output.FormattableObj;
 import org.gario.code.output.OutputFormat;
 import org.gario.code.output.SymbolUndefinedException;
 
+import it.unibz.inf.qtl1.terms.Constant;
 import it.unibz.inf.tdllitefpx.concepts.Concept;
-import org.gario.code.output.OutputFormat;
-import org.gario.code.output.SymbolUndefinedException;
-
-import it.unibz.inf.tdllitefpx.concepts.Concept;
+import it.unibz.inf.tdllitefpx.roles.Role;
 
 public class ABoxRoleAssertion implements FormattableObj{
-	/*Role ro;
-	List<Constant> values = new ArrayList<Constant>();
+	Role ro;
+	String x;
+	String y;
 	
-	public AboxAssertion(Role ro, List<Constant> value){
+	public ABoxRoleAssertion (Role ro, String valuex, String valuey){
+		// R(x,y)
 		this.ro = ro;
 		this.x = valuex;
 		this.y = valuey;
-		// A(x) A(y) 
+	}
+	
+	public  Set<Constant> getConstant(){
+		Set<Constant> consts = new HashSet<Constant>();
+		consts.add(new Constant(x));
+		consts.add(new Constant(y));
+		return consts;
 	}
 
-	public Concept getLHS() { return lhs;}
-	public Concept getRHS() { return rhs;}
 	
-	public int countSuccessors() {
-		for 
-		
-		
-		// return qRole;
+	public Constant getx(){
+		return new Constant(this.x);
 	}
-	*/
-	
 
+	public Constant gety(){
+		return new Constant(this.y);
+	}
+	
 	@Override
-	public String toString(OutputFormat fmt) throws SymbolUndefinedException {
-		
-		return "to be implemented";
-		
-		/*return getLHS().toString(fmt) +
-		fmt.getSymbol(this)+
-		getRHS().toString(fmt); */
-		
+	public String toString(OutputFormat fmt) throws SymbolUndefinedException {	
+		return this.toString(); 
 	}
-
 }
