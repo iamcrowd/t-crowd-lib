@@ -8,16 +8,23 @@ import it.unibz.inf.qtl1.formulae.quantified.UniversalFormula;
 import it.unibz.inf.qtl1.output.LatexDocumentCNF;
 import it.unibz.inf.qtl1.output.NuSMVOutput;
 import it.unibz.inf.qtl1.terms.Constant;
+import it.unibz.inf.qtl1.terms.Term;
 import it.unibz.inf.qtl1.terms.Variable;
 import it.unibz.inf.tdllitefpx.concepts.Concept;
 import it.unibz.inf.tdllitefpx.concepts.AtomicConcept;
+import it.unibz.inf.tdllitefpx.concepts.Concept;
+import it.unibz.inf.tdllitefpx.concepts.temporal.NextFuture;
 import it.unibz.inf.tdllitefpx.output.LatexOutputDocument;
+import it.unibz.inf.tdllitefpx.roles.AtomicRigidRole;
+import it.unibz.inf.tdllitefpx.roles.PositiveRole;
+import it.unibz.inf.tdllitefpx.roles.Role;
 import it.unibz.inf.tdllitefpx.tbox.TBox;
-
 import it.unibz.inf.tdllitefpx.abox.ABox;
 import it.unibz.inf.tdllitefpx.abox.ABoxConceptAssertion;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -32,9 +39,14 @@ public class TDLLiteFPXReasoner {
 	 * prefix specifies the names of the files.
 	 * @throws Exception 
 	 */
-	public static void buildCheckSatisfiability(TBox t, boolean verbose, String prefix) throws Exception{
+	public static void buildCheckSatisfiability(
+			TBox t, 
+			boolean verbose, 
+			String prefix) 
+					throws Exception{
 		TDLLiteFPXReasoner.buildCheck(t, verbose, prefix, CheckType.satisfiability, null );
 	}
+	
 	/***
 	 * Verifies the satisfiability of the concept {@literal c} 
 	 * in the tbox {@literal t}.
@@ -46,20 +58,29 @@ public class TDLLiteFPXReasoner {
 			TBox t,
 			Concept c,
 			boolean verbose,
-			String prefix) throws Exception{
+			String prefix) 
+					throws Exception{
 		Map<String,Object> param = new HashMap<String, Object>();
 		param.put("Concept",c);
-		TDLLiteFPXReasoner.buildCheck(t, verbose, prefix, CheckType.entity_consistency, param);
+		TDLLiteFPXReasoner.buildCheck(t, verbose, prefix, CheckType.entity_consistency, null);
 	}
 	
-	public static void buildCheckAboxtSatisfiability(TBox t,boolean verbose,String prefix, ABox abox) throws Exception{
-		boolean data = true;
-		TDLLiteFPXReasoner.buildAboxCheck(t, verbose, prefix, CheckType.Abox_consistency, abox);
-	}
-	
-	private static void buildAboxCheck(
+	public static void buildCheckABoxtSatisfiability(
 			TBox t,
-			boolean verbose, String prefix, CheckType type, ABox abox) throws Exception{
+			boolean verbose,
+			String prefix,
+			ABox ABox) 
+					throws Exception{
+		TDLLiteFPXReasoner.buildCheck(t, verbose, prefix, CheckType.Abox_consistency, ABox);
+	}
+	
+	private static void buildCheck(
+			TBox t, 
+			boolean verbose, 
+			String prefix, 
+			CheckType type, 
+			ABox ABox) 
+					throws Exception{
 		long total_time = System.currentTimeMillis();
 		long start_time;
 		
@@ -68,15 +89,17 @@ public class TDLLiteFPXReasoner {
 		
 		if(verbose)
 			(new LatexOutputDocument(t)).toFile(prefix+"tbox.tex");
+			ABox.getStatsABox();
+			System.out.print("TBox -> Qtl :");
+			start_time = System.currentTimeMillis();
+			TDLLiteFPXConverter conv = new TDLLiteFPXConverter(t);
+			Formula qtl = conv.getFormula();
 		
-		System.out.print("TBox -> Qtl :");
-		start_time = System.currentTimeMillis();
-		
-		TDLLiteFPXConverter conv = new TDLLiteFPXConverter(t);
-		Formula qtl = conv.getFormula();
-		qtl = qtl.makeTemporalStrict();
-		
-		System.out.println(System.currentTimeMillis()-start_time + "ms");		
+		/*Here we consider that temporal operator are stricts
+		//qtl = qtl.makeTemporalStrict();
+		*/
+			System.out.println(System.currentTimeMillis()-start_time + "ms");		
+			ConjunctiveFormula qtlABox = new ConjunctiveFormula();
 		
 		if(type == CheckType.Abox_consistency){
 			/* Add entity consistency check:
@@ -85,102 +108,26 @@ public class TDLLiteFPXReasoner {
 			 */
 			if(qtl instanceof UniversalFormula){
 				
-			    Set<Constant> constsAbox = abox.getConstantsAbox();
+			    Set<Constant> constsABox = ABox.getConstantsABox();
 				Set<Constant> consts = qtl.getConstants();
-				consts.addAll(constsAbox);
+				consts.addAll(constsABox);
+				System.out.println("");
+				System.out.println("Constants: "+consts);
 				
-				System.out.println("les nouvelles constantes:"+consts);
-				//Abox.toString();
-				Formula o = (Formula) abox;
-				o = o.makeTemporalStrict();
+				
+			    ABox.addExtensionConstraintsABox(t);
+			    Formula o =ABox.getABoxFormula();
 			
-				//ArrayList Abox1=(List) Abox;
-				System.out.println("la taille de la Abox est:"+abox.size());
-				
-				Variable x = ((UniversalFormula) qtl).getQuantifiedVar();
-				qtl = new UniversalFormula(new ConjunctiveFormula(
-				qtl.getSubFormulae().get(0),
-					o),
-					x);
-				
-				//qtl.add(new Formula(Abox));
-				//Abox.addConjunct(qtl);
-				//qtl=Abox;
-				//System.out.println(qtl);
+				qtlABox= new ConjunctiveFormula(qtl,o);
 				
 			}else
 				throw new Exception("Undefined consistency check for qtl not in factorized form");
 		}
 		
 		if(verbose)
-			(new LatexDocumentCNF(qtl)).toFile(prefix+"qtl.tex");
+			(new LatexDocumentCNF(qtlABox)).toFile(prefix+"qtl.tex");
 		
-		System.out.print("Qtl N -> LTL:");
-		start_time = System.currentTimeMillis();
-	
-		Formula ltl = qtl.makePropositional();
-		
-		System.out.println(System.currentTimeMillis()-start_time + "ms");
-		
-		if(verbose)
-			(new LatexDocumentCNF(ltl)).toFile(prefix+"ltl.tex");
-		
-		System.out.println("Generating NuSMV file...");
-		(new NuSMVOutput(ltl)).toFile(prefix+".smv");
-
-		System.out.println("Done! Total time:" + (System.currentTimeMillis()-total_time) + "ms");
-		System.out.println("Num of Propositions: "+ltl.getPropositions().size());		
-			
-	}
-	
-	private static void buildCheck(
-			TBox t,
-			boolean verbose, String prefix, CheckType type, Map<String,Object> param) throws Exception{
-		long total_time = System.currentTimeMillis();
-		long start_time;
-		
-		// Extends the TBox, adding the delta_R and G
-		t.addExtensionConstraints();
-		
-		if(verbose)
-			(new LatexOutputDocument(t)).toFile(prefix+"tbox.tex");
-		
-		System.out.print("TBox -> Qtl :");
-		start_time = System.currentTimeMillis();
-		
-		TDLLiteFPXConverter conv = new TDLLiteFPXConverter(t);
-		Formula qtl = conv.getFormula();
-		qtl = qtl.makeTemporalStrict();
-		
-		System.out.println(System.currentTimeMillis()-start_time + "ms");		
-		
-		if(type == CheckType.entity_consistency){
-			/* Add entity consistency check:
-			 * 	This means verifying TBox /\ E(c) 
-			 * 	for the entity E and a brand new constant c 
-			 */
-			if(qtl instanceof UniversalFormula){
-				Concept c  = (Concept) param.get("Concept");
-				String name = c.toString()+"witness";
-				Set<Constant> consts = qtl.getConstants();
-				while(consts.contains(new Constant(name))){
-					name = name +"0";
-				}
-			
-				Variable x = ((UniversalFormula) qtl).getQuantifiedVar();
-				Atom cAtom = (Atom) conv.conceptToFormula(c);
-				cAtom.substitute(x, new Constant(name));
-			
-				qtl = new UniversalFormula(new ConjunctiveFormula(
-					qtl.getSubFormulae().get(0),
-					cAtom),
-					x);
-			}else
-				throw new Exception("Undefined consistency check for qtl not in factorized form");
-		}
-		
-		if(verbose)
-			(new LatexDocumentCNF(qtl)).toFile(prefix+"qtl.tex");
+		/* Here we have past operators so now need
 		
 		System.out.print("Qtl Z -> Qtl N :");
 		start_time = System.currentTimeMillis();
@@ -192,22 +139,24 @@ public class TDLLiteFPXReasoner {
 		
 		if(verbose)
 			(new LatexDocumentCNF(qtl_N)).toFile(prefix+"qtlN.tex");
-		
+		*/
+		System.out.println("");
 		System.out.print("Qtl N -> LTL:");
 		start_time = System.currentTimeMillis();
 		
-		Formula ltl = qtl_N.makePropositional();
 		
+		Formula ltl = qtlABox.makePropositional();
 		System.out.println(System.currentTimeMillis()-start_time + "ms");
+		
 		
 		if(verbose)
 			(new LatexDocumentCNF(ltl)).toFile(prefix+"ltl.tex");
 		
-		System.out.println("Generating NuSMV file...");
-		(new NuSMVOutput(ltl)).toFile(prefix+".smv");
+			System.out.println("Generating NuSMV file...");
+			(new NuSMVOutput(ltl)).toFile(prefix+".smv");
 
-		System.out.println("Done! Total time:" + (System.currentTimeMillis()-total_time) + "ms");
-		System.out.println("Num of Propositions: "+ltl.getPropositions().size());		
+			System.out.println("Done! Total time:" + (System.currentTimeMillis()-total_time) + "ms");
+			System.out.println("Num of Propositions: "+ltl.getPropositions().size());		
 			
 	}
 
