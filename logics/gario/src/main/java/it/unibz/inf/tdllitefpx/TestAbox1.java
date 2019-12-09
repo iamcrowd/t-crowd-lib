@@ -10,6 +10,7 @@ import it.unibz.inf.tdllitefpx.TDLLiteFPXReasoner;
 
 import it.unibz.inf.tdllitefpx.abox.ABox;
 import it.unibz.inf.tdllitefpx.abox.ABoxConceptAssertion;
+import it.unibz.inf.tdllitefpx.abox.ABoxRoleAssertion;
 
 import it.unibz.inf.tdllitefpx.concepts.AtomicConcept;
 import it.unibz.inf.tdllitefpx.concepts.BottomConcept;
@@ -33,19 +34,16 @@ public class TestAbox1 {
 	
 	public static void main(String[] args) throws Exception{
 		TestAbox1 exTDL = new TestAbox1();
-		
-	/*	TDLLiteFPXReasoner.buildCheckSatisfiability(
-				exTDL.getTBox(),
-				true, 
-				"Status5");  */
+
 		exTDL.getABox();
-		TDLLiteFPXReasoner.buildCheckAboxtSatisfiability(
+		TDLLiteFPXReasoner.buildCheckABoxtSatisfiability(
 				exTDL.getTBox(),
 				true, 
 				"Abox1",exTDL.getABox());
 		
 		Map<String, String> stats = exTDL.getTBox().getStats();
-		
+		System.out.println("");
+		System.out.println("------TBOX------");
 		String key;
 		key="Basic Concepts:";
 		System.out.println(key+ stats.get(key));
@@ -53,6 +51,12 @@ public class TestAbox1 {
 		System.out.println(key+ stats.get(key));
 		key="CIs:";
 		System.out.println(key+ stats.get(key));
+		System.out.println("------ABOX------");
+		Map<String, String> statsA = exTDL.getABox().getStatsABox();
+		key="Concept_Assertion";
+		System.out.println(key+ statsA.get(key));
+		key="Roles_Assertion:";
+		System.out.println(key+ statsA.get(key));
 		
 		
 	}
@@ -73,14 +77,19 @@ public class TestAbox1 {
 	public ABox getABox(){
 		
 		ABox A = new ABox();
-		ABoxConceptAssertion a1= new ABoxConceptAssertion(new NextFuture(Person),"john");
-		Formula ltlfa1 = a1.makeAssertionPropositional();
-		A.add(ltlfa1);
+		ABoxConceptAssertion a1= new ABoxConceptAssertion(new NextFuture(Person),"John");
+		
+		A.addConceptsAssertion(a1);
+		
 		
 		ABoxConceptAssertion a2= new ABoxConceptAssertion(Person,"Maria");
-		Formula ltlfa2 = a2.makeAssertionPropositional();
-		A.add(ltlfa2);
-	
+		A.addConceptsAssertion(a2);
+		
+		 
+		ABoxRoleAssertion r1= new ABoxRoleAssertion(Name,"John", "Kennedy");
+		A.addABoxRoleAssertion(r1);
+		ABoxRoleAssertion r2= new ABoxRoleAssertion(Name,"John", "Mcking");
+		A.addABoxRoleAssertion(r2);
 	//	A.addAll(getABox0());
 	//	A.addAll(getABox1());
 		

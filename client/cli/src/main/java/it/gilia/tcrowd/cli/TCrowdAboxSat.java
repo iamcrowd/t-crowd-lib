@@ -15,10 +15,11 @@ import it.unibz.inf.tdllitefpx.tbox.TBox;
 
 import it.unibz.inf.tdllitefpx.TDLLiteFPXReasoner;
 
-import it.unibz.inf.tdllitefpx.abox.Abox;
-import it.unibz.inf.tdllitefpx.abox.AboxConceptAssertion;
+import it.unibz.inf.tdllitefpx.abox.ABox;
+import it.unibz.inf.tdllitefpx.abox.ABoxConceptAssertion;
 
 import it.unibz.inf.tdllitefpx.TestAbox1;
+import it.unibz.inf.tdllitefpx.Adult;
 
 import it.gilia.tcrowd.encoding.DefaultStrategy;
 import it.gilia.tcrowd.utils.*;
@@ -46,20 +47,16 @@ public class TCrowdAboxSat extends TCrowdEncodingERvtRelatedCommand {
 
         try {
             
-    		TestAbox1 exTDL = new TestAbox1();
-    		
-    		/*	TDLLiteFPXReasoner.buildCheckSatisfiability(
-    					exTDL.getTBox(),
-    					true, 
-    					"Status5");  
-    			exTDL.getABox();*/
-    			TDLLiteFPXReasoner.buildCheckAboxtSatisfiability(
+    			TestAbox1 exTDL = new TestAbox1();	
+    			
+    			TDLLiteFPXReasoner.buildCheckABoxtSatisfiability(
     					exTDL.getTBox(),
     					true, 
     					"Abox1",exTDL.getABox());
     			
     			Map<String, String> stats = exTDL.getTBox().getStats();
-    			
+    			System.out.println("");
+    			System.out.println("------TBOX------");
     			String key;
     			key="Basic Concepts:";
     			System.out.println(key+ stats.get(key));
@@ -67,7 +64,39 @@ public class TCrowdAboxSat extends TCrowdEncodingERvtRelatedCommand {
     			System.out.println(key+ stats.get(key));
     			key="CIs:";
     			System.out.println(key+ stats.get(key));
-        		
+    			System.out.println("------ABOX------");
+    			Map<String, String> statsA = exTDL.getABox().getStatsABox();
+    			key="Concept_Assertion";
+    			System.out.println(key+ statsA.get(key));
+    			key="Roles_Assertion:";
+    			System.out.println(key+ statsA.get(key));
+    			
+    			Adult exAdultTDL = new Adult();
+    			
+    			TDLLiteFPXReasoner.buildCheckABoxtSatisfiability(
+    					exAdultTDL.getTBox(), 
+    					true, 
+    					"Adult", 
+    					exAdultTDL.getABox());
+    			
+    			Map<String, String> stats1 = exAdultTDL.getTBox().getStats();
+    			System.out.println("");
+    			System.out.println("------TBOX Adult------");
+    			String key1;
+    			key1 = "Basic Concepts:";
+    			System.out.println(key1 + stats1.get(key1));
+    			key1 = "Roles:";
+    			System.out.println(key1 + stats1.get(key1));
+    			key1 = "CIs:";
+    			System.out.println(key1 + stats1.get(key1));
+    			System.out.println("------ABOX Adult------");
+    			Map<String, String> statsA1 = exAdultTDL.getABox().getStatsABox();
+    			key1 = "Concept_Assertion";
+    			System.out.println(key1 + statsA1.get(key1));
+    			key1 = "Roles_Assertion:";
+    			System.out.println(key1 + statsA1.get(key1));
+
+    			
 
         } catch (Exception e) {
             System.err.println("Error occurred during encoding: "

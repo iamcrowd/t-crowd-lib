@@ -4,6 +4,9 @@ import org.gario.code.output.FormattableObj;
 import org.gario.code.output.OutputFormat;
 import org.gario.code.output.SymbolUndefinedException;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import it.unibz.inf.qtl1.terms.Constant;
 import it.unibz.inf.tdllitefpx.concepts.Concept;
 import it.unibz.inf.tdllitefpx.roles.Role;
