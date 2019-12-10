@@ -44,8 +44,8 @@ import java.io.IOException;
 
 @Command(name = "NuSMV",
         description = "Encode ERvt model into LTL formulae and return a LTL file together with a NuSMV file including"
-        		+ "the query given as an input file. If file is empty, TBox is to be checked for satisifiability."
-        		+ "Otherwise, query must be a concept to be checked.")
+        		+ " the query given as an input file. If file is empty, TBox is to be checked for satisifiability."
+        		+ " Otherwise, query must be a concept to be checked.")
 
 public class TCrowdNuSMV extends TCrowdEncodingERvtRelatedCommand {
 	
@@ -59,7 +59,7 @@ public class TCrowdNuSMV extends TCrowdEncodingERvtRelatedCommand {
     public void run() {
 
         try {
-            Objects.requireNonNull(tModel, "JSON temporal model file must not be null");
+            Objects.requireNonNull(tModel, "JSON ERvt temporal model file must not be null");
             Objects.requireNonNull(queryF, "Query file must not be null");
     		
             InputStream is = new FileInputStream(tModel);
