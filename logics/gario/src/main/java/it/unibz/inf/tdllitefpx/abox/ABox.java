@@ -179,9 +179,19 @@ public class ABox extends ConjunctiveFormula implements FormattableObj {
 		return null;
 	}
 
+	@Override
 	public String toString(OutputFormat fmt) throws SymbolUndefinedException {
-		// TODO Auto-generated method stub
-		return this.toString();
+		StringBuilder sb = new StringBuilder();
+		
+		for (ABoxConceptAssertion c : ConceptsAssertion) {
+			sb.append(c.toString(fmt));
+		}
+		
+		for (ABoxRoleAssertion r : RolesAssertion) {
+			sb.append(r.toString(fmt));
+		}
+		
+		return sb.toString();
 	}
 
 	@Override

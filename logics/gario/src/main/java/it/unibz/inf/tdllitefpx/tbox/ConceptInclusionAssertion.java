@@ -18,8 +18,7 @@ public class ConceptInclusionAssertion implements FormattableObj{
 	public Concept getRHS() { return rhs;}
 
 	@Override
-	public String toString(OutputFormat fmt) throws SymbolUndefinedException {
-		
+	public String toString(OutputFormat fmt) throws SymbolUndefinedException {		
 		return getLHS().toString(fmt) +
 		fmt.getSymbol(this)+
 		getRHS().toString(fmt); 

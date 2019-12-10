@@ -53,9 +53,9 @@ public class ABoxConceptAssertion implements FormattableObj{
 	}
 	
 	@Override
-	
 	public String toString(OutputFormat fmt) throws SymbolUndefinedException {
-		return this.toString();
+		return getConceptAssertion().toString(fmt) + "(" + 
+		getConstant() + ")\\";
 	}
 
 }

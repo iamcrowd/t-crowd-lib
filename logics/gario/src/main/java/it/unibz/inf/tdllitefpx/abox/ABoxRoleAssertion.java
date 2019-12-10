@@ -30,6 +30,9 @@ public class ABoxRoleAssertion implements FormattableObj{
 		return consts;
 	}
 
+	public Role getRole() {
+		return this.ro;
+	}
 	
 	public Constant getx(){
 		return new Constant(this.x);
@@ -41,6 +44,7 @@ public class ABoxRoleAssertion implements FormattableObj{
 	
 	@Override
 	public String toString(OutputFormat fmt) throws SymbolUndefinedException {	
-		return this.toString(); 
+		return getRole().getRefersTo().toString(fmt) + "(" + 
+		getx() + "," + gety() + ")\\";
 	}
 }

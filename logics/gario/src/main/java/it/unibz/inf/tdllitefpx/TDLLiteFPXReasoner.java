@@ -87,19 +87,22 @@ public class TDLLiteFPXReasoner {
 		// Extends the TBox, adding the delta_R and G
 		t.addExtensionConstraints();
 		
-		if(verbose)
+		if(verbose) {
 			(new LatexOutputDocument(t)).toFile(prefix+"tbox.tex");
-			ABox.getStatsABox();
-			System.out.print("TBox -> Qtl :");
-			start_time = System.currentTimeMillis();
-			TDLLiteFPXConverter conv = new TDLLiteFPXConverter(t);
-			Formula qtl = conv.getFormula();
+			(new LatexOutputDocument(ABox)).toFile(prefix+"abox.tex");
+		}
+		
+		ABox.getStatsABox();
+		System.out.print("TBox -> Qtl :");
+		start_time = System.currentTimeMillis();
+		TDLLiteFPXConverter conv = new TDLLiteFPXConverter(t);
+		Formula qtl = conv.getFormula();
 		
 		/*Here we consider that temporal operator are stricts
 		//qtl = qtl.makeTemporalStrict();
 		*/
-			System.out.println(System.currentTimeMillis()-start_time + "ms");		
-			ConjunctiveFormula qtlABox = new ConjunctiveFormula();
+		System.out.println(System.currentTimeMillis()-start_time + "ms");		
+		ConjunctiveFormula qtlABox = new ConjunctiveFormula();
 		
 		if(type == CheckType.Abox_consistency){
 			/* Add entity consistency check:
@@ -116,7 +119,8 @@ public class TDLLiteFPXReasoner {
 				
 				
 			    ABox.addExtensionConstraintsABox(t);
-			    Formula o =ABox.getABoxFormula();
+			    
+			    Formula o = ABox.getABoxFormula();
 			
 				qtlABox= new ConjunctiveFormula(qtl,o);
 				

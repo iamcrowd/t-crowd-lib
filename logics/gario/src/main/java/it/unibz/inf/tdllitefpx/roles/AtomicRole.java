@@ -1,6 +1,10 @@
 package it.unibz.inf.tdllitefpx.roles;
 
-public abstract class AtomicRole {
+import org.gario.code.output.FormattableObj;
+import org.gario.code.output.OutputFormat;
+import org.gario.code.output.SymbolUndefinedException;
+
+public abstract class AtomicRole implements FormattableObj{
 	String name;
 	
 	public AtomicRole(String name){
@@ -17,5 +21,11 @@ public abstract class AtomicRole {
 				return true;
 		}
 		return false;
+	}
+	
+	@Override
+	public String toString(OutputFormat fmt) throws SymbolUndefinedException {		
+		return this.name; 
+		
 	}
 }
