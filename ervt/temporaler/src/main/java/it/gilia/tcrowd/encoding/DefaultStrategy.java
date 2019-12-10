@@ -40,6 +40,9 @@ import it.unibz.inf.tdllitefpx.roles.Role;
 import it.unibz.inf.tdllitefpx.roles.AtomicRole;
 import it.unibz.inf.tdllitefpx.tbox.ConceptInclusionAssertion;
 import it.unibz.inf.tdllitefpx.tbox.TBox;
+import it.unibz.inf.tdllitefpx.abox.ABox;
+import it.unibz.inf.tdllitefpx.abox.ABoxConceptAssertion;
+import it.unibz.inf.tdllitefpx.abox.ABoxRoleAssertion;
 
 /**
  * 
@@ -498,7 +501,7 @@ public class DefaultStrategy extends Strategy{
        @endcode
      *
 	 */
-	public void to_dllitefpxABox(JSONObject ervtABox_json) {
+	public ABox to_dllitefpxABox(JSONObject ervtABox_json) {
 		System.out.println("Starting ABox JSON: "+ervtABox_json);
 		
 		ervtABox_json.keys().forEachRemaining(key -> {
@@ -529,6 +532,7 @@ public class DefaultStrategy extends Strategy{
 				}
 			}
 		});
+		return this.getABox();
 	}
 	
 	public void getABoxConceptAssertion(JSONObject assertion) {
@@ -537,24 +541,26 @@ public class DefaultStrategy extends Strategy{
 		System.out.println("Instance: "+assertion.get("instance"));
 		System.out.println("Timestamp: "+assertion.get("timestamp"));
 		
-		String concept = new String(assertion.get("concept").toString());
+		Concept concept = this.giveMeAconcept(assertion.get("concept").toString());
 		String instance = new String(assertion.get("instance").toString());
 		
 		int numberOfNext = Integer.parseInt(assertion.get("timestamp").toString());
 		System.out.println("Integer: "+numberOfNext);
 		
 		if (numberOfNext == 0) {
-			System.out.println("Asserted Concept: "+assertion.get("concept")+"("+assertion.get("instance")+")");
+			ABoxConceptAssertion a1 = new ABoxConceptAssertion(concept, instance);
+			this.myABox.addConceptsAssertion(a1);
 			
 		}else if (numberOfNext > 0) {
 			int countNext = 1;
-			String atNextTime = new String(concept+"("+instance+")");
+
 			while (countNext <= numberOfNext) {
-				String tconcept = "X "+atNextTime;
-				atNextTime = tconcept;
+				Concept tconcept = new NextFuture(concept);
+				concept = tconcept;
 				countNext++;
 			}
-			System.out.println("Asserted Concept at more than 0 time: "+atNextTime);
+			ABoxConceptAssertion a1 = new ABoxConceptAssertion(concept, instance);
+			this.myABox.addConceptsAssertion(a1);
 		}
 	}
 	
