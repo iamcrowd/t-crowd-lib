@@ -37,7 +37,7 @@ public class TCrowdTDLLiteFPX extends TCrowdEncodingERvtRelatedCommand {
     public void run() {
 
         try {
-            Objects.requireNonNull(tModel, "JSON temporal model file must not be null");
+            Objects.requireNonNull(tModel, "JSON ERvt temporal model file must not be null");
             
             InputStream is = new FileInputStream(tModel);
                        

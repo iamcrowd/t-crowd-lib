@@ -60,7 +60,7 @@ public class TCrowdNuSMV extends TCrowdEncodingERvtRelatedCommand {
     public void run() {
 
         try {
-            Objects.requireNonNull(tModel, "JSON temporal model file must not be null");
+            Objects.requireNonNull(tModel, "JSON ERvt temporal model file must not be null");
             Objects.requireNonNull(tData, "JSON temporal data file must not be null");
             Objects.requireNonNull(queryF, "Query file must not be null");
     		
