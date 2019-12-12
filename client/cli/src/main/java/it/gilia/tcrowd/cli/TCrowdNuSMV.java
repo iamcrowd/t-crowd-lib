@@ -84,7 +84,7 @@ public class TCrowdNuSMV extends TCrowdEncodingERvtRelatedCommand {
             System.out.println(jsonTxt);
             
             String jsonTxtData = IOUtils.toString(td, "UTF-8");
-            System.out.println(jsonTxt);
+            System.out.println(jsonTxtData);
 
             JSONObject objectModel = new JSONObject(jsonTxt);
             JSONObject objectData = new JSONObject(jsonTxtData);

@@ -12,6 +12,7 @@ import it.unibz.inf.tdllitefpx.ExampleTDL;
 //import it.unibz.inf.tdllitefpx.TDLLiteFPXConverter;
 import it.unibz.inf.tdllitefpx.output.LatexOutputDocument;
 import it.unibz.inf.tdllitefpx.tbox.TBox;
+import it.unibz.inf.tdllitefpx.abox.ABox;
 
 import it.gilia.tcrowd.encoding.DefaultStrategy;
 import it.gilia.tcrowd.utils.*;
@@ -30,7 +31,7 @@ import org.apache.commons.io.IOUtils;
 
 
 @Command(name = "tdllitefpx",
-        description = "Encode ERvt model as a KB in TDL DL-Litefpx")
+        description = "Encode both ERvt model and Temporal data as a KB <TBox,ABox> in TDL DL-Litefpx.")
 public class TCrowdTDLLiteFPX extends TCrowdEncodingERvtRelatedCommand {
 
     @Override
@@ -38,11 +39,18 @@ public class TCrowdTDLLiteFPX extends TCrowdEncodingERvtRelatedCommand {
 
         try {
             Objects.requireNonNull(tModel, "JSON ERvt temporal model file must not be null");
+            Objects.requireNonNull(tData, "JSON Temporal data file must not be null");
             
             InputStream is = new FileInputStream(tModel);
                        
             if (is == null) {
                 throw new NullPointerException("Cannot find resource file " + tModel);
+            }
+            
+            InputStream data = new FileInputStream(tData);
+            
+            if (data == null) {
+                throw new NullPointerException("Cannot find resource file " + tData);
             }
             
             PathsManager pathMan = new PathsManager();
@@ -51,18 +59,26 @@ public class TCrowdTDLLiteFPX extends TCrowdEncodingERvtRelatedCommand {
             
             String jsonTxt = IOUtils.toString(is, "UTF-8");
             System.out.println(jsonTxt);
+            
+            String jsonTxtData = IOUtils.toString(data, "UTF-8");
+            System.out.println(jsonTxtData);
 
             JSONObject object = new JSONObject(jsonTxt);
+            JSONObject objectData = new JSONObject(jsonTxtData);
     		
     		DefaultStrategy strategy = new DefaultStrategy();
             TBox tbox = strategy.to_dllitefpx(object);
+            ABox abox = strategy.to_dllitefpxABox(objectData);
             
             tbox.addExtensionConstraints();
+		    abox.addExtensionConstraintsABox(tbox);
     		
     		System.out.println("Saving in "+fileNameOut);
     		System.out.println("Original TBox...");
+       		System.out.println("Original ABox...");
     		
     		(new LatexOutputDocument(tbox)).toFile(fileNameOut+"_tbox.tex");
+    		(new LatexOutputDocument(abox)).toFile(fileNameOut+"_abox.tex");
 
         } catch (Exception e) {
             System.err.println("Error occurred during encoding: "
