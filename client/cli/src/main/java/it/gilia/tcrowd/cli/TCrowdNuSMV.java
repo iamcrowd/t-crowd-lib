@@ -102,7 +102,7 @@ public class TCrowdNuSMV extends TCrowdEncodingERvtRelatedCommand {
             	BufferedReader reader = new BufferedReader(new FileReader(queryF));
             	String line = reader.readLine();
            	    
-            	if (line == null) { /*Check for TBox satisfiability */
+            	if (line == null) { /*Check for TBox and ABox satisfiability */
             	    System.out.println("No errors, and file empty");
             	    
             	    TDLLiteFPXReasoner.buildCheckABoxtSatisfiability(
@@ -111,7 +111,7 @@ public class TCrowdNuSMV extends TCrowdEncodingERvtRelatedCommand {
             	    		fileNameOut,
             	    		abox);
             	    
-            	}else { /*Check for Concept satisfiability */
+            	}else { /*Check for Concept satisfiability. ABox is not considered here*/
             		System.out.println(line);
 
             		Concept acpt = strategy.giveMeAconcept(line); 
