@@ -1,9 +1,9 @@
 ### This library encodes Temporal Models into DL-Lite and reason over them. It outs a file for feeding off-the-shelf QTL/LTL reasoners. t-crowd library is partially based on a legacy library built by Marco Gario at Free University of Bozen-Bolzano (Italy)
 
-`$ java -cp target/dependency/t-crowd-cli-4.0.0-SNAPSHOT.jar it.gilia.tcrowd.cli.TCrowd help`
+`$ java -cp t-crowd-cli-4.0.0-SNAPSHOT.jar it.gilia.tcrowd.cli.TCrowd help`
 
 ```
-usage: java -cp target/dependency/t-crowd-cli-4.0.0-SNAPSHOT.jar it.gilia.tcrowd.cli.TCrowd <command> [ <args> ]
+usage: java -cp t-crowd-cli-4.0.0-SNAPSHOT.jar it.gilia.tcrowd.cli.TCrowd <command> [ <args> ]
 
 Commands are:
     --version    Show version of t-crowd
@@ -16,7 +16,7 @@ Commands are:
 
 ```
 
-`$ java -cp target/dependency/t-crowd-cli-4.0.0-SNAPSHOT.jar it.gilia.tcrowd.cli.TCrowd help tdllitefpx`
+`$ java -cp t-crowd-cli-4.0.0-SNAPSHOT.jar it.gilia.tcrowd.cli.TCrowd help tdllitefpx`
 
 ```
 NAME
@@ -35,7 +35,7 @@ OPTIONS
 
 ```
 
-`$ java -cp target/dependency/t-crowd-cli-4.0.0-SNAPSHOT.jar it.gilia.tcrowd.cli.TCrowd help NuSMV`
+`$ java -cp t-crowd-cli-4.0.0-SNAPSHOT.jar it.gilia.tcrowd.cli.TCrowd help NuSMV`
 
 ```
 NAME
