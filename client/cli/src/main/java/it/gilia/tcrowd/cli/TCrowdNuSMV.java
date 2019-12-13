@@ -44,9 +44,10 @@ import java.io.IOException;
 
 
 @Command(name = "NuSMV",
-        description = "Encode ERvt model and Temporal Data into LTL formulae and return a LTL file together with a NuSMV file including"
-        		+ "the query given as an input file. If query file is empty, KB is to be checked for satisifiability."
-        		+ "Otherwise, query must be a concept to be checked.")
+description = "Encode ERvt model and Temporal Data into LTL formulae and return a LTL file together with a NuSMV file including"
+        		+ " the query given as an input file." 
+        		+ " * If query file is empty, KB is only checked for satisifiability. KB = <TBox,ABox> or KB = <TBox,{}>"
+        		+ " * Otherwise, query must be a concept to be checked.")
 
 public class TCrowdNuSMV extends TCrowdEncodingERvtRelatedCommand {
 	
@@ -73,7 +74,7 @@ public class TCrowdNuSMV extends TCrowdEncodingERvtRelatedCommand {
             InputStream td = new FileInputStream(tData);
             
             if (td == null) {
-                throw new NullPointerException("Cannot find resource file " + tModel);
+                throw new NullPointerException("Cannot find resource file " + tData);
             }
             
             PathsManager pathMan = new PathsManager();
