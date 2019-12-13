@@ -8,7 +8,10 @@ usage: java -cp target/dependency/t-crowd-cli-4.0.0-SNAPSHOT.jar it.gilia.tcrowd
 Commands are:
     --version    Show version of t-crowd
     help         Display help information
-    NuSMV        Encode ERvt model and Temporal Data into LTL formulae and return a LTL file together with a NuSMV file including the query given as an input file. If query file is empty, KB is to be checked for satisifiability. Otherwise, query must be a concept to be checked.
+    NuSMV        Encode ERvt model and Temporal Data into LTL formulae and return a LTL file 
+                 together with a NuSMV file including the query given as an input file. 
+                 If query file is empty, KB is to be checked for satisifiability. 
+                 Otherwise, query must be a concept to be checked.
     tdllitefpx   Encode ERvt model as a KB in TDL DL-Litefpx
 
 ```
