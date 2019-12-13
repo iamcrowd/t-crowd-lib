@@ -1,35 +1,61 @@
-### Temporal Library for encoding Temporal Models into DL-Lite and reason over them. This library outs a file for feeding each off-the-shelf QTL/LTL reasoner. t-crowd library is partially based on a legacy library built by Marco Gario at Free University of Bozen-Bolzano (Italy)
+### This library encodes Temporal Models into DL-Lite and reason over them. It outs a file for feeding off-the-shelf QTL/LTL reasoners. t-crowd library is partially based on a legacy library built by Marco Gario at Free University of Bozen-Bolzano (Italy)
 
 `$ java -cp target/dependency/t-crowd-cli-4.0.0-SNAPSHOT.jar it.gilia.tcrowd.cli.TCrowd help`
 
 ```
-usage: tcrowd <command> [ <args> ]
+usage: java -cp target/dependency/t-crowd-cli-4.0.0-SNAPSHOT.jar it.gilia.tcrowd.cli.TCrowd <command> [ <args> ]
 
 Commands are:
     --version    Show version of t-crowd
     help         Display help information
-    ltl          Encode ERvt model into LTL formulae
-    NuSMV        Encode ERvt model into LTL formulae and return a LTL file together with a NuSMV file
-    qtln         Encode ERvt model into QTL formulae over natural numbers
-    qtlz         Encode ERvt model into QTL formulae over integers
+    NuSMV        Encode ERvt model and Temporal Data into LTL formulae and return a LTL file together with a NuSMV file including the query given as an input file. If query file is empty, KB is to be checked for satisifiability. Otherwise, query must be a concept to be checked.
     tdllitefpx   Encode ERvt model as a KB in TDL DL-Litefpx
 
-
-See 'tcrowd help <command>' for more information on a specific command.
 ```
 
 `$ java -cp target/dependency/t-crowd-cli-4.0.0-SNAPSHOT.jar it.gilia.tcrowd.cli.TCrowd help tdllitefpx`
 
 ```
 NAME
-        tcrowd tdllitefpx - Encode ERvt model as a KB in TDL DL-Litefpx
+        tdllitefpx - Encode ERvt model as a KB in TDL DL-Litefpx
 
 SYNOPSIS
-        tcrowd tdllitefpx [ {-t | --tmodel} <temporal model> ]
+        tdllitefpx [ {-a | --tdata} <Temporal Data> ]
+                [ {-t | --tmodel} <ERvt temporal model> ]
 
 OPTIONS
-        -t <temporal model>, --tmodel <temporal model>
-            JSON file input containing a temporal model
+        -a <Temporal Data>, --tdata <Temporal Data>
+            JSON file input containing temporal data
+
+        -t <ERvt temporal model>, --tmodel <ERvt temporal model>
+            JSON file input containing an ERvt temporal model
+
+```
+
+`$ java -cp target/dependency/t-crowd-cli-4.0.0-SNAPSHOT.jar it.gilia.tcrowd.cli.TCrowd help NuSMV`
+
+```
+NAME
+        NuSMV - Encode ERvt model and Temporal Data into LTL formulae
+        and return a LTL file together with a NuSMV file includingthe query
+        given as an input file. If query file is empty, KB is to be checked for
+        satisifiability. Otherwise, query must be a concept to be checked
+
+SYNOPSIS
+        NuSMV [ {-a | --tdata} <Temporal Data> ]
+                {-q | --query} <query file>
+                [ {-t | --tmodel} <ERvt temporal model> ]
+
+OPTIONS
+        -a <Temporal Data>, --tdata <Temporal Data>
+            JSON file input containing temporal data
+
+        -q <query file>, --query <query file>
+            Plain Query file (.txt)
+
+        -t <ERvt temporal model>, --tmodel <ERvt temporal model>
+            JSON file input containing an ERvt temporal model
+
 ```
 
 
