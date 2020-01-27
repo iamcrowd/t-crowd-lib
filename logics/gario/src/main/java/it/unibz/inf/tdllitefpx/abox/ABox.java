@@ -1,4 +1,5 @@
 package it.unibz.inf.tdllitefpx.abox;
+import it.unibz.inf.tdllitefpx.*;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -38,6 +39,7 @@ import it.unibz.inf.tdllitefpx.concepts.temporal.NextPast;
 import it.unibz.inf.tdllitefpx.concepts.temporal.SometimeFuture;
 import it.unibz.inf.tdllitefpx.concepts.temporal.SometimePast;
 import it.unibz.inf.tdllitefpx.concepts.temporal.TemporalConcept;
+import it.unibz.inf.tdllitefpx.roles.AtomicLocalRole;
 import it.unibz.inf.tdllitefpx.roles.AtomicRigidRole;
 import it.unibz.inf.tdllitefpx.roles.Role;
 import it.unibz.inf.tdllitefpx.tbox.ConceptInclusionAssertion;
@@ -49,6 +51,8 @@ public class ABox extends ConjunctiveFormula implements FormattableObj {
 	Set<ABoxConceptAssertion> ConceptsAssertion = new HashSet<ABoxConceptAssertion>();
 	Set<ABoxRoleAssertion> RolesAssertion = new HashSet<ABoxRoleAssertion>();
 	Set<Formula> ABoxFormula = new HashSet<Formula>();
+	HashMap<String, Set<String>> QRigid = new HashMap<String, Set<String>>();
+	HashMap<String, Set<String>> QLocal = new HashMap<String, Set<String>>();
 
 	Alphabet a = new Alphabet();
 	Variable x = new Variable("x");
@@ -69,8 +73,33 @@ public class ABox extends ConjunctiveFormula implements FormattableObj {
 	 */
 	public void addABoxRoleAssertion(ABoxRoleAssertion r) {
 		RolesAssertion.add(r);
+		Set<String>successorR = new HashSet<String>();
+		Set<String>successorL = new HashSet<String>();
+				
+		if (r.ro.getRefersTo() instanceof AtomicRigidRole){
+			successorR.add(r.y);
+			QRigid.putIfAbsent(r.ro.toString() + "_" + r.x, successorR);
+				
+			successorR = QRigid.get(r.ro.toString() + "_" + r.x);
+			successorR.add(r.y);
+			QRigid.replace(r.ro.toString() + "_" + r.x,successorR);	
+		}	
+			
+		if (r.ro.getRefersTo() instanceof AtomicLocalRole){
+			successorL.add(r.y);
+			QLocal.putIfAbsent(r.ro.toString() + "_" + r.x +"_" + r.t, successorL);
+				
+			successorL = QLocal.get(r.ro.toString() + "_" + r.x + "_" + r.t);
+			successorL.add(r.y);
+			QLocal.replace(r.ro.toString() + "_" + r.x + "_" + r.t, successorL);
+				
+		}		
 	}
 
+	/**
+	 * 
+	 * @return
+	 */
 	public Set<Constant> getConstantsABox() {
 		// isExtended = false; // TODO: Check if this is really the case
 		Set<Constant> consts = new HashSet<Constant>();
@@ -86,6 +115,10 @@ public class ABox extends ConjunctiveFormula implements FormattableObj {
 		return consts;
 	}
 
+	/**
+	 * 
+	 * @return
+	 */
 	public Set<Role> getRolesABox() {
 		HashSet<Role> roles = new HashSet<Role>();
 		for (ABoxRoleAssertion r : RolesAssertion) {
@@ -94,7 +127,29 @@ public class ABox extends ConjunctiveFormula implements FormattableObj {
 		return roles;
 	}
 
-	public Map<String, String> getStatsABox() {
+	/**
+	 * 
+	 * @param qR
+	 * @return
+	 */
+	public Map<String, Integer> getQRigidABox(Set<QuantifiedRole> qR){
+		HashMap<String, Integer> qRAQ = new HashMap<String, Integer>();
+		for (QuantifiedRole qr: qR){
+			qRAQ.putIfAbsent(qr.getRole().toString(), qr.getQ());
+			
+			if(qRAQ.get(qr.getRole().toString())<qr.getQ()) {
+				qRAQ.replace(qr.getRole().toString(), qr.getQ());
+			}	
+			
+		}
+		return qRAQ;
+	}
+
+	/**
+	 * 
+	 * @return
+	 */
+	public Map<String, String> getStatsABox(){
 		HashMap<String, String> stats = new HashMap<String, String>();
 
 		stats.put("Concept_Assertion:", " " + ConceptsAssertion.size());
@@ -102,25 +157,91 @@ public class ABox extends ConjunctiveFormula implements FormattableObj {
 		return stats;
 	}
 
-	public void addExtensionConstraintsABox(TBox tbox) {
+	/**
+	 * 
+	 * @param tbox
+	 */
+	public void addExtensionConstraintsABox(TBox tbox){
 		Set<QuantifiedRole> qRoles = tbox.getQuantifiedRoles();
+		Map<String, Integer> qRolesQ = tbox.getQuantifiedRolesQ(qRoles);
 		// Set <Role> Roles=getRolesABox();
 		/*
 		 * >= 2.Name(John) >= 1.Name(John) /*>= 2.NameInv(Kennedy) >= 1.NameInv(Kennedy)
 		 */
-		for (QuantifiedRole qR : qRoles) {
-			for (ABoxRoleAssertion r : RolesAssertion){
-				if (qR.getRole() == r.ro) {
-					QuantifiedRole qRinv = new QuantifiedRole(r.ro.getInverse(), qR.getQ());
-					addConceptsAssertion(new ABoxConceptAssertion(qR, r.getx().toString()));
-					addConceptsAssertion(new ABoxConceptAssertion(qRinv, r.gety().toString()));
-					// System.out.println(" role ABox: "+qR.toString());
-				}
-
+		for(String keyR : QRigid.keySet()){
+			String[]keyRi = keyR.split("_");		
+			int Qtbox = qRolesQ.get(keyRi[0]);
+			int Qtabox = QRigid.get(keyR).size();
+				
+			for(ABoxRoleAssertion r: RolesAssertion){
+				if(r.ro.toString().equals(keyRi[0])){//ICI TEMPORAL ROLES ASSERTION
+					int j = Math.min(Qtbox, Qtabox);
+					while (j != 0 ){
+						QuantifiedRole qRinv = new QuantifiedRole(r.ro.getInverse(), j);
+						QuantifiedRole qR1 = new QuantifiedRole(r.ro, j);
+				
+						int i = r.t;
+						Concept cr = (Concept)qR1;
+						Concept cinvr = (Concept)qRinv;
+						while (i != 0 ){
+							Concept tqR1 = new NextFuture(cr);
+							cr = tqR1;
+							Concept tqR2 = new NextFuture(cinvr);
+							cinvr = tqR2;
+							i--;
+						}
+						addConceptsAssertion(new ABoxConceptAssertion (cr,r.getx().toString()));//eliminer la redondance ICI
+						addConceptsAssertion(new ABoxConceptAssertion (cinvr,r.gety().toString()));
+						j--;
+					}
+				}				
+			}
+		}
+				
+		Set<Role> Roles = getRolesABox();
+		for (Role r: Roles){
+			for(String keyL : QLocal.keySet()){
+			    String[]keyLi=keyL.split("_");
+			    Set<String> x=new HashSet();
+			    int Qtbox=qRolesQ.get(keyLi[0]);
+				int Qtaboxi=QLocal.get(keyL).size();
+						
+				int j=Math.min(Qtbox, Qtaboxi);
+						
+						
+				if (r.toString().equals(keyLi[0])){
+					while (j!=0) { //Cardinality
+						QuantifiedRole qL=new QuantifiedRole(r, j);	
+	    				QuantifiedRole qLinv=new QuantifiedRole(r.getInverse(), j);
+	    				Concept cr= (Concept)qL;
+	    				Concept cinvr= (Concept)qLinv;
+	    					
+	    				int t= Integer.parseInt(keyLi[2]);
+	    				while (t!=0 ){ //States
+	    					System.out.println("state:"+t);
+	    					Concept tqL1= new NextFuture(cr);
+	    					cr= tqL1;
+	    					Concept tqL2= new NextFuture(cinvr);
+	    					cinvr= tqL2;
+				    		t--;	
+	    				}
+	    				addConceptsAssertion(new ABoxConceptAssertion (cr,keyLi[1]));
+	    				
+    					for (String y: QLocal.get(keyL)){
+    						addConceptsAssertion(new ABoxConceptAssertion (cinvr,y));
+    					}
+    					
+	    				j--;
+					}
+			    }
 			}
 		}
 	}
 
+	/**
+	 * 
+	 * @return
+	 */
 	public Formula getABoxFormula() {
 		ConjunctiveFormula qtl = new ConjunctiveFormula();
 		for (ABoxConceptAssertion c : ConceptsAssertion) {
@@ -132,6 +253,11 @@ public class ABox extends ConjunctiveFormula implements FormattableObj {
 		return qtl;
 	}
 
+	/**
+	 * 
+	 * @param c
+	 * @return
+	 */
 	public Formula conceptToFormula(Concept c) {
 		if (c instanceof AtomicConcept)
 			return new Atom(c.toString(), x);
@@ -180,7 +306,11 @@ public class ABox extends ConjunctiveFormula implements FormattableObj {
 	}
 
 	@Override
-	public String toString(OutputFormat fmt) throws SymbolUndefinedException {
+    public String toString(OutputFormat fmt) throws  SymbolUndefinedException {
+		// TODO Auto-generated method stub
+		return this.toString();
+	}
+/*	public String toString(OutputFormat fmt) throws SymbolUndefinedException {
 		StringBuilder sb = new StringBuilder();
 		
 		for (ABoxConceptAssertion c : ConceptsAssertion) {
@@ -192,6 +322,33 @@ public class ABox extends ConjunctiveFormula implements FormattableObj {
 		}
 		
 		return sb.toString();
+	}
+*/
+	
+	/**
+	 * 
+	 * @param qR
+	 * @param rigidAs
+	 * @return
+	 */
+	public int getQAssertion(QuantifiedRole qR, Set<ABoxRoleAssertion> rigidAs){ 
+		int qrigid=0;
+		int qlocal=0;
+			
+		if (qR.getRole().getRefersTo() instanceof AtomicRigidRole){
+			for (ABoxRoleAssertion ri: rigidAs) {
+				if (ri.ro.equals(qR.getRole())) qrigid++;
+			}
+			System.out.println("Qrigid:"+qrigid);
+		}
+		
+		if (qR.getRole().getRefersTo() instanceof AtomicLocalRole ){
+			for (ABoxRoleAssertion ri: rigidAs ){
+				if (ri.ro.equals(qR.getRole())) qrigid++;
+			}
+			System.out.println("Qrigid:"+qrigid);
+		}
+		return 0;
 	}
 
 	@Override

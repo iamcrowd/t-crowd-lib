@@ -77,18 +77,18 @@ public class TestAbox1 {
 	public ABox getABox(){
 		
 		ABox A = new ABox();
-		ABoxConceptAssertion a1= new ABoxConceptAssertion(new NextFuture(Person),"John");
+//		ABoxConceptAssertion a1= new ABoxConceptAssertion(new NextFuture(Person),"John");
 		
-		A.addConceptsAssertion(a1);
+//		A.addConceptsAssertion(a1);
 		
 		
-		ABoxConceptAssertion a2= new ABoxConceptAssertion(Person,"Maria");
+		ABoxConceptAssertion a2= new ABoxConceptAssertion(Person,"John");
 		A.addConceptsAssertion(a2);
 		
 		 
-		ABoxRoleAssertion r1= new ABoxRoleAssertion(Name,"John", "Kennedy");
+		ABoxRoleAssertion r1= new ABoxRoleAssertion(Name, "John", "Kennedy", 0);
 		A.addABoxRoleAssertion(r1);
-		ABoxRoleAssertion r2= new ABoxRoleAssertion(Name,"John", "Mcking");
+		ABoxRoleAssertion r2= new ABoxRoleAssertion(Name, "John", "Mcking", 1);
 		A.addABoxRoleAssertion(r2);
 	//	A.addAll(getABox0());
 	//	A.addAll(getABox1());
@@ -130,7 +130,7 @@ public class TestAbox1 {
 				Integer));*/
 		
 		// a person has one Name
-			t0.add(new ConceptInclusionAssertion(
+		t0.add(new ConceptInclusionAssertion(
 				Person,
 				new QuantifiedRole(Name, 1)));
 		t0.add(new ConceptInclusionAssertion(

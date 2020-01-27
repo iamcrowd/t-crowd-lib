@@ -1,0 +1,6 @@
+entity 1 -> G H entity 1
+>= 1.attribute 1Inv -> Integer
+entity 1 -> >= 1.attribute 1
+entity 1 -> !>= 2.attribute 1
+Integer -> !entity 1
+>= 2.attribute 1 -> >= 1.attribute 1

@@ -4,19 +4,67 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.*;
+import org.apache.commons.io.IOUtils;
 import org.json.*;
 
 import it.unibz.inf.tdllitefpx.tbox.TBox;
 import it.unibz.inf.tdllitefpx.tbox.ConceptInclusionAssertion;
 
+import java.util.Objects;
 import java.util.LinkedList;
+import java.lang.*;
+import java.io.*;
 import java.util.Iterator;
+import org.apache.commons.io.IOUtils;
 
 @DisplayName("Test Suite for a default strategy encoding ERvt diagrams into DL-Lite_fpx")
 public class DefaultStrategyTest{
 	
+	private JSONObject getJSONfromFile(String fileName){
+		InputStream data = DefaultStrategyTest.class.
+				getClassLoader().
+				getResourceAsStream(fileName + ".json"); 
+		
+	    if (data == null) {
+            throw new NullPointerException("Cannot find resource file " + fileName);
+        }
+	    String jsonTxt = "";
+	    try {
+	    	jsonTxt = IOUtils.toString(data, "UTF-8");
+	    }
+	    catch(IOException e) {
+	    	e.printStackTrace();
+	    }
+	    JSONObject object = new JSONObject(jsonTxt);
+	    return object;
+	}
+	
+	private String checkExpectedResult(String fileName) {
+		InputStream data = DefaultStrategyTest.class.
+				getClassLoader().
+				getResourceAsStream(fileName + ".txt");
+	    if (data == null) {
+            throw new NullPointerException("Cannot find resource file " + fileName);
+        }
+	    
+	    String val = "";
+	    try {
+	    	BufferedReader r = new BufferedReader(
+	    			new InputStreamReader(data));
+	        String l;
+	        while((l = r.readLine()) != null) {
+	           val = val + l + "\n";
+	        } 
+	        data.close();
+	    }
+	    catch(IOException e) {
+	    	e.printStackTrace();
+	    }
+	    return val;
+	}
+	
 	@Test
-	@DisplayName("Entities")
+	@DisplayName("Only one Entity")
 	public void testERvtEntitiesToDL() {
 		JSONObject obj = new JSONObject();
         JSONArray links = new JSONArray();
@@ -48,12 +96,10 @@ public class DefaultStrategyTest{
         DefaultStrategy strategy = new DefaultStrategy();
         TBox tbox = strategy.to_dllitefpx(obj);
 
-	    System.out.println("TBox Test 1");
 	    Iterator<ConceptInclusionAssertion> iterator = tbox.iterator();
-	     while(iterator.hasNext()){
+	    while(iterator.hasNext()){
 	       ConceptInclusionAssertion ci = iterator.next();
-	    //   assertEquals("entity 1 -> Top", ci.getLHS()+" -> "+ci.getRHS());
-	       System.out.println(ci.getLHS()+" -> "+ci.getRHS());
+	       assertEquals("", ci.getLHS()+" -> "+ci.getRHS());
 	     }  
 	}
 	
@@ -90,14 +136,11 @@ public class DefaultStrategyTest{
         DefaultStrategy strategy = new DefaultStrategy();
         TBox tbox = strategy.to_dllitefpx(obj);
 
-	    System.out.println("TBox Test 2");
 	    Iterator<ConceptInclusionAssertion> iterator = tbox.iterator();
-	     while(iterator.hasNext()){
+	    while(iterator.hasNext()){
 	       ConceptInclusionAssertion ci = iterator.next();
-	  //     assertEquals("entity 2 -> G H entity 2", ci.getLHS()+" -> "+ci.getRHS());
-	       System.out.println(ci.getLHS()+" -> "+ci.getRHS());
+	       assertEquals("entity 2 -> G H entity 2", ci.getLHS()+" -> "+ci.getRHS());
 	     }
-
 	}
 	
 	@Test
@@ -133,1642 +176,314 @@ public class DefaultStrategyTest{
         DefaultStrategy strategy = new DefaultStrategy();
         TBox tbox = strategy.to_dllitefpx(obj);
 
-	    System.out.println("TBox Test 3");
 	    Iterator<ConceptInclusionAssertion> iterator = tbox.iterator();
-	     while(iterator.hasNext()){
+	    while(iterator.hasNext()){
 	       ConceptInclusionAssertion ci = iterator.next();
-	 //      assertEquals("!_|_ -> F O !entity 3", ci.getLHS()+" -> "+ci.getRHS());
-	       System.out.println(ci.getLHS()+" -> "+ci.getRHS());
+	       assertEquals("!_|_ -> F O !entity 3", ci.getLHS()+" -> "+ci.getRHS());
 	     }
 	}
 	
 	@Test
 	@DisplayName("Entities with a key attribute")
 	public void testERvtEntitiesWithAttrToDL() {
-		JSONObject obj = new JSONObject();
-        JSONArray links = new JSONArray();
-        JSONArray attributes = new JSONArray();
-        JSONArray entities = new JSONArray();
-        
-        String jsonEntity = new JSONStringer()
-                .object()
-                .key("name")
-                .value("entity 1")
-                .key("timestamp")
-                .value("")
-                .key("position")
-                .object()
-                .key("x")
-                .value("600")
-                .key("y")
-                .value("800")
-                .endObject()
-                .endObject()
-                .toString();
-        
-        String jsonAttribute = new JSONStringer()
-                .object()
-                .key("name")
-                .value("attribute 1")
-                .key("type")
-                .value("key")
-                .key("datatype")
-                .value("Integer")
-                .key("timestamp")
-                .value("")
-                .key("position")
-                .object()
-                .key("x")
-                .value("600")
-                .key("y")
-                .value("800")
-                .endObject()
-                .endObject()
-                .toString();
-  
-        entities.put(jsonEntity);
-        attributes.put(jsonAttribute);
-        
-        String jsonLinks = new JSONStringer()
-                .object()
-                .key("name")
-                .value("attrA")
-                .key("entity")
-                .value("entity 1")
-                .key("attribute")
-                .value("attribute 1")
-                .key("type")
-                .value("attribute")
-                .endObject()
-                .toString();
-  
-        links.put(jsonLinks);
-
-        obj.put("entities", entities);
-        obj.put("attributes", attributes);
-        obj.put("links", links);
-        
         DefaultStrategy strategy = new DefaultStrategy();
-        TBox tbox = strategy.to_dllitefpx(obj);
+        TBox tbox = strategy.to_dllitefpx(this.getJSONfromFile("testERvtEntitiesWithAttrToDL"));
 
-	    System.out.println("TBox Test 4");
 	    Iterator<ConceptInclusionAssertion> iterator = tbox.iterator();
-	     while(iterator.hasNext()){
+	    String actual = new String();
+	    while(iterator.hasNext()){
 	       ConceptInclusionAssertion ci = iterator.next();
-	    //   assertEquals("entity 1 -> Top", ci.getLHS()+" -> "+ci.getRHS());
+	       actual = actual.concat(ci.getLHS()+" -> "+ci.getRHS() + "\n");   
+	    }
 
-	       System.out.println(ci.getLHS()+" -> "+ci.getRHS());
-	     }
+		assertEquals(this.checkExpectedResult("testERvtEntitiesWithAttrToDL"), actual);
 	}
 	
 	@Test
 	@DisplayName("Entities with a key attribute and a normal one without temporality timestamps.")
 	public void testERvtEntitiesWithAttrKandNToDL() {
-		JSONObject obj = new JSONObject();
-        JSONArray links = new JSONArray();
-        JSONArray attributes = new JSONArray();
-        JSONArray entities = new JSONArray();
-        
-        String jsonEntity = new JSONStringer()
-                .object()
-                .key("name")
-                .value("entity 1")
-                .key("timestamp")
-                .value("")
-                .key("position")
-                .object()
-                .key("x")
-                .value("600")
-                .key("y")
-                .value("800")
-                .endObject()
-                .endObject()
-                .toString();
-        
-        String jsonAttributeK = new JSONStringer()
-                .object()
-                .key("name")
-                .value("attribute 1")
-                .key("type")
-                .value("key")
-                .key("datatype")
-                .value("Integer")
-                .key("timestamp")
-                .value("")
-                .key("position")
-                .object()
-                .key("x")
-                .value("600")
-                .key("y")
-                .value("800")
-                .endObject()
-                .endObject()
-                .toString();
-        
-        String jsonAttributeN = new JSONStringer()
-                .object()
-                .key("name")
-                .value("attribute 2")
-                .key("type")
-                .value("key")
-                .key("datatype")
-                .value("Integer")
-                .key("timestamp")
-                .value("")
-                .key("position")
-                .object()
-                .key("x")
-                .value("600")
-                .key("y")
-                .value("800")
-                .endObject()
-                .endObject()
-                .toString();
-  
-        entities.put(jsonEntity);
-        attributes.put(jsonAttributeK);
-        attributes.put(jsonAttributeN);
-        
-        String jsonLinksK = new JSONStringer()
-                .object()
-                .key("name")
-                .value("attrA")
-                .key("entity")
-                .value("entity 1")
-                .key("attribute")
-                .value("attribute 1")
-                .key("type")
-                .value("attribute")
-                .endObject()
-                .toString();
-        
-        String jsonLinksN = new JSONStringer()
-                .object()
-                .key("name")
-                .value("attrB")
-                .key("entity")
-                .value("entity 1")
-                .key("attribute")
-                .value("attribute 2")
-                .key("type")
-                .value("attribute")
-                .endObject()
-                .toString();
-  
-        links.put(jsonLinksK);
-        links.put(jsonLinksN);
-
-        obj.put("entities", entities);
-        obj.put("attributes", attributes);
-        obj.put("links", links);
-        
         DefaultStrategy strategy = new DefaultStrategy();
-        TBox tbox = strategy.to_dllitefpx(obj);
+        TBox tbox = strategy.to_dllitefpx(this.getJSONfromFile("testERvtEntitiesWithAttrKandNToDL"));
         
         tbox.addExtensionConstraints();
 
-	    System.out.println("--------------------------------------------Key and Normal Attr TBox Test");
-	    Iterator<ConceptInclusionAssertion> iterator = tbox.iterator();
-	     while(iterator.hasNext()){
+        Iterator<ConceptInclusionAssertion> iterator = tbox.iterator();
+	    String actual = new String();
+	    while(iterator.hasNext()){
 	       ConceptInclusionAssertion ci = iterator.next();
-	    //   assertEquals("entity 1 -> Top", ci.getLHS()+" -> "+ci.getRHS());
+	       actual = actual.concat(ci.getLHS()+" -> "+ci.getRHS() + "\n");   
+	    }
 
-	       System.out.println(ci.getLHS()+" -> "+ci.getRHS());
-	     }
+		assertEquals(this.checkExpectedResult("testERvtEntitiesWithAttrKandNToDL"), actual);
 	}
 	
 	@Test
 	@DisplayName("Entities with a snapshot key attribute. It returns an extended TBox")
 	public void testERvtEntitiesWithAttrToDLExtended() {
-		JSONObject obj = new JSONObject();
-        JSONArray links = new JSONArray();
-        JSONArray attributes = new JSONArray();
-        JSONArray entities = new JSONArray();
-        
-        String jsonEntity = new JSONStringer()
-                .object()
-                .key("name")
-                .value("entity 1")
-                .key("timestamp")
-                .value("")
-                .key("position")
-                .object()
-                .key("x")
-                .value("600")
-                .key("y")
-                .value("800")
-                .endObject()
-                .endObject()
-                .toString();
-        
-        String jsonAttribute = new JSONStringer()
-                .object()
-                .key("name")
-                .value("attribute 1")
-                .key("type")
-                .value("key")
-                .key("datatype")
-                .value("Integer")
-                .key("timestamp")
-                .value("snapshot")
-                .key("position")
-                .object()
-                .key("x")
-                .value("600")
-                .key("y")
-                .value("800")
-                .endObject()
-                .endObject()
-                .toString();
-  
-        entities.put(jsonEntity);
-        attributes.put(jsonAttribute);
-        
-        String jsonLinks = new JSONStringer()
-                .object()
-                .key("name")
-                .value("attrA")
-                .key("entity")
-                .value("entity 1")
-                .key("attribute")
-                .value("attribute 1")
-                .key("type")
-                .value("attribute")
-                .endObject()
-                .toString();
-  
-        links.put(jsonLinks);
-
-        obj.put("entities", entities);
-        obj.put("attributes", attributes);
-        obj.put("links", links);
-        
         DefaultStrategy strategy = new DefaultStrategy();
-        TBox tbox = strategy.to_dllitefpx(obj);
+        TBox tbox = strategy.to_dllitefpx(this.getJSONfromFile("testERvtEntitiesWithAttrToDLExtended"));
         
         tbox.addExtensionConstraints();
-
-	    System.out.println("---------------------------------------------Snap Attr Extended TBox Test");
 	    
 		Iterator<ConceptInclusionAssertion> iterator = tbox.iterator();
-		  while(iterator.hasNext()){
-		    ConceptInclusionAssertion ci = iterator.next();
-		   //   assertEquals("entity 1 -> Top", ci.getLHS()+" -> "+ci.getRHS());
+	    String actual = new String();
+	    while(iterator.hasNext()){
+	       ConceptInclusionAssertion ci = iterator.next();
+	       actual = actual.concat(ci.getLHS()+" -> "+ci.getRHS() + "\n");   
+	    }
 
-		    System.out.println(ci.getLHS()+" -> "+ci.getRHS());
-		  }
+		assertEquals(this.checkExpectedResult("testERvtEntitiesWithAttrToDLExtended"), actual);
 	}
 	
 	@Test
 	@DisplayName("Entities with a snapshot key string attribute. It returns an extended TBox")
 	public void testERvtEntitiesWithStringAttrToDLExtended() {
-		JSONObject obj = new JSONObject();
-        JSONArray links = new JSONArray();
-        JSONArray attributes = new JSONArray();
-        JSONArray entities = new JSONArray();
-        
-        String jsonEntity = new JSONStringer()
-                .object()
-                .key("name")
-                .value("entity 1")
-                .key("timestamp")
-                .value("")
-                .key("position")
-                .object()
-                .key("x")
-                .value("600")
-                .key("y")
-                .value("800")
-                .endObject()
-                .endObject()
-                .toString();
-        
-        String jsonAttribute = new JSONStringer()
-                .object()
-                .key("name")
-                .value("attribute 1")
-                .key("type")
-                .value("key")
-                .key("datatype")
-                .value("String")
-                .key("timestamp")
-                .value("snapshot")
-                .key("position")
-                .object()
-                .key("x")
-                .value("600")
-                .key("y")
-                .value("800")
-                .endObject()
-                .endObject()
-                .toString();
-  
-        entities.put(jsonEntity);
-        attributes.put(jsonAttribute);
-        
-        String jsonLinks = new JSONStringer()
-                .object()
-                .key("name")
-                .value("attrA")
-                .key("entity")
-                .value("entity 1")
-                .key("attribute")
-                .value("attribute 1")
-                .key("type")
-                .value("attribute")
-                .endObject()
-                .toString();
-  
-        links.put(jsonLinks);
-
-        obj.put("entities", entities);
-        obj.put("attributes", attributes);
-        obj.put("links", links);
-        
         DefaultStrategy strategy = new DefaultStrategy();
-        TBox tbox = strategy.to_dllitefpx(obj);
+        TBox tbox = strategy.to_dllitefpx(this.getJSONfromFile("testERvtEntitiesWithStringAttrToDLExtended"));
         
         tbox.addExtensionConstraints();
-
-	    System.out.println("---------------------------------------------Snap String Attr Extended TBox Test");
 	    
 		Iterator<ConceptInclusionAssertion> iterator = tbox.iterator();
-		  while(iterator.hasNext()){
-		    ConceptInclusionAssertion ci = iterator.next();
-		   //   assertEquals("entity 1 -> Top", ci.getLHS()+" -> "+ci.getRHS());
+	    String actual = new String();
+	    while(iterator.hasNext()){
+	       ConceptInclusionAssertion ci = iterator.next();
+	       actual = actual.concat(ci.getLHS()+" -> "+ci.getRHS() + "\n");   
+	    }
 
-		    System.out.println(ci.getLHS()+" -> "+ci.getRHS());
-		  }
+		assertEquals(this.checkExpectedResult("testERvtEntitiesWithStringAttrToDLExtended"), actual);
 	}
 	
 	@Test
 	@DisplayName("Entities with a temporal key attribute. It returns an extended TBox")
 	public void testERvtEntitiesWithTempAttrToDLExtended() {
-		JSONObject obj = new JSONObject();
-        JSONArray links = new JSONArray();
-        JSONArray attributes = new JSONArray();
-        JSONArray entities = new JSONArray();
-        
-        String jsonEntity = new JSONStringer()
-                .object()
-                .key("name")
-                .value("entity 1")
-                .key("timestamp")
-                .value("")
-                .key("position")
-                .object()
-                .key("x")
-                .value("600")
-                .key("y")
-                .value("800")
-                .endObject()
-                .endObject()
-                .toString();
-        
-        String jsonAttribute = new JSONStringer()
-                .object()
-                .key("name")
-                .value("attribute 1")
-                .key("type")
-                .value("key")
-                .key("datatype")
-                .value("Integer")
-                .key("timestamp")
-                .value("temporal")
-                .key("position")
-                .object()
-                .key("x")
-                .value("600")
-                .key("y")
-                .value("800")
-                .endObject()
-                .endObject()
-                .toString();
-  
-        entities.put(jsonEntity);
-        attributes.put(jsonAttribute);
-        
-        String jsonLinks = new JSONStringer()
-                .object()
-                .key("name")
-                .value("attrA")
-                .key("entity")
-                .value("entity 1")
-                .key("attribute")
-                .value("attribute 1")
-                .key("type")
-                .value("attribute")
-                .endObject()
-                .toString();
-  
-        links.put(jsonLinks);
-
-        obj.put("entities", entities);
-        obj.put("attributes", attributes);
-        obj.put("links", links);
-        
         DefaultStrategy strategy = new DefaultStrategy();
-        TBox tbox = strategy.to_dllitefpx(obj);
+        TBox tbox = strategy.to_dllitefpx(this.getJSONfromFile("testERvtEntitiesWithTempAttrToDLExtended"));
         
         tbox.addExtensionConstraints();
-
-	    System.out.println("---------------------------------------------Temp Attr Extended TBox Test");
 	    
 		Iterator<ConceptInclusionAssertion> iterator = tbox.iterator();
-		  while(iterator.hasNext()){
-		    ConceptInclusionAssertion ci = iterator.next();
-		   //   assertEquals("entity 1 -> Top", ci.getLHS()+" -> "+ci.getRHS());
+	    String actual = new String();
+	    while(iterator.hasNext()){
+	       ConceptInclusionAssertion ci = iterator.next();
+	       actual = actual.concat(ci.getLHS()+" -> "+ci.getRHS() + "\n");   
+	    }
 
-		    System.out.println(ci.getLHS()+" -> "+ci.getRHS());
-		  }
+		assertEquals(this.checkExpectedResult("testERvtEntitiesWithTempAttrToDLExtended"), actual);
 	}
 	
 	@Test
 	@DisplayName("Entity with a snapshot attribute")
 	public void testERvtEntitiesWithSnapAttrToDL() {
-		JSONObject obj = new JSONObject();
-        JSONArray links = new JSONArray();
-        JSONArray attributes = new JSONArray();
-        JSONArray entities = new JSONArray();
-        
-        String jsonEntity = new JSONStringer()
-                .object()
-                .key("name")
-                .value("entity 1")
-                .key("timestamp")
-                .value("snapshot")
-                .key("position")
-                .object()
-                .key("x")
-                .value("600")
-                .key("y")
-                .value("800")
-                .endObject()
-                .endObject()
-                .toString();
-        
-        String jsonAttribute = new JSONStringer()
-                .object()
-                .key("name")
-                .value("attribute 1")
-                .key("type")
-                .value("key")
-                .key("datatype")
-                .value("Integer")
-                .key("timestamp")
-                .value("snapshot")
-                .key("position")
-                .object()
-                .key("x")
-                .value("600")
-                .key("y")
-                .value("800")
-                .endObject()
-                .endObject()
-                .toString();
-  
-        entities.put(jsonEntity);
-        attributes.put(jsonAttribute);
-        
-        String jsonLinks = new JSONStringer()
-                .object()
-                .key("name")
-                .value("attrA")
-                .key("entity")
-                .value("entity 1")
-                .key("attribute")
-                .value("attribute 1")
-                .key("type")
-                .value("attribute")
-                .endObject()
-                .toString();
-  
-        links.put(jsonLinks);
-
-        obj.put("entities", entities);
-        obj.put("attributes", attributes);
-        obj.put("links", links);
-        
         DefaultStrategy strategy = new DefaultStrategy();
-        TBox tbox = strategy.to_dllitefpx(obj);
+        TBox tbox = strategy.to_dllitefpx(this.getJSONfromFile("testERvtEntitiesWithSnapAttrToDL"));
         
         tbox.addExtensionConstraints();
 
-	    System.out.println("TBox with SNAPSHOT ATTRIBUTES");
 	    Iterator<ConceptInclusionAssertion> iterator = tbox.iterator();
-	     while(iterator.hasNext()){
+	    String actual = new String();
+	    while(iterator.hasNext()){
 	       ConceptInclusionAssertion ci = iterator.next();
-	    //   assertEquals("entity 1 -> Top", ci.getLHS()+" -> "+ci.getRHS());
+	       actual = actual.concat(ci.getLHS()+" -> "+ci.getRHS() + "\n");   
+	    }
 
-	       System.out.println(ci.getLHS()+" -> "+ci.getRHS());
-	     }
+		assertEquals(this.checkExpectedResult("testERvtEntitiesWithSnapAttrToDL"), actual);
 
 	}
 
 	@Test
 	@DisplayName("Entity with a temporal attribute")
 	public void testERvtEntitiesWithTemporalAttrToDL() {
-		JSONObject obj = new JSONObject();
-        JSONArray links = new JSONArray();
-        JSONArray attributes = new JSONArray();
-        JSONArray entities = new JSONArray();
-        
-        String jsonEntity = new JSONStringer()
-                .object()
-                .key("name")
-                .value("entity 1")
-                .key("timestamp")
-                .value("snapshot")
-                .key("position")
-                .object()
-                .key("x")
-                .value("600")
-                .key("y")
-                .value("800")
-                .endObject()
-                .endObject()
-                .toString();
-        
-        String jsonAttribute = new JSONStringer()
-                .object()
-                .key("name")
-                .value("attribute 1")
-                .key("type")
-                .value("key")
-                .key("datatype")
-                .value("Integer")
-                .key("timestamp")
-                .value("temporal")
-                .key("position")
-                .object()
-                .key("x")
-                .value("600")
-                .key("y")
-                .value("800")
-                .endObject()
-                .endObject()
-                .toString();
-  
-        entities.put(jsonEntity);
-        attributes.put(jsonAttribute);
-        
-        String jsonLinks = new JSONStringer()
-                .object()
-                .key("name")
-                .value("attrA")
-                .key("entity")
-                .value("entity 1")
-                .key("attribute")
-                .value("attribute 1")
-                .key("type")
-                .value("attribute")
-                .endObject()
-                .toString();
-  
-        links.put(jsonLinks);
-
-        obj.put("entities", entities);
-        obj.put("attributes", attributes);
-        obj.put("links", links);
-        
         DefaultStrategy strategy = new DefaultStrategy();
-        TBox tbox = strategy.to_dllitefpx(obj);
+        TBox tbox = strategy.to_dllitefpx(this.getJSONfromFile("testERvtEntitiesWithTemporalAttrToDL"));
 
         tbox.addExtensionConstraints();
         
-	    System.out.println("TBox with TEMPORAL ATTRIBUTES");
 	    Iterator<ConceptInclusionAssertion> iterator = tbox.iterator();
-	     while(iterator.hasNext()){
+	    String actual = new String();
+	    while(iterator.hasNext()){
 	       ConceptInclusionAssertion ci = iterator.next();
-	    //   assertEquals("entity 1 -> Top", ci.getLHS()+" -> "+ci.getRHS());
+	       actual = actual.concat(ci.getLHS()+" -> "+ci.getRHS() + "\n");   
+	    }
 
-	       System.out.println(ci.getLHS()+" -> "+ci.getRHS());
-	     }
+		assertEquals(this.checkExpectedResult("testERvtEntitiesWithTemporalAttrToDL"), actual);
 
 	}
 	
 	@Test
 	@DisplayName("ISA simple")
 	public void testERvtSimpleISAtoDL() {
-		JSONObject obj = new JSONObject();
-        JSONArray links = new JSONArray();
-        JSONArray attributes = new JSONArray();
-        JSONArray entities = new JSONArray();
-        
-        String jsonEntity = new JSONStringer()
-                .object()
-                .key("name")
-                .value("entity 1")
-                .key("timestamp")
-                .value("")
-                .key("position")
-                .object()
-                .key("x")
-                .value("600")
-                .key("y")
-                .value("800")
-                .endObject()
-                .endObject()
-                .toString();
-        
-        String jsonEntity2 = new JSONStringer()
-                .object()
-                .key("name")
-                .value("entity 2")
-                .key("timestamp")
-                .value("")
-                .key("position")
-                .object()
-                .key("x")
-                .value("600")
-                .key("y")
-                .value("800")
-                .endObject()
-                .endObject()
-                .toString();
-  
-        entities.put(jsonEntity);
-        entities.put(jsonEntity2);
-        
-        String jsonLinks = new JSONStringer()
-                .object()
-                .key("name")
-                .value("isa1")
-                .key("parent")
-                .value("entity 1")
-                .key("entities")
-                .value(new JSONArray()
-                		.put("entity 2")
-                		)
-                .key("type")
-                .value("isa")
-                .key("constraint")
-                .value(new JSONArray())
-                .endObject()
-                .toString();
-  
-        links.put(jsonLinks);
-
-        obj.put("entities", entities);
-        obj.put("attributes", attributes);
-        obj.put("links", links);
-        
         DefaultStrategy strategy = new DefaultStrategy();
-        TBox tbox = strategy.to_dllitefpx(obj);
+        TBox tbox = strategy.to_dllitefpx(this.getJSONfromFile("testERvtSimpleISAtoDL"));
 
-	    System.out.println("TBox Test 5");
 	    Iterator<ConceptInclusionAssertion> iterator = tbox.iterator();
-	     while(iterator.hasNext()){
+	    String actual = new String();
+	    while(iterator.hasNext()){
 	       ConceptInclusionAssertion ci = iterator.next();
-	       //assertEquals(actual_s, ci.getLHS()+" -> "+ci.getRHS());
-	       System.out.println(ci.getLHS()+" -> "+ci.getRHS());
-	     }
+	       actual = actual.concat(ci.getLHS()+" -> "+ci.getRHS() + "\n");   
+	    }
+
+		assertEquals(this.checkExpectedResult("testERvtSimpleISAtoDL"), actual);
 	}
 	
 	@Test
 	@DisplayName("Exclusive ISA")
 	public void testERvtSimpleExclusiveISAtoDL() {
-		JSONObject obj = new JSONObject();
-        JSONArray links = new JSONArray();
-        JSONArray attributes = new JSONArray();
-        JSONArray entities = new JSONArray();
-        
-        String jsonEntity = new JSONStringer()
-                .object()
-                .key("name")
-                .value("entity 1")
-                .key("timestamp")
-                .value("")
-                .key("position")
-                .object()
-                .key("x")
-                .value("600")
-                .key("y")
-                .value("800")
-                .endObject()
-                .endObject()
-                .toString();
-        
-        String jsonEntity2 = new JSONStringer()
-                .object()
-                .key("name")
-                .value("entity 2")
-                .key("timestamp")
-                .value("")
-                .key("position")
-                .object()
-                .key("x")
-                .value("600")
-                .key("y")
-                .value("800")
-                .endObject()
-                .endObject()
-                .toString();
-        
-        String jsonEntity3 = new JSONStringer()
-                .object()
-                .key("name")
-                .value("entity 3")
-                .key("timestamp")
-                .value("")
-                .key("position")
-                .object()
-                .key("x")
-                .value("600")
-                .key("y")
-                .value("800")
-                .endObject()
-                .endObject()
-                .toString();
-        
-        String jsonEntity4 = new JSONStringer()
-                .object()
-                .key("name")
-                .value("entity 4")
-                .key("timestamp")
-                .value("")
-                .key("position")
-                .object()
-                .key("x")
-                .value("600")
-                .key("y")
-                .value("800")
-                .endObject()
-                .endObject()
-                .toString();
-  
-        entities.put(jsonEntity);
-        entities.put(jsonEntity2);
-        entities.put(jsonEntity3);
-        entities.put(jsonEntity4);
-        
-        String jsonLinks = new JSONStringer()
-                .object()
-                .key("name")
-                .value("isa1")
-                .key("parent")
-                .value("entity 1")
-                .key("entities")
-                .value(new JSONArray()
-                		.put("entity 2")
-                		.put("entity 3")
-                		.put("entity 4")
-                		)
-                .key("type")
-                .value("isa")
-                .key("constraint")
-                .value(new JSONArray()
-                		.put("exclusive")
-                		)
-                .endObject()
-                .toString();
-  
-        links.put(jsonLinks);
-
-        obj.put("entities", entities);
-        obj.put("attributes", attributes);
-        obj.put("links", links);
-        
         DefaultStrategy strategy = new DefaultStrategy();
-        TBox tbox = strategy.to_dllitefpx(obj);
+        TBox tbox = strategy.to_dllitefpx(this.getJSONfromFile("testERvtSimpleExclusiveISAtoDL"));
 
-	    System.out.println("----------------------------------------------------Exclusive ISA TBox Test 5");
 	    Iterator<ConceptInclusionAssertion> iterator = tbox.iterator();
-	     while(iterator.hasNext()){
+	    String actual = new String();
+	    while(iterator.hasNext()){
 	       ConceptInclusionAssertion ci = iterator.next();
-	       //assertEquals(actual_s, ci.getLHS()+" -> "+ci.getRHS());
-	       System.out.println(ci.getLHS()+" -> "+ci.getRHS());
-	     }
+	       actual = actual.concat(ci.getLHS()+" -> "+ci.getRHS() + "\n");   
+	    }
+
+		assertEquals(this.checkExpectedResult("testERvtSimpleExclusiveISAtoDL"), actual);
 	}
 	
 	@Test
 	@DisplayName("Total ISA")
 	public void testERvtSimpleTotalISAtoDL() {
-		JSONObject obj = new JSONObject();
-        JSONArray links = new JSONArray();
-        JSONArray attributes = new JSONArray();
-        JSONArray entities = new JSONArray();
-        
-        String jsonEntity = new JSONStringer()
-                .object()
-                .key("name")
-                .value("entity 1")
-                .key("timestamp")
-                .value("")
-                .key("position")
-                .object()
-                .key("x")
-                .value("600")
-                .key("y")
-                .value("800")
-                .endObject()
-                .endObject()
-                .toString();
-        
-        String jsonEntity2 = new JSONStringer()
-                .object()
-                .key("name")
-                .value("entity 2")
-                .key("timestamp")
-                .value("")
-                .key("position")
-                .object()
-                .key("x")
-                .value("600")
-                .key("y")
-                .value("800")
-                .endObject()
-                .endObject()
-                .toString();
-        
-        String jsonEntity3 = new JSONStringer()
-                .object()
-                .key("name")
-                .value("entity 3")
-                .key("timestamp")
-                .value("")
-                .key("position")
-                .object()
-                .key("x")
-                .value("600")
-                .key("y")
-                .value("800")
-                .endObject()
-                .endObject()
-                .toString();
-  
-        entities.put(jsonEntity);
-        entities.put(jsonEntity2);
-        entities.put(jsonEntity3);
-        
-        String jsonLinks = new JSONStringer()
-                .object()
-                .key("name")
-                .value("isa1")
-                .key("parent")
-                .value("entity 1")
-                .key("entities")
-                .value(new JSONArray()
-                		.put("entity 2")
-                		.put("entity 3")
-                		)
-                .key("type")
-                .value("isa")
-                .key("constraint")
-                .value(new JSONArray()
-                		.put("total")
-                		)
-                .endObject()
-                .toString();
-  
-        links.put(jsonLinks);
-
-        obj.put("entities", entities);
-        obj.put("attributes", attributes);
-        obj.put("links", links);
-        
         DefaultStrategy strategy = new DefaultStrategy();
-        TBox tbox = strategy.to_dllitefpx(obj);
+        TBox tbox = strategy.to_dllitefpx(this.getJSONfromFile("testERvtSimpleTotalISAtoDL"));
 
-	    System.out.println("----------------------------------------------------Total ISA TBox Test");
 	    Iterator<ConceptInclusionAssertion> iterator = tbox.iterator();
-	     while(iterator.hasNext()){
+	    String actual = new String();
+	    while(iterator.hasNext()){
 	       ConceptInclusionAssertion ci = iterator.next();
-	       //assertEquals(actual_s, ci.getLHS()+" -> "+ci.getRHS());
-	       System.out.println(ci.getLHS()+" -> "+ci.getRHS());
-	     }
+	       actual = actual.concat(ci.getLHS()+" -> "+ci.getRHS() + "\n");   
+	    }
+
+		assertEquals(this.checkExpectedResult("testERvtSimpleTotalISAtoDL"), actual);
 	}
 	
 	@Test
 	@DisplayName("Total and Exclusive ISA")
 	public void testERvtSimpleTotalExclusiveISAtoDL() {
-		JSONObject obj = new JSONObject();
-        JSONArray links = new JSONArray();
-        JSONArray attributes = new JSONArray();
-        JSONArray entities = new JSONArray();
-        
-        String jsonEntity = new JSONStringer()
-                .object()
-                .key("name")
-                .value("entity 1")
-                .key("timestamp")
-                .value("")
-                .key("position")
-                .object()
-                .key("x")
-                .value("600")
-                .key("y")
-                .value("800")
-                .endObject()
-                .endObject()
-                .toString();
-        
-        String jsonEntity2 = new JSONStringer()
-                .object()
-                .key("name")
-                .value("entity 2")
-                .key("timestamp")
-                .value("")
-                .key("position")
-                .object()
-                .key("x")
-                .value("600")
-                .key("y")
-                .value("800")
-                .endObject()
-                .endObject()
-                .toString();
-        
-        String jsonEntity3 = new JSONStringer()
-                .object()
-                .key("name")
-                .value("entity 3")
-                .key("timestamp")
-                .value("")
-                .key("position")
-                .object()
-                .key("x")
-                .value("600")
-                .key("y")
-                .value("800")
-                .endObject()
-                .endObject()
-                .toString();
-        
-        String jsonEntity4 = new JSONStringer()
-                .object()
-                .key("name")
-                .value("entity 4")
-                .key("timestamp")
-                .value("")
-                .key("position")
-                .object()
-                .key("x")
-                .value("600")
-                .key("y")
-                .value("800")
-                .endObject()
-                .endObject()
-                .toString();
-  
-        entities.put(jsonEntity);
-        entities.put(jsonEntity2);
-        entities.put(jsonEntity3);
-        entities.put(jsonEntity4);
-        
-        String jsonLinks = new JSONStringer()
-                .object()
-                .key("name")
-                .value("isa1")
-                .key("parent")
-                .value("entity 1")
-                .key("entities")
-                .value(new JSONArray()
-                		.put("entity 2")
-                		.put("entity 3")
-                		.put("entity 4")
-                		)
-                .key("type")
-                .value("isa")
-                .key("constraint")
-                .value(new JSONArray()
-                		.put("exclusive")
-                		.put("total")
-                		)
-                .endObject()
-                .toString();
-  
-        links.put(jsonLinks);
-
-        obj.put("entities", entities);
-        obj.put("attributes", attributes);
-        obj.put("links", links);
-        
         DefaultStrategy strategy = new DefaultStrategy();
-        TBox tbox = strategy.to_dllitefpx(obj);
+        TBox tbox = strategy.to_dllitefpx(this.getJSONfromFile("testERvtSimpleTotalExclusiveISAtoDL"));
 
-	    System.out.println("----------------------------------------------------Total and Exclusive ISA TBox Test");
 	    Iterator<ConceptInclusionAssertion> iterator = tbox.iterator();
-	     while(iterator.hasNext()){
+	    String actual = new String();
+	    while(iterator.hasNext()){
 	       ConceptInclusionAssertion ci = iterator.next();
-	       //assertEquals(actual_s, ci.getLHS()+" -> "+ci.getRHS());
-	       System.out.println(ci.getLHS()+" -> "+ci.getRHS());
-	     }
+	       actual = actual.concat(ci.getLHS()+" -> "+ci.getRHS() + "\n");   
+	    }
+
+		assertEquals(this.checkExpectedResult("testERvtSimpleTotalExclusiveISAtoDL"), actual);
 	}
 	
 	@Test
 	@DisplayName("Binary Rel simple with cardinalities greater than 0")
 	public void testERvtSimpleReltoDL() {
-		JSONObject obj = new JSONObject();
-        JSONArray links = new JSONArray();
-        JSONArray attributes = new JSONArray();
-        JSONArray entities = new JSONArray();
-        JSONArray relationships = new JSONArray();
-        
-        String jsonEntity = new JSONStringer()
-                .object()
-                .key("name")
-                .value("entity 1")
-                .key("timestamp")
-                .value("")
-                .key("position")
-                .object()
-                .key("x")
-                .value("600")
-                .key("y")
-                .value("800")
-                .endObject()
-                .endObject()
-                .toString();
-        
-        String jsonEntity2 = new JSONStringer()
-                .object()
-                .key("name")
-                .value("entity 2")
-                .key("timestamp")
-                .value("")
-                .key("position")
-                .object()
-                .key("x")
-                .value("600")
-                .key("y")
-                .value("800")
-                .endObject()
-                .endObject()
-                .toString();
-        
-        String jsonRel = new JSONStringer()
-                .object()
-                .key("name")
-                .value("rel1")
-                .key("timestamp")
-                .value("")
-                .key("position")
-                .object()
-                .key("x")
-                .value("600")
-                .key("y")
-                .value("800")
-                .endObject()
-                .endObject()
-                .toString();
-  
-        entities.put(jsonEntity);
-        entities.put(jsonEntity2);
-        relationships.put(jsonRel);
-        
-        String jsonLinks = new JSONStringer()
-                .object()
-                .key("name")
-                .value("rel1")
-                .key("entities")
-                .value(new JSONArray()
-                		.put("entity 1")
-                		.put("entity 2")
-                		)
-                .key("cardinality")
-                .value(new JSONArray()
-                		.put("1..4")
-                		.put("3..5")
-                		)
-                .key("roles")
-                .value(new JSONArray()
-                		.put("e1")
-                		.put("e2")
-                		)
-                .key("type")
-                .value("relationship")
-                .endObject()
-                .toString();
-  
-        links.put(jsonLinks);
-
-        obj.put("entities", entities);
-        obj.put("attributes", attributes);
-        obj.put("relationships", relationships);
-        obj.put("links", links);
-        
         DefaultStrategy strategy = new DefaultStrategy();
-        TBox tbox = strategy.to_dllitefpx(obj);
+        TBox tbox = strategy.to_dllitefpx(this.getJSONfromFile("testERvtSimpleReltoDL"));
 
-	    System.out.println("--------------------------------------- Bin Rel Not Extended TBox Test");
 	    Iterator<ConceptInclusionAssertion> iterator = tbox.iterator();
-	     while(iterator.hasNext()){
+	    String actual = new String();
+	    while(iterator.hasNext()){
 	       ConceptInclusionAssertion ci = iterator.next();
-	       //assertEquals(actual_s, ci.getLHS()+" -> "+ci.getRHS());
-	       System.out.println(ci.getLHS()+" -> "+ci.getRHS());
-	     }
+	       actual = actual.concat(ci.getLHS()+" -> "+ci.getRHS() + "\n");   
+	    }
+
+		assertEquals(this.checkExpectedResult("testERvtSimpleReltoDL"), actual);
 	}
 	
 	@Test
 	@DisplayName("Binary Rel simple with cardinalities greater than 0. Extended TBox returned")
 	public void testERvtSimpleReltoDLExtendedTbox() {
-		JSONObject obj = new JSONObject();
-        JSONArray links = new JSONArray();
-        JSONArray attributes = new JSONArray();
-        JSONArray entities = new JSONArray();
-        JSONArray relationships = new JSONArray();
-        
-        String jsonEntity = new JSONStringer()
-                .object()
-                .key("name")
-                .value("entity 1")
-                .key("timestamp")
-                .value("")
-                .key("position")
-                .object()
-                .key("x")
-                .value("600")
-                .key("y")
-                .value("800")
-                .endObject()
-                .endObject()
-                .toString();
-        
-        String jsonEntity2 = new JSONStringer()
-                .object()
-                .key("name")
-                .value("entity 2")
-                .key("timestamp")
-                .value("")
-                .key("position")
-                .object()
-                .key("x")
-                .value("600")
-                .key("y")
-                .value("800")
-                .endObject()
-                .endObject()
-                .toString();
-        
-        String jsonRel = new JSONStringer()
-                .object()
-                .key("name")
-                .value("rel1")
-                .key("timestamp")
-                .value("")
-                .key("position")
-                .object()
-                .key("x")
-                .value("600")
-                .key("y")
-                .value("800")
-                .endObject()
-                .endObject()
-                .toString();
-  
-        entities.put(jsonEntity);
-        entities.put(jsonEntity2);
-        relationships.put(jsonRel);
-        
-        String jsonLinks = new JSONStringer()
-                .object()
-                .key("name")
-                .value("rel1")
-                .key("entities")
-                .value(new JSONArray()
-                		.put("entity 1")
-                		.put("entity 2")
-                		)
-                .key("cardinality")
-                .value(new JSONArray()
-                		.put("1..4")
-                		.put("3..5")
-                		)
-                .key("roles")
-                .value(new JSONArray()
-                		.put("e1")
-                		.put("e2")
-                		)
-                .key("type")
-                .value("relationship")
-                .endObject()
-                .toString();
-  
-        links.put(jsonLinks);
-
-        obj.put("entities", entities);
-        obj.put("attributes", attributes);
-        obj.put("relationships", relationships);
-        obj.put("links", links);
-        
         DefaultStrategy strategy = new DefaultStrategy();
-        TBox tbox = strategy.to_dllitefpx(obj);
-        
+        TBox tbox = strategy.to_dllitefpx(this.getJSONfromFile("testERvtSimpleReltoDLExtendedTbox"));
         tbox.addExtensionConstraints();
         
-	    System.out.println("------------------------------------------ Bin Rel Extended TBox Test 6");
 	    Iterator<ConceptInclusionAssertion> iterator = tbox.iterator();
-	     while(iterator.hasNext()){
+	    String actual = new String();
+	    while(iterator.hasNext()){
 	       ConceptInclusionAssertion ci = iterator.next();
-	       //assertEquals(actual_s, ci.getLHS()+" -> "+ci.getRHS());
-	       System.out.println(ci.getLHS()+" -> "+ci.getRHS());
-	     }
+	       actual = actual.concat(ci.getLHS()+" -> "+ci.getRHS() + "\n");   
+	    }
+
+		assertEquals(this.checkExpectedResult("testERvtSimpleReltoDLExtendedTbox"), actual);
 	}
 
 	@Test
 	@DisplayName("Temporal Binary Rel")
 	public void testERvtTemporalBinaryReltoDL() {
-		JSONObject obj = new JSONObject();
-        JSONArray links = new JSONArray();
-        JSONArray attributes = new JSONArray();
-        JSONArray entities = new JSONArray();
-        JSONArray relationships = new JSONArray();
-        
-        String jsonEntity = new JSONStringer()
-                .object()
-                .key("name")
-                .value("entity 1")
-                .key("timestamp")
-                .value("")
-                .key("position")
-                .object()
-                .key("x")
-                .value("600")
-                .key("y")
-                .value("800")
-                .endObject()
-                .endObject()
-                .toString();
-        
-        String jsonEntity2 = new JSONStringer()
-                .object()
-                .key("name")
-                .value("entity 2")
-                .key("timestamp")
-                .value("")
-                .key("position")
-                .object()
-                .key("x")
-                .value("600")
-                .key("y")
-                .value("800")
-                .endObject()
-                .endObject()
-                .toString();
- 
-        String jsonRel = new JSONStringer()
-                .object()
-                .key("name")
-                .value("rel1")
-                .key("timestamp")
-                .value("temporal")
-                .key("position")
-                .object()
-                .key("x")
-                .value("600")
-                .key("y")
-                .value("800")
-                .endObject()
-                .endObject()
-                .toString();
-        
-        relationships.put(jsonRel);
-        entities.put(jsonEntity);
-        entities.put(jsonEntity2);
-        
-        String jsonLinks = new JSONStringer()
-                .object()
-                .key("name")
-                .value("rel1")
-                .key("entities")
-                .value(new JSONArray()
-                		.put("entity 1")
-                		.put("entity 2")
-                		)
-                .key("cardinality")
-                .value(new JSONArray()
-                		.put("1..4")
-                		.put("3..5")
-                		)
-                .key("roles")
-                .value(new JSONArray()
-                		.put("e1")
-                		.put("e2")
-                		)
-                .key("timestamp")
-                .value("temporal")
-                .key("type")
-                .value("relationship")
-                .endObject()
-                .toString();
-  
-        links.put(jsonLinks);
-
-        obj.put("entities", entities);
-        obj.put("attributes", attributes);
-        obj.put("relationships", relationships);
-        obj.put("links", links);
-        
         DefaultStrategy strategy = new DefaultStrategy();
-        TBox tbox = strategy.to_dllitefpx(obj);
+        TBox tbox = strategy.to_dllitefpx(this.getJSONfromFile("testERvtTemporalBinaryReltoDL"));
 
-	    System.out.println("TBox Test 6(b)");
 	    Iterator<ConceptInclusionAssertion> iterator = tbox.iterator();
-	     while(iterator.hasNext()){
+	    String actual = new String();
+	    while(iterator.hasNext()){
 	       ConceptInclusionAssertion ci = iterator.next();
-	       //assertEquals(actual_s, ci.getLHS()+" -> "+ci.getRHS());
-	       System.out.println(ci.getLHS()+" -> "+ci.getRHS());
-	     }
+	       actual = actual.concat(ci.getLHS()+" -> "+ci.getRHS() + "\n");   
+	    }
+
+		assertEquals(this.checkExpectedResult("testERvtTemporalBinaryReltoDL"), actual);
 	}
 
 	@Test
 	@DisplayName("TEX (Transition EXtension)")
 	public void testERvtTEXtoDL() {
-		JSONObject obj = new JSONObject();
-        JSONArray links = new JSONArray();
-        JSONArray attributes = new JSONArray();
-        JSONArray entities = new JSONArray();
-        
-        String jsonEntity = new JSONStringer()
-                .object()
-                .key("name")
-                .value("entity 1")
-                .key("timestamp")
-                .value("")
-                .key("position")
-                .object()
-                .key("x")
-                .value("600")
-                .key("y")
-                .value("800")
-                .endObject()
-                .endObject()
-                .toString();
-        
-        String jsonEntity2 = new JSONStringer()
-                .object()
-                .key("name")
-                .value("entity 2")
-                .key("timestamp")
-                .value("")
-                .key("position")
-                .object()
-                .key("x")
-                .value("600")
-                .key("y")
-                .value("800")
-                .endObject()
-                .endObject()
-                .toString();
-  
-        entities.put(jsonEntity);
-        entities.put(jsonEntity2);
-        
-        String jsonLinks = new JSONStringer()
-                .object()
-                .key("name")
-                .value("tex1")
-                .key("entities")
-                .value(new JSONArray()
-                		.put("entity 1")
-                		.put("entity 2")
-                		)
-                .key("type")
-                .value("tex")
-                .endObject()
-                .toString();
-  
-        links.put(jsonLinks);
-
-        obj.put("entities", entities);
-        obj.put("attributes", attributes);
-        obj.put("links", links);
-        
         DefaultStrategy strategy = new DefaultStrategy();
-        TBox tbox = strategy.to_dllitefpx(obj);
+        TBox tbox = strategy.to_dllitefpx(this.getJSONfromFile("testERvtTEXtoDL"));
 
-	    System.out.println("TBox Test 7 TEX");
 	    Iterator<ConceptInclusionAssertion> iterator = tbox.iterator();
-	     while(iterator.hasNext()){
+	    String actual = new String();
+	    while(iterator.hasNext()){
 	       ConceptInclusionAssertion ci = iterator.next();
-	       //assertEquals(actual_s, ci.getLHS()+" -> "+ci.getRHS());
-	       System.out.println(ci.getLHS()+" -> "+ci.getRHS());
-	     }
+	       actual = actual.concat(ci.getLHS()+" -> "+ci.getRHS() + "\n");   
+	    }
+
+		assertEquals(this.checkExpectedResult("testERvtTEXtoDL"), actual);
 	}
 	
 	@Test
 	@DisplayName("DEV (Dynamic EVolution)")
 	public void testERvtDEVtoDL() {
-		JSONObject obj = new JSONObject();
-        JSONArray links = new JSONArray();
-        JSONArray attributes = new JSONArray();
-        JSONArray entities = new JSONArray();
-        
-        String jsonEntity = new JSONStringer()
-                .object()
-                .key("name")
-                .value("entity 1")
-                .key("timestamp")
-                .value("")
-                .key("position")
-                .object()
-                .key("x")
-                .value("600")
-                .key("y")
-                .value("800")
-                .endObject()
-                .endObject()
-                .toString();
-        
-        String jsonEntity2 = new JSONStringer()
-                .object()
-                .key("name")
-                .value("entity 2")
-                .key("timestamp")
-                .value("")
-                .key("position")
-                .object()
-                .key("x")
-                .value("600")
-                .key("y")
-                .value("800")
-                .endObject()
-                .endObject()
-                .toString();
-  
-        entities.put(jsonEntity);
-        entities.put(jsonEntity2);
-        
-        String jsonLinks = new JSONStringer()
-                .object()
-                .key("name")
-                .value("dev1")
-                .key("entities")
-                .value(new JSONArray()
-                		.put("entity 1")
-                		.put("entity 2")
-                		)
-                .key("type")
-                .value("dev")
-                .endObject()
-                .toString();
-  
-        links.put(jsonLinks);
-
-        obj.put("entities", entities);
-        obj.put("attributes", attributes);
-        obj.put("links", links);
-        
         DefaultStrategy strategy = new DefaultStrategy();
-        TBox tbox = strategy.to_dllitefpx(obj);
+        TBox tbox = strategy.to_dllitefpx(this.getJSONfromFile("testERvtDEVtoDL"));
 
-	    System.out.println("TBox Test 8 DEV");
 	    Iterator<ConceptInclusionAssertion> iterator = tbox.iterator();
-	     while(iterator.hasNext()){
+	    String actual = new String();
+	    while(iterator.hasNext()){
 	       ConceptInclusionAssertion ci = iterator.next();
-	       //assertEquals(actual_s, ci.getLHS()+" -> "+ci.getRHS());
-	       System.out.println(ci.getLHS()+" -> "+ci.getRHS());
-	     }
+	       actual = actual.concat(ci.getLHS()+" -> "+ci.getRHS() + "\n");   
+	    }
+
+		assertEquals(this.checkExpectedResult("testERvtDEVtoDL"), actual);
 	}	
 	
 	@Test
 	@DisplayName("DEX^- (Dynamic EXtension)")
 	public void testERvtDEXMinustoDL() {
-		JSONObject obj = new JSONObject();
-        JSONArray links = new JSONArray();
-        JSONArray attributes = new JSONArray();
-        JSONArray entities = new JSONArray();
-        
-        String jsonEntity = new JSONStringer()
-                .object()
-                .key("name")
-                .value("entity 1")
-                .key("timestamp")
-                .value("")
-                .key("position")
-                .object()
-                .key("x")
-                .value("600")
-                .key("y")
-                .value("800")
-                .endObject()
-                .endObject()
-                .toString();
-        
-        String jsonEntity2 = new JSONStringer()
-                .object()
-                .key("name")
-                .value("entity 2")
-                .key("timestamp")
-                .value("")
-                .key("position")
-                .object()
-                .key("x")
-                .value("600")
-                .key("y")
-                .value("800")
-                .endObject()
-                .endObject()
-                .toString();
-  
-        entities.put(jsonEntity);
-        entities.put(jsonEntity2);
-        
-        String jsonLinks = new JSONStringer()
-                .object()
-                .key("name")
-                .value("dexminus1")
-                .key("entities")
-                .value(new JSONArray()
-                		.put("entity 1")
-                		.put("entity 2")
-                		)
-                .key("type")
-                .value("dex-")
-                .endObject()
-                .toString();
-  
-        links.put(jsonLinks);
-
-        obj.put("entities", entities);
-        obj.put("attributes", attributes);
-        obj.put("links", links);
-        
         DefaultStrategy strategy = new DefaultStrategy();
-        TBox tbox = strategy.to_dllitefpx(obj);
+        TBox tbox = strategy.to_dllitefpx(this.getJSONfromFile("testERvtDEXMinustoDL"));
 
-	    System.out.println("TBox Test 9 DEX minus");
 	    Iterator<ConceptInclusionAssertion> iterator = tbox.iterator();
-	     while(iterator.hasNext()){
+	    String actual = new String();
+	    while(iterator.hasNext()){
 	       ConceptInclusionAssertion ci = iterator.next();
-	       //assertEquals(actual_s, ci.getLHS()+" -> "+ci.getRHS());
-	       System.out.println(ci.getLHS()+" -> "+ci.getRHS());
-	     }
+	       actual = actual.concat(ci.getLHS()+" -> "+ci.getRHS() + "\n");   
+	    }
+
+		assertEquals(this.checkExpectedResult("testERvtDEXMinustoDL"), actual);
 	}
 	
 	@Test
 	@DisplayName("PEX (Persistent EXtension)")
 	public void testERvtPEXtoDL() {
-		JSONObject obj = new JSONObject();
-        JSONArray links = new JSONArray();
-        JSONArray attributes = new JSONArray();
-        JSONArray entities = new JSONArray();
-        
-        String jsonEntity = new JSONStringer()
-                .object()
-                .key("name")
-                .value("entity 1")
-                .key("timestamp")
-                .value("")
-                .key("position")
-                .object()
-                .key("x")
-                .value("600")
-                .key("y")
-                .value("800")
-                .endObject()
-                .endObject()
-                .toString();
-        
-        String jsonEntity2 = new JSONStringer()
-                .object()
-                .key("name")
-                .value("entity 2")
-                .key("timestamp")
-                .value("")
-                .key("position")
-                .object()
-                .key("x")
-                .value("600")
-                .key("y")
-                .value("800")
-                .endObject()
-                .endObject()
-                .toString();
-  
-        entities.put(jsonEntity);
-        entities.put(jsonEntity2);
-        
-        String jsonLinks = new JSONStringer()
-                .object()
-                .key("name")
-                .value("pex1")
-                .key("entities")
-                .value(new JSONArray()
-                		.put("entity 1")
-                		)
-                .key("type")
-                .value("pex")
-                .endObject()
-                .toString();
-  
-        links.put(jsonLinks);
-
-        obj.put("entities", entities);
-        obj.put("attributes", attributes);
-        obj.put("links", links);
-        
         DefaultStrategy strategy = new DefaultStrategy();
-        TBox tbox = strategy.to_dllitefpx(obj);
+        TBox tbox = strategy.to_dllitefpx(this.getJSONfromFile("testERvtPEXtoDL"));
 
-	    System.out.println("TBox Test 10 PEX");
 	    Iterator<ConceptInclusionAssertion> iterator = tbox.iterator();
-	     while(iterator.hasNext()){
+	    String actual = new String();
+	    while(iterator.hasNext()){
 	       ConceptInclusionAssertion ci = iterator.next();
-	       //assertEquals(actual_s, ci.getLHS()+" -> "+ci.getRHS());
-	       System.out.println(ci.getLHS()+" -> "+ci.getRHS());
-	     }
+	       actual = actual.concat(ci.getLHS()+" -> "+ci.getRHS() + "\n");   
+	    }
+
+		assertEquals(this.checkExpectedResult("testERvtPEXtoDL"), actual);
 	}
 	
 }

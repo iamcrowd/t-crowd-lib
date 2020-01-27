@@ -98,7 +98,7 @@ public class DefaultStrategy extends Strategy{
 	 * @implNote This impl manages a list of rigid roles and a list for remaining ones.
 	 */
 	public TBox to_dllitefpx(JSONObject ervt_json) {
-		System.out.println("Starting TBox JSON: "+ervt_json);
+		//System.out.println("Starting TBox JSON: "+ervt_json);
 		
 		ervt_json.keys().forEachRemaining(key -> {
 			

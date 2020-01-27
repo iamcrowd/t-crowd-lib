@@ -1,0 +1,21 @@
+{"entities":[
+	{"name":"entity 1",
+	"timestamp":"",
+	"position":{
+		"x":"600","y":"800"
+		}
+	},
+	{"name":"entity 2",
+	"timestamp":"",
+	"position":{
+		"x":"600","y":"800"
+		}
+	}],
+"attributes":[],
+"links":[
+	{"name":"isa1",
+	"parent":"entity 1",
+	"entities":["entity 2"],
+	"type":"isa",
+	"constraint":[]}]
+}

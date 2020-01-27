@@ -1,0 +1,17 @@
+{"entities":[
+	{"name": "entity 1",
+	"timestamp":"",
+	"position":{
+		"x":"600","y":"800"}
+	},
+	{"name":"entity 2",
+	"timestamp":"",
+	"position":{
+		"x":"600","y":"800"}
+	}],
+"attributes":[],
+"links":[
+	{"name":"dexminus1",
+	"entities":["entity 1","entity 2"],
+	"type":"dex-"}]
+}

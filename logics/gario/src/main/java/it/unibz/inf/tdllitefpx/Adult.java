@@ -56,7 +56,7 @@ public class Adult {
 
 	// Role Name = new PositiveRole(new AtomicRigidRole("Name"));
 	// Role Salary = new PositiveRole(new AtomicRigidRole("Salary"));
-	Role Salary = new PositiveRole(new AtomicLocalRole("Salary"));// MOi ici
+	//Role Salary = new PositiveRole(new AtomicLocalRole("Salary"));// MOi ici
 	// Role TimeStamp_Min = new PositiveRole(new AtomicLocalRole("TimeStamp_Min"));
 
 	public ABox getABox() {
@@ -82,8 +82,8 @@ public class Adult {
 		A.addConceptsAssertion(a6);
 		A.addConceptsAssertion(a7);
 
-		ABoxRoleAssertion r1 = new ABoxRoleAssertion(Salary, "John", "S1");
-		A.addABoxRoleAssertion(r1);
+//		ABoxRoleAssertion r1 = new ABoxRoleAssertion(Salary, "John", "S1");
+//		A.addABoxRoleAssertion(r1);
 		// ABoxRoleAssertion r2= new ABoxRoleAssertion(Name,"John", "Mcking");
 		// A.addABoxRoleAssertion(r2);
 		// A.addAll(getABox0());
@@ -132,20 +132,15 @@ public class Adult {
 		 * t0.add(new ConceptInclusionAssertion( Person, new NegatedConcept(new
 		 * QuantifiedRole(Name, 2))));
 		 */
-		t0.add(new ConceptInclusionAssertion(Person, new QuantifiedRole(Salary, 1)));
-		t0.add(new ConceptInclusionAssertion(Person, new NegatedConcept(new QuantifiedRole(Salary, 2))));
+		//t0.add(new ConceptInclusionAssertion(Person, new QuantifiedRole(Salary, 1)));
+		//t0.add(new ConceptInclusionAssertion(Person, new NegatedConcept(new QuantifiedRole(Salary, 2))));
 
 		// R
 
 		// H
 
-		// t0.add(new ConceptInclusionAssertion(
-		// Adulte,
-		// Person));
-
-		// t0.add(new ConceptInclusionAssertion(
-		// Minor,
-		// Person));
+		t0.add(new ConceptInclusionAssertion(Adult,Person));
+		t0.add(new ConceptInclusionAssertion(Minor,Person));
 
 		return t0;
 	}
@@ -163,7 +158,8 @@ public class Adult {
 
 		// EVO
 		// An adult stay adult in the future
-		t1.add(new ConceptInclusionAssertion(Adult, new AlwaysFuture(Adult)));
+		//t1.add(new ConceptInclusionAssertion(Adult, new AlwaysFuture(Adult)));
+		t1.add(new ConceptInclusionAssertion(Person, new AlwaysFuture(Person)));
 
 		// An adult was sometime Minor in the past
 		// t1.add(new ConceptInclusionAssertion(Adult,new SometimePast(Minor)));
