@@ -15,8 +15,8 @@
 		}
 	},
 	{"name":"attribute 2",
-	"type":"key",
-	"datatype":"Integer",
+	"type":"normal",
+	"datatype":"String",
 	"timestamp":"",
 	"position":{
 		"x":"600","y":"800"

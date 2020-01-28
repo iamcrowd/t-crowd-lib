@@ -18,10 +18,10 @@ import java.util.Iterator;
 import org.apache.commons.io.IOUtils;
 
 @DisplayName("Test Suite for a default strategy encoding ERvt diagrams into DL-Lite_fpx")
-public class DefaultStrategyTest{
+public class DefaultStrategyTBoxTest {
 	
 	private JSONObject getJSONfromFile(String fileName){
-		InputStream data = DefaultStrategyTest.class.
+		InputStream data = DefaultStrategyTBoxTest.class.
 				getClassLoader().
 				getResourceAsStream(fileName + ".json"); 
 		
@@ -40,7 +40,7 @@ public class DefaultStrategyTest{
 	}
 	
 	private String checkExpectedResult(String fileName) {
-		InputStream data = DefaultStrategyTest.class.
+		InputStream data = DefaultStrategyTBoxTest.class.
 				getClassLoader().
 				getResourceAsStream(fileName + ".txt");
 	    if (data == null) {
@@ -421,6 +421,23 @@ public class DefaultStrategyTest{
 
 		assertEquals(this.checkExpectedResult("testERvtTemporalBinaryReltoDL"), actual);
 	}
+	
+	@Test
+	@DisplayName("Snapshot Binary Rel")
+	public void testERvtSnapBinaryReltoDL() {
+        DefaultStrategy strategy = new DefaultStrategy();
+        TBox tbox = strategy.to_dllitefpx(this.getJSONfromFile("testERvtSnapBinaryReltoDL"));
+
+	    Iterator<ConceptInclusionAssertion> iterator = tbox.iterator();
+	    String actual = new String();
+	    while(iterator.hasNext()){
+	       ConceptInclusionAssertion ci = iterator.next();
+	       actual = actual.concat(ci.getLHS()+" -> "+ci.getRHS() + "\n");   
+	    }
+
+		assertEquals(this.checkExpectedResult("testERvtSnapBinaryReltoDL"), actual);
+	}
+
 
 	@Test
 	@DisplayName("TEX (Transition EXtension)")

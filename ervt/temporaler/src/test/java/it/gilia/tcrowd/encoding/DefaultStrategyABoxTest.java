@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.*;
+import org.apache.commons.io.IOUtils;
 import org.json.*;
 
 import it.unibz.inf.tdllitefpx.tbox.TBox;
@@ -11,10 +12,57 @@ import it.unibz.inf.tdllitefpx.abox.ABox;
 import it.unibz.inf.tdllitefpx.tbox.ConceptInclusionAssertion;
 
 import java.util.LinkedList;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.Iterator;
 
 @DisplayName("Test Suite for a default strategy encoding Temporal Data into DL-Lite_fpx")
-public class DefaultStrategyABoxTest{
+public class DefaultStrategyABoxTest {
+	
+	private JSONObject getJSONfromFile(String fileName){
+		InputStream data = DefaultStrategyABoxTest.class.
+				getClassLoader().
+				getResourceAsStream(fileName + ".json"); 
+		
+	    if (data == null) {
+            throw new NullPointerException("Cannot find resource file " + fileName);
+        }
+	    String jsonTxt = "";
+	    try {
+	    	jsonTxt = IOUtils.toString(data, "UTF-8");
+	    }
+	    catch(IOException e) {
+	    	e.printStackTrace();
+	    }
+	    JSONObject object = new JSONObject(jsonTxt);
+	    return object;
+	}
+	
+	private String checkExpectedResult(String fileName) {
+		InputStream data = DefaultStrategyABoxTest.class.
+				getClassLoader().
+				getResourceAsStream(fileName + ".txt");
+	    if (data == null) {
+            throw new NullPointerException("Cannot find resource file " + fileName);
+        }
+	    
+	    String val = "";
+	    try {
+	    	BufferedReader r = new BufferedReader(
+	    			new InputStreamReader(data));
+	        String l;
+	        while((l = r.readLine()) != null) {
+	           val = val + l + "\n";
+	        } 
+	        data.close();
+	    }
+	    catch(IOException e) {
+	    	e.printStackTrace();
+	    }
+	    return val;
+	}
 	
 	@Test
 	@DisplayName("Concepts at time 0")

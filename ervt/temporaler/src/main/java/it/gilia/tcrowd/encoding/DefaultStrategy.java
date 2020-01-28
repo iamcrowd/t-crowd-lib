@@ -88,7 +88,6 @@ public class DefaultStrategy extends Strategy{
         	{"name":"pex1","entity":"Entity1","type":"pex"}]}
         @endcode
      *
-	 * @implNote temporal and snapshot attributes missing
 	 * @implNote attributes in relationships missing
 	 * @implNote For attributes:
 	 * (a) Every point with at least q'  R-successors has at least q R-successors, for each q < q'  .
@@ -219,7 +218,7 @@ public class DefaultStrategy extends Strategy{
 	    });
 		
 		this.tBoxClousure();
-		System.out.println("TBox stats..."+this.getTBox().getStats());
+		//System.out.println("TBox stats..."+this.getTBox().getStats());
 		return this.getTBox();
 	}
 	
