@@ -15,7 +15,6 @@ import java.util.LinkedList;
 import java.lang.*;
 import java.io.*;
 import java.util.Iterator;
-import org.apache.commons.io.IOUtils;
 
 @DisplayName("Test Suite for a default strategy encoding ERvt diagrams into DL-Lite_fpx")
 public class DefaultStrategyTBoxTest {

@@ -38,6 +38,7 @@ import it.unibz.inf.tdllitefpx.roles.AtomicRigidRole;
 import it.unibz.inf.tdllitefpx.roles.PositiveRole;
 import it.unibz.inf.tdllitefpx.roles.Role;
 import it.unibz.inf.tdllitefpx.roles.AtomicRole;
+import it.unibz.inf.tdllitefpx.roles.temporal.NextFutureRole;
 import it.unibz.inf.tdllitefpx.tbox.ConceptInclusionAssertion;
 import it.unibz.inf.tdllitefpx.tbox.TBox;
 import it.unibz.inf.tdllitefpx.abox.ABox;
@@ -495,7 +496,7 @@ public class DefaultStrategy extends Strategy{
 	 * 					 {"concept":"Person", "instance":"Maria", "timestamp":"2"}]
 	 * 				 "roles":
 	 * 					[{"role":"Surname", "from":"Maria", "to":"Clinton", "timestamp":"1"},
-	 * 					 {"role":"Salary", "from":"Maria", "to":"1000", "timestamp":"2"}]
+	 * 					 {"role":"Salary", "from":"Maria", "to":"1000", "timestamip":"2"}]
 	 * 			 	}
        @endcode
      *
@@ -512,8 +513,11 @@ public class DefaultStrategy extends Strategy{
 				arr.iterator().forEachRemaining(element -> {
 					JSONTokener t = new JSONTokener(element.toString());
 					JSONObject jo = new JSONObject(t);
-					this.getABoxConceptAssertion(jo);
-					
+					try{
+						this.getABoxConceptAssertion(jo);
+					}catch(Exception e) {
+						System.out.println(e.getMessage());
+					}
 				});
 				
 			}else if (key.equals("roles")) {
@@ -534,32 +538,38 @@ public class DefaultStrategy extends Strategy{
 		return this.getABox();
 	}
 	
-	public void getABoxConceptAssertion(JSONObject assertion) {
+	public void getABoxConceptAssertion(JSONObject assertion) throws Exception {
 		System.out.println(assertion);
 		System.out.println("Concept: "+assertion.get("concept"));
 		System.out.println("Instance: "+assertion.get("instance"));
 		System.out.println("Timestamp: "+assertion.get("timestamp"));
 		
-		Concept concept = this.giveMeAconcept(assertion.get("concept").toString());
-		String instance = new String(assertion.get("instance").toString());
+		Concept temp_concept = new AtomicConcept(assertion.get("concept").toString());
 		
-		int numberOfNext = Integer.parseInt(assertion.get("timestamp").toString());
-		System.out.println("Integer: "+numberOfNext);
+		if (this.existsConcept(temp_concept)){
+			Concept concept = this.giveMeAconcept(assertion.get("concept").toString());
+			String instance = new String(assertion.get("instance").toString());
 		
-		if (numberOfNext == 0) {
-			ABoxConceptAssertion a1 = new ABoxConceptAssertion(concept, instance);
-			this.myABox.addConceptsAssertion(a1);
+			int numberOfNext = Integer.parseInt(assertion.get("timestamp").toString());
+			System.out.println("Integer: "+numberOfNext);
+		
+			if (numberOfNext == 0) {
+				ABoxConceptAssertion a1 = new ABoxConceptAssertion(concept, instance);
+				this.myABox.addConceptsAssertion(a1);
 			
-		}else if (numberOfNext > 0) {
-			int countNext = 1;
+			}else if (numberOfNext > 0) {
+				int countNext = 1;
 
-			while (countNext <= numberOfNext) {
-				Concept tconcept = new NextFuture(concept);
-				concept = tconcept;
-				countNext++;
+				while (countNext <= numberOfNext) {
+					Concept tconcept = new NextFuture(concept);
+					concept = tconcept;
+					countNext++;
+				}
+				ABoxConceptAssertion a1 = new ABoxConceptAssertion(concept, instance);
+				this.myABox.addConceptsAssertion(a1);
 			}
-			ABoxConceptAssertion a1 = new ABoxConceptAssertion(concept, instance);
-			this.myABox.addConceptsAssertion(a1);
+		} else {
+			throw new Exception("[MATCH EXCEPTION]: ABox and TBox do not match. Concept: " + assertion.get("concept").toString()); 
 		}
 	}
 	
@@ -571,26 +581,14 @@ public class DefaultStrategy extends Strategy{
 		System.out.println("to: "+assertion.get("to"));
 		System.out.println("Timestamp: "+assertion.get("timestamp"));
 		
-		String role = new String(assertion.get("role").toString());
+		Role role = this.giveMeArole(assertion.get("role").toString());
 		String from = new String(assertion.get("from").toString());
-		String to = new String(assertion.get("to").toString());
+		String to = new String(assertion.get("to").toString()); 
 		
 		int numberOfNext = Integer.parseInt(assertion.get("timestamp").toString());
-		System.out.println("Integer: "+numberOfNext);
 		
-		if (numberOfNext == 0) {
-			System.out.println("Asserted Role: "+assertion.get("role")+"("+assertion.get("from")+","+assertion.get("to")+")");
-			
-		}else if (numberOfNext > 0) {
-			int countNext = 1;
-			String atNextTime = new String(role+"("+from+","+to+")");
-			while (countNext <= numberOfNext) {
-				String trole = "X "+atNextTime;
-				atNextTime = trole;
-				countNext++;
-			}
-			System.out.println("Asserted Role at more than 0 time: "+atNextTime);
-		}
+		ABoxRoleAssertion r1 = new ABoxRoleAssertion(role, from, to, numberOfNext);
+		this.myABox.addABoxRoleAssertion(r1);
 		
 	}
 

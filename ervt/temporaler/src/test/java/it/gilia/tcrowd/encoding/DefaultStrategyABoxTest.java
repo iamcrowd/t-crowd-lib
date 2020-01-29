@@ -1,21 +1,30 @@
 package it.gilia.tcrowd.encoding;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.*;
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.ArrayUtils;
 import org.json.*;
 
 import it.unibz.inf.tdllitefpx.tbox.TBox;
 import it.unibz.inf.tdllitefpx.abox.ABox;
 import it.unibz.inf.tdllitefpx.tbox.ConceptInclusionAssertion;
+import it.unibz.inf.tdllitefpx.abox.ABoxRoleAssertion;
+import it.unibz.inf.tdllitefpx.abox.ABoxConceptAssertion;
+
+import it.unibz.inf.tdllitefpx.roles.temporal.NextFutureRole;
+import it.unibz.inf.tdllitefpx.roles.temporal.TemporalRole;
 
 import java.util.LinkedList;
+import java.util.List;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
 import java.util.Iterator;
 
 @DisplayName("Test Suite for a default strategy encoding Temporal Data into DL-Lite_fpx")
@@ -40,7 +49,7 @@ public class DefaultStrategyABoxTest {
 	    return object;
 	}
 	
-	private String checkExpectedResult(String fileName) {
+	private List<String> checkExpectedResult(String fileName) {
 		InputStream data = DefaultStrategyABoxTest.class.
 				getClassLoader().
 				getResourceAsStream(fileName + ".txt");
@@ -48,13 +57,13 @@ public class DefaultStrategyABoxTest {
             throw new NullPointerException("Cannot find resource file " + fileName);
         }
 	    
-	    String val = "";
+	    List<String> val = new ArrayList<String>();
 	    try {
 	    	BufferedReader r = new BufferedReader(
 	    			new InputStreamReader(data));
 	        String l;
 	        while((l = r.readLine()) != null) {
-	           val = val + l + "\n";
+	           val.add(l);
 	        } 
 	        data.close();
 	    }
@@ -67,207 +76,97 @@ public class DefaultStrategyABoxTest {
 	@Test
 	@DisplayName("Concepts at time 0")
 	public void testABoxConceptsAtTime0ToDL() {
-		JSONObject obj = new JSONObject();
-        JSONArray concepts = new JSONArray();
-        JSONArray roles = new JSONArray();
-
-        String jsonConcept = new JSONStringer()
-                .object()
-                .key("concept")
-                .value("Person")
-                .key("instance")
-                .value("Maria")
-                .key("timestamp")
-                .value("0")
-                .endObject()
-                .toString();
-        
-        concepts.put(jsonConcept);
-
-        obj.put("concepts", concepts);
-        obj.put("roles", roles);
-
         DefaultStrategy strategy = new DefaultStrategy();
-        strategy.to_dllitefpxABox(obj);
-
-	    System.out.println("---------------------------------ABox Test 1 only one concept at time 0");
+        TBox tbox = strategy.to_dllitefpx(this.getJSONfromFile("testABoxConceptsAtTime0ToDLTBOX"));
+        ABox abox = strategy.to_dllitefpxABox(this.getJSONfromFile("testABoxConceptsAtTime0ToDL"));
+        
+		Iterator<ABoxConceptAssertion> iterator = abox.getABoxConceptAssertions().iterator();
+	    String actual = new String();
+	    while(iterator.hasNext()){
+	    	ABoxConceptAssertion ci = iterator.next();
+	    	actual = actual.concat(ci.getConceptAssertion() + "(" + ci.getConstant() + ")" + "\n");   
+	    }
+	    
+		assertEquals(this.checkExpectedResult("testABoxConceptsAtTime0ToDL"), actual);
 	}
 	
 	@Test
 	@DisplayName("Concepts at time 1")
 	public void testABoxConceptsAtTime1ToDL() {
-		JSONObject obj = new JSONObject();
-        JSONArray concepts = new JSONArray();
-        JSONArray roles = new JSONArray();
-
-        String jsonConcept = new JSONStringer()
-                .object()
-                .key("concept")
-                .value("Person")
-                .key("instance")
-                .value("Maria")
-                .key("timestamp")
-                .value("1")
-                .endObject()
-                .toString();
-        
-        concepts.put(jsonConcept);
-
-        obj.put("concepts", concepts);
-        obj.put("roles", roles);
-
         DefaultStrategy strategy = new DefaultStrategy();
-        strategy.to_dllitefpxABox(obj);
-
-	    System.out.println("---------------------------------ABox Test 2 only one concept at time 1");
+        TBox tbox = strategy.to_dllitefpx(this.getJSONfromFile("testABoxConceptsAtTime1ToDLTBOX"));
+        ABox abox = strategy.to_dllitefpxABox(this.getJSONfromFile("testABoxConceptsAtTime1ToDL"));
+        
+		Iterator<ABoxConceptAssertion> iterator = abox.getABoxConceptAssertions().iterator();
+		List<String> expected = this.checkExpectedResult("testABoxConceptsAtTime1ToDL");
+		
+	    while(iterator.hasNext()){
+	    	ABoxConceptAssertion ci = iterator.next();
+	    	String actual = new String(ci.getConceptAssertion() + "(" + ci.getConstant() + ")");
+	    	assertTrue(expected.contains(actual),
+	    			"'" + actual + "'" + " not expected");	
+	    }
 	}
 	
 	@Test
 	@DisplayName("Concepts at time > 1")
 	public void testABoxConceptsAtTimeNToDL() {
-		JSONObject obj = new JSONObject();
-        JSONArray concepts = new JSONArray();
-        JSONArray roles = new JSONArray();
-
-        String jsonConcept = new JSONStringer()
-                .object()
-                .key("concept")
-                .value("Person")
-                .key("instance")
-                .value("Maria")
-                .key("timestamp")
-                .value("1")
-                .endObject()
-                .toString();
-        
-        String jsonConcept2 = new JSONStringer()
-                .object()
-                .key("concept")
-                .value("Person")
-                .key("instance")
-                .value("Maria")
-                .key("timestamp")
-                .value("2")
-                .endObject()
-                .toString();
-        
-        concepts.put(jsonConcept);
-        concepts.put(jsonConcept2);
-
-        obj.put("concepts", concepts);
-        obj.put("roles", roles);
-
         DefaultStrategy strategy = new DefaultStrategy();
-        strategy.to_dllitefpxABox(obj);
+        TBox tbox = strategy.to_dllitefpx(this.getJSONfromFile("testABoxConceptsAtTimeNToDLTBOX"));
+        ABox abox = strategy.to_dllitefpxABox(this.getJSONfromFile("testABoxConceptsAtTimeNToDL"));
 
-	    System.out.println("---------------------------------ABox Test 3 only one concept at time > 1");
+		Iterator<ABoxConceptAssertion> iterator = abox.getABoxConceptAssertions().iterator();
+		List<String> expected = this.checkExpectedResult("testABoxConceptsAtTimeNToDL");
+		
+	    while(iterator.hasNext()){
+	    	ABoxConceptAssertion ci = iterator.next();
+	    	String actual = new String(ci.getConceptAssertion() + "(" + ci.getConstant() + ")");
+	    	assertTrue(expected.contains(actual),
+	    			"'" + actual + "'" + " not expected");	
+	    }   
 	}
 	
 	@Test
 	@DisplayName("Roles at time 0")
 	public void testABoxRolesAtTime0ToDL() {
-		JSONObject obj = new JSONObject();
-        JSONArray concepts = new JSONArray();
-        JSONArray roles = new JSONArray();
-
-        String jsonRole = new JSONStringer()
-                .object()
-                .key("role")
-                .value("Surname")
-                .key("from")
-                .value("Maria")
-                .key("to")
-                .value("Clinton")
-                .key("timestamp")
-                .value("0")
-                .endObject()
-                .toString();
-        
-        roles.put(jsonRole);
-
-        obj.put("concepts", concepts);
-        obj.put("roles", roles);
-        
         DefaultStrategy strategy = new DefaultStrategy();
-        strategy.to_dllitefpxABox(obj);
+        ABox abox = strategy.to_dllitefpxABox(this.getJSONfromFile("testABoxRolesAtTime0ToDL"));
+        
+		Iterator<ABoxRoleAssertion> iterator = abox.getABoxRoleAssertions().iterator();
+	    String actual = new String();
+	    while(iterator.hasNext()){
+	    	ABoxRoleAssertion ci = iterator.next();
+	    	NextFutureRole nfr = new NextFutureRole(ci);
+	    	actual = actual.concat(nfr.toString() + "\n");   
+	    }
+	    
+		assertEquals(this.checkExpectedResult("testABoxRolesAtTime0ToDL"), actual);
 
-	    System.out.println("---------------------------------ABox Test 2 only one role at time 0");
 	}
 	
 	@Test
 	@DisplayName("Roles at time 1")
-	public void testABoxRolesAtTime1ToDL() {
-		JSONObject obj = new JSONObject();
-        JSONArray concepts = new JSONArray();
-        JSONArray roles = new JSONArray();
-
-        String jsonRole = new JSONStringer()
-                .object()
-                .key("role")
-                .value("Surname")
-                .key("from")
-                .value("Maria")
-                .key("to")
-                .value("Clinton")
-                .key("timestamp")
-                .value("1")
-                .endObject()
-                .toString();
-        
-        roles.put(jsonRole);
-
-        obj.put("concepts", concepts);
-        obj.put("roles", roles);
-        
+	public void testABoxRolesAtTime1ToDL() {        
         DefaultStrategy strategy = new DefaultStrategy();
-        strategy.to_dllitefpxABox(obj);
+        ABox abox = strategy.to_dllitefpxABox(this.getJSONfromFile("testABoxRolesAtTime1ToDL"));
 
-	    System.out.println("---------------------------------ABox Test only one role at time 1");
+		Iterator<ABoxRoleAssertion> iterator = abox.getABoxRoleAssertions().iterator();
+	    String actual = new String();
+	    while(iterator.hasNext()){
+	    	ABoxRoleAssertion ci = iterator.next();
+	    	NextFutureRole nfr = new NextFutureRole(ci);
+	    	actual = actual.concat(nfr.toString() + "\n");    
+	    }
+	    
+		assertEquals(this.checkExpectedResult("testABoxRolesAtTime1ToDL"), actual);
 	}
 	
 	@Test
 	@DisplayName("Roles at time N")
 	public void testABoxRolesAtTimeNToDL() {
-		JSONObject obj = new JSONObject();
-        JSONArray concepts = new JSONArray();
-        JSONArray roles = new JSONArray();
-
-        String jsonRole = new JSONStringer()
-                .object()
-                .key("role")
-                .value("Surname")
-                .key("from")
-                .value("Maria")
-                .key("to")
-                .value("Clinton")
-                .key("timestamp")
-                .value("1")
-                .endObject()
-                .toString();
-        
-        String jsonRole2 = new JSONStringer()
-                .object()
-                .key("role")
-                .value("Surname")
-                .key("from")
-                .value("Maria")
-                .key("to")
-                .value("Clinton")
-                .key("timestamp")
-                .value("2")
-                .endObject()
-                .toString();
-        
-        roles.put(jsonRole);
-        roles.put(jsonRole2);
-
-        obj.put("concepts", concepts);
-        obj.put("roles", roles);
-        
         DefaultStrategy strategy = new DefaultStrategy();
-        strategy.to_dllitefpxABox(obj);
+        strategy.to_dllitefpxABox(this.getJSONfromFile("testERvtSimpleTotalExclusiveISAtoDL"));
 
-	    System.out.println("---------------------------------ABox Test only one role at time N");
 	}
 	
 }
