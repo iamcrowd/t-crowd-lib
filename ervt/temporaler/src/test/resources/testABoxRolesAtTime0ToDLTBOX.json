@@ -1,0 +1,22 @@
+{"entities":[
+	{"name":"Person",
+	"timestamp":"",
+	"position":{
+		"x":"600","y":"800"
+		}
+	}],
+"attributes":[
+	{"name":"Surname",
+	"type":"key",
+	"datatype":"String",
+	"timestamp":"snapshot",
+	"position":{
+		"x":"600","y":"800"
+		}
+	}],
+"links":[
+	{"name":"attrA",
+	"entity":"Person",
+	"attribute":"Surname",
+	"type":"attribute"}]
+}

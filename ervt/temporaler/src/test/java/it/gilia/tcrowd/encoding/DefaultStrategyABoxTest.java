@@ -130,18 +130,19 @@ public class DefaultStrategyABoxTest {
 	@DisplayName("Roles at time 0")
 	public void testABoxRolesAtTime0ToDL() {
         DefaultStrategy strategy = new DefaultStrategy();
+        TBox tbox = strategy.to_dllitefpx(this.getJSONfromFile("testABoxRolesAtTime0ToDLTBOX"));
         ABox abox = strategy.to_dllitefpxABox(this.getJSONfromFile("testABoxRolesAtTime0ToDL"));
         
 		Iterator<ABoxRoleAssertion> iterator = abox.getABoxRoleAssertions().iterator();
-	    String actual = new String();
+		List<String> expected = this.checkExpectedResult("testABoxRolesAtTime0ToDL");
+
+		System.out.println("ABox" + expected);
 	    while(iterator.hasNext()){
 	    	ABoxRoleAssertion ci = iterator.next();
-	    	NextFutureRole nfr = new NextFutureRole(ci);
-	    	actual = actual.concat(nfr.toString() + "\n");   
+	    	String actual = new String(ci.getRole().toString() + "(" + ci.getx() + "," + ci.gety() + ")");
+	    	assertTrue(expected.contains(actual),
+	    			"'" + actual + "'" + " not expected");	
 	    }
-	    
-		assertEquals(this.checkExpectedResult("testABoxRolesAtTime0ToDL"), actual);
-
 	}
 	
 	@Test
