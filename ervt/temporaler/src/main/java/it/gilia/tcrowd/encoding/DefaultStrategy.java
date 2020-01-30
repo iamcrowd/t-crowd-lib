@@ -529,7 +529,11 @@ public class DefaultStrategy extends Strategy{
 					arr.iterator().forEachRemaining(element -> {
 						JSONTokener t = new JSONTokener(element.toString());
 						JSONObject jo = new JSONObject(t);
-						this.getABoxRoleAssertion(jo);
+						try {
+							this.getABoxRoleAssertion(jo);
+						}catch(Exception e) {
+							System.out.println(e.getMessage());
+						}
 						
 					});
 				}
@@ -539,19 +543,12 @@ public class DefaultStrategy extends Strategy{
 	}
 	
 	public void getABoxConceptAssertion(JSONObject assertion) throws Exception {
-		System.out.println(assertion);
-		System.out.println("Concept: "+assertion.get("concept"));
-		System.out.println("Instance: "+assertion.get("instance"));
-		System.out.println("Timestamp: "+assertion.get("timestamp"));
-		
 		Concept temp_concept = new AtomicConcept(assertion.get("concept").toString());
 		
 		if (this.existsConcept(temp_concept)){
 			Concept concept = this.giveMeAconcept(assertion.get("concept").toString());
 			String instance = new String(assertion.get("instance").toString());
-		
 			int numberOfNext = Integer.parseInt(assertion.get("timestamp").toString());
-			System.out.println("Integer: "+numberOfNext);
 		
 			if (numberOfNext == 0) {
 				ABoxConceptAssertion a1 = new ABoxConceptAssertion(concept, instance);
@@ -574,22 +571,35 @@ public class DefaultStrategy extends Strategy{
 	}
 	
 	
-	public void getABoxRoleAssertion(JSONObject assertion) {
+	public void getABoxRoleAssertion(JSONObject assertion) throws Exception {
 		System.out.println(assertion);
 		System.out.println("Role: "+assertion.get("role"));
 		System.out.println("from: "+assertion.get("from"));
 		System.out.println("to: "+assertion.get("to"));
 		System.out.println("Timestamp: "+assertion.get("timestamp"));
 		
-		Role role = this.giveMeArole(assertion.get("role").toString());
-		String from = new String(assertion.get("from").toString());
-		String to = new String(assertion.get("to").toString()); 
+		Role temp_local_role = new PositiveRole(new AtomicLocalRole(assertion.get("role").toString()));
+		Role temp_rigid_role = new PositiveRole(new AtomicRigidRole(assertion.get("role").toString()));
 		
-		int numberOfNext = Integer.parseInt(assertion.get("timestamp").toString());
-		
-		ABoxRoleAssertion r1 = new ABoxRoleAssertion(role, from, to, numberOfNext);
-		this.myABox.addABoxRoleAssertion(r1);
-		
+		if (this.existsRole(temp_local_role) || this.existsRole(temp_rigid_role)){
+			String from = new String(assertion.get("from").toString());
+			String to = new String(assertion.get("to").toString()); 
+			int numberOfNext = Integer.parseInt(assertion.get("timestamp").toString());
+			
+			if (this.existsRole(temp_local_role)) {
+				Role localrole = this.giveMeArole(assertion.get("role").toString());
+				ABoxRoleAssertion r1 = new ABoxRoleAssertion(localrole, from, to, numberOfNext);
+				this.myABox.addABoxRoleAssertion(r1);
+				
+			} else if (this.existsRole(temp_rigid_role)) {
+				Role rigidrole = this.giveMeArigidRole(assertion.get("role").toString());
+				ABoxRoleAssertion r1 = new ABoxRoleAssertion(rigidrole, from, to, numberOfNext);
+				this.myABox.addABoxRoleAssertion(r1);
+			}
+			
+		} else {
+			throw new Exception("[MATCH EXCEPTION]: ABox and TBox do not match. Role: " + assertion.get("role").toString()); 
+		}
 	}
 
 }
