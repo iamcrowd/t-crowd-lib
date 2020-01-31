@@ -12,6 +12,7 @@ import it.unibz.inf.tdllitefpx.concepts.Concept;
 import it.unibz.inf.tdllitefpx.concepts.QuantifiedRole;
 import it.unibz.inf.tdllitefpx.roles.AtomicRigidRole;
 import it.unibz.inf.tdllitefpx.roles.Role;
+import it.unibz.inf.tdllitefpx.roles.AtomicRole;
 
 public class ABoxRoleAssertion implements FormattableObj{
 	Role ro;
@@ -35,9 +36,9 @@ public class ABoxRoleAssertion implements FormattableObj{
 		return consts;
 	}
 
-//	public Role getRole() {
-//		return this.ro;
-//	}
+	public Role getRole() {
+		return this.ro;
+	}
 	
 	public Constant getx(){
 		return new Constant(this.x);
@@ -45,6 +46,10 @@ public class ABoxRoleAssertion implements FormattableObj{
 
 	public Constant gety(){
 		return new Constant(this.y);
+	}
+	
+	public Integer getStamp() {
+		return this.t;
 	}
 	
 //	@Override
@@ -57,4 +62,5 @@ public class ABoxRoleAssertion implements FormattableObj{
 	public String toString(OutputFormat fmt) throws SymbolUndefinedException {
 		return this.toString(); 
 	}
+
 }

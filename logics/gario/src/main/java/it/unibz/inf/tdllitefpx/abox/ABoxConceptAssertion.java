@@ -37,7 +37,7 @@ public class ABoxConceptAssertion implements FormattableObj{
 	
 	public Formula getFormula(){
 		Variable x = new Variable("x");
-		Formula fa=new Atom(c.toString(), x);
+		Formula fa = new Atom(c.toString(), x);
 		//Formula fc=conceptToFormula(c);
 		//UniversalFormula fa = new UniversalFormula(fc, x);
 		return fa;
@@ -48,7 +48,7 @@ public class ABoxConceptAssertion implements FormattableObj{
 		Variable x = new Variable("x");
 		Formula fa= this.getFormula();
 		fa.substitute(x, new Constant(value));
-		System.out.println("insertionltl:"+fa);
+		//System.out.println("insertionltl:"+fa);
 		return fa;
 	}
 	
