@@ -20,6 +20,7 @@ import it.unibz.inf.tdllitefpx.roles.temporal.TemporalRole;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -81,13 +82,13 @@ public class DefaultStrategyABoxTest {
         ABox abox = strategy.to_dllitefpxABox(this.getJSONfromFile("testABoxConceptsAtTime0ToDL"));
         
 		Iterator<ABoxConceptAssertion> iterator = abox.getABoxConceptAssertions().iterator();
-	    String actual = new String();
+		List<String> expected = this.checkExpectedResult("testABoxConceptsAtTime0ToDL");
+		
 	    while(iterator.hasNext()){
 	    	ABoxConceptAssertion ci = iterator.next();
-	    	actual = actual.concat(ci.getConceptAssertion() + "(" + ci.getConstant() + ")" + "\n");   
+	    	String actual = new String(ci.getConceptAssertion() + "(" + ci.getConstant() + ")");
+	    	assertTrue(expected.contains(actual), "'" + actual + "'" + " not expected");		
 	    }
-	    
-		assertEquals(this.checkExpectedResult("testABoxConceptsAtTime0ToDL"), actual);
 	}
 	
 	@Test
@@ -99,7 +100,7 @@ public class DefaultStrategyABoxTest {
         
 		Iterator<ABoxConceptAssertion> iterator = abox.getABoxConceptAssertions().iterator();
 		List<String> expected = this.checkExpectedResult("testABoxConceptsAtTime1ToDL");
-		
+
 	    while(iterator.hasNext()){
 	    	ABoxConceptAssertion ci = iterator.next();
 	    	String actual = new String(ci.getConceptAssertion() + "(" + ci.getConstant() + ")");
@@ -127,6 +128,27 @@ public class DefaultStrategyABoxTest {
 	}
 	
 	@Test
+	@DisplayName("Adult Example Only ABox Concepts Assertions - Sabiha")
+	public void testAdult() {
+        DefaultStrategy strategy = new DefaultStrategy();
+        TBox tbox = strategy.to_dllitefpx(this.getJSONfromFile("Adult_TBOX"));
+        ABox abox = strategy.to_dllitefpxABox(this.getJSONfromFile("Adult_ABOX"));
+        
+        tbox.addExtensionConstraints();
+        abox.addExtensionConstraintsABox(tbox);
+
+		Iterator<ABoxConceptAssertion> iterator = abox.getABoxConceptAssertions().iterator();
+		List<String> expected = this.checkExpectedResult("Adult_expected");
+		
+	    while(iterator.hasNext()){
+	    	ABoxConceptAssertion ci = iterator.next();
+	    	String actual = new String(ci.getConceptAssertion() + "(" + ci.getConstant() + ")");
+	    	assertTrue(expected.contains(actual),
+	    			"'" + actual + "'" + " not expected");	
+	    }   
+	}
+	
+	@Test
 	@DisplayName("Roles at time 0")
 	public void testABoxRolesAtTime0ToDL() {
         DefaultStrategy strategy = new DefaultStrategy();
@@ -136,7 +158,6 @@ public class DefaultStrategyABoxTest {
 		Iterator<ABoxRoleAssertion> iterator = abox.getABoxRoleAssertions().iterator();
 		List<String> expected = this.checkExpectedResult("testABoxRolesAtTime0ToDL");
 
-		System.out.println("ABox" + expected);
 	    while(iterator.hasNext()){
 	    	ABoxRoleAssertion ci = iterator.next();
 	    	String actual = new String(ci.getRole().toString() + "(" + ci.getx() + "," + ci.gety() + ")");
@@ -146,29 +167,49 @@ public class DefaultStrategyABoxTest {
 	}
 	
 	@Test
-	@DisplayName("Roles at time 1")
-	public void testABoxRolesAtTime1ToDL() {        
+	@DisplayName("Rigid Role Q Example - Sabiha")
+	public void testRigidRoleQExample() {
         DefaultStrategy strategy = new DefaultStrategy();
-        ABox abox = strategy.to_dllitefpxABox(this.getJSONfromFile("testABoxRolesAtTime1ToDL"));
+        TBox tbox = strategy.to_dllitefpx(this.getJSONfromFile("rigidRoleQ_TBOX"));
+        ABox abox = strategy.to_dllitefpxABox(this.getJSONfromFile("rigidRoleQ_ABOX"));
+        
+        tbox.addExtensionConstraints();
+        abox.addExtensionConstraintsABox(tbox);
+		
+        Set<ABoxConceptAssertion> conceptAssertions = abox.getABoxConceptAssertions();
+        
+		List<String> expected = this.checkExpectedResult("rigidRoleQ_expected");
+		
+		Iterator<ABoxConceptAssertion> iteratorc = conceptAssertions.iterator();
 
-		Iterator<ABoxRoleAssertion> iterator = abox.getABoxRoleAssertions().iterator();
-	    String actual = new String();
-	    while(iterator.hasNext()){
-	    	ABoxRoleAssertion ci = iterator.next();
-	    	NextFutureRole nfr = new NextFutureRole(ci);
-	    	actual = actual.concat(nfr.toString() + "\n");    
+	    while(iteratorc.hasNext()){
+	    	ABoxConceptAssertion ci = iteratorc.next();
+	        String actual = new String(ci.getConceptAssertion()+ "(" + ci.getConstant().toString() + ")");
+	    	assertTrue(expected.contains(actual), "'" + actual + "'" + " not expected");	
 	    }
-	    
-		assertEquals(this.checkExpectedResult("testABoxRolesAtTime1ToDL"), actual);
 	}
 	
 	@Test
-	@DisplayName("Roles at time N")
-	public void testABoxRolesAtTimeNToDL() {
+	@DisplayName("Local Role Q Example - Sabiha")
+	public void testLocalRoleQExample() {
         DefaultStrategy strategy = new DefaultStrategy();
-        strategy.to_dllitefpxABox(this.getJSONfromFile("testERvtSimpleTotalExclusiveISAtoDL"));
+        TBox tbox = strategy.to_dllitefpx(this.getJSONfromFile("localRoleQ_TBOX"));
+        ABox abox = strategy.to_dllitefpxABox(this.getJSONfromFile("localRoleQ_ABOX"));
+        
+        tbox.addExtensionConstraints();
+        abox.addExtensionConstraintsABox(tbox);
+		
+        Set<ABoxConceptAssertion> conceptAssertions = abox.getABoxConceptAssertions();
+        
+		List<String> expected = this.checkExpectedResult("localRoleQ_expected");
+		
+		Iterator<ABoxConceptAssertion> iteratorc = conceptAssertions.iterator();
 
+	    while(iteratorc.hasNext()){
+	    	ABoxConceptAssertion ci = iteratorc.next();
+	        String actual = new String(ci.getConceptAssertion()+ "(" + ci.getConstant().toString() + ")");
+	    	assertTrue(expected.contains(actual), "'" + actual + "'" + " not expected");	
+	    }
 	}
 	
 }
-

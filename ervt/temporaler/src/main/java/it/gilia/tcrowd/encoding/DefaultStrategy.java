@@ -98,8 +98,6 @@ public class DefaultStrategy extends Strategy{
 	 * @implNote This impl manages a list of rigid roles and a list for remaining ones.
 	 */
 	public TBox to_dllitefpx(JSONObject ervt_json) {
-		//System.out.println("Starting TBox JSON: "+ervt_json);
-		
 		ervt_json.keys().forEachRemaining(key -> {
 			
 			if (key.equals("entities")) {
@@ -502,8 +500,6 @@ public class DefaultStrategy extends Strategy{
      *
 	 */
 	public ABox to_dllitefpxABox(JSONObject ervtABox_json) {
-		System.out.println("Starting ABox JSON: "+ervtABox_json);
-		
 		ervtABox_json.keys().forEachRemaining(key -> {
 			
 			if (key.equals("concepts")) {
@@ -572,12 +568,6 @@ public class DefaultStrategy extends Strategy{
 	
 	
 	public void getABoxRoleAssertion(JSONObject assertion) throws Exception {
-		System.out.println(assertion);
-		System.out.println("Role: "+assertion.get("role"));
-		System.out.println("from: "+assertion.get("from"));
-		System.out.println("to: "+assertion.get("to"));
-		System.out.println("Timestamp: "+assertion.get("timestamp"));
-		
 		Role temp_local_role = new PositiveRole(new AtomicLocalRole(assertion.get("role").toString()));
 		Role temp_rigid_role = new PositiveRole(new AtomicRigidRole(assertion.get("role").toString()));
 		
