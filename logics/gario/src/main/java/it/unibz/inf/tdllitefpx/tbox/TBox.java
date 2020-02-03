@@ -2,6 +2,7 @@ package it.unibz.inf.tdllitefpx.tbox;
 
 import it.unibz.inf.tdllitefpx.concepts.Concept;
 import it.unibz.inf.tdllitefpx.concepts.QuantifiedRole;
+//import it.unibz.inf.tdllitefpx.concepts.temporal.Always;
 import it.unibz.inf.tdllitefpx.concepts.temporal.AlwaysFuture;
 import it.unibz.inf.tdllitefpx.concepts.temporal.AlwaysPast;
 import it.unibz.inf.tdllitefpx.roles.AtomicRigidRole;
@@ -28,12 +29,14 @@ public class TBox extends LinkedList<ConceptInclusionAssertion> implements Forma
 	/**
 	 * 
 	 */
+
 	private static final long serialVersionUID = 1L;
 	
 	public boolean add(ConceptInclusionAssertion ci){
 		isExtended = false; // TODO: Check if this is really the case
 		return super.add(ci);
 	}
+	
 	public Set<Role> getRoles(){
 		
 		HashSet<Role> roles = new HashSet<Role>();
@@ -70,10 +73,28 @@ public class TBox extends LinkedList<ConceptInclusionAssertion> implements Forma
 		for(Concept c: concepts){
 			if(c instanceof QuantifiedRole){
 				qR.add((QuantifiedRole) c);
+				//System.out.println("Qrole:"+c.toString());
 			}
 		}
 		
 		return qR;
+	}
+	
+	public Map<String, Integer> getQuantifiedRolesQ(Set<QuantifiedRole> qR){
+		
+		HashMap<String, Integer> qRQ = new HashMap<String, Integer>();
+		for (QuantifiedRole qr: qR) {
+			
+			qRQ.putIfAbsent(qr.getRole().toString(), qr.getQ());
+			if(qRQ.get(qr.getRole().toString())<qr.getQ())
+			{	
+				qRQ.replace(qr.getRole().toString(), qr.getQ());
+				
+		   }	
+		
+		}
+		//System.out.println("toute la liste"+qRQ);
+		return qRQ;
 	}
 	
 	public Set<Concept> getAtomicConcepts(){
@@ -87,14 +108,16 @@ public class TBox extends LinkedList<ConceptInclusionAssertion> implements Forma
 	}
 	
 	private boolean isExtended = false;
-	public boolean isExtended(){return isExtended;}
+	public boolean isExtended(){
+		System.out.println("is extended?"+isExtended);
+		return isExtended;}
 	
 	/***
 	 * Transforms the TBox into an extended TBox as explained in the report.
 	 */
 	public void addExtensionConstraints(){
 		isExtended = true;
-		
+		//System.out.println("is extended:"+isExtended);
 		Set<QuantifiedRole> qRoles = getQuantifiedRoles();
 		
 		/* delta: + >qR \subseteq >q'R
@@ -135,19 +158,13 @@ public class TBox extends LinkedList<ConceptInclusionAssertion> implements Forma
 		for(QuantifiedRole qR : qRoles){
 			if(qR.getRole().getRefersTo() instanceof AtomicRigidRole){
 				this.add(new ConceptInclusionAssertion(
-					qR,
+					qR, 
+					//new Always(qR)));
 					new AlwaysFuture(new AlwaysPast(qR))));
-				//System.out.println(qR);
+				    
 			}
 		}
 		
 	}
-	/*
-	public void addABoxExtension() {
-		Set<AboxConcept> c = getConcepts();
-		Set<QuantifiedRole> qRoles = getQuantifiedRoles();
-		
-		
-	}*/
 
 }

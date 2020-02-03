@@ -65,3 +65,7 @@ https://www.petrikainulainen.net/programming/testing/junit-5-tutorial-running-un
 
 `$ mvn clean test`
 
+`$ mvn -Dtest=it.gilia.tcrowd.encoding.DefaultStrategyTest -DfailIfNoTests=false test`
+
+`$ mvn -Dtest=it.gilia.tcrowd.encoding.DefaultStrategyABoxTest -DfailIfNoTests=false test`
+

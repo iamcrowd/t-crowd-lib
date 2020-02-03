@@ -20,6 +20,12 @@ public class ABoxConceptAssertion implements FormattableObj{
 	Concept c;
 	String value;
 	
+	/**
+	 * An ABox concept is a Concept instance and a String value as constant
+	 * 
+	 * @param c a Concept
+	 * @param v a String
+	 */
 	public ABoxConceptAssertion(Concept c, String v){
 		this.c = c;
 		this.value = v;
@@ -37,7 +43,7 @@ public class ABoxConceptAssertion implements FormattableObj{
 	
 	public Formula getFormula(){
 		Variable x = new Variable("x");
-		Formula fa=new Atom(c.toString(), x);
+		Formula fa = new Atom(c.toString(), x);
 		//Formula fc=conceptToFormula(c);
 		//UniversalFormula fa = new UniversalFormula(fc, x);
 		return fa;
@@ -48,14 +54,15 @@ public class ABoxConceptAssertion implements FormattableObj{
 		Variable x = new Variable("x");
 		Formula fa= this.getFormula();
 		fa.substitute(x, new Constant(value));
-		System.out.println("insertionltl:"+fa);
+		//System.out.println("insertionltl:"+fa);
 		return fa;
 	}
 	
 	@Override
 	public String toString(OutputFormat fmt) throws SymbolUndefinedException {
-		return getConceptAssertion().toString(fmt) + "(" + 
-		getConstant() + ")\\\\ \n  ";
+		//return getConceptAssertion().toString(fmt) + "(" + 
+		//getConstant() + ")\\\\ \n  ";
+		return this.toString();
 	}
 
 }

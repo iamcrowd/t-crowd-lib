@@ -1,0 +1,5 @@
+{"concepts":[
+	{"concept":"Person","instance":"Maria","timestamp":"0"}],
+"roles":[
+	{"role":"Surname","from":"Maria","to":"Clinton","timestamp":"0"}]
+}

@@ -1,0 +1,28 @@
+{"entities":[
+	{"name":"entity 1",
+	"timestamp":"",
+	"position":{
+		"x":"600","y":"800"
+		}
+	},
+	{"name":"entity 2",
+	"timestamp":"",
+	"position":{
+		"x":"600","y":"800"
+		}
+	}],
+"relationships":[
+	{"name":"rel1",
+	"timestamp":"snapshot",
+	"position":{
+		"x":"600","y":"800"
+		}
+	}],
+"attributes":[],
+"links":[
+	{"name":"rel1",
+	"entities":["entity 1","entity 2"],
+	"cardinality":["1..1","1..1"],
+	"roles":["e1","e2"],
+	"type":"relationship"}]
+}

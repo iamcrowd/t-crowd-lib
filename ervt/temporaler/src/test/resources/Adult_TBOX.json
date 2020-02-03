@@ -1,0 +1,13 @@
+{"entities": [
+	{"name":"Person","id":"c51", "timestamp": "", "position":{"x":630,"y":150}},
+	{"name":"Adult","id":"c63", "timestamp": "", "position":{"x":500,"y":300}},
+	{"name":"Minor","id":"c75", "timestamp": "", "position":{"x":760,"y":300}}],
+"attributes":[],
+"relationships":[],
+"links":[
+	{"name":"c192","entities": ["Adult","Adult"], "type":"pex"},
+	{"name":"c87","parent":"Person", 
+	"entities":["Adult","Minor"], 
+	"type":"isa", 
+	"constraint":["exclusive","total"]}]
+}

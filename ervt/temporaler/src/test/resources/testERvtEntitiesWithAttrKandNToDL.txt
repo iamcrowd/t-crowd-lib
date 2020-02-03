@@ -1,0 +1,10 @@
+>= 1.attribute 1Inv -> Integer
+>= 1.attribute 2Inv -> String
+entity 1 -> >= 1.attribute 1
+entity 1 -> !>= 2.attribute 1
+entity 1 -> >= 1.attribute 2
+entity 1 -> !>= 2.attribute 2
+Integer -> !entity 1
+String -> !entity 1
+>= 2.attribute 2 -> >= 1.attribute 2
+>= 2.attribute 1 -> >= 1.attribute 1

@@ -56,39 +56,31 @@ public class Adult {
 
 	// Role Name = new PositiveRole(new AtomicRigidRole("Name"));
 	// Role Salary = new PositiveRole(new AtomicRigidRole("Salary"));
-	Role Salary = new PositiveRole(new AtomicLocalRole("Salary"));// MOi ici
+	//Role Salary = new PositiveRole(new AtomicLocalRole("Salary"));// MOi ici
 	// Role TimeStamp_Min = new PositiveRole(new AtomicLocalRole("TimeStamp_Min"));
 
 	public ABox getABox() {
-		// insert John: Minor, Adult, Minor, Adult, Adult, Adult
+		//insert John: Minor, Adult, Minor, Adult, Adult, Adult
 		ABox A = new ABox();
-		ABoxConceptAssertion a1 = new ABoxConceptAssertion(Person, "John");
+		//AboxConceptAssertion a1= new AboxConceptAssertion(Person,"John");//t=0;
+		
+		ABoxConceptAssertion a2= new ABoxConceptAssertion(Minor,"John");//t=0;
+		ABoxConceptAssertion a3= new ABoxConceptAssertion(new NextFuture(Adult),"John");//t=1;
+		ABoxConceptAssertion a4= new ABoxConceptAssertion(new NextFuture((new NextFuture(Minor))),"John");//t=2;
+		ABoxConceptAssertion a5= new ABoxConceptAssertion(new NextFuture((new NextFuture(new NextFuture(Adult)))),"John");//t=3;
+		ABoxConceptAssertion a6= new ABoxConceptAssertion(new NextFuture((new NextFuture(new NextFuture(new NextFuture(Adult))))),"John");//t=4;
+		ABoxConceptAssertion a7= new ABoxConceptAssertion(new NextFuture((new NextFuture(new NextFuture(new NextFuture(new NextFuture(Adult)))))),"John");//t=5;
+		
 
-		ABoxConceptAssertion a2 = new ABoxConceptAssertion(Minor, "John");
-		ABoxConceptAssertion a3 = new ABoxConceptAssertion(new NextFuture(Adult), "John");
-		ABoxConceptAssertion a4 = new ABoxConceptAssertion(new NextFuture((new NextFuture(Minor))), "John");
-		ABoxConceptAssertion a5 = new ABoxConceptAssertion(new NextFuture((new NextFuture(new NextFuture(Adult)))),
-				"John");
-		ABoxConceptAssertion a6 = new ABoxConceptAssertion(
-				new NextFuture((new NextFuture(new NextFuture(new NextFuture(Adult))))), "John");
-		ABoxConceptAssertion a7 = new ABoxConceptAssertion(
-				new NextFuture((new NextFuture(new NextFuture(new NextFuture(new NextFuture(Adult)))))), "John");
-
-		A.addConceptsAssertion(a1);
+		//A.addConceptsAssertion(a1);
 		A.addConceptsAssertion(a2);
 		A.addConceptsAssertion(a3);
 		A.addConceptsAssertion(a4);
 		A.addConceptsAssertion(a5);
 		A.addConceptsAssertion(a6);
 		A.addConceptsAssertion(a7);
-
-		ABoxRoleAssertion r1 = new ABoxRoleAssertion(Salary, "John", "S1");
-		A.addABoxRoleAssertion(r1);
-		// ABoxRoleAssertion r2= new ABoxRoleAssertion(Name,"John", "Mcking");
-		// A.addABoxRoleAssertion(r2);
-		// A.addAll(getABox0());
-		// A.addAll(getABox1());
-
+					
+		
 		return A;
 	}
 
@@ -132,20 +124,15 @@ public class Adult {
 		 * t0.add(new ConceptInclusionAssertion( Person, new NegatedConcept(new
 		 * QuantifiedRole(Name, 2))));
 		 */
-		t0.add(new ConceptInclusionAssertion(Person, new QuantifiedRole(Salary, 1)));
-		t0.add(new ConceptInclusionAssertion(Person, new NegatedConcept(new QuantifiedRole(Salary, 2))));
+		//t0.add(new ConceptInclusionAssertion(Person, new QuantifiedRole(Salary, 1)));
+		//t0.add(new ConceptInclusionAssertion(Person, new NegatedConcept(new QuantifiedRole(Salary, 2))));
 
 		// R
 
 		// H
 
-		// t0.add(new ConceptInclusionAssertion(
-		// Adulte,
-		// Person));
-
-		// t0.add(new ConceptInclusionAssertion(
-		// Minor,
-		// Person));
+		//t0.add(new ConceptInclusionAssertion(Adult,Person));
+		//t0.add(new ConceptInclusionAssertion(Minor,Person));
 
 		return t0;
 	}
@@ -162,11 +149,12 @@ public class Adult {
 		// TRANS
 
 		// EVO
-		// An adult stay adult in the future
-		t1.add(new ConceptInclusionAssertion(Adult, new AlwaysFuture(Adult)));
-
-		// An adult was sometime Minor in the past
-		// t1.add(new ConceptInclusionAssertion(Adult,new SometimePast(Minor)));
+		// EVO
+		//An adult stay adult in the future
+		t1.add(new ConceptInclusionAssertion(Adult,new AlwaysFuture(Adult)));
+		
+		//An adult was sometime Minor in the past
+		t1.add(new ConceptInclusionAssertion(Adult,new NegatedConcept(Minor)));
 
 		// GEN
 

@@ -20,6 +20,7 @@ import it.unibz.inf.tdllitefpx.abox.ABoxConceptAssertion;
 
 import it.unibz.inf.tdllitefpx.TestAbox1;
 import it.unibz.inf.tdllitefpx.Adult;
+import it.unibz.inf.tdllitefpx.RigidRoleQ;
 
 import it.gilia.tcrowd.encoding.DefaultStrategy;
 import it.gilia.tcrowd.utils.*;
@@ -88,6 +89,27 @@ public class TCrowdAboxSat extends TCrowdEncodingERvtRelatedCommand {
 			System.out.println(key1 + statsA1.get(key1));
 			key1 = "Roles_Assertion:";
 			System.out.println(key1 + statsA1.get(key1));
+			
+			RigidRoleQ exRigidRoleQTDL = new RigidRoleQ();
+
+			TDLLiteFPXReasoner.buildCheckABoxtSatisfiability(exRigidRoleQTDL.getTBox(), true, "RigidName", exRigidRoleQTDL.getABox());
+
+			Map<String, String> stats2 = exRigidRoleQTDL.getTBox().getStats();
+			System.out.println("");
+			System.out.println("------TBOX RigidRoleQ------");
+			String key2;
+			key2 = "Basic Concepts:";
+			System.out.println(key2 + stats2.get(key2));
+			key2 = "Roles:";
+			System.out.println(key2 + stats2.get(key2));
+			key2 = "CIs:";
+			System.out.println(key2 + stats2.get(key2));
+			System.out.println("------ABOX RigidRoleQ------");
+			Map<String, String> statsA2 = exRigidRoleQTDL.getABox().getStatsABox();
+			key2 = "Concept_Assertion";
+			System.out.println(key2 + statsA2.get(key2));
+			key2 = "Roles_Assertion:";
+			System.out.println(key2 + statsA2.get(key2));
 
     			
 

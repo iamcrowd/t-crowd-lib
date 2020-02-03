@@ -38,6 +38,7 @@ import it.unibz.inf.tdllitefpx.roles.AtomicRigidRole;
 import it.unibz.inf.tdllitefpx.roles.PositiveRole;
 import it.unibz.inf.tdllitefpx.roles.Role;
 import it.unibz.inf.tdllitefpx.roles.AtomicRole;
+import it.unibz.inf.tdllitefpx.roles.temporal.NextFutureRole;
 import it.unibz.inf.tdllitefpx.tbox.ConceptInclusionAssertion;
 import it.unibz.inf.tdllitefpx.tbox.TBox;
 import it.unibz.inf.tdllitefpx.abox.ABox;
@@ -88,7 +89,6 @@ public class DefaultStrategy extends Strategy{
         	{"name":"pex1","entity":"Entity1","type":"pex"}]}
         @endcode
      *
-	 * @implNote temporal and snapshot attributes missing
 	 * @implNote attributes in relationships missing
 	 * @implNote For attributes:
 	 * (a) Every point with at least q'  R-successors has at least q R-successors, for each q < q'  .
@@ -98,8 +98,6 @@ public class DefaultStrategy extends Strategy{
 	 * @implNote This impl manages a list of rigid roles and a list for remaining ones.
 	 */
 	public TBox to_dllitefpx(JSONObject ervt_json) {
-		System.out.println("Starting TBox JSON: "+ervt_json);
-		
 		ervt_json.keys().forEachRemaining(key -> {
 			
 			if (key.equals("entities")) {
@@ -219,7 +217,7 @@ public class DefaultStrategy extends Strategy{
 	    });
 		
 		this.tBoxClousure();
-		System.out.println("TBox stats..."+this.getTBox().getStats());
+		//System.out.println("TBox stats..."+this.getTBox().getStats());
 		return this.getTBox();
 	}
 	
@@ -496,14 +494,12 @@ public class DefaultStrategy extends Strategy{
 	 * 					 {"concept":"Person", "instance":"Maria", "timestamp":"2"}]
 	 * 				 "roles":
 	 * 					[{"role":"Surname", "from":"Maria", "to":"Clinton", "timestamp":"1"},
-	 * 					 {"role":"Salary", "from":"Maria", "to":"1000", "timestamp":"2"}]
+	 * 					 {"role":"Salary", "from":"Maria", "to":"1000", "timestamip":"2"}]
 	 * 			 	}
        @endcode
      *
 	 */
 	public ABox to_dllitefpxABox(JSONObject ervtABox_json) {
-		System.out.println("Starting ABox JSON: "+ervtABox_json);
-		
 		ervtABox_json.keys().forEachRemaining(key -> {
 			
 			if (key.equals("concepts")) {
@@ -513,8 +509,11 @@ public class DefaultStrategy extends Strategy{
 				arr.iterator().forEachRemaining(element -> {
 					JSONTokener t = new JSONTokener(element.toString());
 					JSONObject jo = new JSONObject(t);
-					this.getABoxConceptAssertion(jo);
-					
+					try{
+						this.getABoxConceptAssertion(jo);
+					}catch(Exception e) {
+						System.out.println(e.getMessage());
+					}
 				});
 				
 			}else if (key.equals("roles")) {
@@ -526,7 +525,11 @@ public class DefaultStrategy extends Strategy{
 					arr.iterator().forEachRemaining(element -> {
 						JSONTokener t = new JSONTokener(element.toString());
 						JSONObject jo = new JSONObject(t);
-						this.getABoxRoleAssertion(jo);
+						try {
+							this.getABoxRoleAssertion(jo);
+						}catch(Exception e) {
+							System.out.println(e.getMessage());
+						}
 						
 					});
 				}
@@ -535,64 +538,71 @@ public class DefaultStrategy extends Strategy{
 		return this.getABox();
 	}
 	
-	public void getABoxConceptAssertion(JSONObject assertion) {
-		System.out.println(assertion);
-		System.out.println("Concept: "+assertion.get("concept"));
-		System.out.println("Instance: "+assertion.get("instance"));
-		System.out.println("Timestamp: "+assertion.get("timestamp"));
+	/**
+	 * Given a JSONObject encoding a ABox concept with a timestamp, validate that such concept exists in
+	 * the current TBox and assert the new ABox temporal concept
+	 * 
+	 * @param assertion a JSONObject ABox concept with a timestamp
+	 * @throws Exception if the ABox concept does not exist in the current TBox
+	 */
+	public void getABoxConceptAssertion(JSONObject assertion) throws Exception {
+		Concept temp_concept = new AtomicConcept(assertion.get("concept").toString());
 		
-		Concept concept = this.giveMeAconcept(assertion.get("concept").toString());
-		String instance = new String(assertion.get("instance").toString());
+		if (this.existsConcept(temp_concept)){
+			Concept concept = this.giveMeAconcept(assertion.get("concept").toString());
+			String instance = new String(assertion.get("instance").toString());
+			int numberOfNext = Integer.parseInt(assertion.get("timestamp").toString());
 		
-		int numberOfNext = Integer.parseInt(assertion.get("timestamp").toString());
-		System.out.println("Integer: "+numberOfNext);
-		
-		if (numberOfNext == 0) {
-			ABoxConceptAssertion a1 = new ABoxConceptAssertion(concept, instance);
-			this.myABox.addConceptsAssertion(a1);
+			if (numberOfNext == 0) {
+				ABoxConceptAssertion a1 = new ABoxConceptAssertion(concept, instance);
+				this.myABox.addConceptsAssertion(a1);
 			
-		}else if (numberOfNext > 0) {
-			int countNext = 1;
+			}else if (numberOfNext > 0) {
+				int countNext = 1;
 
-			while (countNext <= numberOfNext) {
-				Concept tconcept = new NextFuture(concept);
-				concept = tconcept;
-				countNext++;
+				while (countNext <= numberOfNext) {
+					Concept tconcept = new NextFuture(concept);
+					concept = tconcept;
+					countNext++;
+				}
+				ABoxConceptAssertion a1 = new ABoxConceptAssertion(concept, instance);
+				this.myABox.addConceptsAssertion(a1);
 			}
-			ABoxConceptAssertion a1 = new ABoxConceptAssertion(concept, instance);
-			this.myABox.addConceptsAssertion(a1);
+		} else {
+			throw new Exception("[MATCH EXCEPTION]: ABox and TBox do not match. Concept: " + assertion.get("concept").toString()); 
 		}
 	}
 	
-	
-	public void getABoxRoleAssertion(JSONObject assertion) {
-		System.out.println(assertion);
-		System.out.println("Role: "+assertion.get("role"));
-		System.out.println("from: "+assertion.get("from"));
-		System.out.println("to: "+assertion.get("to"));
-		System.out.println("Timestamp: "+assertion.get("timestamp"));
+	/**
+	 * Given a JSONObject encoding a ABox role with a timestamp, validate that such role exists in
+	 * the current TBox and assert the new ABox temporal role
+	 * 
+	 * @param assertion a JSONObject ABox role with a timestamp
+	 * @throws Exception if the ABox role does not exist in the current TBox
+	 */
+	public void getABoxRoleAssertion(JSONObject assertion) throws Exception {
+		Role temp_local_role = new PositiveRole(new AtomicLocalRole(assertion.get("role").toString()));
+		Role temp_rigid_role = new PositiveRole(new AtomicRigidRole(assertion.get("role").toString()));
 		
-		String role = new String(assertion.get("role").toString());
-		String from = new String(assertion.get("from").toString());
-		String to = new String(assertion.get("to").toString());
-		
-		int numberOfNext = Integer.parseInt(assertion.get("timestamp").toString());
-		System.out.println("Integer: "+numberOfNext);
-		
-		if (numberOfNext == 0) {
-			System.out.println("Asserted Role: "+assertion.get("role")+"("+assertion.get("from")+","+assertion.get("to")+")");
+		if (this.existsRole(temp_local_role) || this.existsRole(temp_rigid_role)){
+			String from = new String(assertion.get("from").toString());
+			String to = new String(assertion.get("to").toString()); 
+			int numberOfNext = Integer.parseInt(assertion.get("timestamp").toString());
 			
-		}else if (numberOfNext > 0) {
-			int countNext = 1;
-			String atNextTime = new String(role+"("+from+","+to+")");
-			while (countNext <= numberOfNext) {
-				String trole = "X "+atNextTime;
-				atNextTime = trole;
-				countNext++;
+			if (this.existsRole(temp_local_role)) {
+				Role localrole = this.giveMeArole(assertion.get("role").toString());
+				ABoxRoleAssertion r1 = new ABoxRoleAssertion(localrole, from, to, numberOfNext);
+				this.myABox.addABoxRoleAssertion(r1);
+				
+			} else if (this.existsRole(temp_rigid_role)) {
+				Role rigidrole = this.giveMeArigidRole(assertion.get("role").toString());
+				ABoxRoleAssertion r1 = new ABoxRoleAssertion(rigidrole, from, to, numberOfNext);
+				this.myABox.addABoxRoleAssertion(r1);
 			}
-			System.out.println("Asserted Role at more than 0 time: "+atNextTime);
+			
+		} else {
+			throw new Exception("[MATCH EXCEPTION]: ABox and TBox do not match. Role: " + assertion.get("role").toString()); 
 		}
-		
 	}
 
 }
