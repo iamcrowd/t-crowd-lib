@@ -538,6 +538,13 @@ public class DefaultStrategy extends Strategy{
 		return this.getABox();
 	}
 	
+	/**
+	 * Given a JSONObject encoding a ABox concept with a timestamp, validate that such concept exists in
+	 * the current TBox and assert the new ABox temporal concept
+	 * 
+	 * @param assertion a JSONObject ABox concept with a timestamp
+	 * @throws Exception if the ABox concept does not exist in the current TBox
+	 */
 	public void getABoxConceptAssertion(JSONObject assertion) throws Exception {
 		Concept temp_concept = new AtomicConcept(assertion.get("concept").toString());
 		
@@ -566,7 +573,13 @@ public class DefaultStrategy extends Strategy{
 		}
 	}
 	
-	
+	/**
+	 * Given a JSONObject encoding a ABox role with a timestamp, validate that such role exists in
+	 * the current TBox and assert the new ABox temporal role
+	 * 
+	 * @param assertion a JSONObject ABox role with a timestamp
+	 * @throws Exception if the ABox role does not exist in the current TBox
+	 */
 	public void getABoxRoleAssertion(JSONObject assertion) throws Exception {
 		Role temp_local_role = new PositiveRole(new AtomicLocalRole(assertion.get("role").toString()));
 		Role temp_rigid_role = new PositiveRole(new AtomicRigidRole(assertion.get("role").toString()));
