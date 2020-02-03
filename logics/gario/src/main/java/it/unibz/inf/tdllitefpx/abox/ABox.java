@@ -69,24 +69,27 @@ public class ABox extends ConjunctiveFormula implements FormattableObj {
 	}
 	
 	/**
-	 * 
-	 * @return
+	 * Return the set of ABox concept assertions
+	 *  
+	 * @return Set<ABoxConceptAssertion>
 	 */
 	public Set<ABoxConceptAssertion> getABoxConceptAssertions(){
 		return this.ConceptsAssertion;
 	}
 	
 	/**
+	 * Return the set of ABox role assertions
 	 * 
-	 * @return
+	 * @return Set<ABoxRoleAssertion>
 	 */
 	public Set<ABoxRoleAssertion> getABoxRoleAssertions(){
 		return this.RolesAssertion;
 	}
 	
 	/**
+	 * Return a list of role names included in the current ABox
 	 * 
-	 * @return
+	 * @return Set<Role>
 	 */
 	public Set<Role> getRolesABox() {
 		HashSet<Role> roles = new HashSet<Role>();
@@ -98,6 +101,7 @@ public class ABox extends ConjunctiveFormula implements FormattableObj {
 
 	/**
 	 * Create the list of Role Assertion
+	 * 
 	 * @param r an ABox Role Assertion
 	 */
 	public void addABoxRoleAssertion(ABoxRoleAssertion r) {
@@ -140,20 +144,18 @@ public class ABox extends ConjunctiveFormula implements FormattableObj {
 	}
 
 	/**
+	 * Return a set of constants in the ABox (for concepts and roles)
 	 * 
-	 * @return
+	 * @return Set<Constant>
 	 */
 	public Set<Constant> getConstantsABox() {
-		// isExtended = false; // TODO: Check if this is really the case
 		Set<Constant> consts = new HashSet<Constant>();
 
 		for (ABoxConceptAssertion c : ConceptsAssertion) {
-
 			consts.add(c.getConstant());
 		}
 
 		for (ABoxRoleAssertion r : RolesAssertion) {
-
 			consts.add(r.getx());
 			consts.add(r.gety());
 		}
@@ -161,15 +163,15 @@ public class ABox extends ConjunctiveFormula implements FormattableObj {
 	}
 	
 	/**
+	 * Return a mapping String to Integer for Rigid Roles
 	 * 
-	 * @param qR
-	 * @return
+	 * @param qR a set of QuantifiedRole >= / <= q
+	 * @return Map<String, Integer>
 	 */
 	public Map<String, Integer> getQRigidABox(Set<QuantifiedRole> qR) {
-
 		HashMap<String, Integer> qRAQ = new HashMap<String, Integer>();
+		
 		for (QuantifiedRole qr : qR) {
-
 			qRAQ.putIfAbsent(qr.getRole().toString(), qr.getQ());
 			if (qRAQ.get(qr.getRole().toString()) < qr.getQ()) {
 				qRAQ.replace(qr.getRole().toString(), qr.getQ());
@@ -179,8 +181,9 @@ public class ABox extends ConjunctiveFormula implements FormattableObj {
 	}
 	
 	/**
+	 * Stats for ABox
 	 * 
-	 * @return
+	 * @return Map<String, String>
 	 */
 	public Map<String, String> getStatsABox() {
 		HashMap<String, String> stats = new HashMap<String, String>();
@@ -191,8 +194,9 @@ public class ABox extends ConjunctiveFormula implements FormattableObj {
 	}
 
 	/**
+	 * Extend the ABox constraints from given TBox
 	 * 
-	 * @param tbox
+	 * @param tbox a TBox
 	 */
 	public void addExtensionConstraintsABox(TBox tbox) {
 
@@ -294,8 +298,9 @@ public class ABox extends ConjunctiveFormula implements FormattableObj {
 	}
 	
 	/**
+	 * Generate QTL formula
 	 * 
-	 * @return
+	 * @return Formula
 	 */
 	public Formula getABoxFormula() {
 		ConjunctiveFormula qtl = new ConjunctiveFormula();
@@ -309,9 +314,10 @@ public class ABox extends ConjunctiveFormula implements FormattableObj {
 	}
 
 	/**
+	 * Encode Concepts as Formula
 	 * 
-	 * @param c
-	 * @return
+	 * @param c Concept
+	 * @return Formula
 	 */
 	public Formula conceptToFormula(Concept c) {
 		if (c instanceof AtomicConcept)
@@ -361,9 +367,10 @@ public class ABox extends ConjunctiveFormula implements FormattableObj {
 	}
 
 	/**
+	 * ABox as String to print
 	 * 
-	 * @param fmt
-	 * @return
+	 * @param fmt a Format
+	 * @return String
 	 * @throws SymbolUndefinedException
 	 */
 	public String toString(OutputFormat fmt) throws SymbolUndefinedException {
