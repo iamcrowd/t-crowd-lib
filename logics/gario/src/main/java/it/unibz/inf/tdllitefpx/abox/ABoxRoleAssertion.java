@@ -20,13 +20,21 @@ public class ABoxRoleAssertion implements FormattableObj{
 	String y;
 	Integer t;
 	
+	/**
+	 * An ABox role is a Role instance, x and y String values as constants and an i Integer
+	 * as timestamp.
+	 * 
+	 * @param ro a Concept
+	 * @param valuex a String
+	 * @param valuey a String
+	 * @param i an Integer
+	 */
 	public ABoxRoleAssertion (Role ro, String valuex, String valuey, Integer i){
 		// R(x,y)^{i}
 		this.ro = ro;
 		this.x = valuex;
 		this.y = valuey;
 		this.t = i;
-		
 	}
 	
 	public  Set<Constant> getConstant(){

@@ -20,6 +20,12 @@ public class ABoxConceptAssertion implements FormattableObj{
 	Concept c;
 	String value;
 	
+	/**
+	 * An ABox concept is a Concept instance and a String value as constant
+	 * 
+	 * @param c a Concept
+	 * @param v a String
+	 */
 	public ABoxConceptAssertion(Concept c, String v){
 		this.c = c;
 		this.value = v;
