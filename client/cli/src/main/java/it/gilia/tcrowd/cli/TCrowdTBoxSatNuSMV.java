@@ -43,13 +43,14 @@ import java.io.FileReader;
 import java.io.IOException;
 
 
-@Command(name = "NuSMV",
-description = "Encode ERvt model and Temporal Data into LTL formulae and return a LTL file together with a NuSMV file including"
-        		+ " the query given as an input file." 
-        		+ " * If query file is empty, KB is only checked for satisifiability. KB = <TBox,ABox> or KB = <TBox,{}>"
+@Command(name = "TBoxSatNuSMV",
+description = "Encode ERvt model into LTL formulae (ABox not considering here) and return a LTL file together "
+				+ "\n \t \t \t" + "with a NuSMV file including"
+        		+ " the query given as an input file. " + "\n \t \t \t" 
+        		+ " * If query file is empty, KB is only checked for satisifiability. KB = <TBox,{}> " + "\n \t \t \t" 
         		+ " * Otherwise, query must be a concept to be checked.")
 
-public class TCrowdNuSMV extends TCrowdEncodingERvtRelatedCommand {
+public class TCrowdTBoxSatNuSMV extends TCrowdEncodingERvtRelatedCommand {
 	
 	@Option(type = OptionType.COMMAND, name = {"-q", "--query"}, title = "query file",
 			description = "Plain Query file (.txt)")
@@ -62,69 +63,60 @@ public class TCrowdNuSMV extends TCrowdEncodingERvtRelatedCommand {
 
         try {
             Objects.requireNonNull(tModel, "JSON ERvt temporal model file must not be null");
-            Objects.requireNonNull(tData, "JSON temporal data file must not be null");
             Objects.requireNonNull(queryF, "Query file must not be null");
     		
             InputStream is = new FileInputStream(tModel);
             
             if (is == null) {
                 throw new NullPointerException("Cannot find resource file " + tModel);
+            }else {
+            	BufferedReader reader_t = new BufferedReader(new FileReader(tModel));
+            	String line_t = reader_t.readLine();
+            	
+               	if (line_t == null) {
+                    throw new NullPointerException("TBox is empty " + tModel);
+               	}else {
+                    PathsManager pathMan = new PathsManager();
+                    String pathToTemp = pathMan.getPathToTmp(tModel);
+            		String fileNameOut = pathToTemp+"tcrowdOut";
+                    
+                    String jsonTxt = IOUtils.toString(is, "UTF-8");
+                    System.out.println(jsonTxt);
+
+                    JSONObject objectModel = new JSONObject(jsonTxt);
+            		
+            		DefaultStrategy strategy = new DefaultStrategy();
+                    TBox tbox = strategy.to_dllitefpx(objectModel);
+                    
+                    InputStream query = new FileInputStream(queryF);
+                    
+                    if (query == null) {
+                        throw new NullPointerException("Cannot find query file " + query);
+                    }else{
+
+                    	BufferedReader reader = new BufferedReader(new FileReader(queryF));
+                    	String line = reader.readLine();
+                   	    
+                    	if (line == null) { /*Check for TBox satisfiability */
+                    	    TDLLiteFPXReasoner.buildCheckSatisfiability(
+                    	    		tbox,
+                    	    		true, 
+                    	    		fileNameOut);
+                    	    
+                    	}else { /*Check for Concept satisfiability.*/
+                    		System.out.println(line);
+
+                    		Concept acpt = strategy.giveMeAconcept(line); 
+                    		TDLLiteFPXReasoner.buildCheckConceptSatisfiability(
+                    				tbox,
+                    				acpt,
+                    				true, 
+                    				fileNameOut);
+                    	}
+                    }
+               	}
             }
             
-            InputStream td = new FileInputStream(tData);
-            
-            if (td == null) {
-                throw new NullPointerException("Cannot find resource file " + tData);
-            }
-            
-            PathsManager pathMan = new PathsManager();
-            String pathToTemp = pathMan.getPathToTmp(tModel);
-    		String fileNameOut = pathToTemp+"tcrowdOut";
-            
-            String jsonTxt = IOUtils.toString(is, "UTF-8");
-            System.out.println(jsonTxt);
-            
-            String jsonTxtData = IOUtils.toString(td, "UTF-8");
-            System.out.println(jsonTxtData);
-
-            JSONObject objectModel = new JSONObject(jsonTxt);
-            JSONObject objectData = new JSONObject(jsonTxtData);
-    		
-    		DefaultStrategy strategy = new DefaultStrategy();
-            TBox tbox = strategy.to_dllitefpx(objectModel);
-            ABox abox = strategy.to_dllitefpxABox(objectData);
-            
-            InputStream query = new FileInputStream(queryF);
-            
-            if (query == null) {
-                throw new NullPointerException("Cannot find query file " + query);
-            }else{
-
-            	BufferedReader reader = new BufferedReader(new FileReader(queryF));
-            	String line = reader.readLine();
-           	    
-            	if (line == null) { /*Check for TBox and ABox satisfiability */
-            	    System.out.println("No errors, and file empty");
-            	    
-            	    TDLLiteFPXReasoner.buildCheckABoxtSatisfiability(
-            	    		tbox,
-            	    		true, 
-            	    		fileNameOut,
-            	    		abox);
-            	    
-            	}else { /*Check for Concept satisfiability. ABox is not considered here*/
-            		System.out.println(line);
-
-            		Concept acpt = strategy.giveMeAconcept(line); 
-            		TDLLiteFPXReasoner.buildCheckConceptSatisfiability(
-            				tbox,
-            				acpt,
-            				true, 
-            				fileNameOut);
-            	}
-            }
-    		
-
         } catch (Exception e) {
             System.err.println("Error occurred during encoding: "
                     + e.getMessage());

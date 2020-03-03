@@ -13,26 +13,5 @@ abstract class TCrowdEncodingERvtRelatedCommand implements TCrowdCommand {
             description = "JSON file input containing an ERvt temporal model")
     @BashCompletion(behaviour = CompletionBehaviour.FILENAMES)
     String tModel;
-    
-	@Option(type = OptionType.COMMAND, name = {"-a", "--tdata"}, title = "Temporal Data",
-			description = "JSON file input containing temporal data")
-	@BashCompletion(behaviour = CompletionBehaviour.FILENAMES)
-	String tData;
-/**
-    @Option(type = OptionType.COMMAND, name = {"-q", "--query"}, title = "query file",
-            description = "Plain Query file (.txt)")
-    @Required
-    @BashCompletion(behaviour = CompletionBehaviour.FILENAMES)
-    String queryF;
-
-    @Option(type = OptionType.COMMAND, name = {"-p", "--properties"}, title = "properties file",
-            description = "Properties file")
-    @Required
-    @BashCompletion(behaviour = CompletionBehaviour.FILENAMES)
-    String propertiesFile;
-
-    protected boolean isR2rmlFile(String mappingFile) {
-        return !mappingFile.endsWith(".obda");
-    }
-**/
+   
 }

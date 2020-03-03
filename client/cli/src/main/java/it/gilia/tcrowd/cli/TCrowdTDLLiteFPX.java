@@ -1,6 +1,11 @@
 package it.gilia.tcrowd.cli;
 
 import com.github.rvesse.airline.annotations.Command;
+import com.github.rvesse.airline.annotations.Option;
+import com.github.rvesse.airline.annotations.OptionType;
+import com.github.rvesse.airline.annotations.help.BashCompletion;
+import com.github.rvesse.airline.help.cli.bash.CompletionBehaviour;
+
 import it.unibz.inf.tdllitefpx.ExampleTDL;
 import it.unibz.inf.tdllitefpx.output.LatexOutputDocument;
 import it.unibz.inf.tdllitefpx.tbox.TBox;
@@ -25,6 +30,11 @@ import org.apache.commons.io.IOUtils;
 @Command(name = "tdllitefpx",
         description = "Encode both ERvt model and Temporal data as a KB <TBox,ABox> in TDL DL-Litefpx.")
 public class TCrowdTDLLiteFPX extends TCrowdEncodingERvtRelatedCommand {
+	
+	@Option(type = OptionType.COMMAND, name = {"-a", "--tdata"}, title = "Temporal Data",
+			description = "JSON file input containing temporal data")
+	@BashCompletion(behaviour = CompletionBehaviour.FILENAMES)
+	String tData;
 
     @Override
     public void run() {

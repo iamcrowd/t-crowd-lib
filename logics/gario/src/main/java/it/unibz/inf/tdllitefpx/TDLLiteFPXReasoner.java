@@ -145,6 +145,9 @@ public class TDLLiteFPXReasoner {
 		System.out.print("Qtl N -> LTL:");
 		start_time = System.currentTimeMillis();
 		
+//		if(verbose)
+//			(new LatexDocumentCNF(qtl_N)).toFile(prefix+"qtlN.tex");
+
 		
 		Formula ltl = qtlABox.makePropositional();
 		System.out.println(System.currentTimeMillis()-start_time + "ms");
