@@ -38,7 +38,6 @@ import it.unibz.inf.tdllitefpx.roles.AtomicRigidRole;
 import it.unibz.inf.tdllitefpx.roles.PositiveRole;
 import it.unibz.inf.tdllitefpx.roles.Role;
 import it.unibz.inf.tdllitefpx.roles.AtomicRole;
-import it.unibz.inf.tdllitefpx.roles.temporal.NextFutureRole;
 import it.unibz.inf.tdllitefpx.tbox.ConceptInclusionAssertion;
 import it.unibz.inf.tdllitefpx.tbox.TBox;
 import it.unibz.inf.tdllitefpx.abox.ABox;

@@ -15,9 +15,6 @@ import it.unibz.inf.tdllitefpx.tbox.ConceptInclusionAssertion;
 import it.unibz.inf.tdllitefpx.abox.ABoxRoleAssertion;
 import it.unibz.inf.tdllitefpx.abox.ABoxConceptAssertion;
 
-import it.unibz.inf.tdllitefpx.roles.temporal.NextFutureRole;
-import it.unibz.inf.tdllitefpx.roles.temporal.TemporalRole;
-
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
