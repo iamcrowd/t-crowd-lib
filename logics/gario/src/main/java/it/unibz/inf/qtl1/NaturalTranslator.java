@@ -136,8 +136,16 @@ public class NaturalTranslator {
 			 * - Modal equivalence
 			 */
 			cf.add(getReformulation());
+			System.out.println("Rerformulation: "+ getReformulation());
+			System.out.println("\n");
+			
 			cf.add(getModalEquivalences());
+			System.out.println("Modal Equiv: "+ getModalEquivalences());
+			System.out.println("\n");
+			
 			cf.add(getAtomicEquivalences());
+			System.out.println("Atomic Equiv: "+ getAtomicEquivalences());
+			System.out.println("\n");
 			
 			translation = new UniversalFormula(cf, x);
 		}
@@ -336,7 +344,7 @@ public class NaturalTranslator {
 	 * relations (Line 2)
 	 * @return
 	 */
-	private Formula getAtomicEquivalences() {
+	public Formula getAtomicEquivalences() {
 		// We Build an equality starting from the Future atoms
 		ConjunctiveFormula cf = new ConjunctiveFormula();
 		
@@ -361,7 +369,7 @@ public class NaturalTranslator {
 	 * 
 	 * @return
 	 */
-	private Formula getReformulation() {
+	public Formula getReformulation() {
 		return trFuture(original);
 	}
 
@@ -382,7 +390,7 @@ public class NaturalTranslator {
 	 * @param past
 	 * @return
 	 */
-	private Formula tr(Formula f,boolean past){
+	public Formula tr(Formula f,boolean past){
 		/*
 		 * We return the translation of each subformula.
 		 * Particular cases are Atoms and 
@@ -463,6 +471,7 @@ public class NaturalTranslator {
 			return null;
 		}
 	}
+	
 	@Deprecated
 	public Formula getEntitySatisfiabilityConstraint(List<Atom> eAtoms){
 		
