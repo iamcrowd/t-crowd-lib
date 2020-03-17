@@ -78,6 +78,111 @@ public class TDLLiteFPXReasoner {
 	}
 	
 	/**
+	 * Check TBox for satisfiability. TBox could have past operators
+	 * 
+	 * @param t a TBox
+	 * @param verbose true|false for printing results
+	 * @param prefix string for output files
+	 * @param type (satisfiability|entity_consistency)
+	 * @param param
+	 * @throws Exception
+	 */
+	private static void buildCheckTBox(
+			TBox t,
+			boolean verbose, 
+			String prefix, 
+			CheckType type, 
+			Map<String,Object> param,
+			boolean purefuture) throws Exception{
+		long total_time = System.currentTimeMillis();
+		long start_time;
+		
+		// Extends the TBox, adding the delta_R and G
+		t.addExtensionConstraints();
+		
+		if(verbose)
+			(new LatexOutputDocument(t)).toFile(prefix+"tbox.tex");
+		
+		System.out.print("TBox -> Qtl :");
+		start_time = System.currentTimeMillis();
+		
+		TDLLiteFPXConverter conv = new TDLLiteFPXConverter(t);
+		Formula qtl = conv.getFormula();
+		qtl = qtl.makeTemporalStrict();
+		
+		System.out.println(System.currentTimeMillis()-start_time + "ms");		
+		
+		if(type == CheckType.entity_consistency){
+			/* Add entity consistency check:
+			 * 	This means verifying TBox /\ E(c) 
+			 * 	for the entity E and a brand new constant c 
+			 */
+			if(qtl instanceof UniversalFormula){
+				Concept c  = (Concept) param.get("Concept");
+				String name = c.toString()+"witness";
+				Set<Constant> consts = qtl.getConstants();
+				while(consts.contains(new Constant(name))){
+					name = name +"0";
+				}
+			
+				Variable x = ((UniversalFormula) qtl).getQuantifiedVar();
+				Atom cAtom = (Atom) conv.conceptToFormula(c);
+				cAtom.substitute(x, new Constant(name));
+			
+				qtl = new UniversalFormula(new ConjunctiveFormula(
+					qtl.getSubFormulae().get(0),
+					cAtom),
+					x);
+			}else
+				throw new Exception("Undefined consistency check for qtl not in factorized form");
+		}
+		
+		if(verbose)
+			(new LatexDocumentCNF(qtl)).toFile(prefix+"qtl.tex");
+		
+		System.out.print("Qtl Z -> Qtl N :");
+		start_time = System.currentTimeMillis();
+		
+		Formula qtl_N;;
+		
+		if (purefuture) {
+			// QTL Z -> QTL N using Pure Future
+			PureFutureTranslator purefutureFormula = new PureFutureTranslator(qtl);
+			qtl_N= purefutureFormula.getPureFutureTranslation();
+		}
+		else {
+			// QTL Z -> QTL N could use past operators
+			NaturalTranslator natural = new NaturalTranslator(qtl);
+			qtl_N= natural.getTranslation();
+		}
+		
+		System.out.println(System.currentTimeMillis()-start_time + "ms");
+		
+		if(verbose)
+			(new LatexDocumentCNF(qtl_N)).toFile(prefix+"qtlN.tex");
+		
+		System.out.print("Qtl N -> LTL:");
+		start_time = System.currentTimeMillis();
+		
+		// LTL (N)
+		Formula ltl = qtl_N.makePropositional();
+		
+		System.out.println(System.currentTimeMillis()-start_time + "ms");
+		
+		if(verbose)
+			(new LatexDocumentCNF(ltl)).toFile(prefix+"ltl.tex");
+		
+		System.out.println("Generating NuSMV file...");
+		(new NuSMVOutput(ltl)).toFile(prefix+".smv");
+
+		System.out.println("Done! Total time:" + (System.currentTimeMillis()-total_time) + "ms");
+		System.out.println("Num of Propositions: "+ltl.getPropositions().size());		
+			
+	}
+	
+	// Considering TBox and ABox
+	
+	/**
 	 * Verifies the KB satisfiability <tbox,abox>.
 	 * If the option verbose is set, the latex files of the intermediate 
 	 * steps are generated.
@@ -176,109 +281,6 @@ public class TDLLiteFPXReasoner {
 
 			System.out.println("Done! Total time:" + (System.currentTimeMillis()-total_time) + "ms");
 			System.out.println("Num of Propositions: "+ltl.getPropositions().size());		
-			
-	}
-
-	/**
-	 * Check TBox for satisfiability. TBox could have past operators
-	 * 
-	 * @param t a TBox
-	 * @param verbose true|false for printing results
-	 * @param prefix string for output files
-	 * @param type (satisfiability|entity_consistency)
-	 * @param param
-	 * @throws Exception
-	 */
-	private static void buildCheckTBox(
-			TBox t,
-			boolean verbose, 
-			String prefix, 
-			CheckType type, 
-			Map<String,Object> param,
-			boolean purefuture) throws Exception{
-		long total_time = System.currentTimeMillis();
-		long start_time;
-		
-		// Extends the TBox, adding the delta_R and G
-		t.addExtensionConstraints();
-		
-		if(verbose)
-			(new LatexOutputDocument(t)).toFile(prefix+"tbox.tex");
-		
-		System.out.print("TBox -> Qtl :");
-		start_time = System.currentTimeMillis();
-		
-		TDLLiteFPXConverter conv = new TDLLiteFPXConverter(t);
-		Formula qtl = conv.getFormula();
-		qtl = qtl.makeTemporalStrict();
-		
-		System.out.println(System.currentTimeMillis()-start_time + "ms");		
-		
-		if(type == CheckType.entity_consistency){
-			/* Add entity consistency check:
-			 * 	This means verifying TBox /\ E(c) 
-			 * 	for the entity E and a brand new constant c 
-			 */
-			if(qtl instanceof UniversalFormula){
-				Concept c  = (Concept) param.get("Concept");
-				String name = c.toString()+"witness";
-				Set<Constant> consts = qtl.getConstants();
-				while(consts.contains(new Constant(name))){
-					name = name +"0";
-				}
-			
-				Variable x = ((UniversalFormula) qtl).getQuantifiedVar();
-				Atom cAtom = (Atom) conv.conceptToFormula(c);
-				cAtom.substitute(x, new Constant(name));
-			
-				qtl = new UniversalFormula(new ConjunctiveFormula(
-					qtl.getSubFormulae().get(0),
-					cAtom),
-					x);
-			}else
-				throw new Exception("Undefined consistency check for qtl not in factorized form");
-		}
-		
-		if(verbose)
-			(new LatexDocumentCNF(qtl)).toFile(prefix+"qtl.tex");
-		
-		System.out.print("Qtl Z -> Qtl N :");
-		start_time = System.currentTimeMillis();
-		
-		Formula qtl_N = new Formula();
-		
-		if (purefuture) {
-			// QTL Z -> QTL N using Pure Future
-			PureFutureTranslator purefuture = new PureFutureTranslator(qtl);
-			qtl_N= purefuture.getPureFutureTranslation();
-		}
-		else {
-			// QTL Z -> QTL N could use past operators
-			NaturalTranslator natural = new NaturalTranslator(qtl);
-			qtl_N= natural.getTranslation();
-		}
-		
-		System.out.println(System.currentTimeMillis()-start_time + "ms");
-		
-		if(verbose)
-			(new LatexDocumentCNF(qtl_N)).toFile(prefix+"qtlN.tex");
-		
-		System.out.print("Qtl N -> LTL:");
-		start_time = System.currentTimeMillis();
-		
-		// LTL (N)
-		Formula ltl = qtl_N.makePropositional();
-		
-		System.out.println(System.currentTimeMillis()-start_time + "ms");
-		
-		if(verbose)
-			(new LatexDocumentCNF(ltl)).toFile(prefix+"ltl.tex");
-		
-		System.out.println("Generating NuSMV file...");
-		(new NuSMVOutput(ltl)).toFile(prefix+".smv");
-
-		System.out.println("Done! Total time:" + (System.currentTimeMillis()-total_time) + "ms");
-		System.out.println("Num of Propositions: "+ltl.getPropositions().size());		
 			
 	}
 	

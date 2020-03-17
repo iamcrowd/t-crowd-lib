@@ -29,13 +29,13 @@ public class EntityInconsistentTDL {
 				t,
 				exTDL.ExProject,
 				true, 
-				"consistent_");
+				"consistent_",false);
 		
 		TDLLiteFPXReasoner.buildCheckConceptSatisfiability(
 				t,
 				exTDL.Employee,
 				false, 
-				"incons_employee");
+				"incons_employee",false);
 		
 		Map<String, String> stats = t.getStats();
 		String key;
