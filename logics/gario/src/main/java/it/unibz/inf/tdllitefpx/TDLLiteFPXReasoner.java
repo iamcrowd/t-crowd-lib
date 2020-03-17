@@ -1,6 +1,8 @@
 package it.unibz.inf.tdllitefpx;
 
 import it.unibz.inf.qtl1.NaturalTranslator;
+import it.unibz.inf.qtl1.PureFutureTranslator;
+
 import it.unibz.inf.qtl1.atoms.Atom;
 import it.unibz.inf.qtl1.formulae.ConjunctiveFormula;
 import it.unibz.inf.qtl1.formulae.Formula;
@@ -37,14 +39,19 @@ public class TDLLiteFPXReasoner {
 	 * If the option verbose is set, the latex files of the intermediate 
 	 * steps are generated.
 	 * prefix specifies the names of the files.
+	 * @param purefuture {boolean} to use only future operators
 	 * @throws Exception 
 	 */
 	public static void buildCheckSatisfiability(
 			TBox t, 
 			boolean verbose, 
-			String prefix) 
+			String prefix,
+			boolean purefuture) 
 					throws Exception{
-		TDLLiteFPXReasoner.buildCheckTBox(t, verbose, prefix, CheckType.satisfiability, null );
+		TDLLiteFPXReasoner.buildCheckTBox(t, verbose, prefix, 
+										  CheckType.satisfiability, 
+										  null, 
+										  purefuture);
 	}
 	
 	/***
@@ -53,16 +60,21 @@ public class TDLLiteFPXReasoner {
 	 * If the option verbose is set, the latex files of the intermediate 
 	 * steps are generated.
 	 * prefix specifies the names of the files.
+	 * @param purefuture {boolean} to use only future operators
 	 */
 	public static void buildCheckConceptSatisfiability(
 			TBox t,
 			Concept c,
 			boolean verbose,
-			String prefix) 
+			String prefix,
+			boolean purefuture) 
 					throws Exception{
 		Map<String,Object> param = new HashMap<String, Object>();
 		param.put("Concept",c);
-		TDLLiteFPXReasoner.buildCheckTBox(t, verbose, prefix, CheckType.entity_consistency, param);
+		TDLLiteFPXReasoner.buildCheckTBox(t, verbose, prefix, 
+										  CheckType.entity_consistency, 
+										  param, 
+										  purefuture);
 	}
 	
 	/**
@@ -87,6 +99,7 @@ public class TDLLiteFPXReasoner {
 		TDLLiteFPXReasoner.buildCheck(t, verbose, prefix, CheckType.Abox_consistency, ABox);
 	}
 	
+	
 	private static void buildCheck(
 			TBox t, 
 			boolean verbose, 
@@ -108,10 +121,12 @@ public class TDLLiteFPXReasoner {
 		ABox.getStatsABox();
 		System.out.print("TBox -> Qtl :");
 		start_time = System.currentTimeMillis();
+		
 		TDLLiteFPXConverter conv = new TDLLiteFPXConverter(t);
 		Formula qtl = conv.getFormula();
 
-		System.out.println(System.currentTimeMillis()-start_time + "ms");		
+		System.out.println(System.currentTimeMillis()-start_time + "ms");
+		
 		ConjunctiveFormula qtlABox = new ConjunctiveFormula();
 		
 		if(type == CheckType.Abox_consistency){
@@ -164,12 +179,23 @@ public class TDLLiteFPXReasoner {
 			
 	}
 
+	/**
+	 * Check TBox for satisfiability. TBox could have past operators
+	 * 
+	 * @param t a TBox
+	 * @param verbose true|false for printing results
+	 * @param prefix string for output files
+	 * @param type (satisfiability|entity_consistency)
+	 * @param param
+	 * @throws Exception
+	 */
 	private static void buildCheckTBox(
 			TBox t,
 			boolean verbose, 
 			String prefix, 
 			CheckType type, 
-			Map<String,Object> param) throws Exception{
+			Map<String,Object> param,
+			boolean purefuture) throws Exception{
 		long total_time = System.currentTimeMillis();
 		long start_time;
 		
@@ -219,8 +245,18 @@ public class TDLLiteFPXReasoner {
 		System.out.print("Qtl Z -> Qtl N :");
 		start_time = System.currentTimeMillis();
 		
-		NaturalTranslator natural = new NaturalTranslator(qtl);
-		Formula qtl_N= natural.getTranslation();
+		Formula qtl_N = new Formula();
+		
+		if (purefuture) {
+			// QTL Z -> QTL N using Pure Future
+			PureFutureTranslator purefuture = new PureFutureTranslator(qtl);
+			qtl_N= purefuture.getPureFutureTranslation();
+		}
+		else {
+			// QTL Z -> QTL N could use past operators
+			NaturalTranslator natural = new NaturalTranslator(qtl);
+			qtl_N= natural.getTranslation();
+		}
 		
 		System.out.println(System.currentTimeMillis()-start_time + "ms");
 		
@@ -230,6 +266,7 @@ public class TDLLiteFPXReasoner {
 		System.out.print("Qtl N -> LTL:");
 		start_time = System.currentTimeMillis();
 		
+		// LTL (N)
 		Formula ltl = qtl_N.makePropositional();
 		
 		System.out.println(System.currentTimeMillis()-start_time + "ms");
