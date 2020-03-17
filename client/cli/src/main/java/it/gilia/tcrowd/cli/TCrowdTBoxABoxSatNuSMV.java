@@ -94,7 +94,7 @@ public class TCrowdTBoxABoxSatNuSMV extends TCrowdEncodingERvtRelatedCommand {
                     	    TDLLiteFPXReasoner.buildCheckSatisfiability(
                     	    		tbox,
                     	    		true, 
-                    	    		fileNameOut);
+                    	    		fileNameOut,false);
                     	}else { /*Check for TBox and ABox satisfiability */
                     		String jsonTxtData = IOUtils.toString(td, "UTF-8");
                         	System.out.println(jsonTxtData);
