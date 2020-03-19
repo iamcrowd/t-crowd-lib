@@ -284,10 +284,6 @@ public class TDLLiteFPXReasoner {
 		
 		if(verbose)
 			(new LatexDocumentCNF(qtlABox)).toFile(prefix+"qtl.tex");
-
-		System.out.println("");
-		System.out.print("Qtl N -> LTL:");
-		start_time = System.currentTimeMillis();
 		
 //		if(verbose)
 //			(new LatexDocumentCNF(qtl_N)).toFile(prefix+"qtlN.tex");

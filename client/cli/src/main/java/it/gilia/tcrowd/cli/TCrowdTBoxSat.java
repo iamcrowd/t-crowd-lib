@@ -43,16 +43,17 @@ import java.io.FileReader;
 import java.io.IOException;
 
 
-@Command(name = "TBoxSatNuSMV",
+@Command(name = "TBoxSat",
 description = "Encode ERvt model into LTL formulae (ABox not considering here) and return a LTL file together "
-				+ "\n \t \t \t" + "with a NuSMV file including"
+				+ "\n \t \t \t" + "with a file to feed a sat solver"
         		+ " the query given as an input file. " + "\n \t \t \t" 
         		+ " * If query file is empty, KB is only checked for satisifiability. KB = <TBox,{}> " + "\n \t \t \t" 
         		+ " * Otherwise, query must be a concept to be checked." + "\n"
-        		+ " Flag pf is optional to reduce to pure future QTL1. " + "\n \t \t \t" 
-        		+ " If flag is not specified, QTL1 could include some past operators")
+        		+ " * Flag pf is optional to reduce to pure future QTL1. " + "\n \t \t \t" 
+        		+ " \t \t \t * If flag is not specified, QTL1 could include some past operators"
+        		+ " option -s requires entering a solver name (NuSMV|Aalta)")
 
-public class TCrowdTBoxSatNuSMV extends TCrowdEncodingERvtRelatedCommand {
+public class TCrowdTBoxSat extends TCrowdEncodingERvtRelatedCommand {
 	
 	@Option(type = OptionType.COMMAND, name = {"-pf", "--purefuture"}, title = "Pure Future Operators",
 			description = "Flag to set reduction to QTL1 using only pure future operators")

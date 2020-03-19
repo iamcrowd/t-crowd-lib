@@ -49,7 +49,7 @@ public class TCrowd {
                         TCrowdLTL.class,
                         TCrowdAboxSat.class,
                         TCrowdTBoxABoxSatNuSMV.class,
-                        TCrowdTBoxSatNuSMV.class
+                        TCrowdTBoxSat.class
                 );
 
 /**
