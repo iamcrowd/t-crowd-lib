@@ -52,6 +52,7 @@ public class TCrowdTBoxABoxSatNuSMV extends TCrowdEncodingERvtRelatedCommand {
 			description = "JSON file input containing temporal data")
 	@BashCompletion(behaviour = CompletionBehaviour.FILENAMES)
 	String tData;
+	
 
     @Override
     public void run() {
@@ -94,7 +95,7 @@ public class TCrowdTBoxABoxSatNuSMV extends TCrowdEncodingERvtRelatedCommand {
                     	    TDLLiteFPXReasoner.buildCheckSatisfiability(
                     	    		tbox,
                     	    		true, 
-                    	    		fileNameOut,false);
+                    	    		fileNameOut,false,"NuSMV");
                     	}else { /*Check for TBox and ABox satisfiability */
                     		String jsonTxtData = IOUtils.toString(td, "UTF-8");
                         	System.out.println(jsonTxtData);

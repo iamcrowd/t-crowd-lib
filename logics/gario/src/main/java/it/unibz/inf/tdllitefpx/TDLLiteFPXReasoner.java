@@ -8,7 +8,10 @@ import it.unibz.inf.qtl1.formulae.ConjunctiveFormula;
 import it.unibz.inf.qtl1.formulae.Formula;
 import it.unibz.inf.qtl1.formulae.quantified.UniversalFormula;
 import it.unibz.inf.qtl1.output.LatexDocumentCNF;
+
 import it.unibz.inf.qtl1.output.NuSMVOutput;
+import it.unibz.inf.qtl1.output.aalta.AaltaOutput;
+
 import it.unibz.inf.qtl1.terms.Constant;
 import it.unibz.inf.qtl1.terms.Term;
 import it.unibz.inf.qtl1.terms.Variable;
@@ -40,18 +43,21 @@ public class TDLLiteFPXReasoner {
 	 * steps are generated.
 	 * prefix specifies the names of the files.
 	 * @param purefuture {boolean} to use only future operators
+	 * @param solver {string} is one of (NuSMV|Aalta)
 	 * @throws Exception 
 	 */
 	public static void buildCheckSatisfiability(
 			TBox t, 
 			boolean verbose, 
 			String prefix,
-			boolean purefuture) 
+			boolean purefuture,
+			String solver) 
 					throws Exception{
 		TDLLiteFPXReasoner.buildCheckTBox(t, verbose, prefix, 
 										  CheckType.satisfiability, 
 										  null, 
-										  purefuture);
+										  purefuture,
+										  solver);
 	}
 	
 	/***
@@ -67,14 +73,16 @@ public class TDLLiteFPXReasoner {
 			Concept c,
 			boolean verbose,
 			String prefix,
-			boolean purefuture) 
+			boolean purefuture,
+			String solver) 
 					throws Exception{
 		Map<String,Object> param = new HashMap<String, Object>();
 		param.put("Concept",c);
 		TDLLiteFPXReasoner.buildCheckTBox(t, verbose, prefix, 
 										  CheckType.entity_consistency, 
 										  param, 
-										  purefuture);
+										  purefuture,
+										  solver);
 	}
 	
 	/**
@@ -85,6 +93,7 @@ public class TDLLiteFPXReasoner {
 	 * @param prefix string for output files
 	 * @param type (satisfiability|entity_consistency)
 	 * @param param
+	 * @param solver (NuSMV|Aalta)
 	 * @throws Exception
 	 */
 	private static void buildCheckTBox(
@@ -93,7 +102,8 @@ public class TDLLiteFPXReasoner {
 			String prefix, 
 			CheckType type, 
 			Map<String,Object> param,
-			boolean purefuture) throws Exception{
+			boolean purefuture,
+			String solver) throws Exception{
 		long total_time = System.currentTimeMillis();
 		long start_time;
 		
@@ -172,8 +182,22 @@ public class TDLLiteFPXReasoner {
 		if(verbose)
 			(new LatexDocumentCNF(ltl)).toFile(prefix+"ltl.tex");
 		
-		System.out.println("Generating NuSMV file...");
-		(new NuSMVOutput(ltl)).toFile(prefix+".smv");
+		System.out.println("Generating model LTL file...");
+		
+		switch (solver) {
+		case Constants.NuSMV:
+				System.out.println("Solver..." + Constants.NuSMV);
+				(new NuSMVOutput(ltl)).toFile(prefix+".smv");
+			break;
+			
+		case Constants.Aalta:
+			System.out.println("Solver" + Constants.Aalta);
+			(new AaltaOutput(ltl)).toFile(prefix+".aalta");
+		break;
+		
+		default:
+			break;
+		}
 
 		System.out.println("Done! Total time:" + (System.currentTimeMillis()-total_time) + "ms");
 		System.out.println("Num of Propositions: "+ltl.getPropositions().size());		

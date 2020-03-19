@@ -64,6 +64,12 @@ public class TCrowdTBoxSatNuSMV extends TCrowdEncodingERvtRelatedCommand {
 			@Required
 			@BashCompletion(behaviour = CompletionBehaviour.FILENAMES)
 			String queryF;
+	
+	@Option(type = OptionType.COMMAND, name = {"-s", "--solver"}, title = "solver",
+			description = "Solver (NuSMV|Aalta)")
+			@Required
+			@BashCompletion(behaviour = CompletionBehaviour.FILENAMES)
+			String solver;
 
     @Override
     public void run() {
@@ -71,6 +77,7 @@ public class TCrowdTBoxSatNuSMV extends TCrowdEncodingERvtRelatedCommand {
         try {
             Objects.requireNonNull(tModel, "JSON ERvt temporal model file must not be null");
             Objects.requireNonNull(queryF, "Query file must not be null");
+            Objects.requireNonNull(solver, "Solver (NuSMV|Aalta) must be specified");
     		
             InputStream is = new FileInputStream(tModel);
             
@@ -109,7 +116,8 @@ public class TCrowdTBoxSatNuSMV extends TCrowdEncodingERvtRelatedCommand {
                     	    		tbox,
                     	    		true, 
                     	    		fileNameOut,
-                    	    		pf);
+                    	    		pf,
+                    	    		solver);
                     	    
                     	}else { /*Check for Concept satisfiability.*/
                     		System.out.println(line);
@@ -120,7 +128,8 @@ public class TCrowdTBoxSatNuSMV extends TCrowdEncodingERvtRelatedCommand {
                     				acpt,
                     				true, 
                     				fileNameOut,
-                    				pf);
+                    				pf,
+                    				solver);
                     	}
                     }
                	}
