@@ -27,22 +27,13 @@ import it.unibz.inf.qtl1.formulae.temporal.TemporalFormula;
 import it.unibz.inf.qtl1.terms.Variable;
 
 
+/**
+ * This class reduce the PLTL (Past LTL) formulae to LTL pure future.
+ * 
+ * @author gab
+ *
+ */
 public class PureFutureTranslator extends NaturalTranslator{
-/*	Alphabet a;
-	int modalCnt=0;
-	Formula original;
-	Formula translation=null;
-	Variable x = new Variable("x");
-	static final String past_post = "P";
-	static final String future_post = "F";
-	
-	List<NextFuture> nxtF = new LinkedList<NextFuture>();
-	List<NextPast> nxtP = new LinkedList<NextPast>();
-	List<AlwaysFuture> boxF = new LinkedList<AlwaysFuture>();
-	List<AlwaysPast> boxP = new LinkedList<AlwaysPast>();
-	List<SometimeFuture> diaF = new LinkedList<SometimeFuture>();
-	List<SometimePast> diaP = new LinkedList<SometimePast>();
-	List<Atom> atoms = new LinkedList<Atom>();*/
 	
 	public PureFutureTranslator(Formula f) throws Exception{
 		super(f);
