@@ -36,7 +36,8 @@ public class ExampleTDL {
 				exTDL.getTBox(),
 				exTDL.Employee,
 				true, 
-				"tdl_",false);
+				"tdl_",false,
+				"Aalta");
 		
 		Map<String, String> stats = exTDL.getTBox().getStats();
 		String key;
