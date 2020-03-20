@@ -177,8 +177,6 @@ public class TDLLiteFPXReasoner {
 			// QTL Z -> QTL N using Pure Future
 			System.out.println("TBox -> Qtl1 -> QTLN -> LTL");
 			
-			System.out.println("TBox -> Qtl1 -> -> LTL?");
-			
 			PureFutureTranslator purefutureFormula = new PureFutureTranslator(qtl);
 			qtl_N = purefutureFormula.getPureFutureTranslation();
 			
@@ -327,7 +325,6 @@ public class TDLLiteFPXReasoner {
 		if(verbose)
 			(new LatexDocumentCNF(qtlABox)).toFile(prefix+"qtl.tex");
 
-	
 		Formula ltl = qtlABox.makePropositional();
 			
 		System.out.println("Num of Propositions: "+ltl.getPropositions().size());		
