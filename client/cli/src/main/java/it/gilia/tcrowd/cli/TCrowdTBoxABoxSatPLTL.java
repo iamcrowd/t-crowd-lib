@@ -43,10 +43,14 @@ import java.io.FileReader;
 import java.io.IOException;
 
 
-@Command(name = "TBoxABoxSatNuSMV",
-description = "Encode ERvt model and Temporal Data into LTL formulae and return a LTL file for Sat checking")
+@Command(name = "TBoxABoxSatPLTL",
+description = " TBox|ABox -> QTL1 -> PLTL (only NuSMV)"
+			  + "\n"
+			  + "\t \t \t Encode both ERvt model and Temporal Data into PLTL formulae and return a PLTL file for Sat checking"
+			  + "\n"
+			  + "\t \t \t * If ABox is empty, only TBox is checked for SAT")
 
-public class TCrowdTBoxABoxSatNuSMV extends TCrowdEncodingERvtRelatedCommand {
+public class TCrowdTBoxABoxSatPLTL extends TCrowdEncodingERvtRelatedCommand {
 	
 	@Option(type = OptionType.COMMAND, name = {"-a", "--tdata"}, title = "Temporal Data",
 			description = "JSON file input containing temporal data")
@@ -95,7 +99,10 @@ public class TCrowdTBoxABoxSatNuSMV extends TCrowdEncodingERvtRelatedCommand {
                     	    TDLLiteFPXReasoner.buildCheckSatisfiability(
                     	    		tbox,
                     	    		true, 
-                    	    		fileNameOut,false,"NuSMV");
+                    	    		fileNameOut,
+                    	    		false,
+                    	    		"NuSMV");
+                    	    
                     	}else { /*Check for TBox and ABox satisfiability */
                     		String jsonTxtData = IOUtils.toString(td, "UTF-8");
                         	System.out.println(jsonTxtData);
