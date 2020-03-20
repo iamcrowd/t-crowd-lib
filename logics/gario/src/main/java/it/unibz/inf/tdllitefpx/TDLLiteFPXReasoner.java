@@ -177,6 +177,8 @@ public class TDLLiteFPXReasoner {
 			// QTL Z -> QTL N using Pure Future
 			System.out.println("TBox -> Qtl1 -> QTLN -> LTL");
 			
+			System.out.println("TBox -> Qtl1 -> -> LTL?");
+			
 			PureFutureTranslator purefutureFormula = new PureFutureTranslator(qtl);
 			qtl_N = purefutureFormula.getPureFutureTranslation();
 			
@@ -287,6 +289,15 @@ public class TDLLiteFPXReasoner {
 		TDLLiteFPXConverter conv = new TDLLiteFPXConverter(t);
 		Formula qtl = conv.getFormula();
 		
+		Formula qtl_N;
+		
+		// QTL Z -> QTL N using Pure Future
+		PureFutureTranslator purefutureFormula = new PureFutureTranslator(qtl);
+		qtl_N = purefutureFormula.getPureFutureTranslation();
+			
+		if(verbose)
+			(new LatexDocumentCNF(qtl_N)).toFile(prefix+"qtlN.tex");	
+		
 		ConjunctiveFormula qtlABox = new ConjunctiveFormula();
 		
 		if(type == CheckType.Abox_consistency){
@@ -294,10 +305,10 @@ public class TDLLiteFPXReasoner {
 			 * 	This means verifying TBox /\ ABox 
 			 * 	for the entity E and a brand new constant c 
 			 */
-			if(qtl instanceof UniversalFormula){
+			if(qtl_N instanceof UniversalFormula){
 				
 			    Set<Constant> constsABox = ABox.getConstantsABox();
-				Set<Constant> consts = qtl.getConstants();
+				Set<Constant> consts = qtl_N.getConstants();
 				consts.addAll(constsABox);
 				System.out.println("");
 				System.out.println("Constants: "+consts);
@@ -307,7 +318,7 @@ public class TDLLiteFPXReasoner {
 			    
 			    Formula o = ABox.getABoxFormula();
 			
-				qtlABox= new ConjunctiveFormula(qtl,o);
+				qtlABox= new ConjunctiveFormula(qtl_N,o);
 				
 			}else
 				throw new Exception("Undefined consistency check for qtl not in factorized form");
@@ -315,39 +326,29 @@ public class TDLLiteFPXReasoner {
 		
 		if(verbose)
 			(new LatexDocumentCNF(qtlABox)).toFile(prefix+"qtl.tex");
-		
-		Formula qtl_N;
-		
-		if (purefuture) {
-			// QTL Z -> QTL N using Pure Future
-			PureFutureTranslator purefutureFormula = new PureFutureTranslator(qtlABox);
-			qtl_N = purefutureFormula.getPureFutureTranslation();
-			
-			if(verbose)
-				(new LatexDocumentCNF(qtl_N)).toFile(prefix+"qtlN.tex");
 
-			Formula ltl = qtl_N.makePropositional();
+	
+		Formula ltl = qtlABox.makePropositional();
 			
-			System.out.println("Num of Propositions: "+ltl.getPropositions().size());		
+		System.out.println("Num of Propositions: "+ltl.getPropositions().size());		
 
 			
-			if(verbose)
-				(new LatexDocumentCNF(ltl)).toFile(prefix+"ltl.tex");
+		if(verbose)
+			(new LatexDocumentCNF(ltl)).toFile(prefix+"ltl.tex");
 			
-			switch (solver) {
-				case Constants.NuSMV:
-					System.out.println("Solver..." + Constants.NuSMV);
-					(new NuSMVOutput(ltl)).toFile(prefix+".smv");
-				break;
+		switch (solver) {
+			case Constants.NuSMV:
+				System.out.println("Solver..." + Constants.NuSMV);
+				(new NuSMVOutput(ltl)).toFile(prefix+".smv");
+			break;
 				
-				case Constants.Aalta:
-					System.out.println("Solver" + Constants.Aalta);
-					(new AaltaOutput(ltl)).toFile(prefix+".aalta");
-				break;
+			case Constants.Aalta:
+				System.out.println("Solver" + Constants.Aalta);
+				(new AaltaOutput(ltl)).toFile(prefix+".aalta");
+			break;
 			
-				default:
-				break;
-			}
+			default:
+			break;
 		}
 
 		System.out.println("Done! Total time:" + (System.currentTimeMillis()-total_time) + "ms");
@@ -432,7 +433,7 @@ public class TDLLiteFPXReasoner {
 			    
 			    Formula o = ABox.getABoxFormula();
 			
-				qtlABox= new ConjunctiveFormula(qtl,o);
+				qtlABox = new ConjunctiveFormula(qtl,o);
 				
 			}else
 				throw new Exception("Undefined consistency check for qtl not in factorized form");
