@@ -34,10 +34,28 @@ import java.util.Map;
 import java.util.Set;
 
 
+/**
+ * TBox SAT
+ * 			LTL: TBox -> QTL -> QTLN -> LTL (NuSMV|NuXMV|Aalta|pltl|TRP++)
+ * 			PLTL: TBox -> QTL -> PLTL (NuSMV|NuXMV)
+ * TBox Concept SAT
+ * 			LTL: TBox -> QTL -> QTLN -> LTL (NuSMV|NuXMV|Aalta|pltl|TRP++)
+ * 			PLTL: TBox -> QTL -> PLTL (NuSMV|NuXMV)
+ * TBox, ABox SAT
+ * 			LTL: TBox|ABox -> QTL -> QTLN -> LTL (NuSMV|NuXMV|Aalta|pltl|TRP++)
+ * 			PLTL: TBox|ABox -> QTL -> PLTL (NuSMV|NuXMV)
+ * @author gab
+ *
+ */
 public class TDLLiteFPXReasoner {
 	/* TODO: Add stats */
 
 	/***
+	 * TBox SAT
+	 * 			LTL: TBox -> QTL -> QTLN -> LTL (NuSMV|NuXMV|Aalta|pltl|TRP++)
+	 * 			PLTL: TBox -> QTL -> PLTL (NuSMV|NuXMV)
+	 * 
+	 * 
 	 * Verifies the satisfiability of the TBox {@literal t}.
 	 * If the option verbose is set, the latex files of the intermediate 
 	 * steps are generated.
@@ -53,6 +71,7 @@ public class TDLLiteFPXReasoner {
 			boolean purefuture,
 			String solver) 
 					throws Exception{
+		
 		TDLLiteFPXReasoner.buildCheckTBox(t, verbose, prefix, 
 										  CheckType.satisfiability, 
 										  null, 
@@ -61,6 +80,11 @@ public class TDLLiteFPXReasoner {
 	}
 	
 	/***
+	 * TBox Concept SAT
+	 * 			LTL: TBox -> QTL -> QTLN -> LTL (NuSMV|NuXMV|Aalta|pltl|TRP++)
+	 * 			PLTL: TBox -> QTL -> PLTL (NuSMV|NuXMV)
+	 * 
+	 * 
 	 * Verifies the satisfiability of the concept {@literal c} 
 	 * in the TBox {@literal t}.
 	 * If the option verbose is set, the latex files of the intermediate 
@@ -107,20 +131,17 @@ public class TDLLiteFPXReasoner {
 		long total_time = System.currentTimeMillis();
 		long start_time;
 		
+		start_time = System.currentTimeMillis();
+		
 		// Extends the TBox, adding the delta_R and G
 		t.addExtensionConstraints();
 		
 		if(verbose)
 			(new LatexOutputDocument(t)).toFile(prefix+"tbox.tex");
 		
-		System.out.print("TBox -> Qtl :");
-		start_time = System.currentTimeMillis();
-		
 		TDLLiteFPXConverter conv = new TDLLiteFPXConverter(t);
 		Formula qtl = conv.getFormula();
-		qtl = qtl.makeTemporalStrict();
-		
-		System.out.println(System.currentTimeMillis()-start_time + "ms");		
+		qtl = qtl.makeTemporalStrict();	
 		
 		if(type == CheckType.entity_consistency){
 			/* Add entity consistency check:
@@ -150,91 +171,102 @@ public class TDLLiteFPXReasoner {
 		if(verbose)
 			(new LatexDocumentCNF(qtl)).toFile(prefix+"qtl.tex");
 		
-		System.out.print("Qtl Z -> Qtl N :");
-		start_time = System.currentTimeMillis();
-		
-		Formula qtl_N;;
+		Formula qtl_N;
 		
 		if (purefuture) {
 			// QTL Z -> QTL N using Pure Future
+			System.out.println("TBox -> Qtl1 -> QTLN -> LTL");
+			
 			PureFutureTranslator purefutureFormula = new PureFutureTranslator(qtl);
-			qtl_N= purefutureFormula.getPureFutureTranslation();
+			qtl_N = purefutureFormula.getPureFutureTranslation();
+			
+			if(verbose)
+				(new LatexDocumentCNF(qtl_N)).toFile(prefix+"qtlN.tex");
+			
+			// LTL (N)
+			Formula ltl = qtl_N.makePropositional();
+			
+			if(verbose)
+				(new LatexDocumentCNF(ltl)).toFile(prefix+"ltl.tex");
+			
+			System.out.println("Generating model LTL file...");
+			System.out.println("Num of Propositions: "+ltl.getPropositions().size());
+			
+			switch (solver) {
+				case Constants.NuSMV:
+					System.out.println("Solver..." + Constants.NuSMV);
+					(new NuSMVOutput(ltl)).toFile(prefix+".smv");
+				break;
+				
+				case Constants.Aalta:
+					System.out.println("Solver" + Constants.Aalta);
+					(new AaltaOutput(ltl)).toFile(prefix+".aalta");
+				break;
+			
+				default:
+					break;
+			}			
+			
 		}
 		else {
-			// QTL Z -> QTL N could use past operators
-			NaturalTranslator natural = new NaturalTranslator(qtl);
-			qtl_N= natural.getTranslation();
-		}
-		
-		System.out.println(System.currentTimeMillis()-start_time + "ms");
-		
-		if(verbose)
-			(new LatexDocumentCNF(qtl_N)).toFile(prefix+"qtlN.tex");
-		
-		System.out.print("Qtl N -> LTL:");
-		start_time = System.currentTimeMillis();
-		
-		// LTL (N)
-		Formula ltl = qtl_N.makePropositional();
-		
-		System.out.println(System.currentTimeMillis()-start_time + "ms");
-		
-		if(verbose)
-			(new LatexDocumentCNF(ltl)).toFile(prefix+"ltl.tex");
-		
-		System.out.println("Generating model LTL file...");
-		
-		switch (solver) {
-		case Constants.NuSMV:
-				System.out.println("Solver..." + Constants.NuSMV);
-				(new NuSMVOutput(ltl)).toFile(prefix+".smv");
-			break;
+			// QTL Z -> PLTL (past operators)
+			System.out.println("TBox -> Qtl1 -> PLTL");
 			
-		case Constants.Aalta:
-			System.out.println("Solver" + Constants.Aalta);
-			(new AaltaOutput(ltl)).toFile(prefix+".aalta");
-		break;
-		
-		default:
-			break;
+			Formula pltl = qtl.makePropositional();
+			
+			if(verbose)
+				(new LatexDocumentCNF(pltl)).toFile(prefix+"pltl.tex");
+			
+			System.out.println("Generating model PLTL file...");
+			
+			System.out.println("Solver..." + Constants.NuSMV);
+			(new NuSMVOutput(pltl)).toFile(prefix+".smv");
+			
+			System.out.println("Num of Propositions: "+pltl.getPropositions().size());
 		}
-
+		
 		System.out.println("Done! Total time:" + (System.currentTimeMillis()-total_time) + "ms");
-		System.out.println("Num of Propositions: "+ltl.getPropositions().size());		
-			
+					
 	}
+
 	
 	// Considering TBox and ABox
 	
 	/**
-	 * Verifies the KB satisfiability <tbox,abox>.
-	 * If the option verbose is set, the latex files of the intermediate 
-	 * steps are generated.
-	 * prefix specifies the names of the files.
-	 * 
-	 * @param t an TBox
+	 * TBox, ABox SAT
+	 * 			LTL: TBox|ABox -> QTL -> QTLN -> LTL (NuSMV|NuXMV|Aalta|pltl|TRP++)
+	 * Check TBox and ABox SAT using only LTL pure future formulae
+	 * @param t
 	 * @param verbose
 	 * @param prefix
-	 * @param ABox an ABox
+	 * @param ABox
+	 * @param purefuture
+	 * @param solver
 	 * @throws Exception
 	 */
-	
-	public static void buildCheckABoxtSatisfiability(
+	public static void buildCheckABoxLTLSatisfiability(
 			TBox t,
 			boolean verbose,
 			String prefix,
-			ABox ABox) 
+			ABox ABox,
+			boolean purefuture,
+			String solver) 
 					throws Exception{
-		TDLLiteFPXReasoner.buildCheck(t, verbose, prefix, CheckType.Abox_consistency, ABox);
+		TDLLiteFPXReasoner.buildLTLCheck(t, verbose, prefix, 
+										 CheckType.Abox_consistency, 
+										 ABox, 
+										 true,
+										 solver);
 	}
 	
-	
-	private static void buildCheck(
+	private static void buildLTLCheck(
 			TBox t, 
 			boolean verbose, 
 			String prefix, 
 			CheckType type, 
-			ABox ABox) 
+			ABox ABox,
+			boolean purefuture,
+			String solver) 
 					throws Exception{
 		long total_time = System.currentTimeMillis();
 		long start_time;
@@ -242,19 +274,18 @@ public class TDLLiteFPXReasoner {
 		// Extends the TBox, adding the delta_R and G
 		t.addExtensionConstraints();
 		
+		System.out.println("TBox|ABox -> Qtl1 -> QTLN -> LTL");
+		
 		if(verbose) {
 			(new LatexOutputDocument(t)).toFile(prefix+"tbox.tex");
 			(new LatexOutputDocument(ABox)).toFile(prefix+"abox.tex");
 		}
 		
 		ABox.getStatsABox();
-		System.out.print("TBox -> Qtl :");
 		start_time = System.currentTimeMillis();
 		
 		TDLLiteFPXConverter conv = new TDLLiteFPXConverter(t);
 		Formula qtl = conv.getFormula();
-
-		System.out.println(System.currentTimeMillis()-start_time + "ms");
 		
 		ConjunctiveFormula qtlABox = new ConjunctiveFormula();
 		
@@ -285,22 +316,141 @@ public class TDLLiteFPXReasoner {
 		if(verbose)
 			(new LatexDocumentCNF(qtlABox)).toFile(prefix+"qtl.tex");
 		
-//		if(verbose)
-//			(new LatexDocumentCNF(qtl_N)).toFile(prefix+"qtlN.tex");
+		Formula qtl_N;
+		
+		if (purefuture) {
+			// QTL Z -> QTL N using Pure Future
+			PureFutureTranslator purefutureFormula = new PureFutureTranslator(qtlABox);
+			qtl_N = purefutureFormula.getPureFutureTranslation();
+			
+			if(verbose)
+				(new LatexDocumentCNF(qtl_N)).toFile(prefix+"qtlN.tex");
 
+			Formula ltl = qtl_N.makePropositional();
+			
+			System.out.println("Num of Propositions: "+ltl.getPropositions().size());		
+
+			
+			if(verbose)
+				(new LatexDocumentCNF(ltl)).toFile(prefix+"ltl.tex");
+			
+			switch (solver) {
+				case Constants.NuSMV:
+					System.out.println("Solver..." + Constants.NuSMV);
+					(new NuSMVOutput(ltl)).toFile(prefix+".smv");
+				break;
+				
+				case Constants.Aalta:
+					System.out.println("Solver" + Constants.Aalta);
+					(new AaltaOutput(ltl)).toFile(prefix+".aalta");
+				break;
+			
+				default:
+				break;
+			}
+		}
+
+		System.out.println("Done! Total time:" + (System.currentTimeMillis()-total_time) + "ms");
+			
+	}
+	
+	
+	/**
+	 * TBox, ABox SAT
+	 * 			PLTL: TBox|ABox -> QTL -> PLTL (NuSMV|NuXMV)
+	 * 
+	 * 
+	 * Verifies the KB satisfiability <tbox,abox>.
+	 * If the option verbose is set, the latex files of the intermediate 
+	 * steps are generated.
+	 * prefix specifies the names of the files.
+	 * 
+	 * @param t an TBox
+	 * @param verbose
+	 * @param prefix
+	 * @param ABox an ABox
+	 * @throws Exception
+	 */
+	
+	public static void buildCheckABoxtSatisfiability(
+			TBox t,
+			boolean verbose,
+			String prefix,
+			ABox ABox) 
+					throws Exception{
+		TDLLiteFPXReasoner.buildCheck(t, 
+									  verbose, 
+									  prefix, 
+									  CheckType.Abox_consistency, 
+									  ABox);
+	}
+	
+	
+	private static void buildCheck(
+			TBox t, 
+			boolean verbose, 
+			String prefix, 
+			CheckType type, 
+			ABox ABox) 
+					throws Exception{
+		long total_time = System.currentTimeMillis();
+		long start_time;
 		
-		Formula ltl = qtlABox.makePropositional();
-		System.out.println(System.currentTimeMillis()-start_time + "ms");
+		// Extends the TBox, adding the delta_R and G
+		t.addExtensionConstraints();
 		
+		System.out.println("TBox -> Qtl1 -> PLTL");
+		
+		if(verbose) {
+			(new LatexOutputDocument(t)).toFile(prefix+"tbox.tex");
+			(new LatexOutputDocument(ABox)).toFile(prefix+"abox.tex");
+		}
+		
+		ABox.getStatsABox();
+		start_time = System.currentTimeMillis();
+		
+		TDLLiteFPXConverter conv = new TDLLiteFPXConverter(t);
+		Formula qtl = conv.getFormula();
+		
+		ConjunctiveFormula qtlABox = new ConjunctiveFormula();
+		
+		if(type == CheckType.Abox_consistency){
+			/* Add entity consistency check:
+			 * 	This means verifying TBox /\ ABox 
+			 * 	for the entity E and a brand new constant c 
+			 */
+			if(qtl instanceof UniversalFormula){
+				
+			    Set<Constant> constsABox = ABox.getConstantsABox();
+				Set<Constant> consts = qtl.getConstants();
+				consts.addAll(constsABox);
+				System.out.println("");
+				System.out.println("Constants: "+consts);
+				
+				
+			    ABox.addExtensionConstraintsABox(t);
+			    
+			    Formula o = ABox.getABoxFormula();
+			
+				qtlABox= new ConjunctiveFormula(qtl,o);
+				
+			}else
+				throw new Exception("Undefined consistency check for qtl not in factorized form");
+		}
 		
 		if(verbose)
-			(new LatexDocumentCNF(ltl)).toFile(prefix+"ltl.tex");
-		
-			System.out.println("Generating NuSMV file...");
-			(new NuSMVOutput(ltl)).toFile(prefix+".smv");
+			(new LatexDocumentCNF(qtlABox)).toFile(prefix+"qtl.tex");
 
-			System.out.println("Done! Total time:" + (System.currentTimeMillis()-total_time) + "ms");
-			System.out.println("Num of Propositions: "+ltl.getPropositions().size());		
+		Formula pltl = qtlABox.makePropositional();
+		System.out.println("Num of Propositions: "+pltl.getPropositions().size());		
+
+		if(verbose)
+			(new LatexDocumentCNF(pltl)).toFile(prefix+"pltl.tex");
+		
+		System.out.println("Generating NuSMV file...");
+		(new NuSMVOutput(pltl)).toFile(prefix+".smv");
+
+		System.out.println("Done! Total time:" + (System.currentTimeMillis()-total_time) + "ms");
 			
 	}
 	
