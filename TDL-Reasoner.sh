@@ -29,17 +29,19 @@ if [ $1 == "status" ];
 then
     echo -e "\t \t \\e[0;43m**Status**\\e[0m"
     echo ""
-    echo -e "KB = <TBox, {}> and NuSMV solver. PLTL (TBox -> QTL1 -> PLTL) is working BUT fails if TBox does not include roles"
+    echo -e "KB = <TBox, {}> and NuSMV solver. PLTL (TBox -> QTL1 -> PLTL) \\e[0;42mis working BUT fails if TBox does not include roles\\e[0m"
     echo ""
-    echo -e "KB = <TBox, {}> and NuSMV solver. LTL (TBox -> QTL1 -> QTLN -> LTL) is working BUT fails if TBox does not include roles"
+    echo -e "KB = <TBox, {}> and NuSMV solver. LTL (TBox -> QTL1 -> QTLN -> LTL) \\e[0;42mis working BUT fails if TBox does not include roles\\e[0m"
     echo ""
-    echo -e "KB = <TBox, ABox> and NuSMV solver. PLTL (TBox|ABox -> QTL1 -> PLTL) is working"
+    echo -e "KB = <TBox, ABox> and NuSMV solver. PLTL (TBox|ABox -> QTL1 -> PLTL) \\e[0;42mis working\\e[0m"
     echo ""
-    echo -e "KB = <TBox, ABox> and NuSMV solver. LTL (TBox|ABox -> QTL1 -> QTLN -> LTL) is failing -> BUG"
+    echo -e "KB = <TBox, ABox> and NuSMV solver. LTL (TBox|ABox -> QTL1 -> QTLN -> LTL) \\e[0;43mto be implemented\\e[0m"
     echo ""
-    echo -e "KB = <TBox, {}> and Aalta solver. LTL (TBox -> QTL1 -> QTLN -> LTL) is working BUT fails if TBox does not include roles"
+    echo -e "KB = <TBox, {}> and Aalta solver. LTL (TBox -> QTL1 -> QTLN -> LTL) \\e[0;42mis working BUT fails if TBox does not include roles\\e[0m"
     echo ""
-    echo -e "KB = <TBox, ABox> and Aalta solver. LTL (TBox|ABox -> QTL1 -> QTLN -> LTL) is failing -> BUG"
+    echo -e "KB = <TBox, ABox> and Aalta solver. LTL (TBox|ABox -> QTL1 -> QTLN -> LTL) \\e[0;43mto be implemented\\e[0m"
+    echo ""
+    echo -e "KB = <TBox, ABox> and <pure future> solver. LTL (TBox|ABox -> QTL1 -> PLTL -> LTL) \\e[0;43mto be implemented\\e[0m"
     exit
 fi
 
