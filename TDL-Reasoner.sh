@@ -29,17 +29,17 @@ if [ $1 == "status" ];
 then
     echo -e "\t \t \\e[0;43m**Status**\\e[0m"
     echo ""
-    echo -e "KB = <TBox, {}> and NuSMV solver. PLTL (QTL1 -> PLTL) is working BUT fails if TBox does not include roles"
+    echo -e "KB = <TBox, {}> and NuSMV solver. PLTL (TBox -> QTL1 -> PLTL) is working BUT fails if TBox does not include roles"
     echo ""
-    echo -e "KB = <TBox, {}> and NuSMV solver. LTL (QTL1 -> QTLN -> LTL) is working BUT fails if TBox does not include roles"
+    echo -e "KB = <TBox, {}> and NuSMV solver. LTL (TBox -> QTL1 -> QTLN -> LTL) is working BUT fails if TBox does not include roles"
     echo ""
-    echo -e "KB = <TBox, ABox> and NuSMV solver. PLTL (QTL1 -> PLTL) is working"
+    echo -e "KB = <TBox, ABox> and NuSMV solver. PLTL (TBox|ABox -> QTL1 -> PLTL) is working"
     echo ""
-    echo -e "KB = <TBox, ABox> and NuSMV solver. LTL (QTL1 -> QTLN -> LTL) to be implemented (BUG)"
+    echo -e "KB = <TBox, ABox> and NuSMV solver. LTL (TBox|ABox -> QTL1 -> QTLN -> LTL) is failing -> BUG"
     echo ""
-    echo -e "KB = <TBox, {}> and Aalta solver. LTL (QTL1 -> QTLN -> LTL) is working BUT fails if TBox does not include roles"
+    echo -e "KB = <TBox, {}> and Aalta solver. LTL (TBox -> QTL1 -> QTLN -> LTL) is working BUT fails if TBox does not include roles"
     echo ""
-    echo -e "KB = <TBox, ABox> and Aalta solver. LTL (QTL1 -> QTLN -> LTL) to be implemented (BUG)"
+    echo -e "KB = <TBox, ABox> and Aalta solver. LTL (TBox|ABox -> QTL1 -> QTLN -> LTL) is failing -> BUG"
     exit
 fi
 
@@ -70,13 +70,11 @@ then
     echo -e "\t \t - 'true': \t TDL-Lite -> QTL1 -> QTL Pure Future -> LTL"
     echo -e "\t \t - 'false': \t TDL-Lite -> QLT1 -> PLTL"
     echo ""
-    echo -e "\\e[0;43mTODO:\\e[0m"
+    echo -e "\\e[0;43mUpdated TODO:\\e[0m"
     echo ""
-    echo -e "\t - BUG 1: Checking SAT TBox and ABox LTL pure future is not working (both solvers)"
-    echo -e "\t - BUG 2: Checking SAT TBox and Empty ABox if TBox does not include roles outs pointer null"
+    echo -e "\t - BUG 1: Checking SAT TBox and Empty ABox if TBox does not include roles outs pointer null"
     echo ""
-    echo -e "\t - Checking SAT TBox and ABox LTL pure future. Currently only works for PTLT and NuSMV"
-    echo -e "\t - We have to review the NuXMV options. Currently, bmc "
+    echo -e "\t - We have to review the NuXMV options. Currently, dynamic "
     echo -e "\t - Add more solvers: pltl (tableaux-based) | TRP++ (temporal resolution)"
     exit
 fi
@@ -124,13 +122,15 @@ if [ $2 -eq 1 ];
 then
     echo -e "\\e[0;41mSolver selected: NuSMV\\e[0m"
 
-    echo -e "\\e[0;42mPlease, enter true|false to give a pure future or a pltl formulae to NuSMV\\e[0m"
+    echo -e "\\e[0;42mPlease, enter true|false to give a pure future (true) or a pltl (false) formulae to NuSMV\\e[0m"
 
     read purefuture
 
     if [ $purefuture = true ];
     then
-       java -cp t-crowd-cli-4.0.0-SNAPSHOT.jar it.gilia.tcrowd.cli.TCrowd TBoxABoxSatLTL -t "${1}tbox.json" -a "${1}abox.json" -s NuSMV 
+       echo -e "\\e[0;42mTo be checked\\e[0m"
+       exit
+       #java -cp t-crowd-cli-4.0.0-SNAPSHOT.jar it.gilia.tcrowd.cli.TCrowd TBoxABoxSatLTL -t "${1}tbox.json" -a "${1}abox.json" -s NuSMV 
 
     else
        if [ $purefuture = false ];
@@ -145,7 +145,7 @@ then
     file="${1}tcrowdOut.smv"
     if [ -f "$file" ];
     then
-	    ./solvers/NuSMV/NuSMV -dcx -dynamic "${1}tcrowdOut.smv"
+	    ./solvers/NuSMV/NuSMV -dcx -bmc -bmc_length 11 "${1}tcrowdOut.smv"
     else
 	    echo "$file not found."
         exit
@@ -164,6 +164,7 @@ else
     
     	if [ -f "$file" ];
     	then
+    		cat "${1}tcrowdOut.aalta"
 	  		./solvers/Aalta/aalta cat "${1}tcrowdOut.aalta"
 
     	else
