@@ -130,9 +130,17 @@ then
 
     if [ $purefuture = true ];
     then
-       echo -e "\\e[0;42mTo be checked\\e[0m"
-       exit
-       #java -cp t-crowd-cli-4.0.0-SNAPSHOT.jar it.gilia.tcrowd.cli.TCrowd TBoxABoxSatLTL -t "${1}tbox.json" -a "${1}abox.json" -s NuSMV 
+       echo -e "\\e[0;42mTo be checked - THIS IS AN EXPERIMENTAL FEATURE!\\e[0m"
+       #exit
+       echo "Do you want to continue? (Y|N)"
+       read yesno
+
+       if [ $yesno == "Y" -o $yesno == "y" ];
+       then
+            java -cp t-crowd-cli-4.0.0-SNAPSHOT.jar it.gilia.tcrowd.cli.TCrowd TBoxABoxSatLTL -t "${1}tbox.json" -a "${1}abox.json" -s NuSMV
+       else
+            exit
+       fi 
 
     else
        if [ $purefuture = false ];

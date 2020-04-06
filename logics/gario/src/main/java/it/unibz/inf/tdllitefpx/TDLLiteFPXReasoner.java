@@ -286,6 +286,10 @@ public class TDLLiteFPXReasoner {
 		
 		TDLLiteFPXConverter conv = new TDLLiteFPXConverter(t);
 		Formula qtl = conv.getFormula();
+		qtl = qtl.makeTemporalStrict();	
+		
+		if(verbose)
+			(new LatexDocumentCNF(qtl)).toFile(prefix+"qtl.tex");
 		
 		Formula qtl_N;
 		
@@ -323,7 +327,7 @@ public class TDLLiteFPXReasoner {
 		}
 		
 		if(verbose)
-			(new LatexDocumentCNF(qtlABox)).toFile(prefix+"qtl.tex");
+			(new LatexDocumentCNF(qtlABox)).toFile(prefix+"qtlNWithABox.tex");
 
 		Formula ltl = qtlABox.makePropositional();
 			
