@@ -197,9 +197,9 @@ public class TDLLiteFPXConverter {
 		
 		/* A reduced version (with less modal operators) : 
 		 * 		
-		 *  with epsilon'(S) = (\box \forall x ((E1S(x)-> \box pS ) /\ pinvS E1SInv(x) -> E1S(ds)))
+		 *  with epsilon'(S) = (\box \forall x ((E1S(x)-> \box pS ))) /\ (pinvS E1SInv(x) -> E1S(ds))
 		 * 		
-		 * 	epsilon''(S) =(\box \forall x ((E1SInv(x)-> \box pSinv ) /\ pS -> E1SInv(dsinv)))
+		 * 	epsilon''(S) =(\box \forall x (E1SInv(x)-> \box pSinv )) /\ (pS -> E1SInv(dsinv))
 		 */
 		ConjunctiveFormula eps1 = new ConjunctiveFormula();
 		ConjunctiveFormula eps2 = new ConjunctiveFormula();
@@ -225,16 +225,16 @@ public class TDLLiteFPXConverter {
 				fE1SInv_ds.substitute(x, dsinv);
 				
 				
-				eps1.add(new ImplicationFormula(
+				eps1.add(new Always(new ImplicationFormula(
 								conceptToFormula(E1S), 
-								new Always(pS)));
+								new Always(pS))));
 				eps1.add(new ImplicationFormula(
 								pinvS,
 								fE1S_ds));
 				
-				eps2.add(new ImplicationFormula(
+				eps2.add(new Always(new ImplicationFormula(
 						conceptToFormula(E1SInv), 
-						new Always(pinvS)));
+						new Always(pinvS))));
 				eps2.add(new ImplicationFormula(
 						pS,
 						fE1SInv_ds));
@@ -247,8 +247,8 @@ public class TDLLiteFPXConverter {
 	private Formula getEpsilon(Role s){
 		 /*
 		  *  epsilon(S) =
-		  *  A. (\box \forall x ((E1S(x)-> \box pS ) /\ pinvS -> E1S(ds)))
-		  *  B. (\box \forall x ((E1SInv(x)-> \box pSinv ) /\ pS -> E1SInv(dsinv)))
+		  *  A. (\box \forall x ((E1S(x)-> \box pS )) /\ (pinvS -> E1S(ds))
+		  *  B. (\box \forall x ((E1SInv(x)-> \box pSinv )) /\ (pS -> E1SInv(dsinv))
 		  */
 		 
 		Proposition pS = (Proposition) a.get("p"+s.toString(),0);
@@ -270,18 +270,18 @@ public class TDLLiteFPXConverter {
 		
 		UniversalFormula fA = new UniversalFormula(
 				new ConjunctiveFormula(
-						new ImplicationFormula(
+						new Always(new ImplicationFormula(
 								conceptToFormula(E1S), 
-								new Always(pS)),
+								new Always(pS))),
 						new ImplicationFormula(
 								pinvS, 
 								fE1S_ds)),
 				x);
 		UniversalFormula fB = new UniversalFormula(
 				new ConjunctiveFormula(
-						new ImplicationFormula(
+						new Always(new ImplicationFormula(
 								conceptToFormula(E1SInv), 
-								new Always(pinvS)),
+								new Always(pinvS))),
 						new ImplicationFormula(
 								pS, 
 								fE1SInv_ds)),
