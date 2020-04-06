@@ -90,6 +90,7 @@ find . -name "*.smv" -type f -delete
 find . -name "*.aalta" -type f -delete
 find . -name "*.tex" -type f -delete
 find . -name "*.pltl" -type f -delete
+find . -name "*.ltl" -type f -delete
 
 echo "Current example directory: "
 ls -l $1
@@ -206,8 +207,28 @@ else
         	    exit
     	    fi
    	    else
-            echo "Invalid solver."
-            exit
+######### if solver is TRP++UC
+            if [ $2 -eq 4 ];
+            then
+                echo -e "\\e[0;42mSolver selected: TRP++UC\\e[0m"
+           
+                java -cp t-crowd-cli-4.0.0-SNAPSHOT.jar it.gilia.tcrowd.cli.TCrowd TBoxABoxSatLTL -t "${1}tbox.json" -a "${1}abox.json" -s TRP++UC
+
+		        file="${1}tcrowdOut.ltl"
+    
+    	        if [ -f "$file" ];
+    	        then
+    		        cat "${1}tcrowdOut.ltl"
+	  		        ./solvers/TRP++UC/trp++uc -f ltl $file
+
+    	        else
+	    	        echo "$file not found."
+        	        exit
+    	        fi
+   	        else
+                echo "Invalid solver."
+                exit
+            fi
         fi
     fi    
 fi
