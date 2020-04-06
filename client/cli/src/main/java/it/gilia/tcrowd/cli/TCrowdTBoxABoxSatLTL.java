@@ -51,7 +51,7 @@ description = " TBox|ABox -> QTL1 -> QTLN -> LTL "
 				+ "\n"
 				+ "\t \t  \t * If ABox is empty, only TBox is checked for SAT"
 				+ "\n"
-        		+ "\t \t \t * option -s requires entering a solver name (NuSMV|Aalta)")
+        		+ "\t \t \t * option -s requires entering a solver name (NuSMV|Aalta|pltl)")
 
 public class TCrowdTBoxABoxSatLTL extends TCrowdEncodingERvtRelatedCommand {
 	
@@ -71,7 +71,7 @@ public class TCrowdTBoxABoxSatLTL extends TCrowdEncodingERvtRelatedCommand {
 
         try {
             Objects.requireNonNull(tModel, "JSON ERvt temporal model file must not be null");
-            Objects.requireNonNull(solver, "Solver (NuSMV|Aalta) must be specified");
+            Objects.requireNonNull(solver, "Solver (NuSMV|Aalta|pltl) must be specified");
             Objects.requireNonNull(tData, "JSON temporal data file must not be null");
     		
             InputStream is = new FileInputStream(tModel);

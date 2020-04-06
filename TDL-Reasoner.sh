@@ -57,14 +57,16 @@ then
 #    echo -e "\t - (optional) it could contain a Query file named 'query.txt'"
     echo ""
     echo -e "[solver number]: "
-    echo -e "\t - 1: NuSMV solver (model checking reduction - pure future or ptlt formulae)"
+    echo -e "\t - 1: NuSMV solver (model checking reduction - pure future or past formulae)"
     echo -e "\t - 2: Aalta solver (model checking reduction - pure future formulae)"
+    echo -e "\t - 3: pltl solver (tableaux - pure future formulae)"
     echo -e "\t - solver number is required"
     echo ""
     echo -e "\\e[0;42mExamples of use:\\e[0m"
     echo ""
     echo -e "\t \t (a) example NuSMV: './TDL-Reasoner.bash examples/adultWithABox/ 1'" 
-    echo -e "\t \t (b) example Aalta: './TDL-Reasoner.bash examples/adultWithABox/ 2'"  
+    echo -e "\t \t (b) example Aalta: './TDL-Reasoner.bash examples/adultWithABox/ 2'"
+    echo -e "\t \t (b) example pltl: './TDL-Reasoner.bash examples/adultWithABox/ 3'"  
     echo "" 
     echo -e "\t - Users are required to enter 'true' or 'false' to choose using" 
     echo -e "\t only future operators or past operators"
@@ -77,7 +79,7 @@ then
     echo -e "\t - BUG 1: Checking SAT TBox and Empty ABox if TBox does not include roles outs pointer null"
     echo ""
     echo -e "\t - We have to review the NuXMV options. Currently, dynamic "
-    echo -e "\t - Add more solvers: pltl (tableaux-based) | TRP++ (temporal resolution)"
+    echo -e "\t - Add more solvers: TRP++ (temporal resolution)"
     exit
 fi
 
@@ -87,6 +89,7 @@ fi
 find . -name "*.smv" -type f -delete
 find . -name "*.aalta" -type f -delete
 find . -name "*.tex" -type f -delete
+find . -name "*.pltl" -type f -delete
 
 echo "Current example directory: "
 ls -l $1
@@ -182,8 +185,30 @@ else
         	exit
     	fi
    	else
-       echo "Invalid solver."
-       exit
+
+
+######### if solver is pltl
+        if [ $2 -eq 3 ];
+        then
+            echo -e "\\e[0;42mSolver selected: pltl\\e[0m"
+           
+            java -cp t-crowd-cli-4.0.0-SNAPSHOT.jar it.gilia.tcrowd.cli.TCrowd TBoxABoxSatLTL -t "${1}tbox.json" -a "${1}abox.json" -s pltl
+
+		    file="${1}tcrowdOut.pltl"
+    
+    	    if [ -f "$file" ];
+    	    then
+    		    cat "${1}tcrowdOut.pltl"
+	  		    ./solvers/pltl/pltl/pltl " < " ${1}tcrowdOut.pltl
+
+    	    else
+	    	    echo "$file not found."
+        	    exit
+    	    fi
+   	    else
+            echo "Invalid solver."
+            exit
+        fi
     fi    
 fi
 

@@ -11,6 +11,7 @@ import it.unibz.inf.qtl1.output.LatexDocumentCNF;
 
 import it.unibz.inf.qtl1.output.NuSMVOutput;
 import it.unibz.inf.qtl1.output.aalta.AaltaOutput;
+import it.unibz.inf.qtl1.output.pltl.PltlOutput;
 
 import it.unibz.inf.qtl1.terms.Constant;
 import it.unibz.inf.qtl1.terms.Term;
@@ -202,6 +203,11 @@ public class TDLLiteFPXReasoner {
 					System.out.println("Solver" + Constants.Aalta);
 					(new AaltaOutput(ltl)).toFile(prefix+".aalta");
 				break;
+				
+				case Constants.pltl:
+					System.out.println("Solver" + Constants.pltl);
+					(new PltlOutput(ltl)).toFile(prefix+".pltl");
+				break;
 			
 				default:
 					break;
@@ -346,6 +352,11 @@ public class TDLLiteFPXReasoner {
 			case Constants.Aalta:
 				System.out.println("Solver" + Constants.Aalta);
 				(new AaltaOutput(ltl)).toFile(prefix+".aalta");
+			break;
+			
+			case Constants.pltl:
+				System.out.println("Solver" + Constants.pltl);
+				(new PltlOutput(ltl)).toFile(prefix+".pltl");
 			break;
 			
 			default:
