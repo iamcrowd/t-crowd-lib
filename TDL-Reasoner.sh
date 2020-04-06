@@ -199,7 +199,7 @@ else
     	    if [ -f "$file" ];
     	    then
     		    cat "${1}tcrowdOut.pltl"
-	  		    ./solvers/pltl/pltl/pltl " < " ${1}tcrowdOut.pltl
+	  		    ./solvers/pltl/pltl/pltl < $file
 
     	    else
 	    	    echo "$file not found."
