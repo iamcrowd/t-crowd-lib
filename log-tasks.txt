@@ -1,4 +1,0 @@
-25/10
-
-I completed JAR implementation with a client to run Gario legacy code.
-Now we can run each library feature independently.
