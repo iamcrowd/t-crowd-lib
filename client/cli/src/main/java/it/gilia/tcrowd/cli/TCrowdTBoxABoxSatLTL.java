@@ -55,6 +55,11 @@ description = " TBox|ABox -> QTL1 -> QTLN -> LTL "
 
 public class TCrowdTBoxABoxSatLTL extends TCrowdEncodingERvtRelatedCommand {
 	
+    @Option(type = OptionType.COMMAND, name = {"-t", "--tmodel"}, title = "ERvt temporal model",
+            description = "JSON file input containing an ERvt temporal model")
+    @BashCompletion(behaviour = CompletionBehaviour.FILENAMES)
+    String tModel;
+    
 	@Option(type = OptionType.COMMAND, name = {"-a", "--tdata"}, title = "Temporal Data",
 			description = "JSON file input containing temporal data")
 			@BashCompletion(behaviour = CompletionBehaviour.FILENAMES)

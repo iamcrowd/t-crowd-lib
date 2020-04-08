@@ -31,6 +31,11 @@ import org.apache.commons.io.IOUtils;
         description = "Encode both ERvt model and Temporal data as a KB <TBox,ABox> in TDL DL-Litefpx.")
 public class TCrowdTDLLiteFPX extends TCrowdEncodingERvtRelatedCommand {
 	
+    @Option(type = OptionType.COMMAND, name = {"-t", "--tmodel"}, title = "ERvt temporal model",
+            description = "JSON file input containing an ERvt temporal model")
+    @BashCompletion(behaviour = CompletionBehaviour.FILENAMES)
+    String tModel;
+	
 	@Option(type = OptionType.COMMAND, name = {"-a", "--tdata"}, title = "Temporal Data",
 			description = "JSON file input containing temporal data")
 	@BashCompletion(behaviour = CompletionBehaviour.FILENAMES)

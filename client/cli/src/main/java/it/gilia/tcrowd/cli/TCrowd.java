@@ -44,13 +44,15 @@ public class TCrowd {
                         TCrowdVersion.class,
                         TCrowdHelp.class,
                         TCrowdTDLLiteFPX.class,
-                        TCrowdQTLZ.class,
+                        /* TCrowdQTLZ.class,
                         TCrowdQTLN.class,
                         TCrowdLTL.class,
-                        TCrowdAboxSat.class,
+                        TCrowdAboxSat.class, */
                         TCrowdTBoxABoxSatLTL.class,
                         TCrowdTBoxABoxSatPLTL.class,
-                        TCrowdTBoxConceptSat.class
+                        TCrowdTBoxConceptSat.class,
+                        TCrowdRandomTBoxABoxSatLTL.class,
+                        TCrowdRandomTBoxABoxSatPLTL.class
                 );
 
 /**

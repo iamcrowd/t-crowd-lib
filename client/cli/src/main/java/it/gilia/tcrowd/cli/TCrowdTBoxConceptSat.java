@@ -64,6 +64,11 @@ description = "\t \t \t Encode ERvt model into LTL|PLTL formulae (ABox not consi
 
 public class TCrowdTBoxConceptSat extends TCrowdEncodingERvtRelatedCommand {
 	
+    @Option(type = OptionType.COMMAND, name = {"-t", "--tmodel"}, title = "ERvt temporal model",
+            description = "JSON file input containing an ERvt temporal model")
+    @BashCompletion(behaviour = CompletionBehaviour.FILENAMES)
+    String tModel;
+    
 	@Option(type = OptionType.COMMAND, name = {"-pf", "--purefuture"}, title = "Pure Future Operators",
 			description = "Flag to set reduction to QTL1 using only pure future operators")
 			@BashCompletion(behaviour = CompletionBehaviour.NONE)
