@@ -56,6 +56,7 @@ public class TCrowdRandomTBoxABoxSatPLTL extends TCrowdRandomTDLRelatedCommand {
 	
 	@Option(type = OptionType.COMMAND, name = {"-a", "--tdata"}, title = "Temporal Data",
 			description = "JSON file input containing temporal data")
+	@Required
 	@BashCompletion(behaviour = CompletionBehaviour.FILENAMES)
 	String tData;
 	
@@ -89,7 +90,7 @@ public class TCrowdRandomTBoxABoxSatPLTL extends TCrowdRandomTDLRelatedCommand {
                 String pathToTemp = pathMan.getPathToTmp(tData);
         		String fileNameOut = pathToTemp+"random";
                    	    
-                if (line == null) { /*Check only for TBox satisfiability */
+                if (line == null) { /*Check only for TBox satisfiability if ABox is empty*/
                 	    TDLLiteFPXReasoner.buildCheckSatisfiability(
                    	    		tbox,
                    	    		true, 

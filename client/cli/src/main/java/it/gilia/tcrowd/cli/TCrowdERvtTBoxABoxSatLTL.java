@@ -43,8 +43,8 @@ import java.io.FileReader;
 import java.io.IOException;
 
 
-@Command(name = "TBoxABoxSatLTL",
-description = " TBox|ABox -> QTL1 -> QTLN -> LTL "
+@Command(name = "ERvtTBoxABoxSatLTL",
+description = " ERvt -> TBox|ABox -> QTL1 -> QTLN -> LTL "
 				+ "\n"
 				+ "\t \t \t Encode both ERvt model and Temporal Data into a LTL Pure Future formulae and return a LTL file"
 				+ "\n \t \t \t" + "to feed sat solvers"
@@ -53,23 +53,25 @@ description = " TBox|ABox -> QTL1 -> QTLN -> LTL "
 				+ "\n"
         		+ "\t \t \t * option -s requires entering a solver name (NuSMV|Aalta|pltl|TRP++UC)")
 
-public class TCrowdTBoxABoxSatLTL extends TCrowdEncodingERvtRelatedCommand {
+public class TCrowdERvtTBoxABoxSatLTL extends TCrowdEncodingERvtRelatedCommand {
 	
     @Option(type = OptionType.COMMAND, name = {"-t", "--tmodel"}, title = "ERvt temporal model",
             description = "JSON file input containing an ERvt temporal model")
+	@Required
     @BashCompletion(behaviour = CompletionBehaviour.FILENAMES)
     String tModel;
     
 	@Option(type = OptionType.COMMAND, name = {"-a", "--tdata"}, title = "Temporal Data",
 			description = "JSON file input containing temporal data")
-			@BashCompletion(behaviour = CompletionBehaviour.FILENAMES)
-			String tData;
+	@Required
+	@BashCompletion(behaviour = CompletionBehaviour.FILENAMES)
+	String tData;
 	
 	@Option(type = OptionType.COMMAND, name = {"-s", "--solver"}, title = "solver",
 			description = "Solver (NuSMV|Aalta)")
-			@Required
-			@BashCompletion(behaviour = CompletionBehaviour.FILENAMES)
-			String solver;
+	@Required
+	@BashCompletion(behaviour = CompletionBehaviour.NONE)
+	String solver;
 
     @Override
     public void run() {
@@ -106,7 +108,7 @@ public class TCrowdTBoxABoxSatLTL extends TCrowdEncodingERvtRelatedCommand {
                     
                     if (td == null) {
                         throw new NullPointerException("Cannot find resource file " + tData);
-                    }else {
+                    } else {
                     	BufferedReader reader = new BufferedReader(new FileReader(tData));
                     	String line = reader.readLine();
                     	

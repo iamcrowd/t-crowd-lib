@@ -48,9 +48,9 @@ public class TCrowd {
                         TCrowdQTLN.class,
                         TCrowdLTL.class,
                         TCrowdAboxSat.class, */
-                        TCrowdTBoxABoxSatLTL.class,
-                        TCrowdTBoxABoxSatPLTL.class,
-                        TCrowdTBoxConceptSat.class,
+                        TCrowdERvtTBoxABoxSatLTL.class,
+                        TCrowdERvtTBoxABoxSatPLTL.class,
+                        TCrowdERvtTBoxConceptSat.class,
                         TCrowdRandomTBoxABoxSatLTL.class,
                         TCrowdRandomTBoxABoxSatPLTL.class
                 );

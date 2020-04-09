@@ -4,6 +4,7 @@ import com.github.rvesse.airline.annotations.Command;
 import com.github.rvesse.airline.annotations.Option;
 import com.github.rvesse.airline.annotations.OptionType;
 import com.github.rvesse.airline.annotations.help.BashCompletion;
+import com.github.rvesse.airline.annotations.restrictions.Required;
 import com.github.rvesse.airline.help.cli.bash.CompletionBehaviour;
 
 import it.unibz.inf.tdllitefpx.ExampleTDL;
@@ -27,17 +28,19 @@ import java.io.FileInputStream;
 import org.apache.commons.io.IOUtils;
 
 
-@Command(name = "tdllitefpx",
+@Command(name = "ERvtTBoxTDLLiteFPX",
         description = "Encode both ERvt model and Temporal data as a KB <TBox,ABox> in TDL DL-Litefpx.")
 public class TCrowdTDLLiteFPX extends TCrowdEncodingERvtRelatedCommand {
 	
     @Option(type = OptionType.COMMAND, name = {"-t", "--tmodel"}, title = "ERvt temporal model",
             description = "JSON file input containing an ERvt temporal model")
+	@Required
     @BashCompletion(behaviour = CompletionBehaviour.FILENAMES)
     String tModel;
 	
 	@Option(type = OptionType.COMMAND, name = {"-a", "--tdata"}, title = "Temporal Data",
 			description = "JSON file input containing temporal data")
+	@Required
 	@BashCompletion(behaviour = CompletionBehaviour.FILENAMES)
 	String tData;
 

@@ -11,26 +11,37 @@ abstract class TCrowdRandomTDLRelatedCommand implements TCrowdCommand {
    
 	@Option(type = OptionType.COMMAND, name = {"-ltbox", "--lengthTBox"}, title = "Concept Inclusion",
 			description = "Number of Concept Inclusions (CIs) - length of TBox")
-			@BashCompletion(behaviour = CompletionBehaviour.FILENAMES)
-			int ltbox;
+	@Required
+	@BashCompletion(behaviour = CompletionBehaviour.NONE)
+	int ltbox;
+	
 	@Option(type = OptionType.COMMAND, name = {"-n", "--concepts"}, title = "Concepts",
 			description = "Number of Concepts")
-			@BashCompletion(behaviour = CompletionBehaviour.FILENAMES)
-			int n;
+	@Required
+	@BashCompletion(behaviour = CompletionBehaviour.NONE)
+	int n;
+	
 	@Option(type = OptionType.COMMAND, name = {"-lc", "--lengthConcept"}, title = "Length of Concepts",
 			description = "Length of each Concept")
-			@BashCompletion(behaviour = CompletionBehaviour.FILENAMES)
-			int lc;
+	@Required
+	@BashCompletion(behaviour = CompletionBehaviour.NONE)
+	int lc;
+	
 	@Option(type = OptionType.COMMAND, name = {"-qm", "--qMax"}, title = "Cardinality of Roles",
 			description = "Maximum Cardinality of Qualified Roles")
-			@BashCompletion(behaviour = CompletionBehaviour.FILENAMES)
-			int qm;
+	@Required
+	@BashCompletion(behaviour = CompletionBehaviour.NONE)
+	int qm;
+	
 	@Option(type = OptionType.COMMAND, name = {"-pt", "--probTemp"}, title = "Temporal Concepts",
 			description = "Probability of generating Temporal Concepts")
-			@BashCompletion(behaviour = CompletionBehaviour.FILENAMES)
-			int pt;
+	@Required
+	@BashCompletion(behaviour = CompletionBehaviour.NONE)
+	int pt;
+	
 	@Option(type = OptionType.COMMAND, name = {"-pr", "--probRidig"}, title = "Rigid Roles",
 			description = "Probability of generating Rigid Roles")
-			@BashCompletion(behaviour = CompletionBehaviour.FILENAMES)
-			int pr;
+	@Required
+	@BashCompletion(behaviour = CompletionBehaviour.NONE)
+	int pr;
 }

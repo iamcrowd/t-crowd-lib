@@ -43,32 +43,56 @@ import java.io.FileReader;
 import java.io.IOException;
 
 
-@Command(name = "TBoxABoxSatPLTL",
-description = " TBox|ABox -> QTL1 -> PLTL (only NuSMV)"
-			  + "\n"
-			  + "\t \t \t Encode both ERvt model and Temporal Data into PLTL formulae and return a PLTL file for Sat checking"
-			  + "\n"
-			  + "\t \t \t * If ABox is empty, only TBox is checked for SAT")
+@Command(name = "ERvtTBoxConceptSat",
+description = "\t \t \t Encode ERvt model into LTL|PLTL formulae (ABox not considering here) and return"
+				+ "\n "
+				+ "\t \t \t a file to feed a sat solver"
+				+ "\n"
+        		+ "\t \t \t * the query is given as an input file. "
+				+ "\n"
+        		+ "\t \t \t * If query file is empty, KB is only checked for satisifiability. KB = <TBox,{}> " 
+        		+ "\n"
+        		+ "\t \t \t * Otherwise, query must be a concept to be checked."
+        		+ "\n"
+        		+ "\t \t \t * Flag pf is optional to reduce to pure future QTL1. "
+        		+ "\n"
+        		+ "\t \t \t * If flag is not specified, QTL1 could include some past operators"
+        		+ "\n"
+        		+ "\t \t \t * option -s requires entering a solver name (NuSMV|Aalta) "
+        		+ "\n"
+        		+ "\t \t \t * if pf is not specified, only NuSMV files will be generated")
 
-public class TCrowdTBoxABoxSatPLTL extends TCrowdEncodingERvtRelatedCommand {
+public class TCrowdERvtTBoxConceptSat extends TCrowdEncodingERvtRelatedCommand {
 	
     @Option(type = OptionType.COMMAND, name = {"-t", "--tmodel"}, title = "ERvt temporal model",
             description = "JSON file input containing an ERvt temporal model")
     @BashCompletion(behaviour = CompletionBehaviour.FILENAMES)
     String tModel;
+    
+	@Option(type = OptionType.COMMAND, name = {"-pf", "--purefuture"}, title = "Pure Future Operators",
+			description = "Flag to set reduction to QTL1 using only pure future operators")
+	@BashCompletion(behaviour = CompletionBehaviour.NONE)
+	boolean pf;
 	
-	@Option(type = OptionType.COMMAND, name = {"-a", "--tdata"}, title = "Temporal Data",
-			description = "JSON file input containing temporal data")
+	@Option(type = OptionType.COMMAND, name = {"-q", "--query"}, title = "query file",
+			description = "Plain Query file (.txt)")
+	@Required
 	@BashCompletion(behaviour = CompletionBehaviour.FILENAMES)
-	String tData;
+	String queryF;
 	
+	@Option(type = OptionType.COMMAND, name = {"-s", "--solver"}, title = "solver",
+			description = "Solver (NuSMV|Aalta)")
+	@Required
+	@BashCompletion(behaviour = CompletionBehaviour.NONE)
+	String solver;
 
     @Override
     public void run() {
 
         try {
             Objects.requireNonNull(tModel, "JSON ERvt temporal model file must not be null");
-            Objects.requireNonNull(tData, "JSON temporal data file must not be null");
+            Objects.requireNonNull(queryF, "Query file must not be null");
+            Objects.requireNonNull(solver, "Solver (NuSMV|Aalta) must be specified");
     		
             InputStream is = new FileInputStream(tModel);
             
@@ -87,39 +111,41 @@ public class TCrowdTBoxABoxSatPLTL extends TCrowdEncodingERvtRelatedCommand {
                     
                     String jsonTxt = IOUtils.toString(is, "UTF-8");
                     System.out.println(jsonTxt);
+
                     JSONObject objectModel = new JSONObject(jsonTxt);
             		
             		DefaultStrategy strategy = new DefaultStrategy();
                     TBox tbox = strategy.to_dllitefpx(objectModel);
                     
-                    InputStream td = new FileInputStream(tData);
+                    InputStream query = new FileInputStream(queryF);
                     
-                    if (td == null) {
-                        throw new NullPointerException("Cannot find resource file " + tData);
-                    }else {
-                    	BufferedReader reader = new BufferedReader(new FileReader(tData));
+                    if (query == null) {
+                        throw new NullPointerException("Cannot find query file " + query);
+                    }else{
+
+                    	BufferedReader reader = new BufferedReader(new FileReader(queryF));
                     	String line = reader.readLine();
                    	    
-                    	if (line == null) { /*Check only for TBox satisfiability */
+                    	if (line == null) { /*Check for TBox satisfiability */
                     	    TDLLiteFPXReasoner.buildCheckSatisfiability(
                     	    		tbox,
                     	    		true, 
                     	    		fileNameOut,
-                    	    		false,
-                    	    		"NuSMV");
+                    	    		pf,
+                    	    		solver);
                     	    
-                    	}else { /*Check for TBox and ABox satisfiability */
-                    		String jsonTxtData = IOUtils.toString(td, "UTF-8");
-                        	System.out.println(jsonTxtData);
-                        	JSONObject objectData = new JSONObject(jsonTxtData);
+                    	}else { /*Check for Concept satisfiability.*/
+                    		System.out.println(line);
 
-                        	ABox abox = strategy.to_dllitefpxABox(objectData);
-                        	    
-                        	TDLLiteFPXReasoner.buildCheckABoxtSatisfiability(
-                        			tbox,
-                        			true, 
-                        			fileNameOut,
-                        			abox);
+                    		Concept acpt = strategy.giveMeAconcept(line); 
+                    		
+                    		TDLLiteFPXReasoner.buildCheckConceptSatisfiability(
+                    				tbox,
+                    				acpt,
+                    				true, 
+                    				fileNameOut,
+                    				pf,
+                    				solver);
                     	}
                     }
                	}
