@@ -31,17 +31,12 @@ then
     echo ""
     echo -e "KB = <TBox, {}> and NuSMV solver. PLTL (TBox -> QTL1 -> PLTL) \\e[0;42mis working BUT fails if TBox does not include roles\\e[0m"
     echo ""
-    echo -e "KB = <TBox, {}> and NuSMV solver. LTL (TBox -> QTL1 -> QTLN -> LTL) \\e[0;42mis working BUT fails if TBox does not include roles\\e[0m"
+    echo -e "KB = <TBox, {}> and (NuSMV|Aalta|pltl|TRP++UC) solver. LTL (TBox -> QTL1 -> QTLN -> LTL) \\e[0;42mis working BUT fails if TBox does not include roles\\e[0m"
     echo ""
     echo -e "KB = <TBox, ABox> and NuSMV solver. PLTL (TBox|ABox -> QTL1 -> PLTL) \\e[0;42mis working\\e[0m"
     echo ""
-    echo -e "KB = <TBox, ABox> and NuSMV solver. LTL (TBox|ABox -> QTL1 -> QTLN -> LTL) \\e[0;43mto be implemented\\e[0m"
+    echo -e "KB = <TBox, ABox> and (NuSMV|Aalta|pltl|TRP++UC) solver. LTL (TBox|ABox -> QTL1 -> QTLN -> LTL) \\e[0;43m is working \\e[0m"
     echo ""
-    echo -e "KB = <TBox, {}> and Aalta solver. LTL (TBox -> QTL1 -> QTLN -> LTL) \\e[0;42mis working BUT fails if TBox does not include roles\\e[0m"
-    echo ""
-    echo -e "KB = <TBox, ABox> and Aalta solver. LTL (TBox|ABox -> QTL1 -> QTLN -> LTL) \\e[0;43mto be implemented\\e[0m"
-    echo ""
-    echo -e "KB = <TBox, ABox> and <pure future> solver. LTL (TBox|ABox -> QTL1 -> PLTL -> LTL) \\e[0;43mto be implemented\\e[0m"
     exit
 fi
 
@@ -60,13 +55,18 @@ then
     echo -e "\t - 1: NuSMV solver (model checking reduction - pure future or past formulae)"
     echo -e "\t - 2: Aalta solver (model checking reduction - pure future formulae)"
     echo -e "\t - 3: pltl solver (tableaux - pure future formulae)"
+    echo -e "\t - 4: TRP++UC solver (temporal resolution - pure future formulae)"
+    echo -e "\t - 5: NuXMV solver (temporal resolution - pure future formulae)"
+    
     echo -e "\t - solver number is required"
     echo ""
     echo -e "\\e[0;42mExamples of use:\\e[0m"
     echo ""
     echo -e "\t \t (a) example NuSMV: './TDL-Reasoner.bash examples/adultWithABox/ 1'" 
     echo -e "\t \t (b) example Aalta: './TDL-Reasoner.bash examples/adultWithABox/ 2'"
-    echo -e "\t \t (b) example pltl: './TDL-Reasoner.bash examples/adultWithABox/ 3'"  
+    echo -e "\t \t (b) example pltl: './TDL-Reasoner.bash examples/adultWithABox/ 3'"
+    echo -e "\t \t (b) example TRP++UC: './TDL-Reasoner.bash examples/adultWithABox/ 4'"
+    echo -e "\t \t (b) example NuXMV: './TDL-Reasoner.bash examples/adultWithABox/ 5'"  
     echo "" 
     echo -e "\t - Users are required to enter 'true' or 'false' to choose using" 
     echo -e "\t only future operators or past operators"
@@ -79,7 +79,6 @@ then
     echo -e "\t - BUG 1: Checking SAT TBox and Empty ABox if TBox does not include roles outs pointer null"
     echo ""
     echo -e "\t - We have to review the NuXMV options. Currently, dynamic "
-    echo -e "\t - Add more solvers: TRP++ (temporal resolution)"
     exit
 fi
 
@@ -91,6 +90,7 @@ find . -name "*.aalta" -type f -delete
 find . -name "*.tex" -type f -delete
 find . -name "*.pltl" -type f -delete
 find . -name "*.ltl" -type f -delete
+
 
 echo "Current example directory: "
 ls -l $1
@@ -141,7 +141,7 @@ then
 
        if [ $yesno == "Y" -o $yesno == "y" ];
        then
-            java -cp t-crowd-cli-4.0.0-SNAPSHOT.jar it.gilia.tcrowd.cli.TCrowd TBoxABoxSatLTL -t "${1}tbox.json" -a "${1}abox.json" -s NuSMV
+            java -cp t-crowd-cli-4.0.0-SNAPSHOT.jar it.gilia.tcrowd.cli.TCrowd ERvtTBoxABoxSatLTL -t "${1}tbox.json" -a "${1}abox.json" -s NuSMV
        else
             exit
        fi 
@@ -149,7 +149,7 @@ then
     else
        if [ $purefuture = false ];
        then
-          java -cp t-crowd-cli-4.0.0-SNAPSHOT.jar it.gilia.tcrowd.cli.TCrowd TBoxABoxSatPLTL -t "${1}tbox.json" -a "${1}abox.json"
+          java -cp t-crowd-cli-4.0.0-SNAPSHOT.jar it.gilia.tcrowd.cli.TCrowd ERvtTBoxABoxSatPLTL -t "${1}tbox.json" -a "${1}abox.json"
        else
     	   echo "You must enter true|false"
            exit
@@ -172,7 +172,7 @@ else
     then
         echo -e "\\e[0;42mSolver selected: Aalta v2.0\\e[0m"
            
-        java -cp t-crowd-cli-4.0.0-SNAPSHOT.jar it.gilia.tcrowd.cli.TCrowd TBoxABoxSatLTL -t "${1}tbox.json" -a "${1}abox.json" -s Aalta 
+        java -cp t-crowd-cli-4.0.0-SNAPSHOT.jar it.gilia.tcrowd.cli.TCrowd ERvtTBoxABoxSatLTL -t "${1}tbox.json" -a "${1}abox.json" -s Aalta 
 
 		file="${1}tcrowdOut.aalta"
     
@@ -193,7 +193,7 @@ else
         then
             echo -e "\\e[0;42mSolver selected: pltl\\e[0m"
            
-            java -cp t-crowd-cli-4.0.0-SNAPSHOT.jar it.gilia.tcrowd.cli.TCrowd TBoxABoxSatLTL -t "${1}tbox.json" -a "${1}abox.json" -s pltl
+            java -cp t-crowd-cli-4.0.0-SNAPSHOT.jar it.gilia.tcrowd.cli.TCrowd ERvtTBoxABoxSatLTL -t "${1}tbox.json" -a "${1}abox.json" -s pltl
 
 		    file="${1}tcrowdOut.pltl"
     
@@ -212,7 +212,7 @@ else
             then
                 echo -e "\\e[0;42mSolver selected: TRP++UC\\e[0m"
            
-                java -cp t-crowd-cli-4.0.0-SNAPSHOT.jar it.gilia.tcrowd.cli.TCrowd TBoxABoxSatLTL -t "${1}tbox.json" -a "${1}abox.json" -s TRP++UC
+                java -cp t-crowd-cli-4.0.0-SNAPSHOT.jar it.gilia.tcrowd.cli.TCrowd ERvtTBoxABoxSatLTL -t "${1}tbox.json" -a "${1}abox.json" -s TRP++UC
 
 		        file="${1}tcrowdOut.ltl"
     
@@ -226,8 +226,23 @@ else
         	        exit
     	        fi
    	        else
-                echo "Invalid solver."
-                exit
+   	        	if [ $2 -eq 5 ];
+   	        	then
+   	        		echo -e "\\e[0;42mSolver selected: NuXMV\\e[0m"
+   	        		java -cp t-crowd-cli-4.0.0-SNAPSHOT.jar it.gilia.tcrowd.cli.TCrowd ERvtTBoxABoxSatLTL -t "${1}tbox.json" -a "${1}abox.json" -s NuSMV
+   	        		
+   	        		file="${1}tcrowdOut.smv"
+    				if [ -f "$file" ];
+    				then
+	    				./solvers/NuXMV/NuXMV -dcx -bmc -bmc_length 11 "${1}tcrowdOut.smv"
+    				else
+	    				echo "$file not found."
+        				exit
+    				fi
+   	        	else
+                	echo "Invalid solver."
+                	exit
+                fi
             fi
         fi
     fi    
