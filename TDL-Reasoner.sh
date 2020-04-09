@@ -16,12 +16,12 @@ echo "*                                                    *"
 echo "*                                                    *"
 echo "******************************************************"
 echo ""
-echo "*************FORZA ITALIA!*******************"
+echo "******************FORZA ITALIA!***********************"
 echo ""
 
 if [ $# -eq 0 ]
   then
-    echo "No arguments supplied. Enter './TDL-Reasoner.bash help'"
+    echo "No arguments supplied. Enter './TDL-Reasoner.sh help'"
     exit
 fi
 
@@ -29,13 +29,13 @@ if [ $1 == "status" ];
 then
     echo -e "\t \t \\e[0;43m**Status**\\e[0m"
     echo ""
-    echo -e "KB = <TBox, {}> and NuSMV solver. PLTL (TBox -> QTL1 -> PLTL) \\e[0;42mis working BUT fails if TBox does not include roles\\e[0m"
+    echo -e "KB = <TBox, {}> and NuSMV. PLTL (TBox -> QTL1 -> PLTL) \\e[0;42mis working BUT fails if TBox does not include roles\\e[0m"
     echo ""
-    echo -e "KB = <TBox, {}> and (NuSMV|Aalta|pltl|TRP++UC) solver. LTL (TBox -> QTL1 -> QTLN -> LTL) \\e[0;42mis working BUT fails if TBox does not include roles\\e[0m"
+    echo -e "KB = <TBox, {}> and (NuSMV|Aalta|pltl|TRP++UC). LTL (TBox -> QTL1 -> QTLN -> LTL) \\e[0;42mis working BUT fails if TBox does not include roles\\e[0m"
     echo ""
-    echo -e "KB = <TBox, ABox> and NuSMV solver. PLTL (TBox|ABox -> QTL1 -> PLTL) \\e[0;42mis working\\e[0m"
+    echo -e "KB = <TBox, ABox> and NuSMV. PLTL (TBox|ABox -> QTL1 -> PLTL) \\e[0;42mis working\\e[0m"
     echo ""
-    echo -e "KB = <TBox, ABox> and (NuSMV|Aalta|pltl|TRP++UC) solver. LTL (TBox|ABox -> QTL1 -> QTLN -> LTL) \\e[0;43m is working \\e[0m"
+    echo -e "KB = <TBox, ABox> and (NuSMV|Aalta|pltl|TRP++UC). LTL (TBox|ABox -> QTL1 -> QTLN -> LTL) \\e[0;43m is working \\e[0m"
     echo ""
     exit
 fi
@@ -44,7 +44,7 @@ if [ $1 == "help" ];
 then
     echo -e "\t \t \\e[0;43m**Help me to run**\\e[0m"
     echo ""
-    echo -e "\\e[0;46mcommand:\\e[0m ./TDL-Reasoner.bash [example_folder] [solver number]"
+    echo -e "\\e[0;46mcommand:\\e[0m ./TDL-Reasoner.sh [example_folder] [solver number]"
     echo ""
     echo -e "[example_folder]: " 
     echo -e "\t - (required, not empty) it must contain a TBox file named 'tbox.json'"
@@ -62,11 +62,11 @@ then
     echo ""
     echo -e "\\e[0;42mExamples of use:\\e[0m"
     echo ""
-    echo -e "\t \t (a) example NuSMV: './TDL-Reasoner.bash examples/adultWithABox/ 1'" 
-    echo -e "\t \t (b) example Aalta: './TDL-Reasoner.bash examples/adultWithABox/ 2'"
-    echo -e "\t \t (b) example pltl: './TDL-Reasoner.bash examples/adultWithABox/ 3'"
-    echo -e "\t \t (b) example TRP++UC: './TDL-Reasoner.bash examples/adultWithABox/ 4'"
-    echo -e "\t \t (b) example NuXMV: './TDL-Reasoner.bash examples/adultWithABox/ 5'"  
+    echo -e "\t \t (a) example NuSMV: './TDL-Reasoner.sh examples/adultWithABox/ 1'" 
+    echo -e "\t \t (b) example Aalta: './TDL-Reasoner.sh examples/adultWithABox/ 2'"
+    echo -e "\t \t (b) example pltl: './TDL-Reasoner.sh examples/adultWithABox/ 3'"
+    echo -e "\t \t (b) example TRP++UC: './TDL-Reasoner.sh examples/adultWithABox/ 4'"
+    echo -e "\t \t (b) example NuXMV: './TDL-Reasoner.sh examples/adultWithABox/ 5'"  
     echo "" 
     echo -e "\t - Users are required to enter 'true' or 'false' to choose using" 
     echo -e "\t only future operators or past operators"
@@ -134,17 +134,7 @@ then
 
     if [ $purefuture = true ];
     then
-       echo -e "\\e[0;42mTo be checked - THIS IS AN EXPERIMENTAL FEATURE!\\e[0m"
-       #exit
-       echo "Do you want to continue? (Y|N)"
-       read yesno
-
-       if [ $yesno == "Y" -o $yesno == "y" ];
-       then
-            java -cp t-crowd-cli-4.0.0-SNAPSHOT.jar it.gilia.tcrowd.cli.TCrowd ERvtTBoxABoxSatLTL -t "${1}tbox.json" -a "${1}abox.json" -s NuSMV
-       else
-            exit
-       fi 
+       java -cp t-crowd-cli-4.0.0-SNAPSHOT.jar it.gilia.tcrowd.cli.TCrowd ERvtTBoxABoxSatLTL -t "${1}tbox.json" -a "${1}abox.json" -s NuSMV
 
     else
        if [ $purefuture = false ];
@@ -164,81 +154,79 @@ then
 	    echo "$file not found."
         exit
     fi
-
-######### if solver is Aalta
-
 else
-    if [ $2 -eq 2 ];
-    then
-        echo -e "\\e[0;42mSolver selected: Aalta v2.0\\e[0m"
-           
-        java -cp t-crowd-cli-4.0.0-SNAPSHOT.jar it.gilia.tcrowd.cli.TCrowd ERvtTBoxABoxSatLTL -t "${1}tbox.json" -a "${1}abox.json" -s Aalta 
-
-		file="${1}tcrowdOut.aalta"
-    
+	if [ $2 -eq 5 ];
+   	then
+   		echo -e "\\e[0;42mSolver selected: NuXMV\\e[0m"
+   	    java -cp t-crowd-cli-4.0.0-SNAPSHOT.jar it.gilia.tcrowd.cli.TCrowd ERvtTBoxABoxSatLTL -t "${1}tbox.json" -a "${1}abox.json" -s NuSMV    		
+   	  	
+   	  	file="${1}tcrowdOut.smv"
     	if [ -f "$file" ];
     	then
-    		cat "${1}tcrowdOut.aalta"
-	  		./solvers/Aalta/aalta cat "${1}tcrowdOut.aalta"
-
+	    	./solvers/NuXMV/nuXmv -dcx -bmc -bmc_length 11 "${1}tcrowdOut.smv"
     	else
 	    	echo "$file not found."
-        	exit
+       		exit
     	fi
-   	else
+######### if solver is Aalta
 
+	else
+    	if [ $2 -eq 2 ];
+    	then
+        	echo -e "\\e[0;42mSolver selected: Aalta v2.0\\e[0m"
+           
+        	java -cp t-crowd-cli-4.0.0-SNAPSHOT.jar it.gilia.tcrowd.cli.TCrowd ERvtTBoxABoxSatLTL -t "${1}tbox.json" -a "${1}abox.json" -s Aalta 
+
+			file="${1}tcrowdOut.aalta"
+    
+    		if [ -f "$file" ];
+    		then
+    			cat "${1}tcrowdOut.aalta"
+	  			./solvers/Aalta/aalta cat "${1}tcrowdOut.aalta"
+
+    		else
+	    		echo "$file not found."
+        		exit
+    		fi
+   		else
 
 ######### if solver is pltl
-        if [ $2 -eq 3 ];
-        then
-            echo -e "\\e[0;42mSolver selected: pltl\\e[0m"
+        	if [ $2 -eq 3 ];
+        	then
+            	echo -e "\\e[0;42mSolver selected: pltl\\e[0m"
            
-            java -cp t-crowd-cli-4.0.0-SNAPSHOT.jar it.gilia.tcrowd.cli.TCrowd ERvtTBoxABoxSatLTL -t "${1}tbox.json" -a "${1}abox.json" -s pltl
+            	java -cp t-crowd-cli-4.0.0-SNAPSHOT.jar it.gilia.tcrowd.cli.TCrowd ERvtTBoxABoxSatLTL -t "${1}tbox.json" -a "${1}abox.json" -s pltl
 
-		    file="${1}tcrowdOut.pltl"
+		    	file="${1}tcrowdOut.pltl"
     
-    	    if [ -f "$file" ];
-    	    then
-    		    cat "${1}tcrowdOut.pltl"
-	  		    ./solvers/pltl/pltl/pltl < $file
+    	    	if [ -f "$file" ];
+    	    	then
+    		    	cat "${1}tcrowdOut.pltl"
+	  		    	./solvers/pltl/pltl/pltl < $file
 
-    	    else
-	    	    echo "$file not found."
-        	    exit
-    	    fi
-   	    else
+    	    	else
+	    	    	echo "$file not found."
+        	    	exit
+    	    	fi
+   	    	else
 ######### if solver is TRP++UC
-            if [ $2 -eq 4 ];
-            then
-                echo -e "\\e[0;42mSolver selected: TRP++UC\\e[0m"
+            	if [ $2 -eq 4 ];
+            	then
+                	echo -e "\\e[0;42mSolver selected: TRP++UC\\e[0m"
            
-                java -cp t-crowd-cli-4.0.0-SNAPSHOT.jar it.gilia.tcrowd.cli.TCrowd ERvtTBoxABoxSatLTL -t "${1}tbox.json" -a "${1}abox.json" -s TRP++UC
+                	java -cp t-crowd-cli-4.0.0-SNAPSHOT.jar it.gilia.tcrowd.cli.TCrowd ERvtTBoxABoxSatLTL -t "${1}tbox.json" -a "${1}abox.json" -s TRP++UC
 
-		        file="${1}tcrowdOut.ltl"
+		        	file="${1}tcrowdOut.ltl"
     
-    	        if [ -f "$file" ];
-    	        then
-    		        cat "${1}tcrowdOut.ltl"
-	  		        ./solvers/TRP++UC/trp++uc -f ltl $file
+    	        	if [ -f "$file" ];
+    	        	then
+    		        	cat "${1}tcrowdOut.ltl"
+	  		        	./solvers/TRP++UC/trp++uc -f ltl $file
 
-    	        else
-	    	        echo "$file not found."
-        	        exit
-    	        fi
-   	        else
-   	        	if [ $2 -eq 5 ];
-   	        	then
-   	        		echo -e "\\e[0;42mSolver selected: NuXMV\\e[0m"
-   	        		java -cp t-crowd-cli-4.0.0-SNAPSHOT.jar it.gilia.tcrowd.cli.TCrowd ERvtTBoxABoxSatLTL -t "${1}tbox.json" -a "${1}abox.json" -s NuSMV
-   	        		
-   	        		file="${1}tcrowdOut.smv"
-    				if [ -f "$file" ];
-    				then
-	    				./solvers/NuXMV/NuXMV -dcx -bmc -bmc_length 11 "${1}tcrowdOut.smv"
-    				else
-	    				echo "$file not found."
-        				exit
-    				fi
+    	        	else
+	    	        	echo "$file not found."
+        	        	exit
+    	        	fi
    	        	else
                 	echo "Invalid solver."
                 	exit
