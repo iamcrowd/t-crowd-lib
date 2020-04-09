@@ -330,7 +330,7 @@ public class TDLLiteFPXReasoner {
 				
 			    ABox.addExtensionConstraintsABox(t);
 			    
-			    Formula o = ABox.getABoxFormula();
+			    Formula o = ABox.getABoxFormula(true);
 			
 				qtlABox= new ConjunctiveFormula(qtl_N,o);
 				
@@ -454,7 +454,7 @@ public class TDLLiteFPXReasoner {
 				
 			    ABox.addExtensionConstraintsABox(t);
 			    
-			    Formula o = ABox.getABoxFormula();
+			    Formula o = ABox.getABoxFormula(false);
 			
 				qtlABox = new ConjunctiveFormula(qtl,o);
 				

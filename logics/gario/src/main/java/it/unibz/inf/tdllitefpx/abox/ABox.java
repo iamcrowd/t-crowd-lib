@@ -302,10 +302,10 @@ public class ABox extends ConjunctiveFormula implements FormattableObj {
 	 * 
 	 * @return Formula
 	 */
-	public Formula getABoxFormula() {
+	public Formula getABoxFormula(boolean futur) {
 		ConjunctiveFormula qtl = new ConjunctiveFormula();
 		for (ABoxConceptAssertion c : ConceptsAssertion) {
-			Formula cf = conceptToFormula(c.c);
+			Formula cf = conceptToFormula(c.c, futur);
 			cf.substitute(x, new Constant(c.value));
 			qtl.addConjunct(cf);
 		}
@@ -314,56 +314,84 @@ public class ABox extends ConjunctiveFormula implements FormattableObj {
 	}
 
 	/**
-	 * Encode Concepts as Formula
 	 * 
-	 * @param c Concept
-	 * @return Formula
+	 * @param c
+	 * @param futur
+	 * @return
 	 */
-	public Formula conceptToFormula(Concept c) {
-		if (c instanceof AtomicConcept)
-			return new Atom(c.toString(), x);
-		else if (c instanceof QuantifiedRole) {
-			QuantifiedRole qE = (QuantifiedRole) c;
-			Atom atom = a.get("E" + qE.getQ() + qE.getRole().toString(), 1);
-			atom.setArg(0, x);
-			return atom;
-		} else if (c instanceof QuantifiedRole) {
-			QuantifiedRole qE = (QuantifiedRole) c;
-			Atom atom = a.get("E" + qE.getQ() + qE.getRole().getInverse().toString(), 1);
-			atom.setArg(0, x);
-			return atom;
-		} else if (c instanceof BottomConcept)
-			return Bot.getStatic();
-		else if (c instanceof NegatedConcept) {
-			NegatedConcept nc = (NegatedConcept) c;
-			return new NegatedFormula(conceptToFormula(nc.getRefersTo()));
-		} else if (c instanceof ConjunctiveConcept) {
-			ConjunctiveConcept cc = (ConjunctiveConcept) c;
-			ConjunctiveFormula cf = new ConjunctiveFormula();
-			for (Concept d : cc.getConjuncts()) {
-				cf.addConjunct(conceptToFormula(d));
+	public Formula conceptToFormula(Concept c, boolean futur) {
+			if (c instanceof AtomicConcept) {
+				if (futur) {
+					return new Atom(c.toString() + "F", x);
+				} else {
+					return new Atom(c.toString(), x);
+				}
 			}
-			return cf;
-		} else if (c instanceof TemporalConcept) {
-			TemporalConcept d = (TemporalConcept) c;
-			if (c instanceof NextFuture) {
-				return new it.unibz.inf.qtl1.formulae.temporal.NextFuture(conceptToFormula(d.getRefersTo()));
-			} else if (c instanceof NextPast) {
-				return new it.unibz.inf.qtl1.formulae.temporal.NextPast(conceptToFormula(d.getRefersTo()));
-			} else if (c instanceof AlwaysPast) {
-				return new it.unibz.inf.qtl1.formulae.temporal.AlwaysPast(conceptToFormula(d.getRefersTo()));
-			} else if (c instanceof AlwaysFuture) {
-				return new it.unibz.inf.qtl1.formulae.temporal.AlwaysFuture(conceptToFormula(d.getRefersTo()));
-			} else if (c instanceof SometimePast) {
-				return new it.unibz.inf.qtl1.formulae.temporal.SometimePast(conceptToFormula(d.getRefersTo()));
-			} else if (c instanceof SometimeFuture) {
-				return new it.unibz.inf.qtl1.formulae.temporal.SometimeFuture(conceptToFormula(d.getRefersTo()));
+			else if (c instanceof QuantifiedRole) {
+				QuantifiedRole qE = (QuantifiedRole)c;
+			    Atom atom;
+			    
+				if (futur){
+					atom = a.get("E"+qE.getQ()+qE.getRole().toString()+"F",1);
+				} else {
+				    atom = a.get("E"+qE.getQ()+qE.getRole().toString(),1); //Modif
+				}
+				
+				atom.setArg(0, x);
+				return atom ;
 			}
-
-		}
-
-		System.err.println("Unexpected case " + c.getClass().toString());
-		return null;
+			else if( c instanceof QuantifiedRole) {
+				QuantifiedRole qE = (QuantifiedRole)c;
+				Atom atom;
+				if (futur){
+					atom = a.get("E"+qE.getQ()+qE.getRole().getInverse().toString()+"F",1); //Modif
+				} else {
+					atom = a.get("E"+qE.getQ()+qE.getRole().getInverse().toString(),1);	
+				}
+				
+				atom.setArg(0, x);
+				return atom;
+			}
+			else if(c instanceof BottomConcept)
+				return Bot.getStatic();
+			else if(c instanceof NegatedConcept){
+				NegatedConcept nc = (NegatedConcept) c;
+				return new NegatedFormula(conceptToFormula(nc.getRefersTo(), futur));
+			}
+			else if(c instanceof ConjunctiveConcept){
+				ConjunctiveConcept cc = (ConjunctiveConcept)c;
+				ConjunctiveFormula cf = new ConjunctiveFormula();
+				for(Concept d : cc.getConjuncts()){
+					cf.addConjunct(conceptToFormula(d, futur));
+				}
+				return cf;
+			}
+			else if(c instanceof TemporalConcept){
+				TemporalConcept d = (TemporalConcept) c;
+				if(c instanceof NextFuture){
+					return new it.unibz.inf.qtl1.formulae.temporal.NextFuture(
+							conceptToFormula(d.getRefersTo(), futur));
+				}else if(c instanceof NextPast){
+					return new it.unibz.inf.qtl1.formulae.temporal.NextPast(
+							conceptToFormula(d.getRefersTo(), futur));
+				}else if(c instanceof AlwaysPast){
+					return new it.unibz.inf.qtl1.formulae.temporal.AlwaysPast(
+							conceptToFormula(d.getRefersTo(), futur));
+				}else if(c instanceof AlwaysFuture){
+					return new it.unibz.inf.qtl1.formulae.temporal.AlwaysFuture(
+							conceptToFormula(d.getRefersTo(), futur));
+				}else if(c instanceof SometimePast){
+					return new it.unibz.inf.qtl1.formulae.temporal.SometimePast(
+							conceptToFormula(d.getRefersTo(), futur));
+				}else if(c instanceof SometimeFuture){
+					return new it.unibz.inf.qtl1.formulae.temporal.SometimeFuture(
+							conceptToFormula(d.getRefersTo(), futur));
+				}
+				
+			}
+			
+			System.err.println("Unexpected case "+c.getClass().toString());
+			return null;
 	}
 
 	/**
