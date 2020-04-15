@@ -85,11 +85,11 @@ fi
 
 #Remove previous files from example folder
 
-find . -name "*.smv" -type f -delete
-find . -name "*.aalta" -type f -delete
-find . -name "*.tex" -type f -delete
-find . -name "*.pltl" -type f -delete
-find . -name "*.ltl" -type f -delete
+#find . -name "*.smv" -type f -delete
+#find . -name "*.aalta" -type f -delete
+#find . -name "*.tex" -type f -delete
+#find . -name "*.pltl" -type f -delete
+#find . -name "*.ltl" -type f -delete
 
 
 echo "Current example directory: "
@@ -149,7 +149,18 @@ then
     file="${1}tcrowdOut.smv"
     if [ -f "$file" ];
     then
-	    ./solvers/NuSMV/NuSMV -dcx -bmc -bmc_length 11 "${1}tcrowdOut.smv"
+        if [[ "$OSTYPE" == "linux-gnu" ]]; then
+            
+            ./solvers/NuSMV/NuSMV -dcx -bmc -bmc_length 11 "${1}tcrowdOut.smv"
+        
+        elif [[ "$OSTYPE" == "darwin"* ]]; then  # Mac OSX
+
+            ./solvers/NuSMV-macos/NuSMV -dcx -bmc -bmc_length 11 "${1}tcrowdOut.smv"
+
+        elif [[ "$OSTYPE" == "cygwin" ]]; then #Windows
+
+	        ./solvers/NuSMV-win/NuSMV -dcx -bmc -bmc_length 11 "${1}tcrowdOut.smv"
+        fi
     else
 	    echo "$file not found."
         exit

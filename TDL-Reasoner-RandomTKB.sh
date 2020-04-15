@@ -167,7 +167,18 @@ then
     	file="${7}random.smv"
     	if [ -f "$file" ];
     	then
-	    	./solvers/NuSMV/NuSMV -dcx -bmc -bmc_length 11 "${7}random.smv"
+            if [[ "$OSTYPE" == "linux-gnu" ]]; then
+            
+                ./solvers/NuSMV/NuSMV -dcx -bmc -bmc_length 11 "${7}random.smv"
+        
+            elif [[ "$OSTYPE" == "darwin"* ]]; then  # Mac OSX
+
+                ./solvers/NuSMV-macos/NuSMV -dcx -bmc -bmc_length 11 "${7}random.smv"
+
+            elif [[ "$OSTYPE" == "cygwin" ]]; then #Windows
+
+	            /solvers/NuSMV-win/NuSMV.exe -dcx -bmc -bmc_length 11 "${7}random.smv"
+            fi
     	else
 	    	echo "$file not found."
         	exit
