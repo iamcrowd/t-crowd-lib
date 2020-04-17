@@ -9,6 +9,8 @@ import it.unibz.inf.qtl1.formulae.Formula;
 import it.unibz.inf.qtl1.formulae.quantified.UniversalFormula;
 import it.unibz.inf.qtl1.output.LatexDocumentCNF;
 
+import org.gario.code.output.StatsOutputDocument;
+
 import it.unibz.inf.qtl1.output.NuSMVOutput;
 import it.unibz.inf.qtl1.output.aalta.AaltaOutput;
 import it.unibz.inf.qtl1.output.pltl.PltlOutput;
@@ -141,9 +143,13 @@ public class TDLLiteFPXReasoner {
 		if(verbose)
 			(new LatexOutputDocument(t)).toFile(prefix+"tbox.tex");
 		
+		long start_tbox2QTL = System.currentTimeMillis();
+		
 		TDLLiteFPXConverter conv = new TDLLiteFPXConverter(t);
 		Formula qtl = conv.getFormula();
 		qtl = qtl.makeTemporalStrict();	
+		
+		long end_tbox2QTL = System.currentTimeMillis() - start_tbox2QTL;
 		
 		if(type == CheckType.entity_consistency){
 			/* Add entity consistency check:
@@ -177,22 +183,35 @@ public class TDLLiteFPXReasoner {
 		
 		if (purefuture) {
 			// QTL Z -> QTL N using Pure Future
-			System.out.println("TBox -> Qtl1 -> QTLN -> LTL");
+			//System.out.println("TBox -> Qtl1 -> QTLN -> LTL");
+			
+			long start_QTL2QTLN = System.currentTimeMillis();
 			
 			PureFutureTranslator purefutureFormula = new PureFutureTranslator(qtl);
 			qtl_N = purefutureFormula.getPureFutureTranslation();
+			
+			long end_QTL2QTLN = System.currentTimeMillis() - start_QTL2QTLN;
 			
 			if(verbose)
 				(new LatexDocumentCNF(qtl_N)).toFile(prefix+"qtlN.tex");
 			
 			// LTL (N)
+			
+			
+			long start_QTLN2LTL = System.currentTimeMillis();
+			
 			Formula ltl = qtl_N.makePropositional();
+			
+			long end_QTLN2LTL = System.currentTimeMillis() - start_QTLN2LTL;
 			
 			if(verbose)
 				(new LatexDocumentCNF(ltl)).toFile(prefix+"ltl.tex");
 			
 			System.out.println("Generating model LTL file...");
 			System.out.println("Num of Propositions: "+ltl.getPropositions().size());
+			
+			StatsOutputDocument out = new StatsOutputDocument();
+			out.toStatsFile(prefix+"stats.txt", end_tbox2QTL, end_QTL2QTLN, end_QTLN2LTL, ltl.getPropositions().size());
 			
 			switch (solver) {
 				case Constants.NuSMV:
@@ -224,7 +243,11 @@ public class TDLLiteFPXReasoner {
 			// QTL Z -> PLTL (past operators)
 			System.out.println("TBox -> Qtl1 -> PLTL");
 			
+			long start_QTL2LTL = System.currentTimeMillis();
+			
 			Formula pltl = qtl.makePropositional();
+			
+			long end_QTL2LTL = System.currentTimeMillis() - start_QTL2LTL;
 			
 			if(verbose)
 				(new LatexDocumentCNF(pltl)).toFile(prefix+"pltl.tex");
@@ -235,6 +258,10 @@ public class TDLLiteFPXReasoner {
 			(new NuSMVOutput(pltl)).toFile(prefix+".smv");
 			
 			System.out.println("Num of Propositions: "+pltl.getPropositions().size());
+			
+			StatsOutputDocument out = new StatsOutputDocument();
+			out.toStatsFile(prefix+"stats.txt", end_tbox2QTL, end_QTL2LTL, pltl.getPropositions().size());
+			
 		}
 		
 		System.out.println("Done! Total time:" + (System.currentTimeMillis()-total_time) + "ms");
