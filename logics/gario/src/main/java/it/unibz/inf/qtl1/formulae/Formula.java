@@ -50,7 +50,7 @@ public abstract class Formula implements Cloneable{
 	
 	public static boolean cloneAtoms=true;
 	public static boolean returnRealSubformulae=false;
-	public static boolean removeDuplicates = false;
+	public static boolean removeDuplicates = true;
 	public static boolean verifyTopBot = true;
 	
 	/* TODO: Implement negated version 
