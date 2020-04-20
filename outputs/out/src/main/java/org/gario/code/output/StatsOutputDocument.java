@@ -7,6 +7,16 @@ public class StatsOutputDocument {
 		
 		public StatsOutputDocument(){}
 
+		/**
+		 * TBox-QTL1-QTLN-LTL
+		 * 
+		 * @param fileName
+		 * @param tbox2qtl
+		 * @param qtl2qtln
+		 * @param qtln2ltl
+		 * @param size
+		 * @throws Exception
+		 */
 		public void toStatsFile(String fileName, long tbox2qtl, long qtl2qtln, long qtln2ltl, int size) throws Exception{
 		    // Create file 
 		    
@@ -22,6 +32,15 @@ public class StatsOutputDocument {
 		    out.close();
 		}
 		
+		/**
+		 * TBox-QTL1-LTL
+		 * 
+		 * @param fileName
+		 * @param tbox2qtl
+		 * @param qtl2ltl
+		 * @param size
+		 * @throws Exception
+		 */
 		public void toStatsFile(String fileName, long tbox2qtl, long qtl2ltl, int size) throws Exception{
 		    // Create file 
 		    
@@ -36,6 +55,17 @@ public class StatsOutputDocument {
 		    out.close();
 		}
 		
+		/**
+		 * TBox-QTL1-QTLN-ABox-LTL
+		 *
+		 * @param fileName
+		 * @param tbox2qtl
+		 * @param qtl2qtln
+		 * @param qtlnABox
+		 * @param qtln2ltl
+		 * @param size
+		 * @throws Exception
+		 */
 		public void toStatsFile(String fileName, long tbox2qtl, long qtl2qtln, long qtlnABox, long qtln2ltl, int size) throws Exception{
 		    // Create file 
 		    
