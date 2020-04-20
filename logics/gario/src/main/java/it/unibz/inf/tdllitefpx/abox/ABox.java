@@ -219,36 +219,32 @@ public class ABox extends ConjunctiveFormula implements FormattableObj {
 						int Qtbox = qRolesQ.get(keyLi[0]);
 						int j = Math.min(Qtbox, Qtabox);
 
-						while (j != 0) { // Cardinality
-							QuantifiedRole qL = new QuantifiedRole(r, j);
-							Concept cr = (Concept) qL;
+			//			For ABox just take max cardinality of each role
+						QuantifiedRole qL = new QuantifiedRole(r, j);
+						Concept cr = (Concept) qL;
 
-							int t = Integer.parseInt(keyLi[2]);
-							while (t != 0) {// States
-								Concept tqL1 = new NextFuture(cr);
-								cr = tqL1;
-								t--;
-							}
-							addConceptsAssertion(new ABoxConceptAssertion(cr, keyLi[1]));
-							j--;
+						int t = Integer.parseInt(keyLi[2]);
+						while (t != 0) { // States
+							Concept tqL1 = new NextFuture(cr);
+							cr = tqL1;
+							t--;
 						}
+						addConceptsAssertion(new ABoxConceptAssertion(cr, keyLi[1]));
+
 					} else if (r.getInverse().toString().equals(keyLi[0])) {
 						int Qtbox = qRolesQ.get(r.toString());
 						int j = Math.min(Qtbox, Qtabox);
-						while (j != 0){ // Cardinality
-							QuantifiedRole qLinv = new QuantifiedRole(r.getInverse(), j);
+						
+						QuantifiedRole qLinv = new QuantifiedRole(r.getInverse(), j);
+						Concept cinvr = (Concept) qLinv;
 
-							Concept cinvr = (Concept) qLinv;
-
-							int t = Integer.parseInt(keyLi[2]);
-							while (t != 0){// States
-								Concept tqL2 = new NextFuture(cinvr);
-								cinvr = tqL2;
-								t--;
-							}
-							addConceptsAssertion(new ABoxConceptAssertion(cinvr, keyLi[1]));
-							j--;
+						int t = Integer.parseInt(keyLi[2]);
+						while (t != 0){ // States
+							Concept tqL2 = new NextFuture(cinvr);
+							cinvr = tqL2;
+							t--;
 						}
+						addConceptsAssertion(new ABoxConceptAssertion(cinvr, keyLi[1]));
 					}
 				}
 			} // Local Roles
@@ -260,37 +256,33 @@ public class ABox extends ConjunctiveFormula implements FormattableObj {
 					if (r.toString().equals(keyLi[0])) {
 						int Qtbox = qRolesQ.get(keyLi[0]);
 						int j = Math.min(Qtbox, Qtaboxi);
-
-						while (j != 0){ // Cardinality
-							QuantifiedRole qL = new QuantifiedRole(r, j);
-							Concept cr = (Concept) qL;
-							int t = Integer.parseInt(keyLi[2]);
 							
-							while (t != 0) {// States
-								Concept tqL1 = new NextFuture(cr);
-								cr = tqL1;
-								t--;
-							}
-							addConceptsAssertion(new ABoxConceptAssertion(cr, keyLi[1]));
-							j--;
+						QuantifiedRole qL = new QuantifiedRole(r, j);
+						Concept cr = (Concept) qL;
+						int t = Integer.parseInt(keyLi[2]);
+							
+						while (t != 0) { // States
+							Concept tqL1 = new NextFuture(cr);
+							cr = tqL1;
+							t--;
 						}
+						addConceptsAssertion(new ABoxConceptAssertion(cr, keyLi[1]));
+
 					} else if (r.getInverse().toString().equals(keyLi[0])) {
 						int Qtbox = qRolesQ.get(r.toString());
 						int j = Math.min(Qtbox, Qtaboxi);
 
-						while (j != 0){ // Cardinality
-							QuantifiedRole qLinv = new QuantifiedRole(r.getInverse(), j);
-							Concept cinvr = (Concept) qLinv;
-							int t = Integer.parseInt(keyLi[2]);
+						QuantifiedRole qLinv = new QuantifiedRole(r.getInverse(), j);
+						Concept cinvr = (Concept) qLinv;
+						int t = Integer.parseInt(keyLi[2]);
 							
-							while (t != 0) {// States
-								Concept tqL2 = new NextFuture(cinvr);
-								cinvr = tqL2;
-								t--;
-							}
-							addConceptsAssertion(new ABoxConceptAssertion(cinvr, keyLi[1]));
-							j--;
+						while (t != 0) { // States
+							Concept tqL2 = new NextFuture(cinvr);
+							cinvr = tqL2;
+							t--;
 						}
+						addConceptsAssertion(new ABoxConceptAssertion(cinvr, keyLi[1]));
+
 					}
 				}
 			}
