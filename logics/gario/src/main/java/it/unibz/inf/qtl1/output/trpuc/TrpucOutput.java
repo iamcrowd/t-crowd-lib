@@ -53,9 +53,9 @@ public class TrpucOutput extends OutputDocument {
 		}
 		
 		if(hasBot)
-			s.append("not ( bot & ");
+			s.append("( bot & ");
 		else
-			s.append("not ( ");
+			s.append("( ");
 		
 		return s.toString();
 	}

@@ -54,9 +54,9 @@ public class PltlOutput extends OutputDocument {
 		}
 		
 		if(hasBot)
-			s.append("~ ( bot & ");
+			s.append("( bot & ");
 		else
-			s.append("~ ( ");
+			s.append("( ");
 		
 		return s.toString();
 	}
