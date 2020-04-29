@@ -31,7 +31,7 @@ public class AleCardinalities {
 				true, 
 				"cardinalities",
 				false,
-				"NuSMV");
+				"NuSMV",true);
 		
 		Map<String, String> stats = exCard.getTBox().getStats();
 		String key;

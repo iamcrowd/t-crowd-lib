@@ -1,0 +1,172 @@
+\documentclass[a4paper,10pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage{pdfpages}
+\usepackage{latexsym}
+\usepackage{amssymb,amsthm,amsmath}
+\usepackage{amsthm}
+
+\begin{document}
+ \newcommand{\nxt}{{\ensuremath\raisebox{0.25ex}{\text{\scriptsize$\bigcirc$}}}}
+\newcommand{\Rdiamond}{\Diamond_{\!F}}
+\newcommand{\Rbox}{\Box_{\!F}}
+\newcommand{\Rnext}{\nxt_{\!F}}
+\newcommand{\Ldiamond}{\Diamond_{\!P}}
+\newcommand{\Lbox}{\Box_{\!P}}
+\newcommand{\Lnext}{\nxt_{\!P}}
+\newcommand{\SVdiamond}{\mathop{\ooalign{$\Diamond$ \cr \kern0.5ex
+    \raisebox{0.35ex}{\scalebox{0.7}{$*$}}} \kern-0.9ex}}
+\newcommand{\SVbox}{\mathop{\ooalign{$\Box$ \cr \kern0.42ex
+    \raisebox{0.3ex}{\scalebox{0.7}{$*$}}} \kern-0.9ex}}
+
+
+$((E1SalaryF_{dSalary} \rightarrow BOX0F_{dSalary}) \land $ \\ 
+ $ (PinvSalaryF \rightarrow E1SalaryF_{dSalary}) \land $ \\ 
+ $ (E1SalaryInvF_{dSalary} \rightarrow BOX1F_{dSalary}) \land $ \\ 
+ $ (PSalaryF \rightarrow E1SalaryInvF_{dSalaryInv}) \land $ \\ 
+ $  \Rbox (( \Rnext NXT3P_{dSalary} \leftrightarrow BOX4P_{dSalary}) \land $ \\ 
+ $ (NXT5F_{dSalary} \leftrightarrow  \Rnext BOX6F_{dSalary}) \land $ \\ 
+ $ ( \Rnext NXT7F_{dSalary} \leftrightarrow BOX8F_{dSalary}) \land $ \\ 
+ $ (NXT9P_{dSalary} \leftrightarrow  \Rnext BOX10P_{dSalary}) \land $ \\ 
+ $ ( \Rnext BOX11P_{dSalary} \leftrightarrow ( \Rnext PSalaryF \land $ \\ 
+ $ BOX11P_{dSalary})) \land $ \\ 
+ $ ( \Rnext BOX12P_{dSalary} \leftrightarrow ( \Rnext PinvSalaryF \land $ \\ 
+ $ BOX12P_{dSalary})) \land $ \\ 
+ $ ( \Rnext BOX13P_{dSalary} \leftrightarrow ( \Rnext ((PersonP_{dSalary} \rightarrow NXT3P_{dSalary}) \land $ \\ 
+ $ (E1SalaryInvP_{dSalary} \rightarrow IntegerP_{dSalary}) \land $ \\ 
+ $ (PersonP_{dSalary} \rightarrow E1SalaryP_{dSalary}) \land $ \\ 
+ $ (PersonP_{dSalary} \rightarrow  \lnot E2SalaryP_{dSalary}) \land $ \\ 
+ $ (IntegerP_{dSalary} \rightarrow  \lnot PersonP_{dSalary}) \land $ \\ 
+ $ (E2SalaryP_{dSalary} \rightarrow E1SalaryP_{dSalary})) \land $ \\ 
+ $ BOX13P_{dSalary})) \land $ \\ 
+ $ ( \Rnext BOX4P_{dSalary} \leftrightarrow ( \Rnext NXT9P_{dSalary} \land $ \\ 
+ $ BOX4P_{dSalary})) \land $ \\ 
+ $ (BOX14F_{dSalary} \leftrightarrow  \Rbox PSalaryF) \land $ \\ 
+ $ (BOX15F_{dSalary} \leftrightarrow  \Rbox PinvSalaryF) \land $ \\ 
+ $ (BOX16F_{dSalary} \leftrightarrow  \Rbox ((PersonF_{dSalary} \rightarrow NXT5F_{dSalary}) \land $ \\ 
+ $ (E1SalaryInvF_{dSalary} \rightarrow IntegerF_{dSalary}) \land $ \\ 
+ $ (PersonF_{dSalary} \rightarrow E1SalaryF_{dSalary}) \land $ \\ 
+ $ (PersonF_{dSalary} \rightarrow  \lnot E2SalaryF_{dSalary}) \land $ \\ 
+ $ (IntegerF_{dSalary} \rightarrow  \lnot PersonF_{dSalary}) \land $ \\ 
+ $ (E2SalaryF_{dSalary} \rightarrow E1SalaryF_{dSalary}))) \land $ \\ 
+ $ (BOX6F_{dSalary} \leftrightarrow  \Rbox NXT7F_{dSalary}) \land $ \\ 
+ $ ( \Rnext BOX0F_{dSalary} \leftrightarrow ( \Rnext BOX14F_{dSalary} \land $ \\ 
+ $ BOX0F_{dSalary})) \land $ \\ 
+ $ ( \Rnext BOX1F_{dSalary} \leftrightarrow ( \Rnext BOX15F_{dSalary} \land $ \\ 
+ $ BOX1F_{dSalary})) \land $ \\ 
+ $ ( \Rnext BOX2F_{dSalary} \leftrightarrow ( \Rnext BOX16F_{dSalary} \land $ \\ 
+ $ BOX2F_{dSalary})) \land $ \\ 
+ $ ( \Rnext BOX8F_{dSalary} \leftrightarrow ( \Rnext PersonF_{dSalary} \land $ \\ 
+ $ BOX8F_{dSalary})) \land $ \\ 
+ $ (BOX17P_{dSalary} \leftrightarrow  \Rbox BOX11P_{dSalary}) \land $ \\ 
+ $ (BOX18P_{dSalary} \leftrightarrow  \Rbox BOX12P_{dSalary}) \land $ \\ 
+ $ (BOX19P_{dSalary} \leftrightarrow  \Rbox BOX13P_{dSalary}) \land $ \\ 
+ $ (BOX10P_{dSalary} \leftrightarrow  \Rbox PersonP_{dSalary})) \land $ \\ 
+ $ (BOX16F_{dSalary} \leftrightarrow BOX13P_{dSalary}) \land $ \\ 
+ $ (BOX14F_{dSalary} \leftrightarrow BOX11P_{dSalary}) \land $ \\ 
+ $ (BOX15F_{dSalary} \leftrightarrow BOX12P_{dSalary}) \land $ \\ 
+ $ (BOX6F_{dSalary} \leftrightarrow BOX4P_{dSalary}) \land $ \\ 
+ $ (BOX2F_{dSalary} \leftrightarrow BOX19P_{dSalary}) \land $ \\ 
+ $ (BOX0F_{dSalary} \leftrightarrow BOX17P_{dSalary}) \land $ \\ 
+ $ (BOX1F_{dSalary} \leftrightarrow BOX18P_{dSalary}) \land $ \\ 
+ $ (BOX8F_{dSalary} \leftrightarrow BOX10P_{dSalary}) \land $ \\ 
+ $ (PSalaryF \leftrightarrow PSalaryP) \land $ \\ 
+ $ (PinvSalaryF \leftrightarrow PinvSalaryP) \land $ \\ 
+ $ (NXT5F_{dSalary} \leftrightarrow NXT3P_{dSalary}) \land $ \\ 
+ $ (NXT7F_{dSalary} \leftrightarrow NXT9P_{dSalary}) \land $ \\ 
+ $ (E1SalaryF_{dSalary} \leftrightarrow E1SalaryP_{dSalary}) \land $ \\ 
+ $ (PSalaryF \leftrightarrow PSalaryF) \land $ \\ 
+ $ (PinvSalaryF \leftrightarrow PinvSalaryF) \land $ \\ 
+ $ (E1SalaryF_{dSalary} \leftrightarrow E1SalaryP_{dSalary}) \land $ \\ 
+ $ (E1SalaryInvF_{dSalary} \leftrightarrow E1SalaryInvP_{dSalary}) \land $ \\ 
+ $ (PinvSalaryF \leftrightarrow PinvSalaryF) \land $ \\ 
+ $ (PSalaryF \leftrightarrow PSalaryF) \land $ \\ 
+ $ (E1SalaryInvF_{dSalaryInv} \leftrightarrow E1SalaryInvP_{dSalaryInv}) \land $ \\ 
+ $ (PersonF_{dSalary} \leftrightarrow PersonP_{dSalary}) \land $ \\ 
+ $ (PersonF_{dSalary} \leftrightarrow PersonP_{dSalary}) \land $ \\ 
+ $ (E1SalaryInvF_{dSalary} \leftrightarrow E1SalaryInvP_{dSalary}) \land $ \\ 
+ $ (IntegerF_{dSalary} \leftrightarrow IntegerP_{dSalary}) \land $ \\ 
+ $ (PersonF_{dSalary} \leftrightarrow PersonP_{dSalary}) \land $ \\ 
+ $ (E1SalaryF_{dSalary} \leftrightarrow E1SalaryP_{dSalary}) \land $ \\ 
+ $ (PersonF_{dSalary} \leftrightarrow PersonP_{dSalary}) \land $ \\ 
+ $ (E2SalaryF_{dSalary} \leftrightarrow E2SalaryP_{dSalary}) \land $ \\ 
+ $ (IntegerF_{dSalary} \leftrightarrow IntegerP_{dSalary}) \land $ \\ 
+ $ (PersonF_{dSalary} \leftrightarrow PersonP_{dSalary}) \land $ \\ 
+ $ (E2SalaryF_{dSalary} \leftrightarrow E2SalaryP_{dSalary}) \land $ \\ 
+ $ (E1SalaryF_{dSalary} \leftrightarrow E1SalaryP_{dSalary}) \land $ \\ 
+ $ (E1SalaryF_{dSalaryInv} \rightarrow BOX0F_{dSalaryInv}) \land $ \\ 
+ $ (PinvSalaryF \rightarrow E1SalaryF_{dSalary}) \land $ \\ 
+ $ (E1SalaryInvF_{dSalaryInv} \rightarrow BOX1F_{dSalaryInv}) \land $ \\ 
+ $ (PSalaryF \rightarrow E1SalaryInvF_{dSalaryInv}) \land $ \\ 
+ $  \Rbox (( \Rnext NXT3P_{dSalaryInv} \leftrightarrow BOX4P_{dSalaryInv}) \land $ \\ 
+ $ (NXT5F_{dSalaryInv} \leftrightarrow  \Rnext BOX6F_{dSalaryInv}) \land $ \\ 
+ $ ( \Rnext NXT7F_{dSalaryInv} \leftrightarrow BOX8F_{dSalaryInv}) \land $ \\ 
+ $ (NXT9P_{dSalaryInv} \leftrightarrow  \Rnext BOX10P_{dSalaryInv}) \land $ \\ 
+ $ ( \Rnext BOX11P_{dSalaryInv} \leftrightarrow ( \Rnext PSalaryF \land $ \\ 
+ $ BOX11P_{dSalaryInv})) \land $ \\ 
+ $ ( \Rnext BOX12P_{dSalaryInv} \leftrightarrow ( \Rnext PinvSalaryF \land $ \\ 
+ $ BOX12P_{dSalaryInv})) \land $ \\ 
+ $ ( \Rnext BOX13P_{dSalaryInv} \leftrightarrow ( \Rnext ((PersonP_{dSalaryInv} \rightarrow NXT3P_{dSalaryInv}) \land $ \\ 
+ $ (E1SalaryInvP_{dSalaryInv} \rightarrow IntegerP_{dSalaryInv}) \land $ \\ 
+ $ (PersonP_{dSalaryInv} \rightarrow E1SalaryP_{dSalaryInv}) \land $ \\ 
+ $ (PersonP_{dSalaryInv} \rightarrow  \lnot E2SalaryP_{dSalaryInv}) \land $ \\ 
+ $ (IntegerP_{dSalaryInv} \rightarrow  \lnot PersonP_{dSalaryInv}) \land $ \\ 
+ $ (E2SalaryP_{dSalaryInv} \rightarrow E1SalaryP_{dSalaryInv})) \land $ \\ 
+ $ BOX13P_{dSalaryInv})) \land $ \\ 
+ $ ( \Rnext BOX4P_{dSalaryInv} \leftrightarrow ( \Rnext NXT9P_{dSalaryInv} \land $ \\ 
+ $ BOX4P_{dSalaryInv})) \land $ \\ 
+ $ (BOX14F_{dSalaryInv} \leftrightarrow  \Rbox PSalaryF) \land $ \\ 
+ $ (BOX15F_{dSalaryInv} \leftrightarrow  \Rbox PinvSalaryF) \land $ \\ 
+ $ (BOX16F_{dSalaryInv} \leftrightarrow  \Rbox ((PersonF_{dSalaryInv} \rightarrow NXT5F_{dSalaryInv}) \land $ \\ 
+ $ (E1SalaryInvF_{dSalaryInv} \rightarrow IntegerF_{dSalaryInv}) \land $ \\ 
+ $ (PersonF_{dSalaryInv} \rightarrow E1SalaryF_{dSalaryInv}) \land $ \\ 
+ $ (PersonF_{dSalaryInv} \rightarrow  \lnot E2SalaryF_{dSalaryInv}) \land $ \\ 
+ $ (IntegerF_{dSalaryInv} \rightarrow  \lnot PersonF_{dSalaryInv}) \land $ \\ 
+ $ (E2SalaryF_{dSalaryInv} \rightarrow E1SalaryF_{dSalaryInv}))) \land $ \\ 
+ $ (BOX6F_{dSalaryInv} \leftrightarrow  \Rbox NXT7F_{dSalaryInv}) \land $ \\ 
+ $ ( \Rnext BOX0F_{dSalaryInv} \leftrightarrow ( \Rnext BOX14F_{dSalaryInv} \land $ \\ 
+ $ BOX0F_{dSalaryInv})) \land $ \\ 
+ $ ( \Rnext BOX1F_{dSalaryInv} \leftrightarrow ( \Rnext BOX15F_{dSalaryInv} \land $ \\ 
+ $ BOX1F_{dSalaryInv})) \land $ \\ 
+ $ ( \Rnext BOX2F_{dSalaryInv} \leftrightarrow ( \Rnext BOX16F_{dSalaryInv} \land $ \\ 
+ $ BOX2F_{dSalaryInv})) \land $ \\ 
+ $ ( \Rnext BOX8F_{dSalaryInv} \leftrightarrow ( \Rnext PersonF_{dSalaryInv} \land $ \\ 
+ $ BOX8F_{dSalaryInv})) \land $ \\ 
+ $ (BOX17P_{dSalaryInv} \leftrightarrow  \Rbox BOX11P_{dSalaryInv}) \land $ \\ 
+ $ (BOX18P_{dSalaryInv} \leftrightarrow  \Rbox BOX12P_{dSalaryInv}) \land $ \\ 
+ $ (BOX19P_{dSalaryInv} \leftrightarrow  \Rbox BOX13P_{dSalaryInv}) \land $ \\ 
+ $ (BOX10P_{dSalaryInv} \leftrightarrow  \Rbox PersonP_{dSalaryInv})) \land $ \\ 
+ $ (BOX16F_{dSalaryInv} \leftrightarrow BOX13P_{dSalaryInv}) \land $ \\ 
+ $ (BOX14F_{dSalaryInv} \leftrightarrow BOX11P_{dSalaryInv}) \land $ \\ 
+ $ (BOX15F_{dSalaryInv} \leftrightarrow BOX12P_{dSalaryInv}) \land $ \\ 
+ $ (BOX6F_{dSalaryInv} \leftrightarrow BOX4P_{dSalaryInv}) \land $ \\ 
+ $ (BOX2F_{dSalaryInv} \leftrightarrow BOX19P_{dSalaryInv}) \land $ \\ 
+ $ (BOX0F_{dSalaryInv} \leftrightarrow BOX17P_{dSalaryInv}) \land $ \\ 
+ $ (BOX1F_{dSalaryInv} \leftrightarrow BOX18P_{dSalaryInv}) \land $ \\ 
+ $ (BOX8F_{dSalaryInv} \leftrightarrow BOX10P_{dSalaryInv}) \land $ \\ 
+ $ (PSalaryF \leftrightarrow PSalaryP) \land $ \\ 
+ $ (PinvSalaryF \leftrightarrow PinvSalaryP) \land $ \\ 
+ $ (NXT5F_{dSalaryInv} \leftrightarrow NXT3P_{dSalaryInv}) \land $ \\ 
+ $ (NXT7F_{dSalaryInv} \leftrightarrow NXT9P_{dSalaryInv}) \land $ \\ 
+ $ (E1SalaryF_{dSalaryInv} \leftrightarrow E1SalaryP_{dSalaryInv}) \land $ \\ 
+ $ (PSalaryF \leftrightarrow PSalaryF) \land $ \\ 
+ $ (PinvSalaryF \leftrightarrow PinvSalaryF) \land $ \\ 
+ $ (E1SalaryF_{dSalary} \leftrightarrow E1SalaryP_{dSalary}) \land $ \\ 
+ $ (E1SalaryInvF_{dSalaryInv} \leftrightarrow E1SalaryInvP_{dSalaryInv}) \land $ \\ 
+ $ (PinvSalaryF \leftrightarrow PinvSalaryF) \land $ \\ 
+ $ (PSalaryF \leftrightarrow PSalaryF) \land $ \\ 
+ $ (E1SalaryInvF_{dSalaryInv} \leftrightarrow E1SalaryInvP_{dSalaryInv}) \land $ \\ 
+ $ (PersonF_{dSalaryInv} \leftrightarrow PersonP_{dSalaryInv}) \land $ \\ 
+ $ (PersonF_{dSalaryInv} \leftrightarrow PersonP_{dSalaryInv}) \land $ \\ 
+ $ (E1SalaryInvF_{dSalaryInv} \leftrightarrow E1SalaryInvP_{dSalaryInv}) \land $ \\ 
+ $ (IntegerF_{dSalaryInv} \leftrightarrow IntegerP_{dSalaryInv}) \land $ \\ 
+ $ (PersonF_{dSalaryInv} \leftrightarrow PersonP_{dSalaryInv}) \land $ \\ 
+ $ (E1SalaryF_{dSalaryInv} \leftrightarrow E1SalaryP_{dSalaryInv}) \land $ \\ 
+ $ (PersonF_{dSalaryInv} \leftrightarrow PersonP_{dSalaryInv}) \land $ \\ 
+ $ (E2SalaryF_{dSalaryInv} \leftrightarrow E2SalaryP_{dSalaryInv}) \land $ \\ 
+ $ (IntegerF_{dSalaryInv} \leftrightarrow IntegerP_{dSalaryInv}) \land $ \\ 
+ $ (PersonF_{dSalaryInv} \leftrightarrow PersonP_{dSalaryInv}) \land $ \\ 
+ $ (E2SalaryF_{dSalaryInv} \leftrightarrow E2SalaryP_{dSalaryInv}) \land $ \\ 
+ $ (E1SalaryF_{dSalaryInv} \leftrightarrow E1SalaryP_{dSalaryInv}) \land $ \\ 
+ $ BOX2F_{dSalary} \land $ \\ 
+ $ BOX2F_{dSalaryInv})$ 
+\end{document}

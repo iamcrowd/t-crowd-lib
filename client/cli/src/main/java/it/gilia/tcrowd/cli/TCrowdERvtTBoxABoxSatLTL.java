@@ -119,7 +119,8 @@ public class TCrowdERvtTBoxABoxSatLTL extends TCrowdEncodingERvtRelatedCommand {
                     				true, 
                     				fileNameOut,
                     				true,
-                    				solver);
+                    				solver,
+                    				false);
                     	    
                     	}else { /*Check for TBox and ABox satisfiability.*/
                     		String jsonTxtData = IOUtils.toString(td, "UTF-8");
@@ -134,7 +135,8 @@ public class TCrowdERvtTBoxABoxSatLTL extends TCrowdEncodingERvtRelatedCommand {
                     				fileNameOut,
                     				abox,
                     				true,
-                    				solver);
+                    				solver,
+                    				false);
                     	}
                     }
                	}

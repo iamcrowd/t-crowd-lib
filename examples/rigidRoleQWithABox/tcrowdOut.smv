@@ -1,0 +1,140 @@
+MODULE main
+VAR
+	String_dName :boolean;
+	String_dNameInv :boolean;
+	String_Mcking :boolean;
+	String_Maria :boolean;
+	String_Kennedy :boolean;
+	String_John :boolean;
+	String_Ana :boolean;
+	PinvName :boolean;
+	Person_dName :boolean;
+	Person_dNameInv :boolean;
+	Person_Mcking :boolean;
+	Person_Maria :boolean;
+	Person_Kennedy :boolean;
+	Person_John :boolean;
+	Person_Ana :boolean;
+	PName :boolean;
+	E2Name_dName :boolean;
+	E2Name_dNameInv :boolean;
+	E2Name_Mcking :boolean;
+	E2Name_Maria :boolean;
+	E2Name_Kennedy :boolean;
+	E2Name_John :boolean;
+	E2Name_Ana :boolean;
+	E2NameInv_Kennedy :boolean;
+	E1Name_dName :boolean;
+	E1Name_dNameInv :boolean;
+	E1Name_Mcking :boolean;
+	E1Name_Maria :boolean;
+	E1Name_Kennedy :boolean;
+	E1Name_John :boolean;
+	E1Name_Ana :boolean;
+	E1NameInv_dName :boolean;
+	E1NameInv_dNameInv :boolean;
+	E1NameInv_Mcking :boolean;
+	E1NameInv_Maria :boolean;
+	E1NameInv_Kennedy :boolean;
+	E1NameInv_John :boolean;
+	E1NameInv_Ana :boolean;
+
+
+LTLSPEC !( ( H G ((E1NameInv_dNameInv -> String_dNameInv) & 
+	(Person_dNameInv -> E1Name_dNameInv) & 
+	(Person_dNameInv ->  !E2Name_dNameInv) & 
+	(String_dNameInv ->  !Person_dNameInv) & 
+	(E2Name_dNameInv -> E1Name_dNameInv) & 
+	(E1NameInv_dNameInv ->  G  H E1NameInv_dNameInv) & 
+	(E1Name_dNameInv ->  G  H E1Name_dNameInv) & 
+	(E2Name_dNameInv ->  G  H E2Name_dNameInv)) & 
+	(E1Name_dNameInv ->  H G PName) & 
+	(PinvName -> E1Name_dName) & 
+	(E1NameInv_dNameInv ->  H G PinvName) & 
+	(PName -> E1NameInv_dNameInv) & 
+	 H G ((E1NameInv_Ana -> String_Ana) & 
+	(Person_Ana -> E1Name_Ana) & 
+	(Person_Ana ->  !E2Name_Ana) & 
+	(String_Ana ->  !Person_Ana) & 
+	(E2Name_Ana -> E1Name_Ana) & 
+	(E1NameInv_Ana ->  G  H E1NameInv_Ana) & 
+	(E1Name_Ana ->  G  H E1Name_Ana) & 
+	(E2Name_Ana ->  G  H E2Name_Ana)) & 
+	(E1Name_Ana ->  H G PName) & 
+	(PinvName -> E1Name_dName) & 
+	(E1NameInv_Ana ->  H G PinvName) & 
+	(PName -> E1NameInv_dNameInv) & 
+	 H G ((E1NameInv_Mcking -> String_Mcking) & 
+	(Person_Mcking -> E1Name_Mcking) & 
+	(Person_Mcking ->  !E2Name_Mcking) & 
+	(String_Mcking ->  !Person_Mcking) & 
+	(E2Name_Mcking -> E1Name_Mcking) & 
+	(E1NameInv_Mcking ->  G  H E1NameInv_Mcking) & 
+	(E1Name_Mcking ->  G  H E1Name_Mcking) & 
+	(E2Name_Mcking ->  G  H E2Name_Mcking)) & 
+	(E1Name_Mcking ->  H G PName) & 
+	(PinvName -> E1Name_dName) & 
+	(E1NameInv_Mcking ->  H G PinvName) & 
+	(PName -> E1NameInv_dNameInv) & 
+	 H G ((E1NameInv_John -> String_John) & 
+	(Person_John -> E1Name_John) & 
+	(Person_John ->  !E2Name_John) & 
+	(String_John ->  !Person_John) & 
+	(E2Name_John -> E1Name_John) & 
+	(E1NameInv_John ->  G  H E1NameInv_John) & 
+	(E1Name_John ->  G  H E1Name_John) & 
+	(E2Name_John ->  G  H E2Name_John)) & 
+	(E1Name_John ->  H G PName) & 
+	(PinvName -> E1Name_dName) & 
+	(E1NameInv_John ->  H G PinvName) & 
+	(PName -> E1NameInv_dNameInv) & 
+	 H G ((E1NameInv_dName -> String_dName) & 
+	(Person_dName -> E1Name_dName) & 
+	(Person_dName ->  !E2Name_dName) & 
+	(String_dName ->  !Person_dName) & 
+	(E2Name_dName -> E1Name_dName) & 
+	(E1NameInv_dName ->  G  H E1NameInv_dName) & 
+	(E1Name_dName ->  G  H E1Name_dName) & 
+	(E2Name_dName ->  G  H E2Name_dName)) & 
+	(E1Name_dName ->  H G PName) & 
+	(PinvName -> E1Name_dName) & 
+	(E1NameInv_dName ->  H G PinvName) & 
+	(PName -> E1NameInv_dNameInv) & 
+	 H G ((E1NameInv_Maria -> String_Maria) & 
+	(Person_Maria -> E1Name_Maria) & 
+	(Person_Maria ->  !E2Name_Maria) & 
+	(String_Maria ->  !Person_Maria) & 
+	(E2Name_Maria -> E1Name_Maria) & 
+	(E1NameInv_Maria ->  G  H E1NameInv_Maria) & 
+	(E1Name_Maria ->  G  H E1Name_Maria) & 
+	(E2Name_Maria ->  G  H E2Name_Maria)) & 
+	(E1Name_Maria ->  H G PName) & 
+	(PinvName -> E1Name_dName) & 
+	(E1NameInv_Maria ->  H G PinvName) & 
+	(PName -> E1NameInv_dNameInv) & 
+	 H G ((E1NameInv_Kennedy -> String_Kennedy) & 
+	(Person_Kennedy -> E1Name_Kennedy) & 
+	(Person_Kennedy ->  !E2Name_Kennedy) & 
+	(String_Kennedy ->  !Person_Kennedy) & 
+	(E2Name_Kennedy -> E1Name_Kennedy) & 
+	(E1NameInv_Kennedy ->  G  H E1NameInv_Kennedy) & 
+	(E1Name_Kennedy ->  G  H E1Name_Kennedy) & 
+	(E2Name_Kennedy ->  G  H E2Name_Kennedy)) & 
+	(E1Name_Kennedy ->  H G PName) & 
+	(PinvName -> E1Name_dName) & 
+	(E1NameInv_Kennedy ->  H G PinvName) & 
+	(PName -> E1NameInv_dNameInv) & 
+	 X  X  X E1Name_Ana & 
+	 X E2Name_John & 
+	 X E2NameInv_Kennedy & 
+	 X E1NameInv_Kennedy & 
+	 X  X  X E2NameInv_Kennedy & 
+	 X  X  X E1NameInv_Kennedy & 
+	 X E1Name_John & 
+	Person_John & 
+	E2NameInv_Kennedy & 
+	E1NameInv_Kennedy & 
+	E2Name_John & 
+	E1Name_John & 
+	E1Name_Maria & 
+	E1NameInv_Mcking))

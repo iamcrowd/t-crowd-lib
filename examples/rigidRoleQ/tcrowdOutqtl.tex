@@ -1,0 +1,34 @@
+\documentclass[a4paper,10pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage{pdfpages}
+\usepackage{latexsym}
+\usepackage{amssymb,amsthm,amsmath}
+\usepackage{amsthm}
+
+\begin{document}
+ \newcommand{\nxt}{{\ensuremath\raisebox{0.25ex}{\text{\scriptsize$\bigcirc$}}}}
+\newcommand{\Rdiamond}{\Diamond_{\!F}}
+\newcommand{\Rbox}{\Box_{\!F}}
+\newcommand{\Rnext}{\nxt_{\!F}}
+\newcommand{\Ldiamond}{\Diamond_{\!P}}
+\newcommand{\Lbox}{\Box_{\!P}}
+\newcommand{\Lnext}{\nxt_{\!P}}
+\newcommand{\SVdiamond}{\mathop{\ooalign{$\Diamond$ \cr \kern0.5ex
+    \raisebox{0.35ex}{\scalebox{0.7}{$*$}}} \kern-0.9ex}}
+\newcommand{\SVbox}{\mathop{\ooalign{$\Box$ \cr \kern0.42ex
+    \raisebox{0.3ex}{\scalebox{0.7}{$*$}}} \kern-0.9ex}}
+
+
+$ \forall x. ( \SVbox ((E1NameInv(x) \rightarrow String(x)) \land $ \\ 
+ $ (Person(x) \rightarrow E1Name(x)) \land $ \\ 
+ $ (Person(x) \rightarrow  \lnot E2Name(x)) \land $ \\ 
+ $ (String(x) \rightarrow  \lnot Person(x)) \land $ \\ 
+ $ (E2Name(x) \rightarrow E1Name(x)) \land $ \\ 
+ $ (E1NameInv(x) \rightarrow  \Rnext  \Rbox  \Lnext  \Lbox E1NameInv(x)) \land $ \\ 
+ $ (E1Name(x) \rightarrow  \Rnext  \Rbox  \Lnext  \Lbox E1Name(x)) \land $ \\ 
+ $ (E2Name(x) \rightarrow  \Rnext  \Rbox  \Lnext  \Lbox E2Name(x))) \land $ \\ 
+ $ (E1Name(x) \rightarrow  \SVbox PName) \land $ \\ 
+ $ (PinvName \rightarrow E1Name(dName)) \land $ \\ 
+ $ (E1NameInv(x) \rightarrow  \SVbox PinvName) \land $ \\ 
+ $ (PName \rightarrow E1NameInv(dNameInv)))$ 
+\end{document}

@@ -1,0 +1,6 @@
+org/gario/code/output/OutputDocument.class
+org/gario/code/output/SymbolUndefinedException.class
+org/gario/code/output/FormattableObj.class
+org/gario/code/output/OutputFormat.class
+org/gario/code/output/OutputSymbolType.class
+org/gario/code/output/StatsOutputDocument.class

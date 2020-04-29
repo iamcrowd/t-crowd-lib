@@ -34,7 +34,7 @@ public class LocalRoleQ {
 		TDLLiteFPXReasoner.buildCheckABoxtSatisfiability(
 				exLRTDL.getTBox(),
 				true, 
-				"LocalR_Adult",exLRTDL.getABox());
+				"LocalR_Adult",exLRTDL.getABox(),false);
 		
 		Map<String, String> stats = exLRTDL.getTBox().getStats();
 		System.out.println("");

@@ -132,7 +132,8 @@ public class TCrowdERvtTBoxConceptSat extends TCrowdEncodingERvtRelatedCommand {
                     	    		true, 
                     	    		fileNameOut,
                     	    		pf,
-                    	    		solver);
+                    	    		solver,
+                    	    		false);
                     	    
                     	}else { /*Check for Concept satisfiability.*/
                     		System.out.println(line);
@@ -145,7 +146,8 @@ public class TCrowdERvtTBoxConceptSat extends TCrowdEncodingERvtRelatedCommand {
                     				true, 
                     				fileNameOut,
                     				pf,
-                    				solver);
+                    				solver,
+                    				false);
                     	}
                     }
                	}

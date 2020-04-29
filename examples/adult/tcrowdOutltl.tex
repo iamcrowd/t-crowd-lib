@@ -1,0 +1,61 @@
+\documentclass[a4paper,10pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage{pdfpages}
+\usepackage{latexsym}
+\usepackage{amssymb,amsthm,amsmath}
+\usepackage{amsthm}
+
+\begin{document}
+ \newcommand{\nxt}{{\ensuremath\raisebox{0.25ex}{\text{\scriptsize$\bigcirc$}}}}
+\newcommand{\Rdiamond}{\Diamond_{\!F}}
+\newcommand{\Rbox}{\Box_{\!F}}
+\newcommand{\Rnext}{\nxt_{\!F}}
+\newcommand{\Ldiamond}{\Diamond_{\!P}}
+\newcommand{\Lbox}{\Box_{\!P}}
+\newcommand{\Lnext}{\nxt_{\!P}}
+\newcommand{\SVdiamond}{\mathop{\ooalign{$\Diamond$ \cr \kern0.5ex
+    \raisebox{0.35ex}{\scalebox{0.7}{$*$}}} \kern-0.9ex}}
+\newcommand{\SVbox}{\mathop{\ooalign{$\Box$ \cr \kern0.42ex
+    \raisebox{0.3ex}{\scalebox{0.7}{$*$}}} \kern-0.9ex}}
+
+
+$( \Rbox (( \Rnext NXT1P_{Personwitness} \leftrightarrow BOX2P_{Personwitness}) \land $ \\ 
+ $ (NXT3F_{Personwitness} \leftrightarrow  \Rnext BOX4F_{Personwitness}) \land $ \\ 
+ $ ( \Rnext BOX5P_{Personwitness} \leftrightarrow ( \Rnext ((AdultP_{Personwitness} \rightarrow NXT1P_{Personwitness}) \land $ \\ 
+ $ (AdultP_{Personwitness} \rightarrow PersonP_{Personwitness}) \land $ \\ 
+ $ (MinorP_{Personwitness} \rightarrow PersonP_{Personwitness}) \land $ \\ 
+ $ (AdultP_{Personwitness} \rightarrow  \lnot MinorP_{Personwitness}) \land $ \\ 
+ $ (PersonP_{Personwitness} \rightarrow  \lnot ( \lnot AdultP_{Personwitness} \land $ \\ 
+ $  \lnot MinorP_{Personwitness}))) \land $ \\ 
+ $ BOX5P_{Personwitness})) \land $ \\ 
+ $ ( \Rnext BOX2P_{Personwitness} \leftrightarrow ( \Rnext AdultP_{Personwitness} \land $ \\ 
+ $ BOX2P_{Personwitness})) \land $ \\ 
+ $ (BOX6F_{Personwitness} \leftrightarrow  \Rbox ((AdultF_{Personwitness} \rightarrow NXT3F_{Personwitness}) \land $ \\ 
+ $ (AdultF_{Personwitness} \rightarrow PersonF_{Personwitness}) \land $ \\ 
+ $ (MinorF_{Personwitness} \rightarrow PersonF_{Personwitness}) \land $ \\ 
+ $ (AdultF_{Personwitness} \rightarrow  \lnot MinorF_{Personwitness}) \land $ \\ 
+ $ (PersonF_{Personwitness} \rightarrow  \lnot ( \lnot AdultF_{Personwitness} \land $ \\ 
+ $  \lnot MinorF_{Personwitness})))) \land $ \\ 
+ $ (BOX4F_{Personwitness} \leftrightarrow  \Rbox AdultF_{Personwitness}) \land $ \\ 
+ $ ( \Rnext BOX0F_{Personwitness} \leftrightarrow ( \Rnext BOX6F_{Personwitness} \land $ \\ 
+ $ BOX0F_{Personwitness})) \land $ \\ 
+ $ (BOX7P_{Personwitness} \leftrightarrow  \Rbox BOX5P_{Personwitness})) \land $ \\ 
+ $ (BOX6F_{Personwitness} \leftrightarrow BOX5P_{Personwitness}) \land $ \\ 
+ $ (BOX4F_{Personwitness} \leftrightarrow BOX2P_{Personwitness}) \land $ \\ 
+ $ (BOX0F_{Personwitness} \leftrightarrow BOX7P_{Personwitness}) \land $ \\ 
+ $ (NXT3F_{Personwitness} \leftrightarrow NXT1P_{Personwitness}) \land $ \\ 
+ $ (PersonF_{Personwitness} \leftrightarrow PersonP_{Personwitness}) \land $ \\ 
+ $ (AdultF_{Personwitness} \leftrightarrow AdultP_{Personwitness}) \land $ \\ 
+ $ (AdultF_{Personwitness} \leftrightarrow AdultP_{Personwitness}) \land $ \\ 
+ $ (AdultF_{Personwitness} \leftrightarrow AdultP_{Personwitness}) \land $ \\ 
+ $ (PersonF_{Personwitness} \leftrightarrow PersonP_{Personwitness}) \land $ \\ 
+ $ (MinorF_{Personwitness} \leftrightarrow MinorP_{Personwitness}) \land $ \\ 
+ $ (PersonF_{Personwitness} \leftrightarrow PersonP_{Personwitness}) \land $ \\ 
+ $ (AdultF_{Personwitness} \leftrightarrow AdultP_{Personwitness}) \land $ \\ 
+ $ (MinorF_{Personwitness} \leftrightarrow MinorP_{Personwitness}) \land $ \\ 
+ $ (PersonF_{Personwitness} \leftrightarrow PersonP_{Personwitness}) \land $ \\ 
+ $ (AdultF_{Personwitness} \leftrightarrow AdultP_{Personwitness}) \land $ \\ 
+ $ (MinorF_{Personwitness} \leftrightarrow MinorP_{Personwitness}) \land $ \\ 
+ $ PersonF_{Personwitness} \land $ \\ 
+ $ BOX0F_{Personwitness})$ 
+\end{document}

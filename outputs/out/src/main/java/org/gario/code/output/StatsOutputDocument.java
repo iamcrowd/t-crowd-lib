@@ -5,7 +5,15 @@ import java.io.FileWriter;
 
 public class StatsOutputDocument {
 		
-		public StatsOutputDocument(){}
+		boolean aboxtime;
+		
+		public StatsOutputDocument(boolean abox){
+			if (abox) {
+				aboxtime = true;
+			} else {
+				aboxtime = false;
+			}
+		}
 
 		/**
 		 * TBox-QTL1-QTLN-LTL
@@ -23,10 +31,17 @@ public class StatsOutputDocument {
 			FileWriter fstream = new FileWriter(fileName);
 		    BufferedWriter out = new BufferedWriter(fstream);
 		    
-		    out.write(tbox2qtl+"\n");
-		    out.write(qtl2qtln+"\n");
-		    out.write(qtln2ltl+"\n");
-		    out.write(size+"\n");
+		    if (aboxtime) {
+		    	out.write("TBox to QTL1 time (ms):\t" + tbox2qtl + "\n");
+		    	out.write("ABox to QTL1 time (ms):\t" + qtl2qtln +"\n");
+		    	out.write("QTL1 to LTL time (ms):\t" + qtln2ltl +"\n");
+		    	out.write("Number of Propositions:\t" + size +"\n");
+		    } else {
+		    	out.write("TBox to QTL1 time (ms):\t" + tbox2qtl + "\n");
+		    	out.write("QTL1 to QTLN time (ms):\t" + qtl2qtln +"\n");
+		    	out.write("QTLN to LTL time (ms):\t" + qtln2ltl +"\n");
+		    	out.write("Number of Propositions:\t" + size +"\n");
+		    }
 		    
 		    //Close the output stream
 		    out.close();
@@ -47,9 +62,9 @@ public class StatsOutputDocument {
 			FileWriter fstream = new FileWriter(fileName);
 		    BufferedWriter out = new BufferedWriter(fstream);
 		    
-		    out.write(tbox2qtl+"\n");
-		    out.write(qtl2ltl+"\n");
-		    out.write(size+"\n");
+		    out.write("TBox to QTL1 time (ms):\t" + tbox2qtl +"\n");
+		    out.write("QTL1 to LTL time (ms):\t" + qtl2ltl +"\n");
+		    out.write("Number of Propositions:\t" + size +"\n");
 
 		    //Close the output stream
 		    out.close();
@@ -72,16 +87,15 @@ public class StatsOutputDocument {
 			FileWriter fstream = new FileWriter(fileName);
 		    BufferedWriter out = new BufferedWriter(fstream);
 		    
-		    out.write(tbox2qtl+"\n");
-		    out.write(qtl2qtln+"\n");
-		    out.write(qtlnABox+"\n");
-		    out.write(qtln2ltl+"\n");
-		    out.write(size+"\n");
+		    out.write("TBox to QTL1 time (ms):\t" + tbox2qtl + "\n");
+		    out.write("QTL1 to QTLN time (ms):\t" + qtl2qtln + "\n");
+		    out.write("ABox to QTLN time (ms):\t" + qtlnABox + "\n");
+		    out.write("QTLN to LTL time (ms):\t" + qtln2ltl + "\n");
+		    out.write("Number of Propositions:\t" + size + "\n");
 
 		    //Close the output stream
 		    out.close();
 		}
-		
 		
 }
 

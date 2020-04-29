@@ -1,0 +1,19 @@
+{"entities": [
+	{"name":"Person",
+	"id":"c51", 
+	"timestamp": "snapshot", 
+	"position":{"x":520,"y":220}}],
+"attributes":[
+	{"name":"Salary",
+	"type":"normal",
+	"datatype":"Integer",
+	"id":"c296", 
+	"timestamp": "temporal", 
+	"position":{"x":661.1111450195312,"y":145.55551147460938}}],
+"relationships":[],
+"links":[
+	{"name":"c309",
+	"entity": "Person", 
+	"attribute": "Salary",
+	"type":"attribute"}]
+}

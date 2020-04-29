@@ -1,0 +1,69 @@
+\documentclass[a4paper,10pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage{pdfpages}
+\usepackage{latexsym}
+\usepackage{amssymb,amsthm,amsmath}
+\usepackage{amsthm}
+
+\begin{document}
+ \newcommand{\nxt}{{\ensuremath\raisebox{0.25ex}{\text{\scriptsize$\bigcirc$}}}}
+\newcommand{\Rdiamond}{\Diamond_{\!F}}
+\newcommand{\Rbox}{\Box_{\!F}}
+\newcommand{\Rnext}{\nxt_{\!F}}
+\newcommand{\Ldiamond}{\Diamond_{\!P}}
+\newcommand{\Lbox}{\Box_{\!P}}
+\newcommand{\Lnext}{\nxt_{\!P}}
+\newcommand{\SVdiamond}{\mathop{\ooalign{$\Diamond$ \cr \kern0.5ex
+    \raisebox{0.35ex}{\scalebox{0.7}{$*$}}} \kern-0.9ex}}
+\newcommand{\SVbox}{\mathop{\ooalign{$\Box$ \cr \kern0.42ex
+    \raisebox{0.3ex}{\scalebox{0.7}{$*$}}} \kern-0.9ex}}
+
+
+$( \SVbox ((Person_{dSalary} \rightarrow  \Rbox  \Lbox Person_{dSalary}) \land $ \\ 
+ $ (E1SalaryInv_{dSalary} \rightarrow Integer_{dSalary}) \land $ \\ 
+ $ (Person_{dSalary} \rightarrow E1Salary_{dSalary}) \land $ \\ 
+ $ (Person_{dSalary} \rightarrow  \lnot E2Salary_{dSalary}) \land $ \\ 
+ $ (Integer_{dSalary} \rightarrow  \lnot Person_{dSalary}) \land $ \\ 
+ $ (E2Salary_{dSalary} \rightarrow E1Salary_{dSalary})) \land $ \\ 
+ $ (E1Salary_{dSalary} \rightarrow  \SVbox PSalary) \land $ \\ 
+ $ (PinvSalary \rightarrow E1Salary_{dSalary}) \land $ \\ 
+ $ (E1SalaryInv_{dSalary} \rightarrow  \SVbox PinvSalary) \land $ \\ 
+ $ (PSalary \rightarrow E1SalaryInv_{dSalaryInv}) \land $ \\ 
+ $  \SVbox ((Person_{dSalaryInv} \rightarrow  \Rbox  \Lbox Person_{dSalaryInv}) \land $ \\ 
+ $ (E1SalaryInv_{dSalaryInv} \rightarrow Integer_{dSalaryInv}) \land $ \\ 
+ $ (Person_{dSalaryInv} \rightarrow E1Salary_{dSalaryInv}) \land $ \\ 
+ $ (Person_{dSalaryInv} \rightarrow  \lnot E2Salary_{dSalaryInv}) \land $ \\ 
+ $ (Integer_{dSalaryInv} \rightarrow  \lnot Person_{dSalaryInv}) \land $ \\ 
+ $ (E2Salary_{dSalaryInv} \rightarrow E1Salary_{dSalaryInv})) \land $ \\ 
+ $ (E1Salary_{dSalaryInv} \rightarrow  \SVbox PSalary) \land $ \\ 
+ $ (PinvSalary \rightarrow E1Salary_{dSalary}) \land $ \\ 
+ $ (E1SalaryInv_{dSalaryInv} \rightarrow  \SVbox PinvSalary) \land $ \\ 
+ $ (PSalary \rightarrow E1SalaryInv_{dSalaryInv}) \land $ \\ 
+ $  \SVbox ((Person_{John} \rightarrow  \Rbox  \Lbox Person_{John}) \land $ \\ 
+ $ (E1SalaryInv_{John} \rightarrow Integer_{John}) \land $ \\ 
+ $ (Person_{John} \rightarrow E1Salary_{John}) \land $ \\ 
+ $ (Person_{John} \rightarrow  \lnot E2Salary_{John}) \land $ \\ 
+ $ (Integer_{John} \rightarrow  \lnot Person_{John}) \land $ \\ 
+ $ (E2Salary_{John} \rightarrow E1Salary_{John})) \land $ \\ 
+ $ (E1Salary_{John} \rightarrow  \SVbox PSalary) \land $ \\ 
+ $ (PinvSalary \rightarrow E1Salary_{dSalary}) \land $ \\ 
+ $ (E1SalaryInv_{John} \rightarrow  \SVbox PinvSalary) \land $ \\ 
+ $ (PSalary \rightarrow E1SalaryInv_{dSalaryInv}) \land $ \\ 
+ $  \SVbox ((Person_{S1} \rightarrow  \Rbox  \Lbox Person_{S1}) \land $ \\ 
+ $ (E1SalaryInv_{S1} \rightarrow Integer_{S1}) \land $ \\ 
+ $ (Person_{S1} \rightarrow E1Salary_{S1}) \land $ \\ 
+ $ (Person_{S1} \rightarrow  \lnot E2Salary_{S1}) \land $ \\ 
+ $ (Integer_{S1} \rightarrow  \lnot Person_{S1}) \land $ \\ 
+ $ (E2Salary_{S1} \rightarrow E1Salary_{S1})) \land $ \\ 
+ $ (E1Salary_{S1} \rightarrow  \SVbox PSalary) \land $ \\ 
+ $ (PinvSalary \rightarrow E1Salary_{dSalary}) \land $ \\ 
+ $ (E1SalaryInv_{S1} \rightarrow  \SVbox PinvSalary) \land $ \\ 
+ $ (PSalary \rightarrow E1SalaryInv_{dSalaryInv}) \land $ \\ 
+ $  \Rnext E1Salary_{John} \land $ \\ 
+ $  \Rnext E1SalaryInv_{S1} \land $ \\ 
+ $  \Rnext  \Rnext E1Salary_{John} \land $ \\ 
+ $  \Rnext  \Rnext E1SalaryInv_{S1} \land $ \\ 
+ $ E1Salary_{John} \land $ \\ 
+ $ E1SalaryInv_{S1} \land $ \\ 
+ $ Person_{John})$ 
+\end{document}

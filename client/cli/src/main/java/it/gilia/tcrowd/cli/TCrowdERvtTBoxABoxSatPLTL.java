@@ -108,7 +108,8 @@ public class TCrowdERvtTBoxABoxSatPLTL extends TCrowdEncodingERvtRelatedCommand 
                     	    		true, 
                     	    		fileNameOut,
                     	    		false,
-                    	    		"NuSMV");
+                    	    		"NuSMV",
+                    	    		false);
                     	    
                     	}else { /*Check for TBox and ABox satisfiability */
                     		String jsonTxtData = IOUtils.toString(td, "UTF-8");
@@ -121,7 +122,8 @@ public class TCrowdERvtTBoxABoxSatPLTL extends TCrowdEncodingERvtRelatedCommand 
                         			tbox,
                         			true, 
                         			fileNameOut,
-                        			abox);
+                        			abox,
+                        			false);
                     	}
                     }
                	}

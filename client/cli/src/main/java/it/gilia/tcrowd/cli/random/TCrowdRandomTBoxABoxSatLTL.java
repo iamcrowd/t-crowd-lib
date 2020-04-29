@@ -105,7 +105,8 @@ public class TCrowdRandomTBoxABoxSatLTL extends TCrowdRandomTDLRelatedCommand {
                     			true, 
                     			fileNameOut,
                     			true,
-                    			solver);
+                    			solver,
+                    			true);
                     	    
                  } else { /*Check for TBox and ABox satisfiability.*/
                 	 String jsonTxtData = IOUtils.toString(td, "UTF-8");
@@ -121,7 +122,8 @@ public class TCrowdRandomTBoxABoxSatLTL extends TCrowdRandomTDLRelatedCommand {
                     			fileNameOut,
                     			abox,
                     			true,
-                    			solver);
+                    			solver,
+                    			true);
                  }
               }
         } catch (Exception e) {

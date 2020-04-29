@@ -107,7 +107,7 @@ public class PureFutureTranslator extends NaturalTranslator{
 		cF = new ConjunctiveFormula();
 		cP = new ConjunctiveFormula();
 		
-		for(NextFuture s : nxtF){
+		for(NextFuture s : nxtF){				// X nxtsubF_ <-> nxtsubF_ 
 			cF.add(new BimplicationFormula(
 											new NextFuture(super.tr(s, true)),
 											super.tr(s.getSubFormulae().get(0),true)

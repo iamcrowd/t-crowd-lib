@@ -1,0 +1,322 @@
+MODULE main
+VAR
+	StringP_dName :boolean;
+	StringP_dNameInv :boolean;
+	StringF_dName :boolean;
+	StringF_dNameInv :boolean;
+	PinvNameP :boolean;
+	PinvNameF :boolean;
+	PersonP_dName :boolean;
+	PersonP_dNameInv :boolean;
+	PersonF_dName :boolean;
+	PersonF_dNameInv :boolean;
+	PNameP :boolean;
+	PNameF :boolean;
+	NXT9F_dName :boolean;
+	NXT9F_dNameInv :boolean;
+	NXT7P_dName :boolean;
+	NXT7P_dNameInv :boolean;
+	NXT5P_dName :boolean;
+	NXT5P_dNameInv :boolean;
+	NXT3P_dName :boolean;
+	NXT3P_dNameInv :boolean;
+	NXT25P_dName :boolean;
+	NXT25P_dNameInv :boolean;
+	NXT23P_dName :boolean;
+	NXT23P_dNameInv :boolean;
+	NXT21P_dName :boolean;
+	NXT21P_dNameInv :boolean;
+	NXT19F_dName :boolean;
+	NXT19F_dNameInv :boolean;
+	NXT17F_dName :boolean;
+	NXT17F_dNameInv :boolean;
+	NXT15F_dName :boolean;
+	NXT15F_dNameInv :boolean;
+	NXT13F_dName :boolean;
+	NXT13F_dNameInv :boolean;
+	NXT11F_dName :boolean;
+	NXT11F_dNameInv :boolean;
+	E2NameP_dName :boolean;
+	E2NameP_dNameInv :boolean;
+	E2NameF_dName :boolean;
+	E2NameF_dNameInv :boolean;
+	E1NameP_dName :boolean;
+	E1NameP_dNameInv :boolean;
+	E1NameInvP_dName :boolean;
+	E1NameInvP_dNameInv :boolean;
+	E1NameInvF_dName :boolean;
+	E1NameInvF_dNameInv :boolean;
+	E1NameF_dName :boolean;
+	E1NameF_dNameInv :boolean;
+	BOX8P_dName :boolean;
+	BOX8P_dNameInv :boolean;
+	BOX6P_dName :boolean;
+	BOX6P_dNameInv :boolean;
+	BOX4P_dName :boolean;
+	BOX4P_dNameInv :boolean;
+	BOX35P_dName :boolean;
+	BOX35P_dNameInv :boolean;
+	BOX34P_dName :boolean;
+	BOX34P_dNameInv :boolean;
+	BOX33P_dName :boolean;
+	BOX33P_dNameInv :boolean;
+	BOX32F_dName :boolean;
+	BOX32F_dNameInv :boolean;
+	BOX31F_dName :boolean;
+	BOX31F_dNameInv :boolean;
+	BOX30F_dName :boolean;
+	BOX30F_dNameInv :boolean;
+	BOX2F_dName :boolean;
+	BOX2F_dNameInv :boolean;
+	BOX29P_dName :boolean;
+	BOX29P_dNameInv :boolean;
+	BOX28P_dName :boolean;
+	BOX28P_dNameInv :boolean;
+	BOX27P_dName :boolean;
+	BOX27P_dNameInv :boolean;
+	BOX26P_dName :boolean;
+	BOX26P_dNameInv :boolean;
+	BOX24P_dName :boolean;
+	BOX24P_dNameInv :boolean;
+	BOX22P_dName :boolean;
+	BOX22P_dNameInv :boolean;
+	BOX20F_dName :boolean;
+	BOX20F_dNameInv :boolean;
+	BOX1F_dName :boolean;
+	BOX1F_dNameInv :boolean;
+	BOX18F_dName :boolean;
+	BOX18F_dNameInv :boolean;
+	BOX16F_dName :boolean;
+	BOX16F_dNameInv :boolean;
+	BOX14F_dName :boolean;
+	BOX14F_dNameInv :boolean;
+	BOX12F_dName :boolean;
+	BOX12F_dNameInv :boolean;
+	BOX10F_dName :boolean;
+	BOX10F_dNameInv :boolean;
+	BOX0F_dName :boolean;
+	BOX0F_dNameInv :boolean;
+
+
+LTLSPEC !( ((E1NameF_dNameInv -> BOX0F_dNameInv) & 
+	(PinvNameF -> E1NameF_dName) & 
+	(E1NameInvF_dNameInv -> BOX1F_dNameInv) & 
+	(PNameF -> E1NameInvF_dNameInv) & 
+	 G (( X NXT3P_dNameInv <-> BOX4P_dNameInv) & 
+	( X NXT5P_dNameInv <-> BOX6P_dNameInv) & 
+	( X NXT7P_dNameInv <-> BOX8P_dNameInv) & 
+	(NXT9F_dNameInv <->  X BOX10F_dNameInv) & 
+	(NXT11F_dNameInv <->  X BOX12F_dNameInv) & 
+	(NXT13F_dNameInv <->  X BOX14F_dNameInv) & 
+	( X NXT15F_dNameInv <-> BOX16F_dNameInv) & 
+	( X NXT17F_dNameInv <-> BOX18F_dNameInv) & 
+	( X NXT19F_dNameInv <-> BOX20F_dNameInv) & 
+	(NXT21P_dNameInv <->  X BOX22P_dNameInv) & 
+	(NXT23P_dNameInv <->  X BOX24P_dNameInv) & 
+	(NXT25P_dNameInv <->  X BOX26P_dNameInv) & 
+	( X BOX27P_dNameInv <-> ( X PNameF & 
+	BOX27P_dNameInv)) & 
+	( X BOX28P_dNameInv <-> ( X PinvNameF & 
+	BOX28P_dNameInv)) & 
+	( X BOX29P_dNameInv <-> ( X ((E1NameInvP_dNameInv -> StringP_dNameInv) & 
+	(PersonP_dNameInv -> E1NameP_dNameInv) & 
+	(PersonP_dNameInv ->  !E2NameP_dNameInv) & 
+	(StringP_dNameInv ->  !PersonP_dNameInv) & 
+	(E2NameP_dNameInv -> E1NameP_dNameInv) & 
+	(E1NameInvP_dNameInv -> NXT3P_dNameInv) & 
+	(E1NameP_dNameInv -> NXT5P_dNameInv) & 
+	(E2NameP_dNameInv -> NXT7P_dNameInv)) & 
+	BOX29P_dNameInv)) & 
+	( X BOX4P_dNameInv <-> ( X NXT21P_dNameInv & 
+	BOX4P_dNameInv)) & 
+	( X BOX6P_dNameInv <-> ( X NXT23P_dNameInv & 
+	BOX6P_dNameInv)) & 
+	( X BOX8P_dNameInv <-> ( X NXT25P_dNameInv & 
+	BOX8P_dNameInv)) & 
+	(BOX30F_dNameInv <->  G PNameF) & 
+	(BOX31F_dNameInv <->  G PinvNameF) & 
+	(BOX32F_dNameInv <->  G ((E1NameInvF_dNameInv -> StringF_dNameInv) & 
+	(PersonF_dNameInv -> E1NameF_dNameInv) & 
+	(PersonF_dNameInv ->  !E2NameF_dNameInv) & 
+	(StringF_dNameInv ->  !PersonF_dNameInv) & 
+	(E2NameF_dNameInv -> E1NameF_dNameInv) & 
+	(E1NameInvF_dNameInv -> NXT9F_dNameInv) & 
+	(E1NameF_dNameInv -> NXT11F_dNameInv) & 
+	(E2NameF_dNameInv -> NXT13F_dNameInv))) & 
+	(BOX10F_dNameInv <->  G NXT15F_dNameInv) & 
+	(BOX12F_dNameInv <->  G NXT17F_dNameInv) & 
+	(BOX14F_dNameInv <->  G NXT19F_dNameInv) & 
+	( X BOX0F_dNameInv <-> ( X BOX30F_dNameInv & 
+	BOX0F_dNameInv)) & 
+	( X BOX1F_dNameInv <-> ( X BOX31F_dNameInv & 
+	BOX1F_dNameInv)) & 
+	( X BOX2F_dNameInv <-> ( X BOX32F_dNameInv & 
+	BOX2F_dNameInv)) & 
+	( X BOX16F_dNameInv <-> ( X E1NameInvF_dNameInv & 
+	BOX16F_dNameInv)) & 
+	( X BOX18F_dNameInv <-> ( X E1NameF_dNameInv & 
+	BOX18F_dNameInv)) & 
+	( X BOX20F_dNameInv <-> ( X E2NameF_dNameInv & 
+	BOX20F_dNameInv)) & 
+	(BOX33P_dNameInv <->  G BOX27P_dNameInv) & 
+	(BOX34P_dNameInv <->  G BOX28P_dNameInv) & 
+	(BOX35P_dNameInv <->  G BOX29P_dNameInv) & 
+	(BOX22P_dNameInv <->  G E1NameInvP_dNameInv) & 
+	(BOX24P_dNameInv <->  G E1NameP_dNameInv) & 
+	(BOX26P_dNameInv <->  G E2NameP_dNameInv)) & 
+	(BOX32F_dNameInv <-> BOX29P_dNameInv) & 
+	(BOX30F_dNameInv <-> BOX27P_dNameInv) & 
+	(BOX31F_dNameInv <-> BOX28P_dNameInv) & 
+	(BOX12F_dNameInv <-> BOX6P_dNameInv) & 
+	(BOX10F_dNameInv <-> BOX4P_dNameInv) & 
+	(BOX14F_dNameInv <-> BOX8P_dNameInv) & 
+	(BOX18F_dNameInv <-> BOX24P_dNameInv) & 
+	(BOX16F_dNameInv <-> BOX22P_dNameInv) & 
+	(BOX20F_dNameInv <-> BOX26P_dNameInv) & 
+	(BOX2F_dNameInv <-> BOX35P_dNameInv) & 
+	(BOX0F_dNameInv <-> BOX33P_dNameInv) & 
+	(BOX1F_dNameInv <-> BOX34P_dNameInv) & 
+	(PNameF <-> PNameP) & 
+	(PinvNameF <-> PinvNameP) & 
+	(NXT11F_dNameInv <-> NXT5P_dNameInv) & 
+	(NXT9F_dNameInv <-> NXT3P_dNameInv) & 
+	(NXT13F_dNameInv <-> NXT7P_dNameInv) & 
+	(NXT17F_dNameInv <-> NXT23P_dNameInv) & 
+	(NXT15F_dNameInv <-> NXT21P_dNameInv) & 
+	(NXT19F_dNameInv <-> NXT25P_dNameInv) & 
+	(E1NameF_dNameInv <-> E1NameP_dNameInv) & 
+	(PNameF <-> PNameF) & 
+	(PinvNameF <-> PinvNameF) & 
+	(E1NameF_dName <-> E1NameP_dName) & 
+	(E1NameInvF_dNameInv <-> E1NameInvP_dNameInv) & 
+	(PinvNameF <-> PinvNameF) & 
+	(PNameF <-> PNameF) & 
+	(E1NameInvF_dNameInv <-> E1NameInvP_dNameInv) & 
+	(E1NameInvF_dNameInv <-> E1NameInvP_dNameInv) & 
+	(StringF_dNameInv <-> StringP_dNameInv) & 
+	(PersonF_dNameInv <-> PersonP_dNameInv) & 
+	(E1NameF_dNameInv <-> E1NameP_dNameInv) & 
+	(PersonF_dNameInv <-> PersonP_dNameInv) & 
+	(E2NameF_dNameInv <-> E2NameP_dNameInv) & 
+	(StringF_dNameInv <-> StringP_dNameInv) & 
+	(PersonF_dNameInv <-> PersonP_dNameInv) & 
+	(E2NameF_dNameInv <-> E2NameP_dNameInv) & 
+	(E1NameF_dNameInv <-> E1NameP_dNameInv) & 
+	(E1NameInvF_dNameInv <-> E1NameInvP_dNameInv) & 
+	(E1NameInvF_dNameInv <-> E1NameInvP_dNameInv) & 
+	(E1NameF_dNameInv <-> E1NameP_dNameInv) & 
+	(E1NameF_dNameInv <-> E1NameP_dNameInv) & 
+	(E2NameF_dNameInv <-> E2NameP_dNameInv) & 
+	(E2NameF_dNameInv <-> E2NameP_dNameInv) & 
+	(E1NameF_dName -> BOX0F_dName) & 
+	(PinvNameF -> E1NameF_dName) & 
+	(E1NameInvF_dName -> BOX1F_dName) & 
+	(PNameF -> E1NameInvF_dNameInv) & 
+	 G (( X NXT3P_dName <-> BOX4P_dName) & 
+	( X NXT5P_dName <-> BOX6P_dName) & 
+	( X NXT7P_dName <-> BOX8P_dName) & 
+	(NXT9F_dName <->  X BOX10F_dName) & 
+	(NXT11F_dName <->  X BOX12F_dName) & 
+	(NXT13F_dName <->  X BOX14F_dName) & 
+	( X NXT15F_dName <-> BOX16F_dName) & 
+	( X NXT17F_dName <-> BOX18F_dName) & 
+	( X NXT19F_dName <-> BOX20F_dName) & 
+	(NXT21P_dName <->  X BOX22P_dName) & 
+	(NXT23P_dName <->  X BOX24P_dName) & 
+	(NXT25P_dName <->  X BOX26P_dName) & 
+	( X BOX27P_dName <-> ( X PNameF & 
+	BOX27P_dName)) & 
+	( X BOX28P_dName <-> ( X PinvNameF & 
+	BOX28P_dName)) & 
+	( X BOX29P_dName <-> ( X ((E1NameInvP_dName -> StringP_dName) & 
+	(PersonP_dName -> E1NameP_dName) & 
+	(PersonP_dName ->  !E2NameP_dName) & 
+	(StringP_dName ->  !PersonP_dName) & 
+	(E2NameP_dName -> E1NameP_dName) & 
+	(E1NameInvP_dName -> NXT3P_dName) & 
+	(E1NameP_dName -> NXT5P_dName) & 
+	(E2NameP_dName -> NXT7P_dName)) & 
+	BOX29P_dName)) & 
+	( X BOX4P_dName <-> ( X NXT21P_dName & 
+	BOX4P_dName)) & 
+	( X BOX6P_dName <-> ( X NXT23P_dName & 
+	BOX6P_dName)) & 
+	( X BOX8P_dName <-> ( X NXT25P_dName & 
+	BOX8P_dName)) & 
+	(BOX30F_dName <->  G PNameF) & 
+	(BOX31F_dName <->  G PinvNameF) & 
+	(BOX32F_dName <->  G ((E1NameInvF_dName -> StringF_dName) & 
+	(PersonF_dName -> E1NameF_dName) & 
+	(PersonF_dName ->  !E2NameF_dName) & 
+	(StringF_dName ->  !PersonF_dName) & 
+	(E2NameF_dName -> E1NameF_dName) & 
+	(E1NameInvF_dName -> NXT9F_dName) & 
+	(E1NameF_dName -> NXT11F_dName) & 
+	(E2NameF_dName -> NXT13F_dName))) & 
+	(BOX10F_dName <->  G NXT15F_dName) & 
+	(BOX12F_dName <->  G NXT17F_dName) & 
+	(BOX14F_dName <->  G NXT19F_dName) & 
+	( X BOX0F_dName <-> ( X BOX30F_dName & 
+	BOX0F_dName)) & 
+	( X BOX1F_dName <-> ( X BOX31F_dName & 
+	BOX1F_dName)) & 
+	( X BOX2F_dName <-> ( X BOX32F_dName & 
+	BOX2F_dName)) & 
+	( X BOX16F_dName <-> ( X E1NameInvF_dName & 
+	BOX16F_dName)) & 
+	( X BOX18F_dName <-> ( X E1NameF_dName & 
+	BOX18F_dName)) & 
+	( X BOX20F_dName <-> ( X E2NameF_dName & 
+	BOX20F_dName)) & 
+	(BOX33P_dName <->  G BOX27P_dName) & 
+	(BOX34P_dName <->  G BOX28P_dName) & 
+	(BOX35P_dName <->  G BOX29P_dName) & 
+	(BOX22P_dName <->  G E1NameInvP_dName) & 
+	(BOX24P_dName <->  G E1NameP_dName) & 
+	(BOX26P_dName <->  G E2NameP_dName)) & 
+	(BOX32F_dName <-> BOX29P_dName) & 
+	(BOX30F_dName <-> BOX27P_dName) & 
+	(BOX31F_dName <-> BOX28P_dName) & 
+	(BOX12F_dName <-> BOX6P_dName) & 
+	(BOX10F_dName <-> BOX4P_dName) & 
+	(BOX14F_dName <-> BOX8P_dName) & 
+	(BOX18F_dName <-> BOX24P_dName) & 
+	(BOX16F_dName <-> BOX22P_dName) & 
+	(BOX20F_dName <-> BOX26P_dName) & 
+	(BOX2F_dName <-> BOX35P_dName) & 
+	(BOX0F_dName <-> BOX33P_dName) & 
+	(BOX1F_dName <-> BOX34P_dName) & 
+	(PNameF <-> PNameP) & 
+	(PinvNameF <-> PinvNameP) & 
+	(NXT11F_dName <-> NXT5P_dName) & 
+	(NXT9F_dName <-> NXT3P_dName) & 
+	(NXT13F_dName <-> NXT7P_dName) & 
+	(NXT17F_dName <-> NXT23P_dName) & 
+	(NXT15F_dName <-> NXT21P_dName) & 
+	(NXT19F_dName <-> NXT25P_dName) & 
+	(E1NameF_dName <-> E1NameP_dName) & 
+	(PNameF <-> PNameF) & 
+	(PinvNameF <-> PinvNameF) & 
+	(E1NameF_dName <-> E1NameP_dName) & 
+	(E1NameInvF_dName <-> E1NameInvP_dName) & 
+	(PinvNameF <-> PinvNameF) & 
+	(PNameF <-> PNameF) & 
+	(E1NameInvF_dNameInv <-> E1NameInvP_dNameInv) & 
+	(E1NameInvF_dName <-> E1NameInvP_dName) & 
+	(StringF_dName <-> StringP_dName) & 
+	(PersonF_dName <-> PersonP_dName) & 
+	(E1NameF_dName <-> E1NameP_dName) & 
+	(PersonF_dName <-> PersonP_dName) & 
+	(E2NameF_dName <-> E2NameP_dName) & 
+	(StringF_dName <-> StringP_dName) & 
+	(PersonF_dName <-> PersonP_dName) & 
+	(E2NameF_dName <-> E2NameP_dName) & 
+	(E1NameF_dName <-> E1NameP_dName) & 
+	(E1NameInvF_dName <-> E1NameInvP_dName) & 
+	(E1NameInvF_dName <-> E1NameInvP_dName) & 
+	(E1NameF_dName <-> E1NameP_dName) & 
+	(E1NameF_dName <-> E1NameP_dName) & 
+	(E2NameF_dName <-> E2NameP_dName) & 
+	(E2NameF_dName <-> E2NameP_dName) & 
+	BOX2F_dNameInv & 
+	BOX2F_dName))

@@ -39,7 +39,7 @@ public class TestAbox1 {
 		TDLLiteFPXReasoner.buildCheckABoxtSatisfiability(
 				exTDL.getTBox(),
 				true, 
-				"Abox1",exTDL.getABox());
+				"Abox1",exTDL.getABox(),false);
 		
 		Map<String, String> stats = exTDL.getTBox().getStats();
 		System.out.println("");

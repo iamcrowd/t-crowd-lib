@@ -40,7 +40,7 @@ public class RigidRoleQ {
 		TDLLiteFPXReasoner.buildCheckABoxtSatisfiability(
 				exTDL.getTBox(),
 				true, 
-				"RigidName",exTDL.getABox());
+				"RigidName",exTDL.getABox(),false);
 		
 		Map<String, String> stats = exTDL.getTBox().getStats();
 		System.out.println("");

@@ -1,0 +1,120 @@
+\documentclass[a4paper,10pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage{pdfpages}
+\usepackage{latexsym}
+\usepackage{amssymb,amsthm,amsmath}
+\usepackage{amsthm}
+
+\begin{document}
+ \newcommand{\nxt}{{\ensuremath\raisebox{0.25ex}{\text{\scriptsize$\bigcirc$}}}}
+\newcommand{\Rdiamond}{\Diamond_{\!F}}
+\newcommand{\Rbox}{\Box_{\!F}}
+\newcommand{\Rnext}{\nxt_{\!F}}
+\newcommand{\Ldiamond}{\Diamond_{\!P}}
+\newcommand{\Lbox}{\Box_{\!P}}
+\newcommand{\Lnext}{\nxt_{\!P}}
+\newcommand{\SVdiamond}{\mathop{\ooalign{$\Diamond$ \cr \kern0.5ex
+    \raisebox{0.35ex}{\scalebox{0.7}{$*$}}} \kern-0.9ex}}
+\newcommand{\SVbox}{\mathop{\ooalign{$\Box$ \cr \kern0.42ex
+    \raisebox{0.3ex}{\scalebox{0.7}{$*$}}} \kern-0.9ex}}
+
+
+$( \SVbox ((E1NameInv_{dNameInv} \rightarrow String_{dNameInv}) \land $ \\ 
+ $ (Person_{dNameInv} \rightarrow E1Name_{dNameInv}) \land $ \\ 
+ $ (Person_{dNameInv} \rightarrow  \lnot E2Name_{dNameInv}) \land $ \\ 
+ $ (String_{dNameInv} \rightarrow  \lnot Person_{dNameInv}) \land $ \\ 
+ $ (E2Name_{dNameInv} \rightarrow E1Name_{dNameInv}) \land $ \\ 
+ $ (E1NameInv_{dNameInv} \rightarrow  \Rbox  \Lbox E1NameInv_{dNameInv}) \land $ \\ 
+ $ (E1Name_{dNameInv} \rightarrow  \Rbox  \Lbox E1Name_{dNameInv}) \land $ \\ 
+ $ (E2Name_{dNameInv} \rightarrow  \Rbox  \Lbox E2Name_{dNameInv})) \land $ \\ 
+ $ (E1Name_{dNameInv} \rightarrow  \SVbox PName) \land $ \\ 
+ $ (PinvName \rightarrow E1Name_{dName}) \land $ \\ 
+ $ (E1NameInv_{dNameInv} \rightarrow  \SVbox PinvName) \land $ \\ 
+ $ (PName \rightarrow E1NameInv_{dNameInv}) \land $ \\ 
+ $  \SVbox ((E1NameInv_{Ana} \rightarrow String_{Ana}) \land $ \\ 
+ $ (Person_{Ana} \rightarrow E1Name_{Ana}) \land $ \\ 
+ $ (Person_{Ana} \rightarrow  \lnot E2Name_{Ana}) \land $ \\ 
+ $ (String_{Ana} \rightarrow  \lnot Person_{Ana}) \land $ \\ 
+ $ (E2Name_{Ana} \rightarrow E1Name_{Ana}) \land $ \\ 
+ $ (E1NameInv_{Ana} \rightarrow  \Rbox  \Lbox E1NameInv_{Ana}) \land $ \\ 
+ $ (E1Name_{Ana} \rightarrow  \Rbox  \Lbox E1Name_{Ana}) \land $ \\ 
+ $ (E2Name_{Ana} \rightarrow  \Rbox  \Lbox E2Name_{Ana})) \land $ \\ 
+ $ (E1Name_{Ana} \rightarrow  \SVbox PName) \land $ \\ 
+ $ (PinvName \rightarrow E1Name_{dName}) \land $ \\ 
+ $ (E1NameInv_{Ana} \rightarrow  \SVbox PinvName) \land $ \\ 
+ $ (PName \rightarrow E1NameInv_{dNameInv}) \land $ \\ 
+ $  \SVbox ((E1NameInv_{Mcking} \rightarrow String_{Mcking}) \land $ \\ 
+ $ (Person_{Mcking} \rightarrow E1Name_{Mcking}) \land $ \\ 
+ $ (Person_{Mcking} \rightarrow  \lnot E2Name_{Mcking}) \land $ \\ 
+ $ (String_{Mcking} \rightarrow  \lnot Person_{Mcking}) \land $ \\ 
+ $ (E2Name_{Mcking} \rightarrow E1Name_{Mcking}) \land $ \\ 
+ $ (E1NameInv_{Mcking} \rightarrow  \Rbox  \Lbox E1NameInv_{Mcking}) \land $ \\ 
+ $ (E1Name_{Mcking} \rightarrow  \Rbox  \Lbox E1Name_{Mcking}) \land $ \\ 
+ $ (E2Name_{Mcking} \rightarrow  \Rbox  \Lbox E2Name_{Mcking})) \land $ \\ 
+ $ (E1Name_{Mcking} \rightarrow  \SVbox PName) \land $ \\ 
+ $ (PinvName \rightarrow E1Name_{dName}) \land $ \\ 
+ $ (E1NameInv_{Mcking} \rightarrow  \SVbox PinvName) \land $ \\ 
+ $ (PName \rightarrow E1NameInv_{dNameInv}) \land $ \\ 
+ $  \SVbox ((E1NameInv_{John} \rightarrow String_{John}) \land $ \\ 
+ $ (Person_{John} \rightarrow E1Name_{John}) \land $ \\ 
+ $ (Person_{John} \rightarrow  \lnot E2Name_{John}) \land $ \\ 
+ $ (String_{John} \rightarrow  \lnot Person_{John}) \land $ \\ 
+ $ (E2Name_{John} \rightarrow E1Name_{John}) \land $ \\ 
+ $ (E1NameInv_{John} \rightarrow  \Rbox  \Lbox E1NameInv_{John}) \land $ \\ 
+ $ (E1Name_{John} \rightarrow  \Rbox  \Lbox E1Name_{John}) \land $ \\ 
+ $ (E2Name_{John} \rightarrow  \Rbox  \Lbox E2Name_{John})) \land $ \\ 
+ $ (E1Name_{John} \rightarrow  \SVbox PName) \land $ \\ 
+ $ (PinvName \rightarrow E1Name_{dName}) \land $ \\ 
+ $ (E1NameInv_{John} \rightarrow  \SVbox PinvName) \land $ \\ 
+ $ (PName \rightarrow E1NameInv_{dNameInv}) \land $ \\ 
+ $  \SVbox ((E1NameInv_{dName} \rightarrow String_{dName}) \land $ \\ 
+ $ (Person_{dName} \rightarrow E1Name_{dName}) \land $ \\ 
+ $ (Person_{dName} \rightarrow  \lnot E2Name_{dName}) \land $ \\ 
+ $ (String_{dName} \rightarrow  \lnot Person_{dName}) \land $ \\ 
+ $ (E2Name_{dName} \rightarrow E1Name_{dName}) \land $ \\ 
+ $ (E1NameInv_{dName} \rightarrow  \Rbox  \Lbox E1NameInv_{dName}) \land $ \\ 
+ $ (E1Name_{dName} \rightarrow  \Rbox  \Lbox E1Name_{dName}) \land $ \\ 
+ $ (E2Name_{dName} \rightarrow  \Rbox  \Lbox E2Name_{dName})) \land $ \\ 
+ $ (E1Name_{dName} \rightarrow  \SVbox PName) \land $ \\ 
+ $ (PinvName \rightarrow E1Name_{dName}) \land $ \\ 
+ $ (E1NameInv_{dName} \rightarrow  \SVbox PinvName) \land $ \\ 
+ $ (PName \rightarrow E1NameInv_{dNameInv}) \land $ \\ 
+ $  \SVbox ((E1NameInv_{Maria} \rightarrow String_{Maria}) \land $ \\ 
+ $ (Person_{Maria} \rightarrow E1Name_{Maria}) \land $ \\ 
+ $ (Person_{Maria} \rightarrow  \lnot E2Name_{Maria}) \land $ \\ 
+ $ (String_{Maria} \rightarrow  \lnot Person_{Maria}) \land $ \\ 
+ $ (E2Name_{Maria} \rightarrow E1Name_{Maria}) \land $ \\ 
+ $ (E1NameInv_{Maria} \rightarrow  \Rbox  \Lbox E1NameInv_{Maria}) \land $ \\ 
+ $ (E1Name_{Maria} \rightarrow  \Rbox  \Lbox E1Name_{Maria}) \land $ \\ 
+ $ (E2Name_{Maria} \rightarrow  \Rbox  \Lbox E2Name_{Maria})) \land $ \\ 
+ $ (E1Name_{Maria} \rightarrow  \SVbox PName) \land $ \\ 
+ $ (PinvName \rightarrow E1Name_{dName}) \land $ \\ 
+ $ (E1NameInv_{Maria} \rightarrow  \SVbox PinvName) \land $ \\ 
+ $ (PName \rightarrow E1NameInv_{dNameInv}) \land $ \\ 
+ $  \SVbox ((E1NameInv_{Kennedy} \rightarrow String_{Kennedy}) \land $ \\ 
+ $ (Person_{Kennedy} \rightarrow E1Name_{Kennedy}) \land $ \\ 
+ $ (Person_{Kennedy} \rightarrow  \lnot E2Name_{Kennedy}) \land $ \\ 
+ $ (String_{Kennedy} \rightarrow  \lnot Person_{Kennedy}) \land $ \\ 
+ $ (E2Name_{Kennedy} \rightarrow E1Name_{Kennedy}) \land $ \\ 
+ $ (E1NameInv_{Kennedy} \rightarrow  \Rbox  \Lbox E1NameInv_{Kennedy}) \land $ \\ 
+ $ (E1Name_{Kennedy} \rightarrow  \Rbox  \Lbox E1Name_{Kennedy}) \land $ \\ 
+ $ (E2Name_{Kennedy} \rightarrow  \Rbox  \Lbox E2Name_{Kennedy})) \land $ \\ 
+ $ (E1Name_{Kennedy} \rightarrow  \SVbox PName) \land $ \\ 
+ $ (PinvName \rightarrow E1Name_{dName}) \land $ \\ 
+ $ (E1NameInv_{Kennedy} \rightarrow  \SVbox PinvName) \land $ \\ 
+ $ (PName \rightarrow E1NameInv_{dNameInv}) \land $ \\ 
+ $  \Rnext  \Rnext  \Rnext E1Name_{Ana} \land $ \\ 
+ $  \Rnext E2Name_{John} \land $ \\ 
+ $  \Rnext E2NameInv_{Kennedy} \land $ \\ 
+ $  \Rnext E1NameInv_{Kennedy} \land $ \\ 
+ $  \Rnext  \Rnext  \Rnext E2NameInv_{Kennedy} \land $ \\ 
+ $  \Rnext  \Rnext  \Rnext E1NameInv_{Kennedy} \land $ \\ 
+ $  \Rnext E1Name_{John} \land $ \\ 
+ $ Person_{John} \land $ \\ 
+ $ E2NameInv_{Kennedy} \land $ \\ 
+ $ E1NameInv_{Kennedy} \land $ \\ 
+ $ E2Name_{John} \land $ \\ 
+ $ E1Name_{John} \land $ \\ 
+ $ E1Name_{Maria} \land $ \\ 
+ $ E1NameInv_{Mcking})$ 
+\end{document}

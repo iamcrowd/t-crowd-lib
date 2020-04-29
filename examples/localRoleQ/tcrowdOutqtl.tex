@@ -1,0 +1,32 @@
+\documentclass[a4paper,10pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage{pdfpages}
+\usepackage{latexsym}
+\usepackage{amssymb,amsthm,amsmath}
+\usepackage{amsthm}
+
+\begin{document}
+ \newcommand{\nxt}{{\ensuremath\raisebox{0.25ex}{\text{\scriptsize$\bigcirc$}}}}
+\newcommand{\Rdiamond}{\Diamond_{\!F}}
+\newcommand{\Rbox}{\Box_{\!F}}
+\newcommand{\Rnext}{\nxt_{\!F}}
+\newcommand{\Ldiamond}{\Diamond_{\!P}}
+\newcommand{\Lbox}{\Box_{\!P}}
+\newcommand{\Lnext}{\nxt_{\!P}}
+\newcommand{\SVdiamond}{\mathop{\ooalign{$\Diamond$ \cr \kern0.5ex
+    \raisebox{0.35ex}{\scalebox{0.7}{$*$}}} \kern-0.9ex}}
+\newcommand{\SVbox}{\mathop{\ooalign{$\Box$ \cr \kern0.42ex
+    \raisebox{0.3ex}{\scalebox{0.7}{$*$}}} \kern-0.9ex}}
+
+
+$ \forall x. ( \SVbox ((Person(x) \rightarrow  \Rnext  \Rbox  \Lnext  \Lbox Person(x)) \land $ \\ 
+ $ (E1SalaryInv(x) \rightarrow Integer(x)) \land $ \\ 
+ $ (Person(x) \rightarrow E1Salary(x)) \land $ \\ 
+ $ (Person(x) \rightarrow  \lnot E2Salary(x)) \land $ \\ 
+ $ (Integer(x) \rightarrow  \lnot Person(x)) \land $ \\ 
+ $ (E2Salary(x) \rightarrow E1Salary(x))) \land $ \\ 
+ $ (E1Salary(x) \rightarrow  \SVbox PSalary) \land $ \\ 
+ $ (PinvSalary \rightarrow E1Salary(dSalary)) \land $ \\ 
+ $ (E1SalaryInv(x) \rightarrow  \SVbox PinvSalary) \land $ \\ 
+ $ (PSalary \rightarrow E1SalaryInv(dSalaryInv)))$ 
+\end{document}

@@ -1,0 +1,61 @@
+\documentclass[a4paper,10pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage{pdfpages}
+\usepackage{latexsym}
+\usepackage{amssymb,amsthm,amsmath}
+\usepackage{amsthm}
+
+\begin{document}
+ \newcommand{\nxt}{{\ensuremath\raisebox{0.25ex}{\text{\scriptsize$\bigcirc$}}}}
+\newcommand{\Rdiamond}{\Diamond_{\!F}}
+\newcommand{\Rbox}{\Box_{\!F}}
+\newcommand{\Rnext}{\nxt_{\!F}}
+\newcommand{\Ldiamond}{\Diamond_{\!P}}
+\newcommand{\Lbox}{\Box_{\!P}}
+\newcommand{\Lnext}{\nxt_{\!P}}
+\newcommand{\SVdiamond}{\mathop{\ooalign{$\Diamond$ \cr \kern0.5ex
+    \raisebox{0.35ex}{\scalebox{0.7}{$*$}}} \kern-0.9ex}}
+\newcommand{\SVbox}{\mathop{\ooalign{$\Box$ \cr \kern0.42ex
+    \raisebox{0.3ex}{\scalebox{0.7}{$*$}}} \kern-0.9ex}}
+
+
+$ \forall x. (PersonF(Personwitness) \land $ \\ 
+ $ BOX0F(x) \land $ \\ 
+ $  \Rbox (( \Rnext NXT1P(x) \leftrightarrow BOX2P(x)) \land $ \\ 
+ $ (NXT3F(x) \leftrightarrow  \Rnext BOX4F(x)) \land $ \\ 
+ $ ( \Rnext BOX5P(x) \leftrightarrow (BOX5P(x) \land $ \\ 
+ $  \Rnext ((AdultP(x) \rightarrow NXT1P(x)) \land $ \\ 
+ $ (AdultP(x) \rightarrow PersonP(x)) \land $ \\ 
+ $ (MinorP(x) \rightarrow PersonP(x)) \land $ \\ 
+ $ (AdultP(x) \rightarrow  \lnot MinorP(x)) \land $ \\ 
+ $ (PersonP(x) \rightarrow  \lnot ( \lnot AdultP(x) \land $ \\ 
+ $  \lnot MinorP(x)))))) \land $ \\ 
+ $ ( \Rnext BOX2P(x) \leftrightarrow (BOX2P(x) \land $ \\ 
+ $  \Rnext AdultP(x))) \land $ \\ 
+ $ (BOX6F(x) \leftrightarrow  \Rbox ((AdultF(x) \rightarrow NXT3F(x)) \land $ \\ 
+ $ (AdultF(x) \rightarrow PersonF(x)) \land $ \\ 
+ $ (MinorF(x) \rightarrow PersonF(x)) \land $ \\ 
+ $ (AdultF(x) \rightarrow  \lnot MinorF(x)) \land $ \\ 
+ $ (PersonF(x) \rightarrow  \lnot ( \lnot AdultF(x) \land $ \\ 
+ $  \lnot MinorF(x))))) \land $ \\ 
+ $ (BOX4F(x) \leftrightarrow  \Rbox AdultF(x)) \land $ \\ 
+ $ ( \Rnext BOX0F(x) \leftrightarrow (BOX0F(x) \land $ \\ 
+ $  \Rnext BOX6F(x))) \land $ \\ 
+ $ (BOX7P(x) \leftrightarrow  \Rbox BOX5P(x))) \land $ \\ 
+ $ (BOX6F(x) \leftrightarrow BOX5P(x)) \land $ \\ 
+ $ (BOX4F(x) \leftrightarrow BOX2P(x)) \land $ \\ 
+ $ (BOX0F(x) \leftrightarrow BOX7P(x)) \land $ \\ 
+ $ (NXT3F(x) \leftrightarrow NXT1P(x)) \land $ \\ 
+ $ (PersonF(Personwitness) \leftrightarrow PersonP(Personwitness)) \land $ \\ 
+ $ (AdultF(x) \leftrightarrow AdultP(x)) \land $ \\ 
+ $ (AdultF(x) \leftrightarrow AdultP(x)) \land $ \\ 
+ $ (AdultF(x) \leftrightarrow AdultP(x)) \land $ \\ 
+ $ (PersonF(x) \leftrightarrow PersonP(x)) \land $ \\ 
+ $ (MinorF(x) \leftrightarrow MinorP(x)) \land $ \\ 
+ $ (PersonF(x) \leftrightarrow PersonP(x)) \land $ \\ 
+ $ (AdultF(x) \leftrightarrow AdultP(x)) \land $ \\ 
+ $ (MinorF(x) \leftrightarrow MinorP(x)) \land $ \\ 
+ $ (PersonF(x) \leftrightarrow PersonP(x)) \land $ \\ 
+ $ (AdultF(x) \leftrightarrow AdultP(x)) \land $ \\ 
+ $ (MinorF(x) \leftrightarrow MinorP(x)))$ 
+\end{document}

@@ -1,0 +1,73 @@
+MODULE main
+VAR
+	PinvSalary :boolean;
+	Person_dSalary :boolean;
+	Person_dSalaryInv :boolean;
+	Person_S1 :boolean;
+	Person_John :boolean;
+	PSalary :boolean;
+	Integer_dSalary :boolean;
+	Integer_dSalaryInv :boolean;
+	Integer_S1 :boolean;
+	Integer_John :boolean;
+	E2Salary_dSalary :boolean;
+	E2Salary_dSalaryInv :boolean;
+	E2Salary_S1 :boolean;
+	E2Salary_John :boolean;
+	E1Salary_dSalary :boolean;
+	E1Salary_dSalaryInv :boolean;
+	E1Salary_S1 :boolean;
+	E1Salary_John :boolean;
+	E1SalaryInv_dSalary :boolean;
+	E1SalaryInv_dSalaryInv :boolean;
+	E1SalaryInv_S1 :boolean;
+	E1SalaryInv_John :boolean;
+
+
+LTLSPEC !( ( H G ((Person_dSalary ->  G  H Person_dSalary) & 
+	(E1SalaryInv_dSalary -> Integer_dSalary) & 
+	(Person_dSalary -> E1Salary_dSalary) & 
+	(Person_dSalary ->  !E2Salary_dSalary) & 
+	(Integer_dSalary ->  !Person_dSalary) & 
+	(E2Salary_dSalary -> E1Salary_dSalary)) & 
+	(E1Salary_dSalary ->  H G PSalary) & 
+	(PinvSalary -> E1Salary_dSalary) & 
+	(E1SalaryInv_dSalary ->  H G PinvSalary) & 
+	(PSalary -> E1SalaryInv_dSalaryInv) & 
+	 H G ((Person_dSalaryInv ->  G  H Person_dSalaryInv) & 
+	(E1SalaryInv_dSalaryInv -> Integer_dSalaryInv) & 
+	(Person_dSalaryInv -> E1Salary_dSalaryInv) & 
+	(Person_dSalaryInv ->  !E2Salary_dSalaryInv) & 
+	(Integer_dSalaryInv ->  !Person_dSalaryInv) & 
+	(E2Salary_dSalaryInv -> E1Salary_dSalaryInv)) & 
+	(E1Salary_dSalaryInv ->  H G PSalary) & 
+	(PinvSalary -> E1Salary_dSalary) & 
+	(E1SalaryInv_dSalaryInv ->  H G PinvSalary) & 
+	(PSalary -> E1SalaryInv_dSalaryInv) & 
+	 H G ((Person_John ->  G  H Person_John) & 
+	(E1SalaryInv_John -> Integer_John) & 
+	(Person_John -> E1Salary_John) & 
+	(Person_John ->  !E2Salary_John) & 
+	(Integer_John ->  !Person_John) & 
+	(E2Salary_John -> E1Salary_John)) & 
+	(E1Salary_John ->  H G PSalary) & 
+	(PinvSalary -> E1Salary_dSalary) & 
+	(E1SalaryInv_John ->  H G PinvSalary) & 
+	(PSalary -> E1SalaryInv_dSalaryInv) & 
+	 H G ((Person_S1 ->  G  H Person_S1) & 
+	(E1SalaryInv_S1 -> Integer_S1) & 
+	(Person_S1 -> E1Salary_S1) & 
+	(Person_S1 ->  !E2Salary_S1) & 
+	(Integer_S1 ->  !Person_S1) & 
+	(E2Salary_S1 -> E1Salary_S1)) & 
+	(E1Salary_S1 ->  H G PSalary) & 
+	(PinvSalary -> E1Salary_dSalary) & 
+	(E1SalaryInv_S1 ->  H G PinvSalary) & 
+	(PSalary -> E1SalaryInv_dSalaryInv) & 
+	 X E1Salary_John & 
+	 X E1SalaryInv_S1 & 
+	 X  X E1Salary_John & 
+	 X  X E1SalaryInv_S1 & 
+	E1Salary_John & 
+	E1SalaryInv_S1 & 
+	Person_John))

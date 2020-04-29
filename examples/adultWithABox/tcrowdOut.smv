@@ -1,0 +1,19 @@
+MODULE main
+VAR
+	Person_John :boolean;
+	Minor_John :boolean;
+	Adult_John :boolean;
+
+
+LTLSPEC !( ( H G ((Adult_John ->  G Adult_John) & 
+	(Adult_John -> Person_John) & 
+	(Minor_John -> Person_John) & 
+	(Adult_John ->  !Minor_John) & 
+	(Person_John ->  !( !Adult_John & 
+	 !Minor_John))) & 
+	 X Adult_John & 
+	 X  X Minor_John & 
+	 X  X  X  X Adult_John & 
+	 X  X  X Adult_John & 
+	 X  X  X  X  X Adult_John & 
+	Minor_John))

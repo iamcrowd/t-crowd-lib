@@ -1,0 +1,7 @@
+{"concepts":[
+	{"concept":"Person","instance":"John","timestamp":"0"}],
+"roles":[
+	{"role":"Salary","from":"John","to":"S1","timestamp":"0"},
+	{"role":"Salary","from":"John","to":"S1","timestamp":"1"},
+	{"role":"Salary","from":"John","to":"S1","timestamp":"2"}]
+}

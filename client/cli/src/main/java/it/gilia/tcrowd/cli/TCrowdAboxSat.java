@@ -50,7 +50,7 @@ public class TCrowdAboxSat extends TCrowdEncodingERvtRelatedCommand {
             
 			TestAbox1 exTDL = new TestAbox1();
 
-			TDLLiteFPXReasoner.buildCheckABoxtSatisfiability(exTDL.getTBox(), true, "Abox1", exTDL.getABox());
+			TDLLiteFPXReasoner.buildCheckABoxtSatisfiability(exTDL.getTBox(), true, "Abox1", exTDL.getABox(),false);
 
 			Map<String, String> stats = exTDL.getTBox().getStats();
 			System.out.println("");
@@ -71,7 +71,7 @@ public class TCrowdAboxSat extends TCrowdEncodingERvtRelatedCommand {
 
 			Adult exAdultTDL = new Adult();
 
-			TDLLiteFPXReasoner.buildCheckABoxtSatisfiability(exAdultTDL.getTBox(), true, "Adult", exAdultTDL.getABox());
+			TDLLiteFPXReasoner.buildCheckABoxtSatisfiability(exAdultTDL.getTBox(), true, "Adult", exAdultTDL.getABox(),false);
 
 			Map<String, String> stats1 = exAdultTDL.getTBox().getStats();
 			System.out.println("");
@@ -92,7 +92,7 @@ public class TCrowdAboxSat extends TCrowdEncodingERvtRelatedCommand {
 			
 			RigidRoleQ exRigidRoleQTDL = new RigidRoleQ();
 
-			TDLLiteFPXReasoner.buildCheckABoxtSatisfiability(exRigidRoleQTDL.getTBox(), true, "RigidName", exRigidRoleQTDL.getABox());
+			TDLLiteFPXReasoner.buildCheckABoxtSatisfiability(exRigidRoleQTDL.getTBox(), true, "RigidName", exRigidRoleQTDL.getABox(),false);
 
 			Map<String, String> stats2 = exRigidRoleQTDL.getTBox().getStats();
 			System.out.println("");

@@ -1,0 +1,244 @@
+\documentclass[a4paper,10pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage{pdfpages}
+\usepackage{latexsym}
+\usepackage{amssymb,amsthm,amsmath}
+\usepackage{amsthm}
+
+\begin{document}
+ \newcommand{\nxt}{{\ensuremath\raisebox{0.25ex}{\text{\scriptsize$\bigcirc$}}}}
+\newcommand{\Rdiamond}{\Diamond_{\!F}}
+\newcommand{\Rbox}{\Box_{\!F}}
+\newcommand{\Rnext}{\nxt_{\!F}}
+\newcommand{\Ldiamond}{\Diamond_{\!P}}
+\newcommand{\Lbox}{\Box_{\!P}}
+\newcommand{\Lnext}{\nxt_{\!P}}
+\newcommand{\SVdiamond}{\mathop{\ooalign{$\Diamond$ \cr \kern0.5ex
+    \raisebox{0.35ex}{\scalebox{0.7}{$*$}}} \kern-0.9ex}}
+\newcommand{\SVbox}{\mathop{\ooalign{$\Box$ \cr \kern0.42ex
+    \raisebox{0.3ex}{\scalebox{0.7}{$*$}}} \kern-0.9ex}}
+
+
+$((E1NameF_{dNameInv} \rightarrow BOX0F_{dNameInv}) \land $ \\ 
+ $ (PinvNameF \rightarrow E1NameF_{dName}) \land $ \\ 
+ $ (E1NameInvF_{dNameInv} \rightarrow BOX1F_{dNameInv}) \land $ \\ 
+ $ (PNameF \rightarrow E1NameInvF_{dNameInv}) \land $ \\ 
+ $  \Rbox (( \Rnext NXT3P_{dNameInv} \leftrightarrow BOX4P_{dNameInv}) \land $ \\ 
+ $ ( \Rnext NXT5P_{dNameInv} \leftrightarrow BOX6P_{dNameInv}) \land $ \\ 
+ $ ( \Rnext NXT7P_{dNameInv} \leftrightarrow BOX8P_{dNameInv}) \land $ \\ 
+ $ (NXT9F_{dNameInv} \leftrightarrow  \Rnext BOX10F_{dNameInv}) \land $ \\ 
+ $ (NXT11F_{dNameInv} \leftrightarrow  \Rnext BOX12F_{dNameInv}) \land $ \\ 
+ $ (NXT13F_{dNameInv} \leftrightarrow  \Rnext BOX14F_{dNameInv}) \land $ \\ 
+ $ ( \Rnext NXT15F_{dNameInv} \leftrightarrow BOX16F_{dNameInv}) \land $ \\ 
+ $ ( \Rnext NXT17F_{dNameInv} \leftrightarrow BOX18F_{dNameInv}) \land $ \\ 
+ $ ( \Rnext NXT19F_{dNameInv} \leftrightarrow BOX20F_{dNameInv}) \land $ \\ 
+ $ (NXT21P_{dNameInv} \leftrightarrow  \Rnext BOX22P_{dNameInv}) \land $ \\ 
+ $ (NXT23P_{dNameInv} \leftrightarrow  \Rnext BOX24P_{dNameInv}) \land $ \\ 
+ $ (NXT25P_{dNameInv} \leftrightarrow  \Rnext BOX26P_{dNameInv}) \land $ \\ 
+ $ ( \Rnext BOX27P_{dNameInv} \leftrightarrow ( \Rnext PNameF \land $ \\ 
+ $ BOX27P_{dNameInv})) \land $ \\ 
+ $ ( \Rnext BOX28P_{dNameInv} \leftrightarrow ( \Rnext PinvNameF \land $ \\ 
+ $ BOX28P_{dNameInv})) \land $ \\ 
+ $ ( \Rnext BOX29P_{dNameInv} \leftrightarrow ( \Rnext ((E1NameInvP_{dNameInv} \rightarrow StringP_{dNameInv}) \land $ \\ 
+ $ (PersonP_{dNameInv} \rightarrow E1NameP_{dNameInv}) \land $ \\ 
+ $ (PersonP_{dNameInv} \rightarrow  \lnot E2NameP_{dNameInv}) \land $ \\ 
+ $ (StringP_{dNameInv} \rightarrow  \lnot PersonP_{dNameInv}) \land $ \\ 
+ $ (E2NameP_{dNameInv} \rightarrow E1NameP_{dNameInv}) \land $ \\ 
+ $ (E1NameInvP_{dNameInv} \rightarrow NXT3P_{dNameInv}) \land $ \\ 
+ $ (E1NameP_{dNameInv} \rightarrow NXT5P_{dNameInv}) \land $ \\ 
+ $ (E2NameP_{dNameInv} \rightarrow NXT7P_{dNameInv})) \land $ \\ 
+ $ BOX29P_{dNameInv})) \land $ \\ 
+ $ ( \Rnext BOX4P_{dNameInv} \leftrightarrow ( \Rnext NXT21P_{dNameInv} \land $ \\ 
+ $ BOX4P_{dNameInv})) \land $ \\ 
+ $ ( \Rnext BOX6P_{dNameInv} \leftrightarrow ( \Rnext NXT23P_{dNameInv} \land $ \\ 
+ $ BOX6P_{dNameInv})) \land $ \\ 
+ $ ( \Rnext BOX8P_{dNameInv} \leftrightarrow ( \Rnext NXT25P_{dNameInv} \land $ \\ 
+ $ BOX8P_{dNameInv})) \land $ \\ 
+ $ (BOX30F_{dNameInv} \leftrightarrow  \Rbox PNameF) \land $ \\ 
+ $ (BOX31F_{dNameInv} \leftrightarrow  \Rbox PinvNameF) \land $ \\ 
+ $ (BOX32F_{dNameInv} \leftrightarrow  \Rbox ((E1NameInvF_{dNameInv} \rightarrow StringF_{dNameInv}) \land $ \\ 
+ $ (PersonF_{dNameInv} \rightarrow E1NameF_{dNameInv}) \land $ \\ 
+ $ (PersonF_{dNameInv} \rightarrow  \lnot E2NameF_{dNameInv}) \land $ \\ 
+ $ (StringF_{dNameInv} \rightarrow  \lnot PersonF_{dNameInv}) \land $ \\ 
+ $ (E2NameF_{dNameInv} \rightarrow E1NameF_{dNameInv}) \land $ \\ 
+ $ (E1NameInvF_{dNameInv} \rightarrow NXT9F_{dNameInv}) \land $ \\ 
+ $ (E1NameF_{dNameInv} \rightarrow NXT11F_{dNameInv}) \land $ \\ 
+ $ (E2NameF_{dNameInv} \rightarrow NXT13F_{dNameInv}))) \land $ \\ 
+ $ (BOX10F_{dNameInv} \leftrightarrow  \Rbox NXT15F_{dNameInv}) \land $ \\ 
+ $ (BOX12F_{dNameInv} \leftrightarrow  \Rbox NXT17F_{dNameInv}) \land $ \\ 
+ $ (BOX14F_{dNameInv} \leftrightarrow  \Rbox NXT19F_{dNameInv}) \land $ \\ 
+ $ ( \Rnext BOX0F_{dNameInv} \leftrightarrow ( \Rnext BOX30F_{dNameInv} \land $ \\ 
+ $ BOX0F_{dNameInv})) \land $ \\ 
+ $ ( \Rnext BOX1F_{dNameInv} \leftrightarrow ( \Rnext BOX31F_{dNameInv} \land $ \\ 
+ $ BOX1F_{dNameInv})) \land $ \\ 
+ $ ( \Rnext BOX2F_{dNameInv} \leftrightarrow ( \Rnext BOX32F_{dNameInv} \land $ \\ 
+ $ BOX2F_{dNameInv})) \land $ \\ 
+ $ ( \Rnext BOX16F_{dNameInv} \leftrightarrow ( \Rnext E1NameInvF_{dNameInv} \land $ \\ 
+ $ BOX16F_{dNameInv})) \land $ \\ 
+ $ ( \Rnext BOX18F_{dNameInv} \leftrightarrow ( \Rnext E1NameF_{dNameInv} \land $ \\ 
+ $ BOX18F_{dNameInv})) \land $ \\ 
+ $ ( \Rnext BOX20F_{dNameInv} \leftrightarrow ( \Rnext E2NameF_{dNameInv} \land $ \\ 
+ $ BOX20F_{dNameInv})) \land $ \\ 
+ $ (BOX33P_{dNameInv} \leftrightarrow  \Rbox BOX27P_{dNameInv}) \land $ \\ 
+ $ (BOX34P_{dNameInv} \leftrightarrow  \Rbox BOX28P_{dNameInv}) \land $ \\ 
+ $ (BOX35P_{dNameInv} \leftrightarrow  \Rbox BOX29P_{dNameInv}) \land $ \\ 
+ $ (BOX22P_{dNameInv} \leftrightarrow  \Rbox E1NameInvP_{dNameInv}) \land $ \\ 
+ $ (BOX24P_{dNameInv} \leftrightarrow  \Rbox E1NameP_{dNameInv}) \land $ \\ 
+ $ (BOX26P_{dNameInv} \leftrightarrow  \Rbox E2NameP_{dNameInv})) \land $ \\ 
+ $ (BOX32F_{dNameInv} \leftrightarrow BOX29P_{dNameInv}) \land $ \\ 
+ $ (BOX30F_{dNameInv} \leftrightarrow BOX27P_{dNameInv}) \land $ \\ 
+ $ (BOX31F_{dNameInv} \leftrightarrow BOX28P_{dNameInv}) \land $ \\ 
+ $ (BOX12F_{dNameInv} \leftrightarrow BOX6P_{dNameInv}) \land $ \\ 
+ $ (BOX10F_{dNameInv} \leftrightarrow BOX4P_{dNameInv}) \land $ \\ 
+ $ (BOX14F_{dNameInv} \leftrightarrow BOX8P_{dNameInv}) \land $ \\ 
+ $ (BOX18F_{dNameInv} \leftrightarrow BOX24P_{dNameInv}) \land $ \\ 
+ $ (BOX16F_{dNameInv} \leftrightarrow BOX22P_{dNameInv}) \land $ \\ 
+ $ (BOX20F_{dNameInv} \leftrightarrow BOX26P_{dNameInv}) \land $ \\ 
+ $ (BOX2F_{dNameInv} \leftrightarrow BOX35P_{dNameInv}) \land $ \\ 
+ $ (BOX0F_{dNameInv} \leftrightarrow BOX33P_{dNameInv}) \land $ \\ 
+ $ (BOX1F_{dNameInv} \leftrightarrow BOX34P_{dNameInv}) \land $ \\ 
+ $ (PNameF \leftrightarrow PNameP) \land $ \\ 
+ $ (PinvNameF \leftrightarrow PinvNameP) \land $ \\ 
+ $ (NXT11F_{dNameInv} \leftrightarrow NXT5P_{dNameInv}) \land $ \\ 
+ $ (NXT9F_{dNameInv} \leftrightarrow NXT3P_{dNameInv}) \land $ \\ 
+ $ (NXT13F_{dNameInv} \leftrightarrow NXT7P_{dNameInv}) \land $ \\ 
+ $ (NXT17F_{dNameInv} \leftrightarrow NXT23P_{dNameInv}) \land $ \\ 
+ $ (NXT15F_{dNameInv} \leftrightarrow NXT21P_{dNameInv}) \land $ \\ 
+ $ (NXT19F_{dNameInv} \leftrightarrow NXT25P_{dNameInv}) \land $ \\ 
+ $ (E1NameF_{dNameInv} \leftrightarrow E1NameP_{dNameInv}) \land $ \\ 
+ $ (PNameF \leftrightarrow PNameF) \land $ \\ 
+ $ (PinvNameF \leftrightarrow PinvNameF) \land $ \\ 
+ $ (E1NameF_{dName} \leftrightarrow E1NameP_{dName}) \land $ \\ 
+ $ (E1NameInvF_{dNameInv} \leftrightarrow E1NameInvP_{dNameInv}) \land $ \\ 
+ $ (PinvNameF \leftrightarrow PinvNameF) \land $ \\ 
+ $ (PNameF \leftrightarrow PNameF) \land $ \\ 
+ $ (E1NameInvF_{dNameInv} \leftrightarrow E1NameInvP_{dNameInv}) \land $ \\ 
+ $ (E1NameInvF_{dNameInv} \leftrightarrow E1NameInvP_{dNameInv}) \land $ \\ 
+ $ (StringF_{dNameInv} \leftrightarrow StringP_{dNameInv}) \land $ \\ 
+ $ (PersonF_{dNameInv} \leftrightarrow PersonP_{dNameInv}) \land $ \\ 
+ $ (E1NameF_{dNameInv} \leftrightarrow E1NameP_{dNameInv}) \land $ \\ 
+ $ (PersonF_{dNameInv} \leftrightarrow PersonP_{dNameInv}) \land $ \\ 
+ $ (E2NameF_{dNameInv} \leftrightarrow E2NameP_{dNameInv}) \land $ \\ 
+ $ (StringF_{dNameInv} \leftrightarrow StringP_{dNameInv}) \land $ \\ 
+ $ (PersonF_{dNameInv} \leftrightarrow PersonP_{dNameInv}) \land $ \\ 
+ $ (E2NameF_{dNameInv} \leftrightarrow E2NameP_{dNameInv}) \land $ \\ 
+ $ (E1NameF_{dNameInv} \leftrightarrow E1NameP_{dNameInv}) \land $ \\ 
+ $ (E1NameInvF_{dNameInv} \leftrightarrow E1NameInvP_{dNameInv}) \land $ \\ 
+ $ (E1NameInvF_{dNameInv} \leftrightarrow E1NameInvP_{dNameInv}) \land $ \\ 
+ $ (E1NameF_{dNameInv} \leftrightarrow E1NameP_{dNameInv}) \land $ \\ 
+ $ (E1NameF_{dNameInv} \leftrightarrow E1NameP_{dNameInv}) \land $ \\ 
+ $ (E2NameF_{dNameInv} \leftrightarrow E2NameP_{dNameInv}) \land $ \\ 
+ $ (E2NameF_{dNameInv} \leftrightarrow E2NameP_{dNameInv}) \land $ \\ 
+ $ (E1NameF_{dName} \rightarrow BOX0F_{dName}) \land $ \\ 
+ $ (PinvNameF \rightarrow E1NameF_{dName}) \land $ \\ 
+ $ (E1NameInvF_{dName} \rightarrow BOX1F_{dName}) \land $ \\ 
+ $ (PNameF \rightarrow E1NameInvF_{dNameInv}) \land $ \\ 
+ $  \Rbox (( \Rnext NXT3P_{dName} \leftrightarrow BOX4P_{dName}) \land $ \\ 
+ $ ( \Rnext NXT5P_{dName} \leftrightarrow BOX6P_{dName}) \land $ \\ 
+ $ ( \Rnext NXT7P_{dName} \leftrightarrow BOX8P_{dName}) \land $ \\ 
+ $ (NXT9F_{dName} \leftrightarrow  \Rnext BOX10F_{dName}) \land $ \\ 
+ $ (NXT11F_{dName} \leftrightarrow  \Rnext BOX12F_{dName}) \land $ \\ 
+ $ (NXT13F_{dName} \leftrightarrow  \Rnext BOX14F_{dName}) \land $ \\ 
+ $ ( \Rnext NXT15F_{dName} \leftrightarrow BOX16F_{dName}) \land $ \\ 
+ $ ( \Rnext NXT17F_{dName} \leftrightarrow BOX18F_{dName}) \land $ \\ 
+ $ ( \Rnext NXT19F_{dName} \leftrightarrow BOX20F_{dName}) \land $ \\ 
+ $ (NXT21P_{dName} \leftrightarrow  \Rnext BOX22P_{dName}) \land $ \\ 
+ $ (NXT23P_{dName} \leftrightarrow  \Rnext BOX24P_{dName}) \land $ \\ 
+ $ (NXT25P_{dName} \leftrightarrow  \Rnext BOX26P_{dName}) \land $ \\ 
+ $ ( \Rnext BOX27P_{dName} \leftrightarrow ( \Rnext PNameF \land $ \\ 
+ $ BOX27P_{dName})) \land $ \\ 
+ $ ( \Rnext BOX28P_{dName} \leftrightarrow ( \Rnext PinvNameF \land $ \\ 
+ $ BOX28P_{dName})) \land $ \\ 
+ $ ( \Rnext BOX29P_{dName} \leftrightarrow ( \Rnext ((E1NameInvP_{dName} \rightarrow StringP_{dName}) \land $ \\ 
+ $ (PersonP_{dName} \rightarrow E1NameP_{dName}) \land $ \\ 
+ $ (PersonP_{dName} \rightarrow  \lnot E2NameP_{dName}) \land $ \\ 
+ $ (StringP_{dName} \rightarrow  \lnot PersonP_{dName}) \land $ \\ 
+ $ (E2NameP_{dName} \rightarrow E1NameP_{dName}) \land $ \\ 
+ $ (E1NameInvP_{dName} \rightarrow NXT3P_{dName}) \land $ \\ 
+ $ (E1NameP_{dName} \rightarrow NXT5P_{dName}) \land $ \\ 
+ $ (E2NameP_{dName} \rightarrow NXT7P_{dName})) \land $ \\ 
+ $ BOX29P_{dName})) \land $ \\ 
+ $ ( \Rnext BOX4P_{dName} \leftrightarrow ( \Rnext NXT21P_{dName} \land $ \\ 
+ $ BOX4P_{dName})) \land $ \\ 
+ $ ( \Rnext BOX6P_{dName} \leftrightarrow ( \Rnext NXT23P_{dName} \land $ \\ 
+ $ BOX6P_{dName})) \land $ \\ 
+ $ ( \Rnext BOX8P_{dName} \leftrightarrow ( \Rnext NXT25P_{dName} \land $ \\ 
+ $ BOX8P_{dName})) \land $ \\ 
+ $ (BOX30F_{dName} \leftrightarrow  \Rbox PNameF) \land $ \\ 
+ $ (BOX31F_{dName} \leftrightarrow  \Rbox PinvNameF) \land $ \\ 
+ $ (BOX32F_{dName} \leftrightarrow  \Rbox ((E1NameInvF_{dName} \rightarrow StringF_{dName}) \land $ \\ 
+ $ (PersonF_{dName} \rightarrow E1NameF_{dName}) \land $ \\ 
+ $ (PersonF_{dName} \rightarrow  \lnot E2NameF_{dName}) \land $ \\ 
+ $ (StringF_{dName} \rightarrow  \lnot PersonF_{dName}) \land $ \\ 
+ $ (E2NameF_{dName} \rightarrow E1NameF_{dName}) \land $ \\ 
+ $ (E1NameInvF_{dName} \rightarrow NXT9F_{dName}) \land $ \\ 
+ $ (E1NameF_{dName} \rightarrow NXT11F_{dName}) \land $ \\ 
+ $ (E2NameF_{dName} \rightarrow NXT13F_{dName}))) \land $ \\ 
+ $ (BOX10F_{dName} \leftrightarrow  \Rbox NXT15F_{dName}) \land $ \\ 
+ $ (BOX12F_{dName} \leftrightarrow  \Rbox NXT17F_{dName}) \land $ \\ 
+ $ (BOX14F_{dName} \leftrightarrow  \Rbox NXT19F_{dName}) \land $ \\ 
+ $ ( \Rnext BOX0F_{dName} \leftrightarrow ( \Rnext BOX30F_{dName} \land $ \\ 
+ $ BOX0F_{dName})) \land $ \\ 
+ $ ( \Rnext BOX1F_{dName} \leftrightarrow ( \Rnext BOX31F_{dName} \land $ \\ 
+ $ BOX1F_{dName})) \land $ \\ 
+ $ ( \Rnext BOX2F_{dName} \leftrightarrow ( \Rnext BOX32F_{dName} \land $ \\ 
+ $ BOX2F_{dName})) \land $ \\ 
+ $ ( \Rnext BOX16F_{dName} \leftrightarrow ( \Rnext E1NameInvF_{dName} \land $ \\ 
+ $ BOX16F_{dName})) \land $ \\ 
+ $ ( \Rnext BOX18F_{dName} \leftrightarrow ( \Rnext E1NameF_{dName} \land $ \\ 
+ $ BOX18F_{dName})) \land $ \\ 
+ $ ( \Rnext BOX20F_{dName} \leftrightarrow ( \Rnext E2NameF_{dName} \land $ \\ 
+ $ BOX20F_{dName})) \land $ \\ 
+ $ (BOX33P_{dName} \leftrightarrow  \Rbox BOX27P_{dName}) \land $ \\ 
+ $ (BOX34P_{dName} \leftrightarrow  \Rbox BOX28P_{dName}) \land $ \\ 
+ $ (BOX35P_{dName} \leftrightarrow  \Rbox BOX29P_{dName}) \land $ \\ 
+ $ (BOX22P_{dName} \leftrightarrow  \Rbox E1NameInvP_{dName}) \land $ \\ 
+ $ (BOX24P_{dName} \leftrightarrow  \Rbox E1NameP_{dName}) \land $ \\ 
+ $ (BOX26P_{dName} \leftrightarrow  \Rbox E2NameP_{dName})) \land $ \\ 
+ $ (BOX32F_{dName} \leftrightarrow BOX29P_{dName}) \land $ \\ 
+ $ (BOX30F_{dName} \leftrightarrow BOX27P_{dName}) \land $ \\ 
+ $ (BOX31F_{dName} \leftrightarrow BOX28P_{dName}) \land $ \\ 
+ $ (BOX12F_{dName} \leftrightarrow BOX6P_{dName}) \land $ \\ 
+ $ (BOX10F_{dName} \leftrightarrow BOX4P_{dName}) \land $ \\ 
+ $ (BOX14F_{dName} \leftrightarrow BOX8P_{dName}) \land $ \\ 
+ $ (BOX18F_{dName} \leftrightarrow BOX24P_{dName}) \land $ \\ 
+ $ (BOX16F_{dName} \leftrightarrow BOX22P_{dName}) \land $ \\ 
+ $ (BOX20F_{dName} \leftrightarrow BOX26P_{dName}) \land $ \\ 
+ $ (BOX2F_{dName} \leftrightarrow BOX35P_{dName}) \land $ \\ 
+ $ (BOX0F_{dName} \leftrightarrow BOX33P_{dName}) \land $ \\ 
+ $ (BOX1F_{dName} \leftrightarrow BOX34P_{dName}) \land $ \\ 
+ $ (PNameF \leftrightarrow PNameP) \land $ \\ 
+ $ (PinvNameF \leftrightarrow PinvNameP) \land $ \\ 
+ $ (NXT11F_{dName} \leftrightarrow NXT5P_{dName}) \land $ \\ 
+ $ (NXT9F_{dName} \leftrightarrow NXT3P_{dName}) \land $ \\ 
+ $ (NXT13F_{dName} \leftrightarrow NXT7P_{dName}) \land $ \\ 
+ $ (NXT17F_{dName} \leftrightarrow NXT23P_{dName}) \land $ \\ 
+ $ (NXT15F_{dName} \leftrightarrow NXT21P_{dName}) \land $ \\ 
+ $ (NXT19F_{dName} \leftrightarrow NXT25P_{dName}) \land $ \\ 
+ $ (E1NameF_{dName} \leftrightarrow E1NameP_{dName}) \land $ \\ 
+ $ (PNameF \leftrightarrow PNameF) \land $ \\ 
+ $ (PinvNameF \leftrightarrow PinvNameF) \land $ \\ 
+ $ (E1NameF_{dName} \leftrightarrow E1NameP_{dName}) \land $ \\ 
+ $ (E1NameInvF_{dName} \leftrightarrow E1NameInvP_{dName}) \land $ \\ 
+ $ (PinvNameF \leftrightarrow PinvNameF) \land $ \\ 
+ $ (PNameF \leftrightarrow PNameF) \land $ \\ 
+ $ (E1NameInvF_{dNameInv} \leftrightarrow E1NameInvP_{dNameInv}) \land $ \\ 
+ $ (E1NameInvF_{dName} \leftrightarrow E1NameInvP_{dName}) \land $ \\ 
+ $ (StringF_{dName} \leftrightarrow StringP_{dName}) \land $ \\ 
+ $ (PersonF_{dName} \leftrightarrow PersonP_{dName}) \land $ \\ 
+ $ (E1NameF_{dName} \leftrightarrow E1NameP_{dName}) \land $ \\ 
+ $ (PersonF_{dName} \leftrightarrow PersonP_{dName}) \land $ \\ 
+ $ (E2NameF_{dName} \leftrightarrow E2NameP_{dName}) \land $ \\ 
+ $ (StringF_{dName} \leftrightarrow StringP_{dName}) \land $ \\ 
+ $ (PersonF_{dName} \leftrightarrow PersonP_{dName}) \land $ \\ 
+ $ (E2NameF_{dName} \leftrightarrow E2NameP_{dName}) \land $ \\ 
+ $ (E1NameF_{dName} \leftrightarrow E1NameP_{dName}) \land $ \\ 
+ $ (E1NameInvF_{dName} \leftrightarrow E1NameInvP_{dName}) \land $ \\ 
+ $ (E1NameInvF_{dName} \leftrightarrow E1NameInvP_{dName}) \land $ \\ 
+ $ (E1NameF_{dName} \leftrightarrow E1NameP_{dName}) \land $ \\ 
+ $ (E1NameF_{dName} \leftrightarrow E1NameP_{dName}) \land $ \\ 
+ $ (E2NameF_{dName} \leftrightarrow E2NameP_{dName}) \land $ \\ 
+ $ (E2NameF_{dName} \leftrightarrow E2NameP_{dName}) \land $ \\ 
+ $ BOX2F_{dNameInv} \land $ \\ 
+ $ BOX2F_{dName})$ 
+\end{document}

@@ -1,0 +1,218 @@
+MODULE main
+VAR
+	PinvSalaryP :boolean;
+	PinvSalaryF :boolean;
+	PersonP_dSalary :boolean;
+	PersonP_dSalaryInv :boolean;
+	PersonF_dSalary :boolean;
+	PersonF_dSalaryInv :boolean;
+	PSalaryP :boolean;
+	PSalaryF :boolean;
+	NXT9P_dSalary :boolean;
+	NXT9P_dSalaryInv :boolean;
+	NXT7F_dSalary :boolean;
+	NXT7F_dSalaryInv :boolean;
+	NXT5F_dSalary :boolean;
+	NXT5F_dSalaryInv :boolean;
+	NXT3P_dSalary :boolean;
+	NXT3P_dSalaryInv :boolean;
+	IntegerP_dSalary :boolean;
+	IntegerP_dSalaryInv :boolean;
+	IntegerF_dSalary :boolean;
+	IntegerF_dSalaryInv :boolean;
+	E2SalaryP_dSalary :boolean;
+	E2SalaryP_dSalaryInv :boolean;
+	E2SalaryF_dSalary :boolean;
+	E2SalaryF_dSalaryInv :boolean;
+	E1SalaryP_dSalary :boolean;
+	E1SalaryP_dSalaryInv :boolean;
+	E1SalaryInvP_dSalary :boolean;
+	E1SalaryInvP_dSalaryInv :boolean;
+	E1SalaryInvF_dSalary :boolean;
+	E1SalaryInvF_dSalaryInv :boolean;
+	E1SalaryF_dSalary :boolean;
+	E1SalaryF_dSalaryInv :boolean;
+	BOX8F_dSalary :boolean;
+	BOX8F_dSalaryInv :boolean;
+	BOX6F_dSalary :boolean;
+	BOX6F_dSalaryInv :boolean;
+	BOX4P_dSalary :boolean;
+	BOX4P_dSalaryInv :boolean;
+	BOX2F_dSalary :boolean;
+	BOX2F_dSalaryInv :boolean;
+	BOX1F_dSalary :boolean;
+	BOX1F_dSalaryInv :boolean;
+	BOX19P_dSalary :boolean;
+	BOX19P_dSalaryInv :boolean;
+	BOX18P_dSalary :boolean;
+	BOX18P_dSalaryInv :boolean;
+	BOX17P_dSalary :boolean;
+	BOX17P_dSalaryInv :boolean;
+	BOX16F_dSalary :boolean;
+	BOX16F_dSalaryInv :boolean;
+	BOX15F_dSalary :boolean;
+	BOX15F_dSalaryInv :boolean;
+	BOX14F_dSalary :boolean;
+	BOX14F_dSalaryInv :boolean;
+	BOX13P_dSalary :boolean;
+	BOX13P_dSalaryInv :boolean;
+	BOX12P_dSalary :boolean;
+	BOX12P_dSalaryInv :boolean;
+	BOX11P_dSalary :boolean;
+	BOX11P_dSalaryInv :boolean;
+	BOX10P_dSalary :boolean;
+	BOX10P_dSalaryInv :boolean;
+	BOX0F_dSalary :boolean;
+	BOX0F_dSalaryInv :boolean;
+
+
+LTLSPEC !( ((E1SalaryF_dSalary -> BOX0F_dSalary) & 
+	(PinvSalaryF -> E1SalaryF_dSalary) & 
+	(E1SalaryInvF_dSalary -> BOX1F_dSalary) & 
+	(PSalaryF -> E1SalaryInvF_dSalaryInv) & 
+	 G (( X NXT3P_dSalary <-> BOX4P_dSalary) & 
+	(NXT5F_dSalary <->  X BOX6F_dSalary) & 
+	( X NXT7F_dSalary <-> BOX8F_dSalary) & 
+	(NXT9P_dSalary <->  X BOX10P_dSalary) & 
+	( X BOX11P_dSalary <-> ( X PSalaryF & 
+	BOX11P_dSalary)) & 
+	( X BOX12P_dSalary <-> ( X PinvSalaryF & 
+	BOX12P_dSalary)) & 
+	( X BOX13P_dSalary <-> ( X ((PersonP_dSalary -> NXT3P_dSalary) & 
+	(E1SalaryInvP_dSalary -> IntegerP_dSalary) & 
+	(PersonP_dSalary -> E1SalaryP_dSalary) & 
+	(PersonP_dSalary ->  !E2SalaryP_dSalary) & 
+	(IntegerP_dSalary ->  !PersonP_dSalary) & 
+	(E2SalaryP_dSalary -> E1SalaryP_dSalary)) & 
+	BOX13P_dSalary)) & 
+	( X BOX4P_dSalary <-> ( X NXT9P_dSalary & 
+	BOX4P_dSalary)) & 
+	(BOX14F_dSalary <->  G PSalaryF) & 
+	(BOX15F_dSalary <->  G PinvSalaryF) & 
+	(BOX16F_dSalary <->  G ((PersonF_dSalary -> NXT5F_dSalary) & 
+	(E1SalaryInvF_dSalary -> IntegerF_dSalary) & 
+	(PersonF_dSalary -> E1SalaryF_dSalary) & 
+	(PersonF_dSalary ->  !E2SalaryF_dSalary) & 
+	(IntegerF_dSalary ->  !PersonF_dSalary) & 
+	(E2SalaryF_dSalary -> E1SalaryF_dSalary))) & 
+	(BOX6F_dSalary <->  G NXT7F_dSalary) & 
+	( X BOX0F_dSalary <-> ( X BOX14F_dSalary & 
+	BOX0F_dSalary)) & 
+	( X BOX1F_dSalary <-> ( X BOX15F_dSalary & 
+	BOX1F_dSalary)) & 
+	( X BOX2F_dSalary <-> ( X BOX16F_dSalary & 
+	BOX2F_dSalary)) & 
+	( X BOX8F_dSalary <-> ( X PersonF_dSalary & 
+	BOX8F_dSalary)) & 
+	(BOX17P_dSalary <->  G BOX11P_dSalary) & 
+	(BOX18P_dSalary <->  G BOX12P_dSalary) & 
+	(BOX19P_dSalary <->  G BOX13P_dSalary) & 
+	(BOX10P_dSalary <->  G PersonP_dSalary)) & 
+	(BOX16F_dSalary <-> BOX13P_dSalary) & 
+	(BOX14F_dSalary <-> BOX11P_dSalary) & 
+	(BOX15F_dSalary <-> BOX12P_dSalary) & 
+	(BOX6F_dSalary <-> BOX4P_dSalary) & 
+	(BOX2F_dSalary <-> BOX19P_dSalary) & 
+	(BOX0F_dSalary <-> BOX17P_dSalary) & 
+	(BOX1F_dSalary <-> BOX18P_dSalary) & 
+	(BOX8F_dSalary <-> BOX10P_dSalary) & 
+	(PSalaryF <-> PSalaryP) & 
+	(PinvSalaryF <-> PinvSalaryP) & 
+	(NXT5F_dSalary <-> NXT3P_dSalary) & 
+	(NXT7F_dSalary <-> NXT9P_dSalary) & 
+	(E1SalaryF_dSalary <-> E1SalaryP_dSalary) & 
+	(PSalaryF <-> PSalaryF) & 
+	(PinvSalaryF <-> PinvSalaryF) & 
+	(E1SalaryF_dSalary <-> E1SalaryP_dSalary) & 
+	(E1SalaryInvF_dSalary <-> E1SalaryInvP_dSalary) & 
+	(PinvSalaryF <-> PinvSalaryF) & 
+	(PSalaryF <-> PSalaryF) & 
+	(E1SalaryInvF_dSalaryInv <-> E1SalaryInvP_dSalaryInv) & 
+	(PersonF_dSalary <-> PersonP_dSalary) & 
+	(PersonF_dSalary <-> PersonP_dSalary) & 
+	(E1SalaryInvF_dSalary <-> E1SalaryInvP_dSalary) & 
+	(IntegerF_dSalary <-> IntegerP_dSalary) & 
+	(PersonF_dSalary <-> PersonP_dSalary) & 
+	(E1SalaryF_dSalary <-> E1SalaryP_dSalary) & 
+	(PersonF_dSalary <-> PersonP_dSalary) & 
+	(E2SalaryF_dSalary <-> E2SalaryP_dSalary) & 
+	(IntegerF_dSalary <-> IntegerP_dSalary) & 
+	(PersonF_dSalary <-> PersonP_dSalary) & 
+	(E2SalaryF_dSalary <-> E2SalaryP_dSalary) & 
+	(E1SalaryF_dSalary <-> E1SalaryP_dSalary) & 
+	(E1SalaryF_dSalaryInv -> BOX0F_dSalaryInv) & 
+	(PinvSalaryF -> E1SalaryF_dSalary) & 
+	(E1SalaryInvF_dSalaryInv -> BOX1F_dSalaryInv) & 
+	(PSalaryF -> E1SalaryInvF_dSalaryInv) & 
+	 G (( X NXT3P_dSalaryInv <-> BOX4P_dSalaryInv) & 
+	(NXT5F_dSalaryInv <->  X BOX6F_dSalaryInv) & 
+	( X NXT7F_dSalaryInv <-> BOX8F_dSalaryInv) & 
+	(NXT9P_dSalaryInv <->  X BOX10P_dSalaryInv) & 
+	( X BOX11P_dSalaryInv <-> ( X PSalaryF & 
+	BOX11P_dSalaryInv)) & 
+	( X BOX12P_dSalaryInv <-> ( X PinvSalaryF & 
+	BOX12P_dSalaryInv)) & 
+	( X BOX13P_dSalaryInv <-> ( X ((PersonP_dSalaryInv -> NXT3P_dSalaryInv) & 
+	(E1SalaryInvP_dSalaryInv -> IntegerP_dSalaryInv) & 
+	(PersonP_dSalaryInv -> E1SalaryP_dSalaryInv) & 
+	(PersonP_dSalaryInv ->  !E2SalaryP_dSalaryInv) & 
+	(IntegerP_dSalaryInv ->  !PersonP_dSalaryInv) & 
+	(E2SalaryP_dSalaryInv -> E1SalaryP_dSalaryInv)) & 
+	BOX13P_dSalaryInv)) & 
+	( X BOX4P_dSalaryInv <-> ( X NXT9P_dSalaryInv & 
+	BOX4P_dSalaryInv)) & 
+	(BOX14F_dSalaryInv <->  G PSalaryF) & 
+	(BOX15F_dSalaryInv <->  G PinvSalaryF) & 
+	(BOX16F_dSalaryInv <->  G ((PersonF_dSalaryInv -> NXT5F_dSalaryInv) & 
+	(E1SalaryInvF_dSalaryInv -> IntegerF_dSalaryInv) & 
+	(PersonF_dSalaryInv -> E1SalaryF_dSalaryInv) & 
+	(PersonF_dSalaryInv ->  !E2SalaryF_dSalaryInv) & 
+	(IntegerF_dSalaryInv ->  !PersonF_dSalaryInv) & 
+	(E2SalaryF_dSalaryInv -> E1SalaryF_dSalaryInv))) & 
+	(BOX6F_dSalaryInv <->  G NXT7F_dSalaryInv) & 
+	( X BOX0F_dSalaryInv <-> ( X BOX14F_dSalaryInv & 
+	BOX0F_dSalaryInv)) & 
+	( X BOX1F_dSalaryInv <-> ( X BOX15F_dSalaryInv & 
+	BOX1F_dSalaryInv)) & 
+	( X BOX2F_dSalaryInv <-> ( X BOX16F_dSalaryInv & 
+	BOX2F_dSalaryInv)) & 
+	( X BOX8F_dSalaryInv <-> ( X PersonF_dSalaryInv & 
+	BOX8F_dSalaryInv)) & 
+	(BOX17P_dSalaryInv <->  G BOX11P_dSalaryInv) & 
+	(BOX18P_dSalaryInv <->  G BOX12P_dSalaryInv) & 
+	(BOX19P_dSalaryInv <->  G BOX13P_dSalaryInv) & 
+	(BOX10P_dSalaryInv <->  G PersonP_dSalaryInv)) & 
+	(BOX16F_dSalaryInv <-> BOX13P_dSalaryInv) & 
+	(BOX14F_dSalaryInv <-> BOX11P_dSalaryInv) & 
+	(BOX15F_dSalaryInv <-> BOX12P_dSalaryInv) & 
+	(BOX6F_dSalaryInv <-> BOX4P_dSalaryInv) & 
+	(BOX2F_dSalaryInv <-> BOX19P_dSalaryInv) & 
+	(BOX0F_dSalaryInv <-> BOX17P_dSalaryInv) & 
+	(BOX1F_dSalaryInv <-> BOX18P_dSalaryInv) & 
+	(BOX8F_dSalaryInv <-> BOX10P_dSalaryInv) & 
+	(PSalaryF <-> PSalaryP) & 
+	(PinvSalaryF <-> PinvSalaryP) & 
+	(NXT5F_dSalaryInv <-> NXT3P_dSalaryInv) & 
+	(NXT7F_dSalaryInv <-> NXT9P_dSalaryInv) & 
+	(E1SalaryF_dSalaryInv <-> E1SalaryP_dSalaryInv) & 
+	(PSalaryF <-> PSalaryF) & 
+	(PinvSalaryF <-> PinvSalaryF) & 
+	(E1SalaryF_dSalary <-> E1SalaryP_dSalary) & 
+	(E1SalaryInvF_dSalaryInv <-> E1SalaryInvP_dSalaryInv) & 
+	(PinvSalaryF <-> PinvSalaryF) & 
+	(PSalaryF <-> PSalaryF) & 
+	(E1SalaryInvF_dSalaryInv <-> E1SalaryInvP_dSalaryInv) & 
+	(PersonF_dSalaryInv <-> PersonP_dSalaryInv) & 
+	(PersonF_dSalaryInv <-> PersonP_dSalaryInv) & 
+	(E1SalaryInvF_dSalaryInv <-> E1SalaryInvP_dSalaryInv) & 
+	(IntegerF_dSalaryInv <-> IntegerP_dSalaryInv) & 
+	(PersonF_dSalaryInv <-> PersonP_dSalaryInv) & 
+	(E1SalaryF_dSalaryInv <-> E1SalaryP_dSalaryInv) & 
+	(PersonF_dSalaryInv <-> PersonP_dSalaryInv) & 
+	(E2SalaryF_dSalaryInv <-> E2SalaryP_dSalaryInv) & 
+	(IntegerF_dSalaryInv <-> IntegerP_dSalaryInv) & 
+	(PersonF_dSalaryInv <-> PersonP_dSalaryInv) & 
+	(E2SalaryF_dSalaryInv <-> E2SalaryP_dSalaryInv) & 
+	(E1SalaryF_dSalaryInv <-> E1SalaryP_dSalaryInv) & 
+	BOX2F_dSalary & 
+	BOX2F_dSalaryInv))

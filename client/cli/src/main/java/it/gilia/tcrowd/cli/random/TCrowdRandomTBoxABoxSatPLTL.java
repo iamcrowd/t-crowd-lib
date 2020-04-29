@@ -96,7 +96,8 @@ public class TCrowdRandomTBoxABoxSatPLTL extends TCrowdRandomTDLRelatedCommand {
                    	    		true, 
                    	    		fileNameOut,
                    	    		false,
-                   	    		"NuSMV");
+                   	    		"NuSMV",
+                   	    		true);
                     	    
                 } else { /*Check for TBox and ABox satisfiability */
                    	String jsonTxtData = IOUtils.toString(td, "UTF-8");
@@ -110,7 +111,8 @@ public class TCrowdRandomTBoxABoxSatPLTL extends TCrowdRandomTDLRelatedCommand {
                     		tbox,
                     		true, 
                     		fileNameOut,
-                    		abox);
+                    		abox,
+                    		true);
                 }
             }
         } catch (Exception e) {

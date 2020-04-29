@@ -20,7 +20,7 @@ public class Frag06TDL {
 				exTDL.getTBox(),
 				exTDL.Project,
 				true, 
-				"tdl_06a");
+				"tdl_06a",false);
 		
 		Map<String, String> stats = exTDL.getTBox().getStats();
 		String key;
