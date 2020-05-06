@@ -52,7 +52,7 @@ description = " TBox|ABox -> QTL1 -> QTLN -> LTL "
 				+ "\n"
 				+ "\t \t  \t \t \t * If ABox is empty, only TBox is checked for SAT"
 				+ "\n"
-        		+ "\t \t \t \t \t * option -s requires entering a solver name (NuSMV|Aalta|pltl|TRP++UC)")
+        		+ "\t \t \t \t \t * option -s requires entering a solver name (NuSMV|Aalta|pltl|TRP++UC|all)")
 
 public class TCrowdRandomTBoxABoxSatLTL extends TCrowdRandomTDLRelatedCommand {
 	
