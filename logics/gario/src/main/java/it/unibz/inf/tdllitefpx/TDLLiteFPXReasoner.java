@@ -240,6 +240,17 @@ public class TDLLiteFPXReasoner {
 					System.out.println("Solver" + Constants.TRPUC);
 					(new TrpucOutput(ltl)).toFile(prefix+".ltl");
 				break;
+				
+				case Constants.all:
+					System.out.println("Solver..." + Constants.NuSMV);
+					(new NuSMVOutput(ltl)).toFile(prefix+".smv");
+					System.out.println("Solver" + Constants.Aalta);
+					(new AaltaOutput(ltl)).toFile(prefix+".aalta");
+					System.out.println("Solver" + Constants.pltl);
+					(new PltlOutput(ltl)).toFile(prefix+".pltl");
+					System.out.println("Solver" + Constants.TRPUC);
+					(new TrpucOutput(ltl)).toFile(prefix+".ltl");
+				break;
 			
 				default:
 					break;
@@ -434,6 +445,17 @@ public class TDLLiteFPXReasoner {
 			break;
 			
 			case Constants.TRPUC:
+				System.out.println("Solver" + Constants.TRPUC);
+				(new TrpucOutput(ltl)).toFile(prefix+".ltl");
+			break;
+			
+			case Constants.all:
+				System.out.println("Solver..." + Constants.NuSMV);
+				(new NuSMVOutput(ltl)).toFile(prefix+".smv");
+				System.out.println("Solver" + Constants.Aalta);
+				(new AaltaOutput(ltl)).toFile(prefix+".aalta");
+				System.out.println("Solver" + Constants.pltl);
+				(new PltlOutput(ltl)).toFile(prefix+".pltl");
 				System.out.println("Solver" + Constants.TRPUC);
 				(new TrpucOutput(ltl)).toFile(prefix+".ltl");
 			break;
