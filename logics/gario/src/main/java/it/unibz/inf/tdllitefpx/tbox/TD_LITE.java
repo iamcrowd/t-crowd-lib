@@ -27,70 +27,27 @@ import it.unibz.inf.tdllitefpx.tbox.ConceptInclusionAssertion;
 import it.unibz.inf.tdllitefpx.tbox.TBox;
 
 public class TD_LITE {
+
+	public static Set <Concept> ConceptsSet = new HashSet<Concept>();
+	public static Set<Role> RolesSet = new HashSet<Role>();
 	
-/**	
-	public static void main(String[] args) throws Exception {
-		// TODO Auto-generated method stub
-		TD_LITE exTDLITE = new TD_LITE();
+/*	public static Concept getABoxConcept( ){
 		
+		Concept[] ArrayC= new Concept[ConceptsSet.size()];
+		ConceptsSet.toArray(ArrayC);
+		int index= new Random().nextInt(ArrayC.length);
 		
-		//Scanner sc = new Scanner(System.in);
-		//System.out.println("How many basic concepts:");
-		//int str = sc.nextInt();
-		//System.out.println("You enter : " + str);
-		
-		TBox t = new TBox();
-		t=exTDLITE.getTbox(4,2,4,2,5,5);
-	
-		(new LatexOutputDocument(t)).toFile("TDLITEtbox.tex");
-		
-		TDLLiteFPXReasoner.buildCheckSatisfiability(t,true,"Rand",false);
-		
-		Map<String, String> stats = t.getStats();
-		System.out.println("");
-		System.out.println("------TBOX------");
-		String key;
-		key="Basic Concepts:";
-		System.out.println(key+ stats.get(key));
-		key="Roles:";
-		System.out.println(key+ stats.get(key));
-		key="CIs:";
-		System.out.println(key+ stats.get(key));
-		
-		ProcessBuilder processBuilder = new ProcessBuilder();
-		processBuilder.command("C:\\Program Files (x86)\\NuSMV-2.6\\bin\\NuSMV.exe", "Rand.smv");
-		//processBuilder.redirectOutput().toString();
-		try {
-			System.out.println("NUSMV process!");
-			Process process = processBuilder.start();
-
-			StringBuilder output = new StringBuilder();
-
-			BufferedReader reader = new BufferedReader(
-					new InputStreamReader(process.getInputStream()));
-
-			String line;
-			while ((line = reader.readLine()) != null) {
-				output.append(line + "\n");
-			}
-
-			int exitVal = process.waitFor();
-			if (exitVal == 0) {
-				System.out.println("Success!");
-				System.out.println(output);
-				System.exit(0);
-			} else {
-				//abnormal...
-			}
-
-		} catch (IOException e) {
-			e.printStackTrace();
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
-		
+		return ArrayC[index];
 	}
-*/
+	
+	public static Role getABoxRole(){
+		
+		Role[] ArrayR= new Role[RolesSet.size()];
+		RolesSet.toArray(ArrayR);
+		int index= new Random().nextInt(ArrayR.length);
+		
+		return ArrayR[index];
+	}*/
 	
 	/**
 	 * Random generation of TBox TDLLITE
@@ -108,11 +65,11 @@ public class TD_LITE {
 		TBox t = new TBox();
 		
 		for (int i = 1; i <= size; i++){
-			Concept C1 = getConcept(Lc,N,Q, Pr, Pt);
-			Concept C2 = getConcept(Lc,N,Q, Pr, Pt);
+			Concept C1 = getConcept(Lc, N, Q, Pr, Pt);
+			Concept C2 = getConcept(Lc, N, Q, Pr, Pt);
 		
-			t.add(new ConceptInclusionAssertion(C1,C2));
-			System.out.println("Tbox: "+C1+" << "+C2 );
+			t.add(new ConceptInclusionAssertion(C1, C2));
+			System.out.println("Tbox: " + C1 + " << " + C2);
 		}
 		return t;
 	}
@@ -125,24 +82,34 @@ public class TD_LITE {
 	 * @return
 	 */
 	public static BasicConcept getBasicConcepts(int N, int Q, int Pr){
-		int i = (int)(Math.random() * (N+1));
+		int i = (int)(Math.random() * (N)); //return an integer from 0 to N-1
 		int q = (int)( 1 + (Math.random() * (Q)));
-	
-		int op = new Random().nextInt(2);
+		
+		int op = new Random().nextInt(2);//0 and 1
 		//Probability
-		int p = new Random().nextInt(10);
-	
+		int p = new Random().nextInt(10); //0..9
+		
 		switch (op){
-			case 0: 
-				return new AtomicConcept("C"+i); 
-			case 1:
-				if (p < (10-Pr)) {
-					Role L = new PositiveRole(new AtomicLocalRole("L"+i)); 
-					return new QuantifiedRole(L,q);
-				} else {
-					Role G = new PositiveRole(new AtomicRigidRole("G"+i)); 
-					return new QuantifiedRole(G,q);
-				}
+		  case 0:
+		//	System.out.println("I'm basic basic");
+			  BasicConcept Basic= new AtomicConcept("C" + i);
+			  ConceptsSet.add(Basic);  
+			  return Basic ;
+		    
+		  case 1:
+			  if (p < (10-Pr)) {
+				 // System.out.println("I'm q local");
+				  Role L = new PositiveRole(new AtomicLocalRole("L" + i)); 
+				  RolesSet.add(L);
+				  return new QuantifiedRole(L, q);
+		        } else 
+		        {
+		            
+			  //   System.out.println("I'm q rigid");
+			      Role G = new PositiveRole(new AtomicRigidRole("G" + i)); 
+			      RolesSet.add(G);
+			      return new QuantifiedRole(G, q);
+		        }
 		}
 		return null;
 	}
@@ -156,14 +123,14 @@ public class TD_LITE {
 	 * @param Pt
 	 * @return
 	 */
-	public static Set <Concept> getConcepts( int Lc, int N,int Q, int Pr, int Pt){
+/*	public static Set <Concept> getConcepts( int Lc, int N,int Q, int Pr, int Pt){
 		Set <Concept> Concepts = new HashSet<Concept>();
 		for (int i = 1; i <= N; i++){
 			Concept C = getConcept(Lc, N,Q, Pr, Pt);
 			Concepts.add(C);
 		}
 		return Concepts;
-	}
+	}*/
 	
 	/**
 	 * 
@@ -175,38 +142,56 @@ public class TD_LITE {
 	 * @return
 	 */
 	public static Concept getConcept(int Lc, int N, int Q, int Pr, int Pt){
-		Concept C = new AtomicConcept("C");
-		
+		Concept C= new AtomicConcept("C");
 		if (Lc == 1){
-			Concept BC = getBasicConcepts(N,Q, Pr);
-			C = BC;	
-		} else if (Lc == 2) {
+			Concept BC = getBasicConcepts(N, Q, Pr);
+			C = BC;
+		}
+		else if (Lc == 2){
 			Concept CL1=getConcept(1,N,Q, Pr, Pt);
 			//Probability
 			int p = new Random().nextInt(10);
-			if (p < (1-Pt)) {
-				Concept Cn = new NegatedConcept(CL1);
-				C = Cn;
-		     } else {
-		    	 Concept Cu = getTemporalConcept(CL1);
-		    	 C = Cu;
+			if (p < (10-Pt)) {
+				int opx = new Random().nextInt(3);
+				
+				switch (opx){
+					case 0:
+						//System.out.println("I'm a next");	   
+						Concept Cnx = new NextFuture(CL1);
+					    C = Cnx;
+					case 1:
+						//System.out.println("I'm a previous");
+						Concept Cno = new NextPast(CL1);
+					    C = Cno;  
+					case 2:
+        				//System.out.println("I'm a negated");
+				        Concept Cn = new NegatedConcept(CL1);
+				        C = Cn;
+				}
+			} 
+			else {
+				//System.out.println("I'm a temporal");
+				Concept Cu = getTemporalConcept(CL1);
+				C = Cu;
 			}
 		}
 		
 		if (Lc > 2){
-			int p = new Random().nextInt(10);
+			int p = new Random().nextInt(10);// 0..9
 	
-			if (p < (10 - Pt)) {
-				int x = (int)( 1 + (Math.random() * (Lc - 2 - 1)));
-				Concept C1 = getConcept(x, N, Q, Pr, Pt);
-				Concept C2 = getConcept(Lc - x - 1, N, Q, Pr, Pt);
-				Concept Cc = new ConjunctiveConcept(C1,C2);
-				C= Cc; 
-			} else {
-				Concept CUu = getTemporalConcept(getConcept(Lc-1, N, Q, Pr, Pt));
+			if (p < (10-Pt)) {
+				  int x = (int)( 1 + (Math.random() * (Lc-2 - 1)));
+				  Concept C1 = getConcept(x, N, Q, Pr, Pt);
+				  Concept C2 = getConcept(Lc - x - 1, N, Q, Pr, Pt);
+				  Concept Cc = new ConjunctiveConcept(C1, C2);
+				  C = Cc; 
+			}
+			else {
+				Concept CUu = getTemporalConcept(getConcept(Lc - 1, N, Q, Pr, Pt));
 				C = CUu; 
 			}
 		}
+		
 		return C;
 	}
 
@@ -216,24 +201,41 @@ public class TD_LITE {
 	 * @return
 	 */
 	public static TemporalConcept getTemporalConcept(Concept C){
-		int n = (int)(Math.random() * 6);
-
+		int n = (int)(Math.random() * 4); //values from 0 to 3
+	
 		switch (n){
-			case 0:
-				return new AlwaysFuture(C);	    
-			case 1:
-				return new AlwaysPast(C);	 
-			case 2:
-				return new NextFuture(C);		
-			case 3:
-				return new NextPast(C);
-			case 4:
-				return new SometimeFuture(C);
-			case 5:
-				return new SometimePast(C);
+		  case 0:
+			  return new AlwaysFuture(C);	   
+		  case 1:
+			  return new AlwaysPast(C);	
+		  case 2:
+			  return new SometimeFuture(C);
+		  case 3:
+			  return new SometimePast(C);
 		}
 		return null;
 	}
+	
+/*	public ABox getABox(int size, int max){
+		ABox A = new ABox();
+		
+		for (int i = 1; i <= size; i++){
+			int s= new Random().nextInt(2);
+			int j= new Random().nextInt(max+1);
+			
+			switch (s){
+			  case 0:
+				//	Concept assertion;
+				ABoxConceptAssertion a= new ABoxConceptAssertion(getABoxConcept(),"a" + i);
+				A.addConceptsAssertion(a); 
+			  case 1:
+				  //	Role assertion;	  
+				  ABoxRoleAssertion r= new ABoxRoleAssertion(getABoxRole(),"a" + i, "b" + i, j);
+				  A.addABoxRoleAssertion(r);
+			}
+		}
+		return A;
+	}*/
 	
 	/**
 	 * 
