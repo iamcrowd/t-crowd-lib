@@ -76,8 +76,8 @@ public class TCrowdRandomTBoxABoxSatPLTL extends TCrowdRandomTDLRelatedCommand {
             
     		TD_LITE exTDLITE = new TD_LITE();
     		TBox tbox = new TBox();
-    		tbox = exTDLITE.getTbox(ltbox, n, lc, qm, pt, pr);
-    		
+    		tbox = exTDLITE.getTbox(ltbox, lc, n, qm, pt, pr);
+
             InputStream td = new FileInputStream(tData);
                     
             if (td == null) {
