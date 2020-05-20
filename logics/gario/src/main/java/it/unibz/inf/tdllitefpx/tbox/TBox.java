@@ -112,18 +112,42 @@ public class TBox extends LinkedList<ConceptInclusionAssertion> implements Forma
 		System.out.println("is extended?"+isExtended);
 		return isExtended;}
 	
+	
+	/**
+	 * This function rewrite the quantified roles list in order to extend TBox with the right cardinalities
+	 * @return
+	 */
+	public Set<QuantifiedRole> getQuantifiedRoles1(){
+		
+		Set<QuantifiedRole> qR = getQuantifiedRoles();
+		Set<QuantifiedRole> qR1 = new HashSet<QuantifiedRole>();
+		
+		for(QuantifiedRole r: qR){
+			QuantifiedRole r1 = new QuantifiedRole(r.getRole(), 1);
+			System.out.println("Qrole:"+r.toString());
+			qR1.add(r);
+			qR1.add(r1);
+			System.out.println("Qrole1:"+r1.toString());
+			}	
+		return qR1;
+	}
+
+	
 	/***
 	 * Transforms the TBox into an extended TBox as explained in the report.
 	 */
 	public void addExtensionConstraints(){
 		isExtended = true;
 		//System.out.println("is extended:"+isExtended);
-		Set<QuantifiedRole> qRoles = getQuantifiedRoles();
+		//Set<QuantifiedRole> qRoles = getQuantifiedRoles();
+		Set<QuantifiedRole> qRoles= getQuantifiedRoles1();
 		
 		/* delta: + >qR \subseteq >q'R
 		 * for q > q' and >qR, >q'R in T an thre's no q'' s.t. q>q''>q' and q''R \in T
 		 */
 		Map<Role,List<QuantifiedRole>> qRMap = new HashMap<Role, List<QuantifiedRole>>();
+		
+		
 		for(QuantifiedRole qR : qRoles){
 			List<QuantifiedRole> list = qRMap.get(qR.getRole());
 			if(list == null){

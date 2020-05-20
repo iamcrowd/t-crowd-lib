@@ -88,7 +88,7 @@ public class AleCardinalities {
 		
 		t0.add(new ConceptInclusionAssertion(
 				E,
-				new QuantifiedRole(R, 1)));
+				new QuantifiedRole(R, 2)));
 		
 		
 		return t0;
