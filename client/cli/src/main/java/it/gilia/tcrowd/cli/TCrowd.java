@@ -52,7 +52,8 @@ public class TCrowd {
                         TCrowdERvtTBoxABoxSatPLTL.class,
                         TCrowdERvtTBoxConceptSat.class,
                         TCrowdRandomTBoxABoxSatLTL.class,
-                        TCrowdRandomTBoxABoxSatPLTL.class
+                        TCrowdRandomTBoxABoxSatPLTL.class,
+                        TCrowdRandomTBoxABoxSatLTLPastAndFutureOps.class
                 );
 
 /**
