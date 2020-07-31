@@ -39,7 +39,7 @@ public class TDLLiteFPXConverter {
 	public TDLLiteFPXConverter(TBox tbox){
 		this.tbox = tbox;
 		a = new Alphabet();
-		x = new Variable("x");
+		x = new Variable("X");
 		
 	}
 	
@@ -91,7 +91,7 @@ public class TDLLiteFPXConverter {
 			out.add(new Always(new UniversalFormula(
 						new ImplicationFormula(
 								conceptToFormula(ci.getLHS()),
-								conceptToFormula(ci.getRHS())), new Variable("x"))));
+								conceptToFormula(ci.getRHS())), new Variable("X"))));
 		}
 		return out;
 	}

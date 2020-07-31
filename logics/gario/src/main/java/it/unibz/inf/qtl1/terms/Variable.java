@@ -12,7 +12,6 @@ public class Variable extends Term {
 	
 	public Object clone(){
 		Variable v=new Variable(name);
-		//if(isBound()) v.setBound();
 		return v;
 	}
 	

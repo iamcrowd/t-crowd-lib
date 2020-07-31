@@ -341,6 +341,7 @@ public abstract class Formula implements Cloneable{
 	public String getFormattedFormula(FormulaOutputFormat format) throws SymbolUndefinedException{
 		return getSBFormattedFormula(format).toString();
 	}
+	
 	public StringBuilder getSBFormattedFormula(FormulaOutputFormat format) throws SymbolUndefinedException{
 		StringBuilder out = new StringBuilder();
 		if(format.hasParenthesis(this))

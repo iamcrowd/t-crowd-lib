@@ -25,7 +25,7 @@ public class Adult {
 	public static void main(String[] args) throws Exception {
 		Adult exTDL = new Adult();
 
-		TDLLiteFPXReasoner.buildCheckABoxtSatisfiability(
+		TDLLiteFPXReasoner.buildFOCheckSatisfiability(
 				exTDL.getTBox(), 
 				true, 
 				"Adult", 
