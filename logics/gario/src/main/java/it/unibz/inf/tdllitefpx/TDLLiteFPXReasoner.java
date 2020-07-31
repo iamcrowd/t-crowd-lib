@@ -637,7 +637,7 @@ public class TDLLiteFPXReasoner {
 		long total_time = System.currentTimeMillis();
 		long start_time;
 		
-		System.out.println("TBox -> Qtl1 -> PLTL");
+		System.out.println("TBox|ABox -> Qtl1");
 		start_time = System.currentTimeMillis();
 		
 		long start_tbox2QTL = System.currentTimeMillis();
@@ -685,10 +685,10 @@ public class TDLLiteFPXReasoner {
 			 * 	This means verifying TBox /\ ABox 
 			 * 	for the entity E and a brand new constant c 
 			 */
-			if(qtl instanceof UniversalFormula){
+			if(qtl_N instanceof UniversalFormula){
 				
 			    Set<Constant> constsABox = ABox.getConstantsABox();
-				Set<Constant> consts = qtl.getConstants();
+				Set<Constant> consts = qtl_N.getConstants();
 				consts.addAll(constsABox);
 				System.out.println("");
 				System.out.println("Constants: "+consts);
@@ -713,7 +713,6 @@ public class TDLLiteFPXReasoner {
 		System.out.println("Generating FO file...");
 		(new FOOutput(qtlABox)).toFile(prefix+".tptp");
 		
-			
 	}
 	
 }
