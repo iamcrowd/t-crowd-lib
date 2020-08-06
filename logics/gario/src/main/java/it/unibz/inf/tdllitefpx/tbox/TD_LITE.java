@@ -30,6 +30,12 @@ import it.unibz.inf.tdllitefpx.tbox.TBox;
 
 import org.gario.code.output.SymbolUndefinedException;
 
+/**
+ * Random TBox and ABox TDL-Lite with Past and Future Operators
+ * 
+ * @author gab
+ *
+ */
 public class TD_LITE {
 
 	public static Set <Concept> ConceptsSet = new HashSet<Concept>();
