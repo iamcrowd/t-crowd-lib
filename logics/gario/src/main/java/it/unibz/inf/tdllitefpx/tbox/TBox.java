@@ -190,5 +190,65 @@ public class TBox extends LinkedList<ConceptInclusionAssertion> implements Forma
 		}
 		
 	}
+	
+	/***
+	 * Transforms the TBox into a pure future extended TBox as explained in the report.
+	 * 
+	 * Here we extend the rigid roles but considering only future operators. \diamodF qr -> \boxF qr
+	 */
+	public void addExtensionConstraintsF(){
+		isExtended = true;
+		//System.out.println("is extended:"+isExtended);
+		//Set<QuantifiedRole> qRoles = getQuantifiedRoles();
+		Set<QuantifiedRole> qRoles= getQuantifiedRoles1();
+		
+		/* delta: + >qR \subseteq >q'R
+		 * for q > q' and >qR, >q'R in T an thre's no q'' s.t. q>q''>q' and q''R \in T
+		 */
+		Map<Role,List<QuantifiedRole>> qRMap = new HashMap<Role, List<QuantifiedRole>>();
+		
+		
+		for(QuantifiedRole qR : qRoles){
+			List<QuantifiedRole> list = qRMap.get(qR.getRole());
+			if(list == null){
+				list = new ArrayList<QuantifiedRole>();
+				qRMap.put(qR.getRole(),list);
+			}
+			list.add(qR);
+		}
+		
+		for(Entry<Role, List<QuantifiedRole>> e: qRMap.entrySet()){
+			List<QuantifiedRole> qrL = e.getValue();
+			Collections.sort(qrL, new Comparator<QuantifiedRole>() {
+				@Override
+				public int compare(QuantifiedRole o1, QuantifiedRole o2) {
+					return o2.getQ()-o1.getQ();
+				}
+			});
+			
+			for(int i=0;i<qrL.size()-1;i++){
+				this.add(new ConceptInclusionAssertion(
+						qrL.get(i),
+						qrL.get(i+1)));
+				//System.out.println(qrL.get(i)+" "+qrL.get(i+1));
+			}
+		}
+		
+		/* G: + >qR \subseteq BOX >qR 
+		 * for >qR \in T an R is rigid role
+		 * 
+		 * TODO: Avoid duplications
+		 */
+
+		for(QuantifiedRole qR : qRoles){
+			if(qR.getRole().getRefersTo() instanceof AtomicRigidRole){
+				this.add(new ConceptInclusionAssertion(
+					new SometimeFuture(qR),
+					new AlwaysFuture(qR)));
+				    
+			}
+		}
+		
+	}
 
 }
