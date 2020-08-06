@@ -4,6 +4,7 @@ import it.unibz.inf.tdllitefpx.concepts.Concept;
 import it.unibz.inf.tdllitefpx.concepts.QuantifiedRole;
 //import it.unibz.inf.tdllitefpx.concepts.temporal.Always;
 import it.unibz.inf.tdllitefpx.concepts.temporal.AlwaysFuture;
+import it.unibz.inf.tdllitefpx.concepts.temporal.SometimeFuture;
 import it.unibz.inf.tdllitefpx.concepts.temporal.AlwaysPast;
 import it.unibz.inf.tdllitefpx.roles.AtomicRigidRole;
 import it.unibz.inf.tdllitefpx.roles.Role;

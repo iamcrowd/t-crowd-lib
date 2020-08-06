@@ -52,7 +52,7 @@ description = " TBox|ABox -> QTL1 -> PLTL (only NuSMV)"
 			  + "\n"
 			  + "\t \t \t \t \t * If ABox is empty, only TBox is checked for SAT")
 
-public class TCrowdRandomTBoxABoxSatPLTL extends TCrowdRandomTDLRelatedCommand {
+public class TCrowdRandomTBoxABoxPLTL extends TCrowdRandomTDLRelatedCommand {
 	
 	@Option(type = OptionType.COMMAND, name = {"-a", "--tdata"}, title = "Temporal Data",
 			description = "JSON file input containing temporal data")
