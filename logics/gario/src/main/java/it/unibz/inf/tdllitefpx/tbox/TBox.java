@@ -195,6 +195,8 @@ public class TBox extends LinkedList<ConceptInclusionAssertion> implements Forma
 	 * Transforms the TBox into a pure future extended TBox as explained in the report.
 	 * 
 	 * Here we extend the rigid roles but considering only future operators. \diamodF qr -> \boxF qr
+	 * 
+	 * TODO: refactor these methods
 	 */
 	public void addExtensionConstraintsF(){
 		isExtended = true;
