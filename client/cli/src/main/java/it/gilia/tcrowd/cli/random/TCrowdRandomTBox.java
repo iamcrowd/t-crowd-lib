@@ -45,16 +45,16 @@ import java.io.FileReader;
 import java.io.IOException;
 
 
-@Command(name = "RandomTBoxABoxSatLTL",
+@Command(name = "RandomTBox",
 description = " TBox|ABox -> QTL1 -> QTLN -> LTL "
 				+ "\n"
-				+ "\t \t \t \t TBox is randomly generated given the required parameters. Output is a Pure Future LTL"
+				+ "\t \t \t \t TBox is randomly generated with past and future operators and the required parameters. Output is a Pure Future LTL"
 				+ "\n"
 				+ "\t \t  \t \t \t * If ABox is empty, only TBox is checked for SAT"
 				+ "\n"
         		+ "\t \t \t \t \t * option -s requires entering a solver name (NuSMV|Aalta|pltl|TRP++UC|all)")
 
-public class TCrowdRandomTBoxABoxSatLTL extends TCrowdRandomTDLRelatedCommand {
+public class TCrowdRandomTBox extends TCrowdRandomTDLRelatedCommand {
 	
 	@Option(type = OptionType.COMMAND, name = {"-a", "--tdata"}, title = "Temporal Data",
 			description = "JSON file input containing temporal data")

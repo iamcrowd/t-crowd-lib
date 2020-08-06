@@ -51,20 +51,12 @@ public class TCrowd {
                         TCrowdERvtTBoxABoxSatLTL.class,
                         TCrowdERvtTBoxABoxSatPLTL.class,
                         TCrowdERvtTBoxConceptSat.class,
-                        TCrowdRandomTBoxABoxSatLTL.class,
-                        TCrowdRandomTBoxABoxSatPLTL.class,
-                        TCrowdRandomTBoxABoxSatLTLPastAndFutureOps.class,
-                        TCrowdERvtTBoxABoxSatFO.class
+                        TCrowdERvtTBoxABoxSatFO.class,
+                        TCrowdRandomTBox.class,
+                        TCrowdRandomTBoxABoxFuture.class,
+                        TCrowdRandomTBoxABoxPLTL.class,
+                        TCrowdRandomTBoxABoxPastAndFuture.class
                 );
-
-/**
-        builder.withGroup("mapping")
-                .withDescription("Manipulate mapping files")
-                .withCommand(OntopOBDAToR2RML.class)
-                .withCommand(OntopR2RMLToOBDA.class)
-                .withCommand(OntopR2RMLPrettify.class)
-                .withCommand(OntopMappingV1ToV3.class); 
-**/
         return builder.build();
     }
 

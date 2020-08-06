@@ -45,19 +45,19 @@ import java.io.FileReader;
 import java.io.IOException;
 
 
-@Command(name = "RandomTBoxABoxSatLTLPastAndFutureOps",
+@Command(name = "RandomTBoxABoxPastAndFuture",
 description = " TBox|ABox -> QTL1 -> QTLN -> LTL "
 				+ "\n"
-				+ "\t \t \t \t TBox is randomly generated given the required parameters. Output is a Pure Future LTL"
+				+ "\t \t \t \t Both TBox and ABox are randomly generated with past and future operators and the required parameters. Output is a Pure Future LTL"
 				+ "\n"
 				+ "\t \t  \t \t \t * If ABox is empty, only TBox is checked for SAT"
 				+ "\n"
         		+ "\t \t \t \t \t * option -s requires entering a solver name (NuSMV|Aalta|pltl|TRP++UC|all)")
 
-public class TCrowdRandomTBoxABoxSatLTLPastAndFutureOps extends TCrowdRandomTDLRelatedCommand {
+public class TCrowdRandomTBoxABoxPastAndFuture extends TCrowdRandomTDLRelatedCommand {
 	
 	@Option(type = OptionType.COMMAND, name = {"-s", "--solver"}, title = "solver",
-			description = "Solver (NuSMV|Aalta|pltl|TRP++UC)")
+			description = "Solver (NuSMV|Aalta|pltl|TRP++UC|all)")
 	@Required
 	@BashCompletion(behaviour = CompletionBehaviour.NONE)
 	String solver;
@@ -91,7 +91,7 @@ public class TCrowdRandomTBoxABoxSatLTLPastAndFutureOps extends TCrowdRandomTDLR
             Objects.requireNonNull(pt, "Probability of generating Temporal Concepts must not be null");
             Objects.requireNonNull(pr, "Probability of generating Rigid Roles must not be null");
 
-            Objects.requireNonNull(solver, "Solver (NuSMV|Aalta|pltl|TRP++UC) must be specified");
+            Objects.requireNonNull(solver, "Solver (NuSMV|Aalta|pltl|TRP++UC|all) must be specified");
             
             Objects.requireNonNull(aboxS, "ABoxS must not be null");
             Objects.requireNonNull(aboxM, "ABoxM must not be null");
