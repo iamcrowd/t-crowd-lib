@@ -63,7 +63,7 @@ public class TCrowdRandomTBox extends TCrowdRandomTDLRelatedCommand {
 	String tData;
 	
 	@Option(type = OptionType.COMMAND, name = {"-s", "--solver"}, title = "solver",
-			description = "Solver (NuSMV|Aalta|pltl|TRP++UC)")
+			description = "Solver (NuSMV|Aalta|pltl|TRP++UC|all)")
 	@Required
 	@BashCompletion(behaviour = CompletionBehaviour.NONE)
 	String solver;
@@ -79,7 +79,7 @@ public class TCrowdRandomTBox extends TCrowdRandomTDLRelatedCommand {
             Objects.requireNonNull(pt, "Probability of generating Temporal Concepts must not be null");
             Objects.requireNonNull(pr, "Probability of generating Rigid Roles must not be null");
 
-            Objects.requireNonNull(solver, "Solver (NuSMV|Aalta|pltl|TRP++UC) must be specified");
+            Objects.requireNonNull(solver, "Solver (NuSMV|Aalta|pltl|TRP++UC|all) must be specified");
             Objects.requireNonNull(tData, "JSON temporal data file must not be null");
             		
     		TD_LITE exTDLITE = new TD_LITE();

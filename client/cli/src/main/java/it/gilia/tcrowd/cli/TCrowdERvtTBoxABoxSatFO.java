@@ -65,19 +65,12 @@ public class TCrowdERvtTBoxABoxSatFO extends TCrowdEncodingERvtRelatedCommand {
 	@Required
 	@BashCompletion(behaviour = CompletionBehaviour.FILENAMES)
 	String tData;
-	
-/**	@Option(type = OptionType.COMMAND, name = {"-s", "--solver"}, title = "solver",
-			description = "Solver (NuSMV|Aalta)")
-	@Required
-	@BashCompletion(behaviour = CompletionBehaviour.NONE)
-	String solver;**/
 
     @Override
     public void run() {
 
         try {
             Objects.requireNonNull(tModel, "JSON ERvt temporal model file must not be null");
-            //Objects.requireNonNull(solver, "Solver (NuSMV|Aalta|pltl|TRP++UC) must be specified");
             Objects.requireNonNull(tData, "JSON temporal data file must not be null");
     		
             InputStream is = new FileInputStream(tModel);
