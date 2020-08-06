@@ -47,7 +47,7 @@ import java.io.IOException;
 description = " ERvt -> TBox|ABox -> QTL1 -> QTLN "
 				+ "\n"
 				+ "\t \t \t Encode both ERvt model and Temporal Data into a FO Pure Future monadic formulae and return a FO file"
-				+ "\n \t \t \t" + "to feed TeMP or TSPASS solvers"
+				+ "\n \t \t \t" + "to feed both TeMP and TSPASS solvers"
 				+ "\n"
 				+ "\t \t  \t * ABox must be non-empty"
 				+ "\n")
