@@ -239,9 +239,9 @@ public class DefaultStrategy extends Strategy{
 	}
 	
 	/**
-	 * ISA links
+	 * ISA links with exclusive and/or total constraints
 	 * 
-	 * @param ervt_isa
+	 * @param ervt_isa, an ERvt isa link
 	 * 
 	 * @apiNote {"name":"s2","parent":"Entity1","entities":["Entity3"],"type":"isa","constraint":[]}
 	 * @see {"name":"s1","parent":"Entity4","entities":["Entity2","Entity5"],"type":"isa","constraint":["exclusive","total"]}
@@ -261,16 +261,20 @@ public class DefaultStrategy extends Strategy{
 		ervt_isa.getJSONArray("constraint").iterator().forEachRemaining(cons -> {
 			
 			if (cons.equals("exclusive")) {
-				int i = 0;
-				while (i < list_childs.size()) {
-					int j = i + 1;
-
-					while (j < list_childs.size()) {
-						this.myTBox.add(new ConceptInclusionAssertion(
-								list_childs.get(i), new NegatedConcept(list_childs.get(j))));
-						j++;
+				if (list_childs.size() > 1) {
+					ConjunctiveConcept cce = new ConjunctiveConcept(
+												list_childs.get(0),
+												list_childs.get(1));
+					
+					if (list_childs.size() > 2) {
+						int i = 2;
+						while (i < list_childs.size()) {
+							cce.add(list_childs.get(i));
+							i++;
+						}
 					}
-					i++;
+					
+					this.myTBox.add(new ConceptInclusionAssertion(cce, new BottomConcept()));
 				}
 			}
 			
@@ -303,7 +307,7 @@ public class DefaultStrategy extends Strategy{
 	/**
 	 * Attribute links
 	 * 
-	 * @param ervt_attr
+	 * @param ervt_attr, an ERvt attribute
 	 * 
 	 * @apiNote {"name":"AttrA","entity":"Entity1","attribute":"A","type":"attribute"}
 	 */
@@ -326,7 +330,7 @@ public class DefaultStrategy extends Strategy{
 	/**
 	 * Binary Relationship links
 	 * 
-	 * @param ervt_rel
+	 * @param ervt_rel, an ERvt relationship, cardinalities and roles
 	 * 
 	 * @apiNote {"name":"R","entities":["Entity4","Entity1"],"cardinality":["1..4","3..5"],"roles":["entity4","entity1"],"type":"relationship"},
 	 * @apiNote {"name":"R","entities":["Entity4","Entity1"],"cardinality":["1..4","3..5"],"roles":["entity4","entity1"],"type":"relationship"},
@@ -407,6 +411,7 @@ public class DefaultStrategy extends Strategy{
 	}
 	
 	/**
+	 * TEX (Transition EXtension)
 	 * 
 	 * @param ervt_tex JSONObject containing a visual definition of TEX constraints
 	 * 
@@ -425,6 +430,7 @@ public class DefaultStrategy extends Strategy{
 	}
 	
 	/**
+	 * DEV (Dynamic EVolution)
 	 * 
 	 * @param ervt_dev JSONObject containing a visual definition of DEV constraints
 	 * 
@@ -444,6 +450,7 @@ public class DefaultStrategy extends Strategy{
 	}
 	
 	/**
+	 * DEX (Dynamic EXtension)
 	 * 
 	 * @param ervt_dexminus JSONObject containing a visual definition of DEV constraints
 	 * 
@@ -463,6 +470,7 @@ public class DefaultStrategy extends Strategy{
 	}
 	
 	/**
+	 * PEX (Persistent EXtension)
 	 * 
 	 * @param ervt_pex JSONObject containing a visual definition of PEX constraints
 	 * 
