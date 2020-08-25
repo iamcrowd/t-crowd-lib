@@ -46,13 +46,20 @@ import java.io.FileReader;
 import java.io.IOException;
 
 
-@Command(name = "RandomTBoxABoxSatLTLFuture",
+@Command(name = "RandomTBoxABoxFuture",
 description = " TBox|ABox on N -> QTL1 -> LTL. No past to future translation is required"
 			  + "\n"
 			  + "\t \t \t \t Both TBox and ABox with only future operators are randomly generated given the required parameters."
+      		  + "\t \t \t \t \t * option -s requires entering a solver name (NuSMV|Aalta|pltl|TRP++UC|all)"
 			  + "\n")
 
 public class TCrowdRandomTBoxABoxFuture extends TCrowdRandomTDLRelatedCommand {
+
+	@Option(type = OptionType.COMMAND, name = {"-s", "--solver"}, title = "solver",
+			description = "Solver (NuSMV|Aalta|pltl|TRP++UC|all)")
+	@Required
+	@BashCompletion(behaviour = CompletionBehaviour.NONE)
+	String solver;
 	
 	@Option(type = OptionType.COMMAND, name = {"-aS", "--aboxS"}, title = "Size",
 			description = "Size of ABox")
@@ -84,6 +91,8 @@ public class TCrowdRandomTBoxABoxFuture extends TCrowdRandomTDLRelatedCommand {
             Objects.requireNonNull(pt, "Probability of generating Temporal Concepts must not be null");
             Objects.requireNonNull(pr, "Probability of generating Rigid Roles must not be null");
             
+            Objects.requireNonNull(solver, "Solver (NuSMV|Aalta|pltl|TRP++UC|all) must be specified");
+            
             Objects.requireNonNull(aboxS, "ABoxS must not be null");
             Objects.requireNonNull(aboxM, "ABoxM must not be null");
             Objects.requireNonNull(aboxQ, "ABoxQ must not be null");
@@ -93,11 +102,13 @@ public class TCrowdRandomTBoxABoxFuture extends TCrowdRandomTDLRelatedCommand {
     		TBox tbox = new TBox();
     		tbox = exTDLITE_N.getTbox(ltbox, lc, n, qm, pt, pr);
                    	         	    
-            TDLLiteFPXReasoner.buildCheckABoxSatisfiabilityF(
+            TDLLiteFPXReasoner.buildCheckABoxLTLSatisfiability(
                     		tbox,
                     		true, 
                     		"random",
                     		exTDLITE_N.getABox(aboxS, aboxM, aboxQ),
+                    		true,
+                    		solver,
                     		true);
             
         } catch (Exception e) {
