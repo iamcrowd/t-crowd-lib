@@ -124,7 +124,7 @@ public class FormulaOutputFormat {
 		setSymbolType(UniversalFormula.class.toString(), OutputSymbolType.PREFIX);
 		// Temporal
 		
-		setSymbol(Always.class.toString()," H G ");
+		setSymbol(Always.class.toString()," G ");
 		setSymbol(AlwaysFuture.class.toString(), " G ");
 		setSymbol(AlwaysPast.class.toString(), " H ");
 		setSymbol(Sometime.class.toString(), " O F ");

@@ -53,7 +53,7 @@ public class TCrowd {
                         TCrowdERvtTBoxConceptSat.class,
                         TCrowdERvtTBoxABoxSatFO.class,
                         TCrowdRandomTBox.class,
-                        //TCrowdRandomTBoxABoxFuture.class,
+                        TCrowdRandomTBoxABoxFuture.class,
                         TCrowdRandomTBoxABoxPLTL.class,
                         TCrowdRandomTBoxABoxPastAndFuture.class
                 );
