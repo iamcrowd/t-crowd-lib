@@ -205,6 +205,9 @@ public class TDLLiteFPXReasoner {
 			if(verbose)
 				(new LatexDocumentCNF(qtl_N)).toFile(prefix+"qtlN.tex");
 			
+			
+			
+			
 			// LTL (N)
 			
 			long start_QTLN2LTL = System.currentTimeMillis();
@@ -252,6 +255,8 @@ public class TDLLiteFPXReasoner {
 					(new PltlOutput(ltl)).toFile(prefix+".pltl");
 					System.out.println("Solver" + Constants.TRPUC);
 					(new TrpucOutput(ltl)).toFile(prefix+".ltl");
+					System.out.println("Generating FO file...");
+					(new FOOutput(qtl_N)).toFile(prefix+".tptp");
 				break;
 			
 				default:
@@ -460,6 +465,8 @@ public class TDLLiteFPXReasoner {
 				(new PltlOutput(ltl)).toFile(prefix+".pltl");
 				System.out.println("Solver" + Constants.TRPUC);
 				(new TrpucOutput(ltl)).toFile(prefix+".ltl");
+				System.out.println("Generating FO file...");
+				(new FOOutput(qtlABox)).toFile(prefix+".tptp");
 			break;
 			
 			default:
