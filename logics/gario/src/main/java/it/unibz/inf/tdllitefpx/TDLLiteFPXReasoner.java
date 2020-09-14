@@ -1025,42 +1025,11 @@ public class TDLLiteFPXReasoner {
 			qtl = qtl.makeTemporalStrict();	
 		}
 		
-		if(verbose)
-			(new LatexDocumentCNF(qtl)).toFile(prefix+"qtl.tex");
-		
+		if(verbose) (new LatexDocumentCNF(qtl)).toFile(prefix+"qtl.tex");
 		
 		long end_tbox2QTL = System.currentTimeMillis() - start_tbox2QTL;
 
-		if(verbose) {
-			(new LatexOutputDocument(t)).toFile(prefix+"tbox.tex");
-		}
-
-		if(type == CheckType.Abox_consistency){
-			/* Add entity consistency check:
-			 * 	This means verifying TBox /\ ABox 
-			 * 	for the entity E and a brand new constant c 
-			 */
-			if(qtl instanceof UniversalFormula){
-				
-			    Set<Constant> constsABox = ABox.getConstantsABox();
-				Set<Constant> consts = qtl.getConstants();
-				consts.addAll(constsABox);
-				System.out.println("");
-				System.out.println("Constants: "+consts);
-				
-				long start_ABox = System.currentTimeMillis();
-
-			    ABox.addExtensionConstraintsABox(t);
-			    
-			    Formula o = ABox.getABoxFormula(true);
-			
-				qtlABox = new ConjunctiveFormula(qtl,o);
-				
-				end_ABox = System.currentTimeMillis() - start_ABox;
-				
-			}else
-				throw new Exception("Undefined consistency check for qtl not in factorized form");
-		}
+		if(verbose) (new LatexOutputDocument(t)).toFile(prefix+"tbox.tex");
 		
 		long start_QTL2PLTL = System.currentTimeMillis();
 
@@ -1070,8 +1039,7 @@ public class TDLLiteFPXReasoner {
 		
 		System.out.println("Num of Propositions: "+pltl.getPropositions().size());		
 
-		if(verbose)
-			(new LatexDocumentCNF(pltl)).toFile(prefix+"pltl.tex");
+		if(verbose) (new LatexDocumentCNF(pltl)).toFile(prefix+"pltl.tex");
 		
 		System.out.println("Generating NuSMV file...");
 		(new NuSMVOutput(pltl)).toFile(prefix+".smv");
