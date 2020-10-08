@@ -963,6 +963,9 @@ public class TDLLiteFPXReasoner {
 		(new NuSMVOutput(pltl)).toFile(prefix+".smv");
 		(new AaltaOutput(pltl)).toFile(prefix+".aalta");
 		
+		System.out.println("Solver" + Constants.pltl);
+		(new PltlOutput(ltl)).toFile(prefix+".pltl");
+		
 		System.out.println("Generating FO file...");
 		(new FOOutput(qtlABox)).toFile(prefix+".tptp");
 
@@ -1044,6 +1047,9 @@ public class TDLLiteFPXReasoner {
 		System.out.println("Generating NuSMV file...");
 		(new NuSMVOutput(pltl)).toFile(prefix+".smv");
 		(new AaltaOutput(pltl)).toFile(prefix+".aalta");
+		
+		System.out.println("Solver" + Constants.pltl);
+		(new PltlOutput(ltl)).toFile(prefix+".pltl");
 		
 		System.out.println("Generating FO file...");
 		(new FOOutput(qtl)).toFile(prefix+".tptp");
