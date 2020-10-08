@@ -52,11 +52,17 @@ public class TCrowd {
                         TCrowdERvtTBoxABoxSatPLTL.class,
                         TCrowdERvtTBoxConceptSat.class,
                         TCrowdERvtTBoxABoxSatFO.class,
-                        TCrowdRandomTBoxFuture.class,
-                        TCrowdRandomTBoxABoxFuture.class,
                         TCrowdRandomTBoxABoxPLTL.class,
+                        //past and future random
                         TCrowdRandomTBox.class,
-                        TCrowdRandomTBoxABoxPastAndFuture.class
+                        TCrowdRandomUNSATTBoxPastAndFuture.class,
+                        TCrowdRandomTBoxABoxPastAndFuture.class,
+                        //future random
+                        TCrowdRandomTBoxFuture.class,
+                        TCrowdRandomUNSATTBoxFuture.class,
+                        TCrowdRandomTBoxABoxFuture.class,
+                        TCrowdRandomTBoxUNSATABoxFuture.class
+
                 );
         return builder.build();
     }

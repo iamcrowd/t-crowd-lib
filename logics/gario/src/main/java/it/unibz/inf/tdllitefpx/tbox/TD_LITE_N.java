@@ -14,6 +14,7 @@ import it.unibz.inf.tdllitefpx.abox.ABox;
 import it.unibz.inf.tdllitefpx.abox.ABoxRoleAssertion;
 import it.unibz.inf.tdllitefpx.abox.ABoxConceptAssertion;
 import it.unibz.inf.tdllitefpx.concepts.AtomicConcept;
+import it.unibz.inf.tdllitefpx.concepts.BottomConcept;
 import it.unibz.inf.tdllitefpx.concepts.BasicConcept;
 import it.unibz.inf.tdllitefpx.concepts.Concept;
 import it.unibz.inf.tdllitefpx.concepts.ConjunctiveConcept;
@@ -80,6 +81,56 @@ public class TD_LITE_N {
 		
 			t.add(new ConceptInclusionAssertion(C1, C2));
 			System.out.println("Tbox: " + C1 + " << " + C2);
+		}
+		return t;
+	}
+	
+	/**
+	 * Random generation of UNSAT TBox TDLLITE
+	 * 
+	 * @param size
+	 * @param Lc
+	 * @param N
+	 * @param Q
+	 * @param Pr
+	 * @param Pt
+	 * @return
+	 */
+	public TBox getUnsatTBox(int size, int Lc, int N, int Q, int Pr, int Pt){
+		TBox t = new TBox();
+		int r = size / 2;
+		
+		if (r == 0){
+			Concept C1 = getConcept(Lc, N, Q, Pr, Pt);
+			Concept C2 = getConcept(Lc, N, Q, Pr, Pt);
+			
+			t.add(new ConceptInclusionAssertion(C1, C2));
+			System.out.println("Tbox: "+C1+" << "+C2 );
+		}
+		else {
+			int bot = (int)( 1 + (Math.random() * (r)));
+	
+			for (int j = 1; j <= bot; j++){
+				Concept C1 = getConcept(Lc, N, Q, Pr, Pt);
+				Concept C2 = getConcept(Lc, N, Q, Pr, Pt);
+		
+				t.add(new ConceptInclusionAssertion(C1,C2));
+				//create an Unsat TBox
+				t.add(new ConceptInclusionAssertion(new NegatedConcept(new BottomConcept()),
+													new ConjunctiveConcept(C1, new NegatedConcept(C1))));
+				System.out.println("Tbox: "+C1+" << "+C2 );
+				System.out.println("Tbox: "+C1+" << not "+C1 );
+			}
+			
+			int size1=size-bot*2;
+		
+			for (int i = 1; i <= size1; i++){
+				Concept C1=getConcept(Lc,N,Q, Pr, Pt);
+				Concept C2=getConcept(Lc,N,Q, Pr, Pt);
+		
+				t.add(new ConceptInclusionAssertion(C1,C2));
+				System.out.println("Tbox: "+C1+" << "+C2 );
+			}
 		}
 		return t;
 	}
