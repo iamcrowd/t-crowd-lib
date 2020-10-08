@@ -43,20 +43,17 @@ public class TCrowd {
                          */
                         TCrowdVersion.class,
                         TCrowdHelp.class,
-                        TCrowdTDLLiteFPX.class,
-                        /* TCrowdQTLZ.class,
-                        TCrowdQTLN.class,
-                        TCrowdLTL.class,
-                        TCrowdAboxSat.class, */
+                   /*     TCrowdTDLLiteFPX.class,
                         TCrowdERvtTBoxABoxSatLTL.class,
                         TCrowdERvtTBoxABoxSatPLTL.class,
                         TCrowdERvtTBoxConceptSat.class,
                         TCrowdERvtTBoxABoxSatFO.class,
+                        
                         TCrowdRandomTBoxABoxPLTL.class,
-                        //past and future random
+                        
                         TCrowdRandomTBox.class,
                         TCrowdRandomUNSATTBoxPastAndFuture.class,
-                        TCrowdRandomTBoxABoxPastAndFuture.class,
+                        TCrowdRandomTBoxABoxPastAndFuture.class,*/
                         //future random
                         TCrowdRandomTBoxFuture.class,
                         TCrowdRandomUNSATTBoxFuture.class,

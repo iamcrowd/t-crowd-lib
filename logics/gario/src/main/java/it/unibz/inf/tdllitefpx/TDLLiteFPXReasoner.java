@@ -964,7 +964,7 @@ public class TDLLiteFPXReasoner {
 		(new AaltaOutput(pltl)).toFile(prefix+".aalta");
 		
 		System.out.println("Solver" + Constants.pltl);
-		(new PltlOutput(ltl)).toFile(prefix+".pltl");
+		(new PltlOutput(pltl)).toFile(prefix+".pltl");
 		
 		System.out.println("Generating FO file...");
 		(new FOOutput(qtlABox)).toFile(prefix+".tptp");
@@ -1049,7 +1049,7 @@ public class TDLLiteFPXReasoner {
 		(new AaltaOutput(pltl)).toFile(prefix+".aalta");
 		
 		System.out.println("Solver" + Constants.pltl);
-		(new PltlOutput(ltl)).toFile(prefix+".pltl");
+		(new PltlOutput(pltl)).toFile(prefix+".pltl");
 		
 		System.out.println("Generating FO file...");
 		(new FOOutput(qtl)).toFile(prefix+".tptp");
