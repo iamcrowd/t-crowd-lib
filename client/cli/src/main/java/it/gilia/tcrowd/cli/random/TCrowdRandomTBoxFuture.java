@@ -46,7 +46,7 @@ import java.io.FileReader;
 import java.io.IOException;
 
 
-@Command(name = "RandomTBox",
+@Command(name = "RandomTBoxFuture",
 description = " TBox|ABox -> QTL1 -> QTLN -> LTL "
 				+ "\n"
 				+ "\t \t \t \t TBox is randomly generated with past and future operators and the required parameters. Output is a Pure Future LTL"

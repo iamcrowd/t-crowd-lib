@@ -60,7 +60,8 @@ public class TCrowd {
                         //future random
                         TCrowdRandomTBoxFuture.class,
                         TCrowdRandomUNSATTBoxFuture.class,
-                        TCrowdRandomTBoxABoxFuture.class
+                        TCrowdRandomTBoxABoxFuture.class,
+                        TCrowdRandomTBoxUNSATABoxFuture.class
 
                 );
         return builder.build();
