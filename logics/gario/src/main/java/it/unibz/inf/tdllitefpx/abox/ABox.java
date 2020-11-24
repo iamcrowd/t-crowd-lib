@@ -52,6 +52,7 @@ public class ABox extends ConjunctiveFormula implements FormattableObj {
 	Set<ABoxRoleAssertion> RolesAssertion = new HashSet<ABoxRoleAssertion>();
 	Set<Formula> ABoxFormula = new HashSet<Formula>();
 	HashMap<String, Set<String>> QRigid = new HashMap<String, Set<String>>();
+	HashMap<String, Set<String>> QRigidL = new HashMap<String, Set<String>>();
 	HashMap<String, Set<String>> QLocal = new HashMap<String, Set<String>>();
 	HashMap<String, Set<String>> QRigidinv = new HashMap<String, Set<String>>();
 	
@@ -107,39 +108,60 @@ public class ABox extends ConjunctiveFormula implements FormattableObj {
 	public void addABoxRoleAssertion(ABoxRoleAssertion r) {
 		// Create the list of Role Assertions
 		RolesAssertion.add(r);
-		Set<String> successorR = new HashSet<String>();
-		Set<String> successorL = new HashSet<String>();
-		Set<String> PredecessorR = new HashSet<String>();
-		Set<String> PredecessorL = new HashSet<String>();
-
-		if (r.ro.getRefersTo() instanceof AtomicRigidRole) {
+		Set<String>successorR = new HashSet<String>();
+		Set<String>successorL = new HashSet<String>();
+		Set<String>successorLG = new HashSet<String>();
+		Set<String>PredecessorR = new HashSet<String>();
+		Set<String>PredecessorL = new HashSet<String>();
+		Set<String>PredecessorLG = new HashSet<String>();
+			
+		if (r.ro.getRefersTo() instanceof AtomicRigidRole )
+		{
 			successorR.add(r.y);
 			PredecessorR.add(r.x);
-			QRigid.putIfAbsent(r.ro.toString() + "_" + r.x, successorR);
-			QRigid.putIfAbsent(r.ro.getInverse().toString() + "_" + r.y, PredecessorR);
-
-			successorR = QRigid.get(r.ro.toString() + "_" + r.x);
-			PredecessorR = QRigid.get(r.ro.getInverse().toString() + "_" + r.y);
-
+			QRigid.putIfAbsent(r.ro.toString()+"_"+r.x, successorR);
+			QRigid.putIfAbsent(r.ro.getInverse().toString()+"_"+r.y, PredecessorR);
+			
+			successorR = QRigid.get(r.ro.toString()+"_"+r.x);
+			PredecessorR = QRigid.get(r.ro.getInverse().toString()+"_"+r.y);
+			
 			successorR.add(r.y);
 			PredecessorR.add(r.x);
-			QRigid.replace(r.ro.toString() + "_" + r.x, successorR);
-			QRigid.replace(r.ro.getInverse().toString() + "_" + r.y, PredecessorR);
-
+			QRigid.replace(r.ro.toString()+"_"+r.x,successorR);
+			QRigid.replace(r.ro.getInverse().toString()+"_"+r.y,PredecessorR);
+			
+			//Rigid TimeStamps				
+			successorLG.add(r.y);
+			PredecessorLG.add(r.x);
+			QRigidL.putIfAbsent(r.ro.toString()+"_"+r.x+"_"+r.t, successorLG);
+			QRigidL.putIfAbsent(r.ro.getInverse().toString()+"_"+r.y+"_"+r.t, PredecessorLG);
+			
+			successorLG = QRigidL.get(r.ro.toString()+"_"+r.x+"_"+r.t);
+			PredecessorLG = QRigidL.get(r.ro.getInverse().toString()+"_"+r.y+"_"+r.t);
+			
+			successorLG.add(r.y);
+			PredecessorLG.add(r.x);
+			QRigidL.replace(r.ro.toString()+"_"+r.x+"_"+r.t,successorLG); // XE1G1(a2) <=> G1_a2_1 (1: timeStamp)
+			QRigidL.replace(r.ro.getInverse().toString()+"_"+r.x+"_"+r.t,PredecessorLG);			
+		}	
+		
+		else {
+			successorL.add(r.y);
+			PredecessorL.add(r.x);
+			QLocal.putIfAbsent(r.ro.toString()+"_"+r.x+"_"+r.t, successorL);
+			QLocal.putIfAbsent(r.ro.getInverse().toString()+"_"+r.y+"_"+r.t, PredecessorL);
+			
+			successorL=QLocal.get(r.ro.toString()+"_"+r.x+"_"+r.t);
+			PredecessorL=QLocal.get(r.ro.getInverse().toString()+"_"+r.y+"_"+r.t);
+			
+			successorL.add(r.y);
+			PredecessorL.add(r.x);
+			QLocal.replace(r.ro.toString()+"_"+r.x+"_"+r.t,successorL); // XE1G1(a2) <=> G1_a2_1 (1: timeStamp)
+			QLocal.replace(r.ro.getInverse().toString()+"_"+r.x+"_"+r.t,PredecessorL);
 		}
-
-		successorL.add(r.y);
-		PredecessorL.add(r.x);
-		QLocal.putIfAbsent(r.ro.toString() + "_" + r.x + "_" + r.t, successorL);
-		QLocal.putIfAbsent(r.ro.getInverse().toString() + "_" + r.y + "_" + r.t, PredecessorL);
-
-		successorL = QLocal.get(r.ro.toString() + "_" + r.x + "_" + r.t);
-		PredecessorL = QLocal.get(r.ro.getInverse().toString() + "_" + r.y + "_" + r.t);
-
-		successorL.add(r.y);
-		PredecessorL.add(r.x);
-		QLocal.replace(r.ro.toString() + "_" + r.x + "_" + r.t, successorL);
-		QLocal.replace(r.ro.getInverse().toString() + "_" + r.x + "_" + r.t, PredecessorL);
+		System.out.println("QRigid:"+QRigid.toString());
+		System.out.println("QRigidL:"+QRigidL.toString());
+		System.out.println("QLocal:"+QLocal.toString());
 
 	}
 
@@ -161,6 +183,7 @@ public class ABox extends ConjunctiveFormula implements FormattableObj {
 		}
 		return consts;
 	}
+	
 	
 	/**
 	 * Return a mapping String to Integer for Rigid Roles
@@ -210,7 +233,7 @@ public class ABox extends ConjunctiveFormula implements FormattableObj {
 		for (Role r : Roles) {
 			if (r.getRefersTo() instanceof AtomicRigidRole) {
 
-				for (String keyL : QLocal.keySet()) {
+				for (String keyL : QRigidL.keySet()) {
 					String[] keyLi = keyL.split("_");
 					String index = keyLi[0].concat("_" + keyLi[1]);
 
@@ -269,6 +292,7 @@ public class ABox extends ConjunctiveFormula implements FormattableObj {
 						addConceptsAssertion(new ABoxConceptAssertion(cr, keyLi[1]));
 
 					} else if (r.getInverse().toString().equals(keyLi[0])) {
+						qRolesQ.putIfAbsent(r.getInverse().toString(), 1);
 						int Qtbox = qRolesQ.get(r.toString());
 						int j = Math.min(Qtbox, Qtaboxi);
 

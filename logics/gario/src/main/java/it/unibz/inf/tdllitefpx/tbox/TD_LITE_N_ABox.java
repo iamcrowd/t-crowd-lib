@@ -280,6 +280,8 @@ public class TD_LITE_N_ABox {
 			int j = new Random().nextInt(max+1);
 			int l = new Random().nextInt(q+1);
 			
+			System.out.println("L" + l);
+			
 			if (ConceptsSet.isEmpty()) {
 				s = 2;
 			}
