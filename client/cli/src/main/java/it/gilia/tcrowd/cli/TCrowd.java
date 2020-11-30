@@ -57,6 +57,8 @@ public class TCrowd {
                         TCrowdRandomTBox.class,
                         TCrowdRandomUNSATTBoxPastAndFuture.class,
                         TCrowdRandomTBoxABoxPastAndFuture.class,
+                        //abstraction
+                        TCrowdRandomTBoxABoxPastAndFutureAbstract.class,
                         //future random
                         TCrowdRandomTBoxFuture.class,
                         TCrowdRandomUNSATTBoxFuture.class,
