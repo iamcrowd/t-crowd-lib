@@ -1026,8 +1026,10 @@ public class TDLLiteFPXReasoner {
 		TDLLiteFPXConverter conv = new TDLLiteFPXConverter(t);
 		Formula qtl = conv.getFormula();
 		
-		//Formula qtlX = conv.getEpsilonX();
-		//Formula qtlWithoutX = conv.getEpsilonWithoutX();
+		Formula qtlX = conv.getEpsilonX();
+		Formula qtlWithoutX = conv.getEpsilonWithoutX();
+		
+		Set<Constant> consts = qtl.getConstants();
 		
 		if (!reflexive) {
 			qtl = qtl.makeTemporalStrict();	
@@ -1041,11 +1043,11 @@ public class TDLLiteFPXReasoner {
 		
 		long start_QTL2PLTL = System.currentTimeMillis();
 		
-		Formula ltl = qtl.makePropositional();
-		//Formula ltlnox = qtlWithoutX.makePropositional();
+		Formula ltl = qtlX.makePropositional(consts);
+		Formula ltlnox = qtlWithoutX.makePropositional();
 		
-	    //ltl = new ConjunctiveFormula(ltl, ltlnox);
-		//ltl = new Always(ltl);
+	    ltl = new ConjunctiveFormula(ltl, ltlnox);
+		ltl = new Always(ltl);
 		
 		long end_QTL2PLTL = System.currentTimeMillis() - start_QTL2PLTL;
 		

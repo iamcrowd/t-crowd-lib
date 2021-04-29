@@ -50,7 +50,7 @@ public abstract class Formula implements Cloneable{
 	
 	public static boolean cloneAtoms=true;
 	public static boolean returnRealSubformulae=false;
-	public static boolean removeDuplicates = true;
+	public static boolean removeDuplicates = true; //changed to true 20 april 2020
 	public static boolean verifyTopBot = true;
 	
 	/* TODO: Implement negated version 
@@ -252,12 +252,13 @@ public abstract class Formula implements Cloneable{
 		Formula base = (Formula) this.clone();
 		base.makeUniqueVar();
 		//Set<Constant> constants = base.getConstants();
-		
+
 		return base.makeGroundR(constants);
 		
 	}
 	
 	private Formula makeGroundR(Set<Constant> constants){
+
 		for(Formula f: this.getSubFormulae())
 			replaceSubFormula(f,f.makeGroundR(constants));
 		
@@ -341,7 +342,6 @@ public abstract class Formula implements Cloneable{
 	public String getFormattedFormula(FormulaOutputFormat format) throws SymbolUndefinedException{
 		return getSBFormattedFormula(format).toString();
 	}
-	
 	public StringBuilder getSBFormattedFormula(FormulaOutputFormat format) throws SymbolUndefinedException{
 		StringBuilder out = new StringBuilder();
 		if(format.hasParenthesis(this))
@@ -401,12 +401,22 @@ public abstract class Formula implements Cloneable{
 	 * @return
 	 * @throws Exception 
 	 */
-	public Formula makePropositional() throws Exception{
-		Formula propF = this.makeGround();
+	public Formula makePropositional(Set<Constant> constants) throws Exception{
+		//Formula propF = this.makeGround(Set<Constant> constants); ancien
+		Formula propF = this.makeGround(constants);
+		//System.out.println("propF1: "+propF);
 		propF.atomsToPropositions();
+		//System.out.println("propF2: "+propF);
 		return propF;
 	}
 	
+	public Formula makePropositional() throws Exception{
+		Formula propF = this.makeGround();
+		//System.out.println("propF1: "+propF);
+		propF.atomsToPropositions();
+		//System.out.println("propF2: "+propF);
+		return propF;
+	}
 	/**
 	 * Verifies whether the formula belongs to the propositional logic 
 	 * fragment. 
@@ -563,7 +573,9 @@ public abstract class Formula implements Cloneable{
 					this instanceof Always ||
 					this instanceof Sometime){
 				f = this;
-			}else{
+			}/*else if(this instanceof Always) {
+				f = new AlwaysFuture(new AlwaysPast(this));
+			}*/else{
 				System.err.println("makeTemporalStrict: undefined for "+this.getClass().getName());
 			}
 		}else{
