@@ -5,6 +5,8 @@ import it.unibz.inf.qtl1.PureFutureTranslator;
 
 import it.unibz.inf.qtl1.atoms.Atom;
 import it.unibz.inf.qtl1.formulae.ConjunctiveFormula;
+import it.unibz.inf.qtl1.formulae.temporal.Always;
+import it.unibz.inf.qtl1.formulae.temporal.AlwaysFuture;
 import it.unibz.inf.qtl1.formulae.Formula;
 import it.unibz.inf.qtl1.formulae.quantified.UniversalFormula;
 import it.unibz.inf.qtl1.output.LatexDocumentCNF;
@@ -17,6 +19,8 @@ import it.unibz.inf.qtl1.output.pltl.PltlOutput;
 import it.unibz.inf.qtl1.output.trpuc.TrpucOutput;
 
 import it.unibz.inf.qtl1.output.fo.FOOutput;
+
+
 
 import it.unibz.inf.qtl1.terms.Constant;
 import it.unibz.inf.qtl1.terms.Term;
@@ -152,9 +156,15 @@ public class TDLLiteFPXReasoner {
 		TDLLiteFPXConverter conv = new TDLLiteFPXConverter(t);
 		Formula qtl = conv.getFormula();
 		
+		
 		if (!reflexive) {
 			qtl = qtl.makeTemporalStrict();	
 		}
+		
+		Formula qtlX = conv.getEpsilonX();
+		Formula qtlWithoutX = conv.getEpsilonWithoutX();
+		
+		Set<Constant> consts = qtl.getConstants();
 		
 		long end_tbox2QTL = System.currentTimeMillis() - start_tbox2QTL;
 		
@@ -169,7 +179,7 @@ public class TDLLiteFPXReasoner {
 			if(qtl instanceof UniversalFormula){
 				Concept c  = (Concept) param.get("Concept");
 				String name = c.toString()+"witness";
-				Set<Constant> consts = qtl.getConstants();
+				//Set<Constant> consts = qtl.getConstants();
 				while(consts.contains(new Constant(name))){
 					name = name +"0";
 				}
@@ -190,6 +200,8 @@ public class TDLLiteFPXReasoner {
 			(new LatexDocumentCNF(qtl)).toFile(prefix+"qtl.tex");
 		
 		Formula qtl_N;
+		Formula qtl_NX;
+		Formula qtl_NWX;
 		
 		if (purefuture) {
 			// QTL Z -> QTL N using Pure Future
@@ -197,10 +209,12 @@ public class TDLLiteFPXReasoner {
 			
 			long start_QTL2QTLN = System.currentTimeMillis();
 			
-			PureFutureTranslator purefutureFormula = new PureFutureTranslator(qtl);
-			qtl_N = purefutureFormula.getPureFutureTranslation();
+			PureFutureTranslator purefutureFormulaX = new PureFutureTranslator(qtlX);
+			qtl_NX = purefutureFormulaX.getPureFutureTranslation();
 			
 			long end_QTL2QTLN = System.currentTimeMillis() - start_QTL2QTLN;
+			
+			qtl_N = new ConjunctiveFormula(qtl_NX,qtlWithoutX);
 			
 			if(verbose)
 				(new LatexDocumentCNF(qtl_N)).toFile(prefix+"qtlN.tex");
@@ -212,7 +226,10 @@ public class TDLLiteFPXReasoner {
 			
 			long start_QTLN2LTL = System.currentTimeMillis();
 			
-			Formula ltl = qtl_N.makePropositional();
+			Formula ltl = qtl_NX.makePropositional(consts);
+			Formula ltlNoX = qtlWithoutX.makePropositional();
+			
+			ltl = new AlwaysFuture(new ConjunctiveFormula(ltl,ltlNoX));
 			
 			long end_QTLN2LTL = System.currentTimeMillis() - start_QTLN2LTL;
 			
@@ -270,7 +287,12 @@ public class TDLLiteFPXReasoner {
 			
 			long start_QTL2LTL = System.currentTimeMillis();
 			
-			Formula pltl = qtl.makePropositional();
+			Formula pltl = qtlX.makePropositional(consts);
+			Formula pltlNoX = qtlWithoutX.makePropositional();
+			
+			pltl = new Always(new ConjunctiveFormula(pltl,pltlNoX));
+			
+			//Formula pltl = qtl.makePropositional();
 			
 			long end_QTL2LTL = System.currentTimeMillis() - start_QTL2LTL;
 			
@@ -357,6 +379,7 @@ public class TDLLiteFPXReasoner {
 										 Abstract);
 	}
 	
+	
 	private static void buildLTLCheck(
 			TBox t, 
 			boolean verbose, 
@@ -386,6 +409,11 @@ public class TDLLiteFPXReasoner {
 			qtl = qtl.makeTemporalStrict();	
 		}
 		
+		Formula qtlX = conv.getEpsilonX();
+		Formula qtlWithoutX = conv.getEpsilonWithoutX();
+		
+		Set<Constant> consts = qtl.getConstants();
+		
 		long end_tbox2QTL = System.currentTimeMillis() - start_tbox2QTL;
 
 		if(verbose) {
@@ -393,20 +421,25 @@ public class TDLLiteFPXReasoner {
 			(new LatexOutputDocument(ABox)).toFile(prefix+"abox.tex");
 		}
 		
+		Formula qtl_N;
+		Formula qtl_NX;
+		Formula qtl_NWX;
+		
 		ABox.getStatsABox();
 		
 		if(verbose)
 			(new LatexDocumentCNF(qtl)).toFile(prefix+"qtl.tex");
 		
-		Formula qtl_N;
-		
-		long start_QTL2QTLN = System.currentTimeMillis();
 
-		// QTL Z -> QTL N using Pure Future
-		PureFutureTranslator purefutureFormula = new PureFutureTranslator(qtl);
-		qtl_N = purefutureFormula.getPureFutureTranslation();
+		long start_QTL2QTLN = System.currentTimeMillis();
+		
+		PureFutureTranslator purefutureFormulaX = new PureFutureTranslator(qtlX);
+		qtl_NX = purefutureFormulaX.getPureFutureTranslation();
 		
 		long end_QTL2QTLN = System.currentTimeMillis() - start_QTL2QTLN;
+		
+		qtl_N = new ConjunctiveFormula(qtl_NX,qtlWithoutX);
+		
 			
 		if(verbose)
 			(new LatexDocumentCNF(qtl_N)).toFile(prefix+"qtlN.tex");	
@@ -430,8 +463,6 @@ public class TDLLiteFPXReasoner {
 				
 				
 				long start_ABox = System.currentTimeMillis();
-				
-				System.out.println("No Abstract");
 
 			    ABox.addExtensionConstraintsABox(t);
 			    
@@ -508,8 +539,8 @@ public class TDLLiteFPXReasoner {
 		}
 
 		System.out.println("Done! Total time:" + (System.currentTimeMillis()-total_time) + "ms");
-			
 	}
+	
 	
 	private static void buildLTLCheck(
 			TBox t, 

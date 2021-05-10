@@ -36,6 +36,9 @@ public class TDLLiteFPXConverter {
 	Alphabet a;
 	Variable x;
 	
+	ConjunctiveFormula epsX = new ConjunctiveFormula();
+	ConjunctiveFormula eps = new ConjunctiveFormula();
+	
 	public TDLLiteFPXConverter(TBox tbox){
 		this.tbox = tbox;
 		a = new Alphabet();
@@ -116,7 +119,7 @@ public class TDLLiteFPXConverter {
 								conceptToFormula(ci.getLHS()),
 								conceptToFormula(ci.getRHS())));
 		}
-		return new Always(out);
+		return out;
 	}
 	
 	public Formula conceptToFormula(Concept c){
@@ -193,55 +196,82 @@ public class TDLLiteFPXConverter {
 		return cf;
 	}
 	
+	
+	//gathering formula with the variable "x"
+	public Formula getEpsilonX(){
+		Formula F= new UniversalFormula(
+				new ConjunctiveFormula(getFactorizedT(),epsX),x);
+	//System.out.println("Formula X: "+F.toString());
+		return F;
+	}
+	
+	//gathering formula with the variable "x" to avoid redundancy formula when make it propositional
+	public Formula getEpsilonWithoutX(){
+		return eps;
+	}
+	
 	private Formula getFactorizedEpsilon(){
-		
-		/* A reduced version (with less modal operators) : 
-		 * 		
-		 *  with epsilon'(S) = (\box \forall x ((E1S(x)-> \box pS ))) /\ (pinvS E1SInv(x) -> E1S(ds))
-		 * 		
-		 * 	epsilon''(S) =(\box \forall x (E1SInv(x)-> \box pSinv )) /\ (pS -> E1SInv(dsinv))
-		 */
+
+		/* A reduced version (with less modal operators) :
+		*
+		*  with epsilon'(S) = (\box \forall x ((E1S(x)-> \box pS ))) /\ (pinvS E1SInv(x) -> E1S(ds))
+		*
+		* epsilon''(S) =(\box \forall x (E1SInv(x)-> \box pSinv )) /\ (pS -> E1SInv(dsinv))
+		*/
 		ConjunctiveFormula eps1 = new ConjunctiveFormula();
 		ConjunctiveFormula eps2 = new ConjunctiveFormula();
-		
+
 		for( Role s : tbox.getRoles()){
-			if(s instanceof PositiveRole){
-				Proposition pS = (Proposition) a.get("P"+s.toString(),0);
-				Proposition pinvS = (Proposition) a.get("Pinv"+s.toString(),0);
-				Role SInv = s.getInverse();
-				
-				Concept E1S = new QuantifiedRole(s, 1);
-				Concept E1SInv = new QuantifiedRole(SInv, 1);
-				
-				Constant ds = new Constant("d"+s.toString());
-				Constant dsinv = new Constant("d"+SInv.toString());
-			
-			
-				
-				Formula fE1S_ds = conceptToFormula(E1S);
-				fE1S_ds.substitute(x, ds);
-				
-				Formula fE1SInv_ds = conceptToFormula(E1SInv);
-				fE1SInv_ds.substitute(x, dsinv);
-				
-				
-				eps1.add(new Always(new ImplicationFormula(
-								conceptToFormula(E1S), 
-								new Always(pS))));
-				eps1.add(new ImplicationFormula(
-								pinvS,
-								fE1S_ds));
-				
-				eps2.add(new Always(new ImplicationFormula(
-						conceptToFormula(E1SInv), 
-						new Always(pinvS))));
-				eps2.add(new ImplicationFormula(
-						pS,
-						fE1SInv_ds));
-			}
+		if(s instanceof PositiveRole){
+		Proposition pS = (Proposition) a.get("P"+s.toString(),0);
+		Proposition pinvS = (Proposition) a.get("Pinv"+s.toString(),0);
+		Role SInv = s.getInverse();
+
+		Concept E1S = new QuantifiedRole(s, 1);
+		Concept E1SInv = new QuantifiedRole(SInv, 1);
+
+		Constant ds = new Constant("d"+s.toString());
+		Constant dsinv = new Constant("d"+SInv.toString());
+
+
+
+		Formula fE1S_ds = conceptToFormula(E1S);
+		fE1S_ds.substitute(x, ds);
+
+		Formula fE1SInv_ds = conceptToFormula(E1SInv);
+		fE1SInv_ds.substitute(x, dsinv);
+
+
+		eps1.add(new ImplicationFormula(conceptToFormula(E1S),
+		new Always(pS))
+		);
+		eps1.add(new ImplicationFormula(
+		pinvS,
+		fE1S_ds));
+
+		epsX.add(new ImplicationFormula(
+		conceptToFormula(E1S),
+		new Always(pS))); //);
+		eps.add(new ImplicationFormula(
+		pinvS,
+		fE1S_ds));
+
+		eps2.add(new ImplicationFormula( conceptToFormula(E1SInv),
+		new Always(pinvS)));
+		eps2.add(new ImplicationFormula(
+		pS,
+		fE1SInv_ds));
+		epsX.add(new ImplicationFormula(  
+		conceptToFormula(E1SInv),
+		new Always(pinvS)));
+
+		eps.add(new ImplicationFormula(
+		pS,
+		fE1SInv_ds));
+		}
 		}
 		return new ConjunctiveFormula(eps1, eps2);
-	}
+		}
 	
 	
 	private Formula getEpsilon(Role s){

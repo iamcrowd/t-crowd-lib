@@ -274,6 +274,8 @@ public abstract class Formula implements Cloneable{
 		return this;
 		
 	}
+
+	
 	/***
 	 * Generic function to substitute a subformula in a formula. This function
 	 * applies only at top most level, and doesn't replace sub-subformulas.
@@ -404,6 +406,15 @@ public abstract class Formula implements Cloneable{
 	public Formula makePropositional() throws Exception{
 		Formula propF = this.makeGround();
 		propF.atomsToPropositions();
+		return propF;
+	}
+	
+	public Formula makePropositional(Set<Constant> constants) throws Exception{
+		//Formula propF = this.makeGround(Set<Constant> constants); ancien
+		Formula propF = this.makeGround(constants);
+		//System.out.println("propF1: "+propF);
+		propF.atomsToPropositions();
+		//System.out.println("propF2: "+propF);
 		return propF;
 	}
 	
