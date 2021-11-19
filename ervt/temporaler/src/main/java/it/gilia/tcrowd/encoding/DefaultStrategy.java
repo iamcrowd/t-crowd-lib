@@ -208,6 +208,9 @@ public class DefaultStrategy extends Strategy{
 					case "pex":
 						this.to_dllitefpx_pex(jo);
 					break;
+					case "pex-":
+						this.to_dllitefpx_pexminus(jo);
+					break;
 					default:
 						break;
 					}
@@ -484,6 +487,24 @@ public class DefaultStrategy extends Strategy{
 		this.myTBox.add(new ConceptInclusionAssertion(
 				entity,
 				new AlwaysFuture(entity)));
+		
+	}
+
+	/**
+	 * FAKE PEX- (Persistent EXtension)
+	 * 
+	 * @param ervt_pex JSONObject containing a visual definition of FAKE PEX- constraints
+	 * 
+	 * @apiNote PEX (Persistent EXtension) is a qualitative evolution constraint meaning that every 
+	 * object will always be an instance of its entity. Always in the future.
+	 * @apiNote {"name":"dev1","entities":"Entity2","type":"pex"}
+	 */
+	public void to_dllitefpx_pexminus(JSONObject ervt_pex) {
+		Concept entity = this.giveMeAconcept(
+				ervt_pex.getJSONArray("entities").get(0).toString());
+		this.myTBox.add(new ConceptInclusionAssertion(
+				entity,
+				new AlwaysPast(entity)));
 		
 	}
 	
