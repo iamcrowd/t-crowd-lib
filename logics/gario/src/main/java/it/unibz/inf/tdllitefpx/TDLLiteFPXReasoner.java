@@ -229,7 +229,8 @@ public class TDLLiteFPXReasoner {
 			Formula ltl = qtl_NX.makePropositional(consts);
 			Formula ltlNoX = qtlWithoutX.makePropositional();
 			
-			ltl = new AlwaysFuture(new ConjunctiveFormula(ltl,ltlNoX));
+			//ltl = new AlwaysFuture(new ConjunctiveFormula(ltl,ltlNoX));
+			ltl = new ConjunctiveFormula(ltl,ltlNoX);
 			
 			long end_QTLN2LTL = System.currentTimeMillis() - start_QTLN2LTL;
 			
@@ -477,7 +478,8 @@ public class TDLLiteFPXReasoner {
 				end_ABox = System.currentTimeMillis() - start_ABox;
 				
 				// only for FO solvers
-				qtlFO = new ConjunctiveFormula(new Always(qtl_N), o);
+				//qtlFO = new ConjunctiveFormula(new Always(qtl_N), o);
+				qtlFO = new ConjunctiveFormula(qtl_N, o);
 				
 				if(verbose)
 					(new LatexDocumentCNF(qtlFO)).toFile(prefix+"qtlABoxN.tex");	
@@ -493,7 +495,8 @@ public class TDLLiteFPXReasoner {
 		Formula ltlnox = qtlWithoutX.makePropositional();
 	    ltl = new ConjunctiveFormula(ltl, ltlnox);
 		o = o.makePropositional(consts);
-		ltl = new ConjunctiveFormula(new Always(ltl), o);
+		//ltl = new ConjunctiveFormula(new Always(ltl), o);
+		ltl = new ConjunctiveFormula(ltl, o);
 
 		
 		long end_QTLN2LTL = System.currentTimeMillis() - start_QTLN2LTL;
