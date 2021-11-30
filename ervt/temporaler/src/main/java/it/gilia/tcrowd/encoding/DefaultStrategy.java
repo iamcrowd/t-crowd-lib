@@ -138,15 +138,15 @@ public class DefaultStrategy extends Strategy{
 					
 						if (jo.get("timestamp").toString().equals("snapshot")) {
 							Role pRole = this.giveMeArigidRole(jo.get("name").toString());
-							this.myTBox.add(new ConceptInclusionAssertion(
+						/*	this.myTBox.add(new ConceptInclusionAssertion(
 									new QuantifiedRole(pRole.getInverse(), 1),
-									domain));
+									domain));*/
 						
 						}else {
 							Role pRole = this.giveMeArole(jo.get("name").toString());
-							this.myTBox.add(new ConceptInclusionAssertion(
+						/*	this.myTBox.add(new ConceptInclusionAssertion(
 									new QuantifiedRole(pRole.getInverse(), 1),
-									domain));
+									domain)); */
 						}
 						
 					});
@@ -218,8 +218,8 @@ public class DefaultStrategy extends Strategy{
 			}
 	    });
 		
-		this.tBoxClousure();
-		//System.out.println("TBox stats..."+this.getTBox().getStats());
+		// this.tBoxClousure();
+		
 		return this.getTBox();
 	}
 	
