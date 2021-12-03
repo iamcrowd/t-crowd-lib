@@ -1088,7 +1088,7 @@ public class TDLLiteFPXReasoner {
 		
 	}
 	
-	/** FO - Only Future
+	/** FO - Only Future TBox and ABox
 	 * 
 	 * @param t
 	 * @param verbose
@@ -1200,6 +1200,9 @@ public class TDLLiteFPXReasoner {
 		(new NuSMVOutput(pltl)).toFile(prefix+".smv");
 		(new AaltaOutput(pltl)).toFile(prefix+".aalta");
 		
+		System.out.println("Solver" + Constants.pltl);
+		(new PltlOutput(pltl)).toFile(prefix+".pltl");
+		
 		System.out.println("Generating FO file...");
 		(new FOOutput(qtlABox)).toFile(prefix+".tptp");
 
@@ -1213,6 +1216,86 @@ public class TDLLiteFPXReasoner {
 			out = new StatsOutputDocument(false);
 			out.toStatsFile(prefix+"Stats.stats", end_tbox2QTL, end_QTL2PLTL, pltl.getPropositions().size());
 		}
+		
+	}
+	
+	/** FO - Only Future TBox
+	 * 
+	 * @param t
+	 * @param verbose
+	 * @param prefix
+	 * @param reflexive
+	 * @throws Exception
+	 */
+	public static void buildFOCheckTBoxSatisfiabilityOnlyFuture(
+			TBox t,
+			boolean verbose,
+			String prefix,
+			boolean reflexive) 
+					throws Exception{
+		TDLLiteFPXReasoner.buildFOCheckTBoxOnlyFuture(t, 
+									  verbose, 
+									  prefix, 
+									  CheckType.satisfiability, 
+									  reflexive);
+	}
+	
+	
+	private static void buildFOCheckTBoxOnlyFuture(
+			TBox t, 
+			boolean verbose, 
+			String prefix, 
+			CheckType type, 
+			boolean reflexive) 
+					throws Exception{
+		long total_time = System.currentTimeMillis();
+		long start_time;
+		
+		System.out.println("TBox -> Qtl1");
+		start_time = System.currentTimeMillis();
+		
+		long start_tbox2QTL = System.currentTimeMillis();
+		// Extends the TBox, adding the delta_R and G
+		t.addExtensionConstraintsF();
+	
+		TDLLiteFPXConverter conv = new TDLLiteFPXConverter(t);
+		Formula qtl = conv.getFormula();
+		
+		if (!reflexive) {
+			qtl = qtl.makeTemporalStrict();	
+		}
+		
+		if(verbose) (new LatexDocumentCNF(qtl)).toFile(prefix+"qtl.tex");
+		
+		long end_tbox2QTL = System.currentTimeMillis() - start_tbox2QTL;
+
+		if(verbose) (new LatexOutputDocument(t)).toFile(prefix+"tbox.tex");
+		
+		long start_QTL2PLTL = System.currentTimeMillis();
+
+		Formula pltl = qtl.makePropositional();
+		
+		long end_QTL2PLTL = System.currentTimeMillis() - start_QTL2PLTL;
+		
+		System.out.println("Num of Propositions: "+pltl.getPropositions().size());		
+
+		if(verbose) (new LatexDocumentCNF(pltl)).toFile(prefix+"pltl.tex");
+		
+		System.out.println("Generating NuSMV file...");
+		(new NuSMVOutput(pltl)).toFile(prefix+".smv");
+		(new AaltaOutput(pltl)).toFile(prefix+".aalta");
+		
+		System.out.println("Solver" + Constants.pltl);
+		(new PltlOutput(pltl)).toFile(prefix+".pltl");
+		
+		System.out.println("Generating FO file...");
+		(new FOOutput(qtl)).toFile(prefix+".tptp");
+
+		System.out.println("Done! Total time:" + (System.currentTimeMillis()-total_time) + "ms");
+		
+		StatsOutputDocument out;
+		out = new StatsOutputDocument(false);
+		out.toStatsFile(prefix+"Stats.stats", end_tbox2QTL, end_QTL2PLTL, pltl.getPropositions().size());
 		
 	}
 	
