@@ -121,7 +121,7 @@ public class TDLLiteFPXConverter {
 								conceptToFormula(ci.getLHS()),
 								conceptToFormula(ci.getRHS())));
 		}
-		return Always(out);
+		return new Always(out);
 	}
 	
 	public Formula conceptToFormula(Concept c){
