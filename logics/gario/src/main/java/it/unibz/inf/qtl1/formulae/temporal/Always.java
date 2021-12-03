@@ -9,10 +9,10 @@ public class Always extends TemporalFormula{
 	}
 	
 	public String toString(){
-		return "GH"+refersTo;
+		return "G"+refersTo;
 	}
 
 	public Formula normalize(){
-		return new AlwaysFuture(new AlwaysPast(refersTo));
+		return new AlwaysFuture(refersTo);
 	}
 }
