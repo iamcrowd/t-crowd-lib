@@ -1286,7 +1286,8 @@ public class TDLLiteFPXReasoner {
 		Formula ltlnox = qtlWithoutX.makePropositional();
 		
 	    ltl = new ConjunctiveFormula(ltl, ltlnox);
-		ltl = new Always(ltl);
+		//ltl = new Always(ltl);
+		
 		
 		long end_QTL2PLTL = System.currentTimeMillis() - start_QTL2PLTL;
 		
