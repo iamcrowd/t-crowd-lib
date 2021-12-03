@@ -23,7 +23,7 @@ import it.unibz.inf.tdllitefpx.concepts.temporal.AlwaysFuture;
 import it.unibz.inf.tdllitefpx.concepts.temporal.AlwaysPast;
 import it.unibz.inf.tdllitefpx.concepts.temporal.NextFuture;
 import it.unibz.inf.tdllitefpx.concepts.temporal.NextPast;
-import it.unibz.inf.tdllitefpx.concepts.temporal.SometimeFuture;
+//import it.unibz.inf.tdllitefpx.concepts.temporal.SometimeFuture;
 import it.unibz.inf.tdllitefpx.concepts.temporal.SometimePast;
 import it.unibz.inf.tdllitefpx.concepts.temporal.TemporalConcept;
 import it.unibz.inf.tdllitefpx.roles.PositiveRole;
@@ -121,7 +121,7 @@ public class TDLLiteFPXConverter {
 								conceptToFormula(ci.getLHS()),
 								conceptToFormula(ci.getRHS())));
 		}
-		return new Always(out);
+		return out; //Always(out);
 	}
 	
 	public Formula conceptToFormula(Concept c){
@@ -164,7 +164,7 @@ public class TDLLiteFPXConverter {
 			}else if(c instanceof SometimePast){
 				return new it.unibz.inf.qtl1.formulae.temporal.SometimePast(
 						conceptToFormula(d.getRefersTo()));
-			}else if(c instanceof SometimeFuture){
+			}else if(c instanceof it.unibz.inf.tdllitefpx.concepts.temporal.SometimeFuture){
 				return new it.unibz.inf.qtl1.formulae.temporal.SometimeFuture(
 						conceptToFormula(d.getRefersTo()));
 			}
@@ -468,6 +468,6 @@ public class TDLLiteFPXConverter {
 		
 		return eps;
 	}
-	
+	*/	
 	
 }
