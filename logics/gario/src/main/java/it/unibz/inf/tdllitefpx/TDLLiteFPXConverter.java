@@ -10,7 +10,6 @@ import it.unibz.inf.qtl1.formulae.ImplicationFormula;
 import it.unibz.inf.qtl1.formulae.NegatedFormula;
 import it.unibz.inf.qtl1.formulae.quantified.UniversalFormula;
 import it.unibz.inf.qtl1.formulae.temporal.Always;
-import it.unibz.inf.qtl1.formulae.temporal.SometimeFuture;
 import it.unibz.inf.qtl1.terms.Constant;
 import it.unibz.inf.qtl1.terms.Variable;
 import it.unibz.inf.tdllitefpx.concepts.AtomicConcept;
@@ -98,7 +97,7 @@ public class TDLLiteFPXConverter {
 								conceptToFormula(ci.getLHS()),
 								conceptToFormula(ci.getRHS())), new Variable("X"))));
 		}
-		return out;
+		return new AlwaysFuture(out);
 	}
 	
 	private Formula getFactorizedT(){
