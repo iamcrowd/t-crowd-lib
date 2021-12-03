@@ -97,7 +97,7 @@ public class TDLLiteFPXConverter {
 								conceptToFormula(ci.getLHS()),
 								conceptToFormula(ci.getRHS())), new Variable("X"))));
 		}
-		return new AlwaysFuture(out);
+		return out;
 	}
 	
 	private Formula getFactorizedT(){
@@ -120,7 +120,7 @@ public class TDLLiteFPXConverter {
 								conceptToFormula(ci.getLHS()),
 								conceptToFormula(ci.getRHS())));
 		}
-		return out; //Always(out);
+		return AlwaysFuture(out);
 	}
 	
 	public Formula conceptToFormula(Concept c){
