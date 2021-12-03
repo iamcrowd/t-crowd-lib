@@ -435,18 +435,19 @@ public class TDLLiteFPXReasoner {
 			(new LatexDocumentCNF(qtl)).toFile(prefix+"qtl.tex");
 		
 
-		long start_QTL2QTLN = System.currentTimeMillis();
+		//long start_QTL2QTLN = 0;
 		
-		PureFutureTranslator purefutureFormulaX = new PureFutureTranslator(qtlX);
-		qtl_NX = purefutureFormulaX.getPureFutureTranslation();
+		//PureFutureTranslator purefutureFormulaX = new PureFutureTranslator(qtlX);
+		//qtl_NX = purefutureFormulaX.getPureFutureTranslation();
 		
-		long end_QTL2QTLN = System.currentTimeMillis() - start_QTL2QTLN;
+		long end_QTL2QTLN = 0;
 		
-		qtl_N = new ConjunctiveFormula(qtl_NX,qtlWithoutX);
+		//qtl_N = new ConjunctiveFormula(qtl_NX,qtlWithoutX);
+        qtl_N = new ConjunctiveFormula(qtlX,qtlWithoutX);
 		
 			
-		if(verbose)
-			(new LatexDocumentCNF(qtl_N)).toFile(prefix+"qtlN.tex");	
+		//if(verbose)
+		//	(new LatexDocumentCNF(qtl_N)).toFile(prefix+"qtlN.tex");	
 		
 		//ConjunctiveFormula qtlABox = new ConjunctiveFormula();
 		
@@ -493,7 +494,8 @@ public class TDLLiteFPXReasoner {
 
 		long start_QTLN2LTL = System.currentTimeMillis();
 		
-		Formula ltl = qtl_NX.makePropositional(consts);
+		//Formula ltl = qtl_NX.makePropositional(consts);
+        Formula ltl = qtlX.makePropositional(consts);
 		Formula ltlnox = qtlWithoutX.makePropositional();
 	    ltl = new ConjunctiveFormula(ltl, ltlnox);
 		o = o.makePropositional(consts);
