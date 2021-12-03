@@ -10,6 +10,7 @@ import it.unibz.inf.qtl1.formulae.ImplicationFormula;
 import it.unibz.inf.qtl1.formulae.NegatedFormula;
 import it.unibz.inf.qtl1.formulae.quantified.UniversalFormula;
 import it.unibz.inf.qtl1.formulae.temporal.Always;
+import it.unibz.inf.qtl1.formulae.temporal.SometimeFuture;
 import it.unibz.inf.qtl1.terms.Constant;
 import it.unibz.inf.qtl1.terms.Variable;
 import it.unibz.inf.tdllitefpx.concepts.AtomicConcept;
@@ -46,7 +47,7 @@ public class TDLLiteFPXConverter {
 		
 	}
 	
-	public Formula getFormula(){
+	public Formula getFormula() throws Exception{
 		return getFormula(true);
 	}
 	/**
@@ -57,8 +58,9 @@ public class TDLLiteFPXConverter {
 	 * 
 	 * @param factorize
 	 * @return
+	 * @throws Exception 
 	 */
-	public Formula getFormula(boolean factorize){
+	public Formula getFormula(boolean factorize) throws Exception{
 		/* The result formula has the following structure
 		 * F = T /\ e
 		 * 
@@ -300,18 +302,18 @@ public class TDLLiteFPXConverter {
 		
 		UniversalFormula fA = new UniversalFormula(
 				new ConjunctiveFormula(
-						new Always(new ImplicationFormula(
+						new ImplicationFormula(   // new Always(new ImplicationFormula(
 								conceptToFormula(E1S), 
-								new Always(pS))),
+								new Always(pS)),   //)
 						new ImplicationFormula(
 								pinvS, 
 								fE1S_ds)),
 				x);
 		UniversalFormula fB = new UniversalFormula(
 				new ConjunctiveFormula(
-						new Always(new ImplicationFormula(
+						new ImplicationFormula(    //new Always(
 								conceptToFormula(E1SInv), 
-								new Always(pinvS))),
+								new Always(pinvS)),         //),
 						new ImplicationFormula(
 								pS, 
 								fE1SInv_ds)),
@@ -322,6 +324,9 @@ public class TDLLiteFPXConverter {
 		return eps;
 	}	
 
+	/* Old version of rewriting Formula
+	 * 
+	 
 	private Formula getFactorizedEpsilon1(){
 		/* A reduced version (with less modal operators) : 
 		 * 		
@@ -333,7 +338,7 @@ public class TDLLiteFPXConverter {
 		 * 		
 		 * 		  epsilon''(S) =((E1S(x)-> \box ps ) /\ E1SInv(x) -> \box ps)
 		 */
-		ConjunctiveFormula eps1 = new ConjunctiveFormula();
+	/*	ConjunctiveFormula eps1 = new ConjunctiveFormula();
 		ConjunctiveFormula eps2 = new ConjunctiveFormula();
 		
 		for( Role s : tbox.getRoles()){
@@ -379,7 +384,7 @@ public class TDLLiteFPXConverter {
 		  *  B.  (\box \forall x ((E1S(x)-> \box ps ) /\ E1SInv(x) -> \box ps))
 		  *  
 		  */
-		 
+/*		 
 		Proposition pS = (Proposition) a.get("p"+s.toString(),0);
 		Role SInv = s.getInverse();
 		
@@ -425,7 +430,7 @@ public class TDLLiteFPXConverter {
 		  *  B.  (\box \forall x ((E1S(x)-> \box ps ) /\ E1SInv(x) -> \box ps))
 		  *  
 		  */
-		 
+/*		 
 		Proposition pS = (Proposition) a.get("p"+s.toString(),0);
 		Role SInv = s.getInverse();
 		

@@ -9,6 +9,7 @@ import it.unibz.inf.qtl1.formulae.temporal.Always;
 import it.unibz.inf.qtl1.formulae.temporal.AlwaysFuture;
 import it.unibz.inf.qtl1.formulae.Formula;
 import it.unibz.inf.qtl1.formulae.quantified.UniversalFormula;
+import it.unibz.inf.qtl1.formulae.temporal.Always;
 import it.unibz.inf.qtl1.output.LatexDocumentCNF;
 
 import org.gario.code.output.StatsOutputDocument;
@@ -29,6 +30,7 @@ import it.unibz.inf.tdllitefpx.concepts.Concept;
 import it.unibz.inf.tdllitefpx.concepts.AtomicConcept;
 import it.unibz.inf.tdllitefpx.concepts.Concept;
 import it.unibz.inf.tdllitefpx.concepts.temporal.NextFuture;
+
 import it.unibz.inf.tdllitefpx.output.LatexOutputDocument;
 import it.unibz.inf.tdllitefpx.roles.AtomicRigidRole;
 import it.unibz.inf.tdllitefpx.roles.PositiveRole;
@@ -1261,6 +1263,11 @@ public class TDLLiteFPXReasoner {
 		TDLLiteFPXConverter conv = new TDLLiteFPXConverter(t);
 		Formula qtl = conv.getFormula();
 		
+		Formula qtlX = conv.getEpsilonX();
+		Formula qtlWithoutX = conv.getEpsilonWithoutX();
+		
+		Set<Constant> consts = qtl.getConstants();
+		
 		if (!reflexive) {
 			qtl = qtl.makeTemporalStrict();	
 		}
@@ -1272,21 +1279,25 @@ public class TDLLiteFPXReasoner {
 		if(verbose) (new LatexOutputDocument(t)).toFile(prefix+"tbox.tex");
 		
 		long start_QTL2PLTL = System.currentTimeMillis();
-
-		Formula pltl = qtl.makePropositional();
+		
+		Formula ltl = qtlX.makePropositional(consts);
+		Formula ltlnox = qtlWithoutX.makePropositional();
+		
+	    ltl = new ConjunctiveFormula(ltl, ltlnox);
+		ltl = new Always(ltl);
 		
 		long end_QTL2PLTL = System.currentTimeMillis() - start_QTL2PLTL;
 		
-		System.out.println("Num of Propositions: "+pltl.getPropositions().size());		
+		System.out.println("Num of Propositions: "+ltl.getPropositions().size());		
 
-		if(verbose) (new LatexDocumentCNF(pltl)).toFile(prefix+"pltl.tex");
+		if(verbose) (new LatexDocumentCNF(ltl)).toFile(prefix+"pltl.tex");
 		
 		System.out.println("Generating NuSMV file...");
-		(new NuSMVOutput(pltl)).toFile(prefix+".smv");
-		(new AaltaOutput(pltl)).toFile(prefix+".aalta");
+		(new NuSMVOutput(ltl)).toFile(prefix+".smv");
+		(new AaltaOutput(ltl)).toFile(prefix+".aalta");
 		
 		System.out.println("Solver" + Constants.pltl);
-		(new PltlOutput(pltl)).toFile(prefix+".pltl");
+		(new PltlOutput(ltl)).toFile(prefix+".pltl");
 		
 		System.out.println("Generating FO file...");
 		(new FOOutput(qtl)).toFile(prefix+".tptp");
@@ -1295,7 +1306,7 @@ public class TDLLiteFPXReasoner {
 		
 		StatsOutputDocument out;
 		out = new StatsOutputDocument(false);
-		out.toStatsFile(prefix+"Stats.stats", end_tbox2QTL, end_QTL2PLTL, pltl.getPropositions().size());
+		out.toStatsFile(prefix+"Stats.stats", end_tbox2QTL, end_QTL2PLTL, ltl.getPropositions().size());
 		
 	}
 	
