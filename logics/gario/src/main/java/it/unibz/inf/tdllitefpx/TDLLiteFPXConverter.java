@@ -93,7 +93,7 @@ public class TDLLiteFPXConverter {
 		
 		ConjunctiveFormula out = new ConjunctiveFormula();
 		for(ConceptInclusionAssertion ci: tbox){
-			out.add(new Always(new UniversalFormula(
+			out.add(new it.unibz.inf.qtl1.formulae.temporal.AlwaysFuture(new UniversalFormula(
 						new ImplicationFormula(
 								conceptToFormula(ci.getLHS()),
 								conceptToFormula(ci.getRHS())), new Variable("X"))));
@@ -121,7 +121,7 @@ public class TDLLiteFPXConverter {
 								conceptToFormula(ci.getLHS()),
 								conceptToFormula(ci.getRHS())));
 		}
-		return new Always(out);
+		return new it.unibz.inf.qtl1.formulae.temporal.AlwaysFuture(out);
 	}
 	
 	public Formula conceptToFormula(Concept c){
@@ -245,7 +245,7 @@ public class TDLLiteFPXConverter {
 
 
 		eps1.add(new ImplicationFormula(conceptToFormula(E1S),
-		new Always(pS))
+		new it.unibz.inf.qtl1.formulae.temporal.AlwaysFuture(pS))
 		);
 		eps1.add(new ImplicationFormula(
 		pinvS,
@@ -253,19 +253,19 @@ public class TDLLiteFPXConverter {
 
 		epsX.add(new ImplicationFormula(
 		conceptToFormula(E1S),
-		new Always(pS))); //);
+		new it.unibz.inf.qtl1.formulae.temporal.AlwaysFuture(pS))); //);
 		eps.add(new ImplicationFormula(
 		pinvS,
 		fE1S_ds));
 
 		eps2.add(new ImplicationFormula( conceptToFormula(E1SInv),
-		new Always(pinvS)));
+		new it.unibz.inf.qtl1.formulae.temporal.AlwaysFuture(pinvS)));
 		eps2.add(new ImplicationFormula(
 		pS,
 		fE1SInv_ds));
 		epsX.add(new ImplicationFormula(  
 		conceptToFormula(E1SInv),
-		new Always(pinvS)));
+		new it.unibz.inf.qtl1.formulae.temporal.AlwaysFuture(pinvS)));
 
 		eps.add(new ImplicationFormula(
 		pS,
@@ -304,7 +304,7 @@ public class TDLLiteFPXConverter {
 				new ConjunctiveFormula(
 						new ImplicationFormula(   // new Always(new ImplicationFormula(
 								conceptToFormula(E1S), 
-								new Always(pS)),   //)
+								new it.unibz.inf.qtl1.formulae.temporal.AlwaysFuture(pS)),   //)
 						new ImplicationFormula(
 								pinvS, 
 								fE1S_ds)),
@@ -313,7 +313,7 @@ public class TDLLiteFPXConverter {
 				new ConjunctiveFormula(
 						new ImplicationFormula(    //new Always(
 								conceptToFormula(E1SInv), 
-								new Always(pinvS)),         //),
+								new it.unibz.inf.qtl1.formulae.temporal.AlwaysFuture(pinvS)),         //),
 						new ImplicationFormula(
 								pS, 
 								fE1SInv_ds)),
