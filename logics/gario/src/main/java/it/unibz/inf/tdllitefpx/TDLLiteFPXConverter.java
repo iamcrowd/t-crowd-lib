@@ -81,9 +81,10 @@ public class TDLLiteFPXConverter {
 			return new UniversalFormula(
 					new ConjunctiveFormula(getFactorizedT(),
 							getFactorizedEpsilon()), x);
-		}else
+		}else {
 			return new ConjunctiveFormula(getT(), 
 									  getEpsilon());
+		}
 	}
 	
 	
@@ -165,11 +166,10 @@ public class TDLLiteFPXConverter {
 			}else if(c instanceof SometimeFuture){
 				return new it.unibz.inf.qtl1.formulae.temporal.SometimeFuture(
 						conceptToFormula(d.getRefersTo()));
-			}
-			/*else if(c instanceof Always){
+			}else if(c instanceof it.unibz.inf.tdllitefpx.concepts.temporal.Always){
 				return new it.unibz.inf.qtl1.formulae.temporal.Always(
 						conceptToFormula(d.getRefersTo()));
-			}*/
+			}
 		}
 		
 		System.err.println("Unexpected case "+c.getClass().toString());
@@ -201,7 +201,6 @@ public class TDLLiteFPXConverter {
 	public Formula getEpsilonX(){
 		Formula F= new UniversalFormula(
 				new ConjunctiveFormula(getFactorizedT(),epsX),x);
-	//System.out.println("Formula X: "+F.toString());
 		return F;
 	}
 	
@@ -218,59 +217,65 @@ public class TDLLiteFPXConverter {
 		*
 		* epsilon''(S) =(\box \forall x (E1SInv(x)-> \box pSinv )) /\ (pS -> E1SInv(dsinv))
 		*/
+
 		ConjunctiveFormula eps1 = new ConjunctiveFormula();
 		ConjunctiveFormula eps2 = new ConjunctiveFormula();
 
 		for( Role s : tbox.getRoles()){
-		if(s instanceof PositiveRole){
-		Proposition pS = (Proposition) a.get("P"+s.toString(),0);
-		Proposition pinvS = (Proposition) a.get("Pinv"+s.toString(),0);
-		Role SInv = s.getInverse();
+			if(s instanceof PositiveRole){
+			Proposition pS = (Proposition) a.get("P"+s.toString(),0);
+			Proposition pinvS = (Proposition) a.get("Pinv"+s.toString(),0);
+			Role SInv = s.getInverse();
 
-		Concept E1S = new QuantifiedRole(s, 1);
-		Concept E1SInv = new QuantifiedRole(SInv, 1);
+			Concept E1S = new QuantifiedRole(s, 1);
+			Concept E1SInv = new QuantifiedRole(SInv, 1);
 
-		Constant ds = new Constant("d"+s.toString());
-		Constant dsinv = new Constant("d"+SInv.toString());
-
-
-
-		Formula fE1S_ds = conceptToFormula(E1S);
-		fE1S_ds.substitute(x, ds);
-
-		Formula fE1SInv_ds = conceptToFormula(E1SInv);
-		fE1SInv_ds.substitute(x, dsinv);
+			Constant ds = new Constant("d"+s.toString());
+			Constant dsinv = new Constant("d"+SInv.toString());
 
 
-		eps1.add(new ImplicationFormula(conceptToFormula(E1S),
-		new Always(pS))
-		);
-		eps1.add(new ImplicationFormula(
-		pinvS,
-		fE1S_ds));
 
-		epsX.add(new ImplicationFormula(
-		conceptToFormula(E1S),
-		new Always(pS))); //);
-		eps.add(new ImplicationFormula(
-		pinvS,
-		fE1S_ds));
+			Formula fE1S_ds = conceptToFormula(E1S);
+			fE1S_ds.substitute(x, ds);
 
-		eps2.add(new ImplicationFormula( conceptToFormula(E1SInv),
-		new Always(pinvS)));
-		eps2.add(new ImplicationFormula(
-		pS,
-		fE1SInv_ds));
-		epsX.add(new ImplicationFormula(  
-		conceptToFormula(E1SInv),
-		new Always(pinvS)));
+			Formula fE1SInv_ds = conceptToFormula(E1SInv);
+			fE1SInv_ds.substitute(x, dsinv);
 
-		eps.add(new ImplicationFormula(
-		pS,
-		fE1SInv_ds));
+
+			epsX.add(new ImplicationFormula(conceptToFormula(E1SInv),
+					 new Always(conceptToFormula(E1SInv))));
+
+			epsX.add(new ImplicationFormula(conceptToFormula(E1S),
+					 new Always(pS)));
+
+			epsX.add(new ImplicationFormula(conceptToFormula(E1SInv),
+					 new Always(pinvS)));
+
+			eps.add(new ImplicationFormula(
+						pinvS,
+						fE1S_ds));
+			
+			eps.add(new ImplicationFormula(
+						pS,
+						fE1SInv_ds));
+			
+			// old stuff		 
+
+			eps1.add(new ImplicationFormula(conceptToFormula(E1S),
+					    new Always(pS)));
+			eps1.add(new ImplicationFormula(
+					pinvS,
+					fE1S_ds));
+
+			eps2.add(new ImplicationFormula( conceptToFormula(E1SInv),
+					 new Always(pinvS)));
+			eps2.add(new ImplicationFormula(
+					pS,
+					fE1SInv_ds));
+
+			}
 		}
-		}
-		return new ConjunctiveFormula(eps1, eps2);
+			return new ConjunctiveFormula(eps1, eps2);
 		}
 	
 	

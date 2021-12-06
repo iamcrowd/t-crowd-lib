@@ -429,9 +429,11 @@ public class TDLLiteFPXReasoner {
 		
 		ABox.getStatsABox();
 		
-		if(verbose)
-			(new LatexDocumentCNF(qtl)).toFile(prefix+"qtl.tex");
-		
+		if(verbose) {
+			Formula QTLF = new ConjunctiveFormula(qtlX,qtlWithoutX);
+			(new LatexDocumentCNF(QTLF)).toFile(prefix+"qtl.tex");
+			
+		}	
 
 		long start_QTL2QTLN = System.currentTimeMillis();
 		
@@ -445,8 +447,6 @@ public class TDLLiteFPXReasoner {
 			
 		if(verbose)
 			(new LatexDocumentCNF(qtl_N)).toFile(prefix+"qtlN.tex");	
-		
-		//ConjunctiveFormula qtlABox = new ConjunctiveFormula();
 		
 		long end_ABox = 0;
 		
