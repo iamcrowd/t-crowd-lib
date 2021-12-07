@@ -51,7 +51,13 @@ public class TDLLiteFPXConverter {
 	}
 
 	public Formula getFormulaToRemovePast(){
-		return new Always(getEpsilonX());
+
+		Formula F = new UniversalFormula(
+							new ConjunctiveFormula(new Always(getFactorizedT()).normalize(),
+													epsX),x);
+
+		System.out.println("Formula for pure future in Converter"+F.toString());							
+		return F; //new Always(getEpsilonX());
 	}
 	/**
 	 * Returns a K+ given an Extended TBox T*. 
@@ -91,12 +97,12 @@ public class TDLLiteFPXConverter {
 		Formula epsilonx = getEpsilonX();
 
 		if(factorize){
-			F = new ConjunctiveFormula(epsilonx, eps);
+			F = new ConjunctiveFormula(new Always(epsilonx).normalize(), eps);
 		}else {
 			F = new ConjunctiveFormula(getT(), 
 									  getEpsilon());
 		}
-		return new Always(F).normalize();
+		return F;
 	}
 	
 	

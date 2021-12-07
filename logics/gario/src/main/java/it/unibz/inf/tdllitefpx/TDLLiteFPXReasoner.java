@@ -437,9 +437,9 @@ public class TDLLiteFPXReasoner {
 
 		long start_QTL2QTLN = System.currentTimeMillis();
 
-		System.out.println("QTLX in Reasoner before Natural"+qtlX.toString());
+		System.out.println("QTLX in Reasoner before Natural"+conv.getFormulaToRemovePast());
 		
-		PureFutureTranslator purefutureFormulaX = new PureFutureTranslator(qtlX);
+		PureFutureTranslator purefutureFormulaX = new PureFutureTranslator(conv.getFormulaToRemovePast());
 		qtl_NX = purefutureFormulaX.getPureFutureTranslation();
 		
 		long end_QTL2QTLN = System.currentTimeMillis() - start_QTL2QTLN;
