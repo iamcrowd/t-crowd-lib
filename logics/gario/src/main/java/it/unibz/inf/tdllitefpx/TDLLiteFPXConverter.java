@@ -49,6 +49,10 @@ public class TDLLiteFPXConverter {
 	public Formula getFormula(){
 		return getFormula(true);
 	}
+
+	public Formula getFormulaToRemovePast(){
+		return new Always(getEpsilonX());
+	}
 	/**
 	 * Returns a K+ given an Extended TBox T*. 
 	 * If factorize is set to true, the formula returned will
@@ -77,14 +81,22 @@ public class TDLLiteFPXConverter {
 		tbox.addExtensionConstraints();
 		
 		*/
-		if(factorize){
+/*		if(factorize){
 			return new UniversalFormula(
-					new ConjunctiveFormula(getFactorizedT(),
-							getFactorizedEpsilon()), x);
+					new ConjunctiveFormula(
+							new Always(getFactorizedT()),
+							getFactorizedEpsilon()), x);*/
+		Formula F;
+		Formula epsilon = getFactorizedEpsilon();
+		Formula epsilonx = getEpsilonX();
+
+		if(factorize){
+			F = new ConjunctiveFormula(epsilonx, eps);
 		}else {
-			return new ConjunctiveFormula(getT(), 
+			F = new ConjunctiveFormula(getT(), 
 									  getEpsilon());
 		}
+		return new Always(F).normalize();
 	}
 	
 	
@@ -120,7 +132,7 @@ public class TDLLiteFPXConverter {
 								conceptToFormula(ci.getLHS()),
 								conceptToFormula(ci.getRHS())));
 		}
-		return new Always(out);
+		return out;
 	}
 	
 	public Formula conceptToFormula(Concept c){
@@ -199,7 +211,7 @@ public class TDLLiteFPXConverter {
 	
 	//gathering formula with the variable "x"
 	public Formula getEpsilonX(){
-		Formula F= new UniversalFormula(
+		Formula F = new UniversalFormula(
 				new ConjunctiveFormula(getFactorizedT(),epsX),x);
 		return F;
 	}
@@ -243,13 +255,19 @@ public class TDLLiteFPXConverter {
 
 
 			epsX.add(new ImplicationFormula(conceptToFormula(E1SInv),
-					 new Always(conceptToFormula(E1SInv))));
+					 						new Always(conceptToFormula(E1SInv)).normalize()
+										   )
+					);
 
 			epsX.add(new ImplicationFormula(conceptToFormula(E1S),
-					 new Always(pS)));
+					 						new Always(pS).normalize()
+										   )
+					);
 
 			epsX.add(new ImplicationFormula(conceptToFormula(E1SInv),
-					 new Always(pinvS)));
+					 						new Always(pinvS).normalize()
+										   )
+					);
 
 			eps.add(new ImplicationFormula(
 						pinvS,
@@ -279,6 +297,8 @@ public class TDLLiteFPXConverter {
 		}
 	
 	
+	/**
+	 * Not factorised Epsilon formulas */	
 	private Formula getEpsilon(Role s){
 		 /*
 		  *  epsilon(S) =

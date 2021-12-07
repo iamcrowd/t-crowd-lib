@@ -7,6 +7,7 @@ import it.unibz.inf.qtl1.atoms.Atom;
 import it.unibz.inf.qtl1.formulae.ConjunctiveFormula;
 import it.unibz.inf.qtl1.formulae.temporal.Always;
 import it.unibz.inf.qtl1.formulae.temporal.AlwaysFuture;
+import it.unibz.inf.qtl1.formulae.temporal.AlwaysPast;
 import it.unibz.inf.qtl1.formulae.Formula;
 import it.unibz.inf.qtl1.formulae.quantified.UniversalFormula;
 import it.unibz.inf.qtl1.output.LatexDocumentCNF;
@@ -430,12 +431,13 @@ public class TDLLiteFPXReasoner {
 		ABox.getStatsABox();
 		
 		if(verbose) {
-			Formula QTLF = new ConjunctiveFormula(qtlX,qtlWithoutX);
-			(new LatexDocumentCNF(QTLF)).toFile(prefix+"qtl.tex");
+			(new LatexDocumentCNF(qtl)).toFile(prefix+"qtl.tex");
 			
 		}	
 
 		long start_QTL2QTLN = System.currentTimeMillis();
+
+		System.out.println("QTLX in Reasoner before Natural"+qtlX.toString());
 		
 		PureFutureTranslator purefutureFormulaX = new PureFutureTranslator(qtlX);
 		qtl_NX = purefutureFormulaX.getPureFutureTranslation();
@@ -495,7 +497,6 @@ public class TDLLiteFPXReasoner {
 		Formula ltlnox = qtlWithoutX.makePropositional();
 	    ltl = new ConjunctiveFormula(ltl, ltlnox);
 		o = o.makePropositional(consts);
-		//ltl = new ConjunctiveFormula(new Always(ltl), o);
 		ltl = new ConjunctiveFormula(ltl, o);
 
 		
