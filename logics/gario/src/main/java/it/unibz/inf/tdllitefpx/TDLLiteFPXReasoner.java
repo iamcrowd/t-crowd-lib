@@ -383,7 +383,9 @@ public class TDLLiteFPXReasoner {
 	}
 	
 	
-	
+	/**
+	 * For tdlliteN
+	 */
 	private static void buildLTLCheck(
 			TBox t, 
 			boolean verbose, 
@@ -407,19 +409,19 @@ public class TDLLiteFPXReasoner {
 		t.addExtensionConstraintsF();
 		
 		TDLLiteFPXConverter conv = new TDLLiteFPXConverter(t);
-		Formula qtl = conv.getFormula();
+		Formula qtl_N = conv.getFormula();
 		
-		Formula qtl_N;
-		Formula qtl_NX;
+		/*Formula qtl_N;
+		Formula qtl_NX;*/
 		
 		if (!reflexive) {
-			qtl = qtl.makeTemporalStrict();	
+			qtl_N = qtl_N.makeTemporalStrict();	
 		}
 		
-		Formula qtlX = conv.getEpsilonX();
-		Formula qtlWithoutX = conv.getEpsilonWithoutX();
+		/*Formula qtlX = conv.getEpsilonX();
+		Formula qtlWithoutX = conv.getEpsilonWithoutX();*/
 		
-		Set<Constant> consts = qtl.getConstants();
+		Set<Constant> consts = qtl_N.getConstants();
 		
 		long end_tbox2QTL = System.currentTimeMillis() - start_tbox2QTL;
 
@@ -432,7 +434,7 @@ public class TDLLiteFPXReasoner {
 		ABox.getStatsABox();
 		
 		if(verbose)
-			(new LatexDocumentCNF(qtl)).toFile(prefix+"qtl.tex");
+			(new LatexDocumentCNF(qtl_N)).toFile(prefix+"qtlN.tex");
 		
 
 		//long start_QTL2QTLN = 0;
@@ -442,14 +444,8 @@ public class TDLLiteFPXReasoner {
 		
 		long end_QTL2QTLN = 0;
 		
-		//qtl_N = new ConjunctiveFormula(qtl_NX,qtlWithoutX);
-        qtl_N = new ConjunctiveFormula(qtlX,qtlWithoutX);
 		
-			
-		//if(verbose)
-		//	(new LatexDocumentCNF(qtl_N)).toFile(prefix+"qtlN.tex");	
-		
-		//ConjunctiveFormula qtlABox = new ConjunctiveFormula();
+        //qtl_N = new ConjunctiveFormula(qtlX,qtlWithoutX);
 		
 		long end_ABox = 0;
 		
@@ -495,9 +491,10 @@ public class TDLLiteFPXReasoner {
 		long start_QTLN2LTL = System.currentTimeMillis();
 		
 		//Formula ltl = qtl_NX.makePropositional(consts);
-        Formula ltl = qtlX.makePropositional(consts);
-		Formula ltlnox = qtlWithoutX.makePropositional();
-	    ltl = new ConjunctiveFormula(ltl, ltlnox);
+        //Formula ltl = qtlX.makePropositional(consts);
+		Formula ltl = qtl_N.makePropositional(consts);
+		//Formula ltlnox = qtlWithoutX.makePropositional();
+	    //ltl = new ConjunctiveFormula(ltl, ltlnox);
 		o = o.makePropositional(consts);
 		//ltl = new ConjunctiveFormula(new Always(ltl), o);
 		ltl = new ConjunctiveFormula(ltl, o);
@@ -1263,18 +1260,19 @@ public class TDLLiteFPXReasoner {
 		t.addExtensionConstraintsF();
 	
 		TDLLiteFPXConverter conv = new TDLLiteFPXConverter(t);
-		Formula qtl = conv.getFormula();
+		Formula qtl_N = conv.getFormula();
 		
-		Formula qtlX = conv.getEpsilonX();
-		Formula qtlWithoutX = conv.getEpsilonWithoutX();
+		//Formula qtlX = conv.getEpsilonX();
+		//Formula qtlWithoutX = conv.getEpsilonWithoutX();
 		
-		Set<Constant> consts = qtl.getConstants();
+		Set<Constant> consts = qtl_N.getConstants();
 		
 		if (!reflexive) {
-			qtl = qtl.makeTemporalStrict();	
+			qtl_N = qtl_N.makeTemporalStrict();	
 		}
 		
-		if(verbose) (new LatexDocumentCNF(qtl)).toFile(prefix+"qtl.tex");
+		if(verbose) 
+			(new LatexDocumentCNF(qtl_N)).toFile(prefix+"qtlN.tex");
 		
 		long end_tbox2QTL = System.currentTimeMillis() - start_tbox2QTL;
 
@@ -1282,10 +1280,12 @@ public class TDLLiteFPXReasoner {
 		
 		long start_QTL2PLTL = System.currentTimeMillis();
 		
-		Formula ltl = qtlX.makePropositional(consts);
-		Formula ltlnox = qtlWithoutX.makePropositional();
+		//Formula ltl = qtlX.makePropositional(consts);
+		//Formula ltlnox = qtlWithoutX.makePropositional();
+
+		Formula ltl = qtl_N.makePropositional(consts);
 		
-	    ltl = new ConjunctiveFormula(ltl, ltlnox);
+	    //ltl = new ConjunctiveFormula(ltl, ltlnox);
 		//ltl = new Always(ltl);
 		
 		
@@ -1293,7 +1293,8 @@ public class TDLLiteFPXReasoner {
 		
 		System.out.println("Num of Propositions: "+ltl.getPropositions().size());		
 
-		if(verbose) (new LatexDocumentCNF(ltl)).toFile(prefix+"pltl.tex");
+		if(verbose) 
+			(new LatexDocumentCNF(ltl)).toFile(prefix+"pltl.tex");
 		
 		System.out.println("Generating NuSMV file...");
 		(new NuSMVOutput(ltl)).toFile(prefix+".smv");
@@ -1303,7 +1304,7 @@ public class TDLLiteFPXReasoner {
 		(new PltlOutput(ltl)).toFile(prefix+".pltl");
 		
 		System.out.println("Generating FO file...");
-		(new FOOutput(qtl)).toFile(prefix+".tptp");
+		(new FOOutput(qtl_N)).toFile(prefix+".tptp");
 
 		System.out.println("Done! Total time:" + (System.currentTimeMillis()-total_time) + "ms");
 		
