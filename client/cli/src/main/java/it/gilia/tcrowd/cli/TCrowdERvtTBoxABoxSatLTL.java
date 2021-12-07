@@ -15,7 +15,7 @@ import it.unibz.inf.qtl1.output.LatexDocumentCNF;
 import it.unibz.inf.qtl1.output.NuSMVOutput;
 import it.unibz.inf.tdllitefpx.ExampleTDL;
 import it.unibz.inf.tdllitefpx.TDLLiteFPXConverter;
-import it.unibz.inf.tdllitefpx.TDLLiteFPXReasoner;
+import it.unibz.inf.tdllitefpx.TDLLiteNFPXReasoner;
 import it.unibz.inf.tdllitefpx.output.LatexOutputDocument;
 import it.unibz.inf.tdllitefpx.concepts.Concept;
 import it.unibz.inf.tdllitefpx.tbox.TBox;
@@ -114,12 +114,10 @@ public class TCrowdERvtTBoxABoxSatLTL extends TCrowdEncodingERvtRelatedCommand {
                     	
                     	if (line == null) {
                     		/*Check for TBox satisfiability*/
-                    		TDLLiteFPXReasoner.buildCheckSatisfiability(
+                    		TDLLiteNFPXReasoner.buildFOCheckTBoxSatisfiabilityOnlyFuture(
                     				tbox,
                     				true, 
                     				fileNameOut,
-                    				true,
-                    				solver,
                     				true);
                     	    
                     	}else { /*Check for TBox and ABox satisfiability.*/
@@ -129,7 +127,7 @@ public class TCrowdERvtTBoxABoxSatLTL extends TCrowdEncodingERvtRelatedCommand {
 
                         	ABox abox = strategy.to_dllitefpxABox(objectData);
                     		
-                    		TDLLiteFPXReasoner.buildCheckABoxLTLSatisfiability(
+                    		TDLLiteNFPXReasoner.buildCheckABoxLTLSatisfiability(
                     				tbox,
                     				true, 
                     				fileNameOut,
