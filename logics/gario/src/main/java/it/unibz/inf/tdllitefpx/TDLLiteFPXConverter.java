@@ -128,6 +128,7 @@ public class TDLLiteFPXConverter {
 								conceptToFormula(ci.getLHS()),
 								conceptToFormula(ci.getRHS())));
 		}
+		System.out.println("FactorizedT in converter"+out.toString());
 		return out;
 	}
 	
@@ -210,7 +211,7 @@ public class TDLLiteFPXConverter {
 	public Formula getEpsilonX(){
 		Formula F = new UniversalFormula(
 				new ConjunctiveFormula(getFactorizedT(),epsX),x);
-	//System.out.println("Formula X: "+F.toString());
+		System.out.println("Formula epsilonX: "+F.toString());
 		return F;
 	}
 	
@@ -250,6 +251,8 @@ public class TDLLiteFPXConverter {
 				Formula fE1SInv_ds = conceptToFormula(E1SInv);
 				fE1SInv_ds.substitute(x, dsinv);
 
+				epsX.add(new ImplicationFormula(new it.unibz.inf.qtl1.formulae.temporal.SometimeFuture(conceptToFormula(E1SInv)),
+												new it.unibz.inf.qtl1.formulae.temporal.AlwaysFuture(conceptToFormula(E1SInv))));
 
 				epsX.add(new ImplicationFormula(new it.unibz.inf.qtl1.formulae.temporal.SometimeFuture(conceptToFormula(E1S)),
 												new it.unibz.inf.qtl1.formulae.temporal.AlwaysFuture(pS)));
@@ -257,8 +260,7 @@ public class TDLLiteFPXConverter {
 				epsX.add(new ImplicationFormula(new it.unibz.inf.qtl1.formulae.temporal.SometimeFuture(conceptToFormula(E1SInv)),
 												new it.unibz.inf.qtl1.formulae.temporal.AlwaysFuture(pinvS)));
 
-				epsX.add(new ImplicationFormula(new it.unibz.inf.qtl1.formulae.temporal.SometimeFuture(conceptToFormula(E1SInv)),
-												new it.unibz.inf.qtl1.formulae.temporal.AlwaysFuture(conceptToFormula(E1SInv))));
+
 
 				eps.add(new ImplicationFormula(pinvS, fE1S_ds));
 
