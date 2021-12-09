@@ -219,6 +219,9 @@ public class TDLLiteFPXConverter {
 	public Formula getEpsilonX(){
 		Formula F = new UniversalFormula(
 				new ConjunctiveFormula(getFactorizedT(),epsX),x);
+
+		System.out.println("GetEpsilonX "+F.toString());
+
 		return F;
 	}
 	
@@ -241,7 +244,11 @@ public class TDLLiteFPXConverter {
 
 		for( Role s : tbox.getRoles()){
 
+			System.out.println("s in getFactorizedEpsilon "+s.toString());
+
 			if(s instanceof PositiveRole){
+
+				System.out.println("s is PositiveRole in getFactorizedEpsilon "+s.toString());
 				
 				Proposition pS = (Proposition) a.get("P"+s.toString(),0);
 				Proposition pinvS = (Proposition) a.get("Pinv"+s.toString(),0);

@@ -45,6 +45,8 @@ public class TBox extends LinkedList<ConceptInclusionAssertion> implements Forma
 			roles.addAll(ci.getLHS().getRoles());
 			roles.addAll(ci.getRHS().getRoles());
 		}
+
+		System.out.println("Set of Roles in getRoles() TBox"+roles.toString());
 		return roles;
 	}
 
@@ -74,7 +76,7 @@ public class TBox extends LinkedList<ConceptInclusionAssertion> implements Forma
 		for(Concept c: concepts){
 			if(c instanceof QuantifiedRole){
 				qR.add((QuantifiedRole) c);
-				//System.out.println("Qrole:"+c.toString());
+				System.out.println("Qrole in getQuantifiedRoles:"+c.toString());
 			}
 		}
 		
@@ -94,7 +96,7 @@ public class TBox extends LinkedList<ConceptInclusionAssertion> implements Forma
 		   }	
 		
 		}
-		//System.out.println("toute la liste"+qRQ);
+		System.out.println("getQuantifiedRolesQ in TBox"+qRQ.toString());
 		return qRQ;
 	}
 	
@@ -121,9 +123,15 @@ public class TBox extends LinkedList<ConceptInclusionAssertion> implements Forma
 	public Set<QuantifiedRole> getQuantifiedRoles1(){
 		
 		Set<QuantifiedRole> qR = getQuantifiedRoles();
+
+		System.out.println("qR in TBox getQuantifiedRoles1:"+qR.toString());
+
 		Set<QuantifiedRole> qR1 = new HashSet<QuantifiedRole>();
 		
 		for(QuantifiedRole r: qR){
+
+			System.out.println("r in TBox getQuantifiedRoles1:"+qR.toString());
+
 			QuantifiedRole r1 = new QuantifiedRole(r.getRole(), 1);
 			System.out.println("Qrole:"+r.toString());
 			qR1.add(r);
@@ -139,27 +147,37 @@ public class TBox extends LinkedList<ConceptInclusionAssertion> implements Forma
 	 */
 	public void addExtensionConstraints(){
 		isExtended = true;
-		//System.out.println("is extended:"+isExtended);
 		//Set<QuantifiedRole> qRoles = getQuantifiedRoles();
 		Set<QuantifiedRole> qRoles= getQuantifiedRoles1();
+
+		System.out.println("set of qRoles in addExtensionConstraints:"+qRoles.toString());
 		
 		/* delta: + >qR \subseteq >q'R
 		 * for q > q' and >qR, >q'R in T an thre's no q'' s.t. q>q''>q' and q''R \in T
 		 */
 		Map<Role,List<QuantifiedRole>> qRMap = new HashMap<Role, List<QuantifiedRole>>();
 		
-		
+		System.out.println("qRMap in addExtensionConstraints "+qRMap.toString());
+
 		for(QuantifiedRole qR : qRoles){
+
+			System.out.println("qR in addExtensionConstraints "+qR.toString());
+
 			List<QuantifiedRole> list = qRMap.get(qR.getRole());
+
 			if(list == null){
 				list = new ArrayList<QuantifiedRole>();
 				qRMap.put(qR.getRole(),list);
 			}
 			list.add(qR);
+			System.out.println("list of QuantifiedRole in AddExtension"+list.toString());
 		}
 		
 		for(Entry<Role, List<QuantifiedRole>> e: qRMap.entrySet()){
 			List<QuantifiedRole> qrL = e.getValue();
+
+			System.out.println("qrL in AddExtension"+qrL.toString());
+
 			Collections.sort(qrL, new Comparator<QuantifiedRole>() {
 				@Override
 				public int compare(QuantifiedRole o1, QuantifiedRole o2) {
@@ -171,7 +189,8 @@ public class TBox extends LinkedList<ConceptInclusionAssertion> implements Forma
 				this.add(new ConceptInclusionAssertion(
 						qrL.get(i),
 						qrL.get(i+1)));
-				//System.out.println(qrL.get(i)+" "+qrL.get(i+1));
+
+				System.out.println("Extending TBox Checking (2) in formula"+qrL.get(i)+" "+qrL.get(i+1));
 			}
 		}
 		
@@ -181,10 +200,15 @@ public class TBox extends LinkedList<ConceptInclusionAssertion> implements Forma
 		 * TODO: Avoid duplications
 		 */
 		for(QuantifiedRole qR : qRoles){
+
+			System.out.println("Exending TBox Checking (3) in formula (roles)"+qR.toString());
+
 			if(qR.getRole().getRefersTo() instanceof AtomicRigidRole){
+
+				System.out.println("Exending TBox Checking (3) in formula (if roles are rigid)"+qR.toString());
+
 				this.add(new ConceptInclusionAssertion(
 					qR, 
-					//new Always(qR)));
 					new AlwaysFuture(new AlwaysPast(qR))));
 				    
 			}
