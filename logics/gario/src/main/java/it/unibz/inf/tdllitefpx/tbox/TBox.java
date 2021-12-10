@@ -2,7 +2,6 @@ package it.unibz.inf.tdllitefpx.tbox;
 
 import it.unibz.inf.tdllitefpx.concepts.Concept;
 import it.unibz.inf.tdllitefpx.concepts.QuantifiedRole;
-//import it.unibz.inf.tdllitefpx.concepts.temporal.Always;
 import it.unibz.inf.tdllitefpx.concepts.temporal.AlwaysFuture;
 import it.unibz.inf.tdllitefpx.concepts.temporal.SometimeFuture;
 import it.unibz.inf.tdllitefpx.concepts.temporal.AlwaysPast;
@@ -34,7 +33,6 @@ public class TBox extends LinkedList<ConceptInclusionAssertion> implements Forma
 	private static final long serialVersionUID = 1L;
 	
 	public boolean add(ConceptInclusionAssertion ci){
-		isExtended = false; // TODO: Check if this is really the case
 		return super.add(ci);
 	}
 	
@@ -86,15 +84,12 @@ public class TBox extends LinkedList<ConceptInclusionAssertion> implements Forma
 	public Map<String, Integer> getQuantifiedRolesQ(Set<QuantifiedRole> qR){
 		
 		HashMap<String, Integer> qRQ = new HashMap<String, Integer>();
-		for (QuantifiedRole qr: qR) {
-			
-			qRQ.putIfAbsent(qr.getRole().toString(), qr.getQ());
-			if(qRQ.get(qr.getRole().toString())<qr.getQ())
-			{	
-				qRQ.replace(qr.getRole().toString(), qr.getQ());
-				
-		   }	
 		
+		for (QuantifiedRole qr: qR) {
+			qRQ.putIfAbsent(qr.getRole().toString(), qr.getQ());
+			if(qRQ.get(qr.getRole().toString())<qr.getQ()){	
+				qRQ.replace(qr.getRole().toString(), qr.getQ());
+		   }	
 		}
 		System.out.println("getQuantifiedRolesQ in TBox"+qRQ.toString());
 		return qRQ;
@@ -110,14 +105,10 @@ public class TBox extends LinkedList<ConceptInclusionAssertion> implements Forma
 		return concepts;
 	}
 	
-	private boolean isExtended = false;
-	public boolean isExtended(){
-		System.out.println("is extended?"+isExtended);
-		return isExtended;}
-	
 	
 	/**
-	 * This function rewrite the quantified roles list in order to extend TBox with the right cardinalities
+	 * This function rewrite the quantified roles list in order to extend TBox 
+	 * with the right cardinalities
 	 * @return
 	 */
 	public Set<QuantifiedRole> getQuantifiedRoles1(){
@@ -137,145 +128,8 @@ public class TBox extends LinkedList<ConceptInclusionAssertion> implements Forma
 			qR1.add(r);
 			qR1.add(r1);
 			System.out.println("Qrole1:"+r1.toString());
-			}	
+		}	
 		return qR1;
-	}
-
-	
-	/***
-	 * Transforms the TBox into an extended TBox as explained in the report.
-	 */
-	public void addExtensionConstraints(){
-		isExtended = true;
-		//Set<QuantifiedRole> qRoles = getQuantifiedRoles();
-		Set<QuantifiedRole> qRoles= getQuantifiedRoles1();
-
-		System.out.println("set of qRoles in addExtensionConstraints:"+qRoles.toString());
-		
-		/* delta: + >qR \subseteq >q'R
-		 * for q > q' and >qR, >q'R in T an thre's no q'' s.t. q>q''>q' and q''R \in T
-		 */
-		Map<Role,List<QuantifiedRole>> qRMap = new HashMap<Role, List<QuantifiedRole>>();
-		
-		System.out.println("qRMap in addExtensionConstraints "+qRMap.toString());
-
-		for(QuantifiedRole qR : qRoles){
-
-			System.out.println("qR in addExtensionConstraints "+qR.toString());
-
-			List<QuantifiedRole> list = qRMap.get(qR.getRole());
-
-			if(list == null){
-				list = new ArrayList<QuantifiedRole>();
-				qRMap.put(qR.getRole(),list);
-			}
-			list.add(qR);
-			System.out.println("list of QuantifiedRole in AddExtension"+list.toString());
-		}
-		
-		for(Entry<Role, List<QuantifiedRole>> e: qRMap.entrySet()){
-			List<QuantifiedRole> qrL = e.getValue();
-
-			System.out.println("qrL in AddExtension"+qrL.toString());
-
-			Collections.sort(qrL, new Comparator<QuantifiedRole>() {
-				@Override
-				public int compare(QuantifiedRole o1, QuantifiedRole o2) {
-					return o2.getQ()-o1.getQ();
-				}
-			});
-			
-			for(int i=0;i<qrL.size()-1;i++){
-				this.add(new ConceptInclusionAssertion(
-						qrL.get(i),
-						qrL.get(i+1)));
-
-				System.out.println("Extending TBox Checking (2) in formula"+qrL.get(i)+" "+qrL.get(i+1));
-			}
-		}
-		
-		/* G: + >qR \subseteq BOX >qR 
-		 * for >qR \in T an R is rigid role
-		 * 
-		 * TODO: Avoid duplications
-		 */
-		for(QuantifiedRole qR : qRoles){
-
-			System.out.println("Exending TBox Checking (3) in formula (roles)"+qR.toString());
-
-			if(qR.getRole().getRefersTo() instanceof AtomicRigidRole){
-
-				System.out.println("Exending TBox Checking (3) in formula (if roles are rigid)"+qR.toString());
-
-				this.add(new ConceptInclusionAssertion(
-					qR, 
-					new AlwaysFuture(new AlwaysPast(qR))));
-				    
-			}
-		}
-		
-	}
-	
-	/***
-	 * Transforms the TBox into a pure future extended TBox as explained in the report.
-	 * 
-	 * Here we extend the rigid roles but considering only future operators. \diamodF qr -> \boxF qr
-	 * 
-	 * TODO: refactor these methods
-	 */
-	public void addExtensionConstraintsF(){
-		isExtended = true;
-		//System.out.println("is extended:"+isExtended);
-		//Set<QuantifiedRole> qRoles = getQuantifiedRoles();
-		Set<QuantifiedRole> qRoles= getQuantifiedRoles1();
-		
-		/* delta: + >qR \subseteq >q'R
-		 * for q > q' and >qR, >q'R in T an thre's no q'' s.t. q>q''>q' and q''R \in T
-		 */
-		Map<Role,List<QuantifiedRole>> qRMap = new HashMap<Role, List<QuantifiedRole>>();
-		
-		
-		for(QuantifiedRole qR : qRoles){
-			List<QuantifiedRole> list = qRMap.get(qR.getRole());
-			if(list == null){
-				list = new ArrayList<QuantifiedRole>();
-				qRMap.put(qR.getRole(),list);
-			}
-			list.add(qR);
-		}
-		
-		for(Entry<Role, List<QuantifiedRole>> e: qRMap.entrySet()){
-			List<QuantifiedRole> qrL = e.getValue();
-			Collections.sort(qrL, new Comparator<QuantifiedRole>() {
-				@Override
-				public int compare(QuantifiedRole o1, QuantifiedRole o2) {
-					return o2.getQ()-o1.getQ();
-				}
-			});
-			
-			for(int i=0;i<qrL.size()-1;i++){
-				this.add(new ConceptInclusionAssertion(
-						qrL.get(i),
-						qrL.get(i+1)));
-				//System.out.println(qrL.get(i)+" "+qrL.get(i+1));
-			}
-		}
-		
-		/* G: + >qR \subseteq BOX >qR 
-		 * for >qR \in T an R is rigid role
-		 * 
-		 * TODO: Avoid duplications
-		 */
-
-		for(QuantifiedRole qR : qRoles){
-			if(qR.getRole().getRefersTo() instanceof AtomicRigidRole){
-				this.add(new ConceptInclusionAssertion(
-					new SometimeFuture(qR),
-					new AlwaysFuture(qR)));
-				    
-			}
-		}
-		
 	}
 
 }

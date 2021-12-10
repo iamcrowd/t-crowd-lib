@@ -26,9 +26,22 @@ import it.unibz.inf.tdllitefpx.concepts.temporal.SometimeFuture;
 import it.unibz.inf.tdllitefpx.concepts.temporal.SometimePast;
 import it.unibz.inf.tdllitefpx.concepts.temporal.TemporalConcept;
 import it.unibz.inf.tdllitefpx.roles.PositiveRole;
+import it.unibz.inf.tdllitefpx.roles.AtomicRigidRole;
 import it.unibz.inf.tdllitefpx.roles.Role;
 import it.unibz.inf.tdllitefpx.tbox.ConceptInclusionAssertion;
 import it.unibz.inf.tdllitefpx.tbox.TBox;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.Map.Entry;
+
 
 public class TDLLiteFPXConverter {
 	
@@ -36,6 +49,8 @@ public class TDLLiteFPXConverter {
 	Alphabet a;
 	Variable x;
 	
+	ConjunctiveFormula cardinalities = new ConjunctiveFormula();
+	ConjunctiveFormula rigidR = new ConjunctiveFormula();
 	ConjunctiveFormula epsX = new ConjunctiveFormula();
 	ConjunctiveFormula eps = new ConjunctiveFormula();
 	
@@ -93,11 +108,19 @@ public class TDLLiteFPXConverter {
 							new Always(getFactorizedT()),
 							getFactorizedEpsilon()), x);*/
 		Formula F;
-		Formula epsilon = getFactorizedEpsilon();
+
+		this.getFactorizedEpsilon();
+		this.getExtendedFormula();
 		Formula epsilonx = getEpsilonX();
 
+		
 		if(factorize){
-			F = new ConjunctiveFormula(new Always(epsilonx).normalize(), eps);
+			F = new ConjunctiveFormula(
+					    new Always(
+							new ConjunctiveFormula(epsilonx, 
+												   new ConjunctiveFormula(cardinalities,
+												   						  rigidR))).normalize(), 
+						eps);
 		}else {
 			F = new ConjunctiveFormula(getT(), 
 									  getEpsilon());
@@ -192,9 +215,28 @@ public class TDLLiteFPXConverter {
 		
 		System.err.println("Unexpected case "+c.getClass().toString());
 		return null;
-			
-			
 	}
+
+		/** 
+	 * Gathering formula with the variable "x"
+	*/
+	public Formula getEpsilonX(){
+		Formula F = new UniversalFormula(
+				new ConjunctiveFormula(getFactorizedT(),epsX),x);
+
+		System.out.println("GetEpsilonX "+F.toString());
+		return F;
+	}
+	
+	/**
+	 * Gathering the formula with the variable "x" to avoid redundancy 
+	 * formula when make it propositional
+	*/
+	public Formula getEpsilonWithoutX(){
+		return eps;
+	}
+
+	@deprecated
 	private Formula getEpsilon(){
 		/* Given S the name of the role:
 		 * 
@@ -215,32 +257,13 @@ public class TDLLiteFPXConverter {
 	}
 	
 	
-	//gathering formula with the variable "x"
-	public Formula getEpsilonX(){
-		Formula F = new UniversalFormula(
-				new ConjunctiveFormula(getFactorizedT(),epsX),x);
-
-		System.out.println("GetEpsilonX "+F.toString());
-
-		return F;
-	}
-	
-	//gathering formula with the variable "x" to avoid redundancy formula when make it propositional
-	public Formula getEpsilonWithoutX(){
-		return eps;
-	}
-	
-	private Formula getFactorizedEpsilon(){
-
-		/* A reduced version (with less modal operators) :
+	/* A reduced version (with less modal operators) :
 		*
 		*  with epsilon'(S) = (\box \forall x ((E1S(x)-> \box pS ))) /\ (pinvS E1SInv(x) -> E1S(ds))
 		*
 		* epsilon''(S) =(\box \forall x (E1SInv(x)-> \box pSinv )) /\ (pS -> E1SInv(dsinv))
-		*/
-
-		ConjunctiveFormula eps1 = new ConjunctiveFormula();
-		ConjunctiveFormula eps2 = new ConjunctiveFormula();
+	*/
+	private void getFactorizedEpsilon(){
 
 		for( Role s : tbox.getRoles()){
 
@@ -291,29 +314,89 @@ public class TDLLiteFPXConverter {
 				eps.add(new ImplicationFormula(
 						pS,
 						fE1SInv_ds));
-			
-				// old stuff		 
-
-				eps1.add(new ImplicationFormula(conceptToFormula(E1S),
-					    new Always(pS)));
-				eps1.add(new ImplicationFormula(
-					pinvS,
-					fE1S_ds));
-
-				eps2.add(new ImplicationFormula( conceptToFormula(E1SInv),
-					 new Always(pinvS)));
-				eps2.add(new ImplicationFormula(
-					pS,
-					fE1SInv_ds));
 
 				}
 			}
-				return new ConjunctiveFormula(eps1, eps2);
 		}
 	
-	
+	/***
+	 * Reduction to QTL1
+	 * Assert cardinality axioms (2) and rigid roles axioms (3) as explained in the report.
+	 */
+	public void getExtendedFormula(){
+		Set<QuantifiedRole> qRoles= tbox.getQuantifiedRoles1();
+
+		System.out.println("set of qRoles in addExtensionConstraints:"+qRoles.toString());
+		
+		/* delta: + >qR \subseteq >q'R
+		 * for q > q' and >qR, >q'R in T an thre's no q'' s.t. q>q''>q' and q''R \in T
+		 */
+		Map<Role,List<QuantifiedRole>> qRMap = new HashMap<Role, List<QuantifiedRole>>();
+		
+		System.out.println("qRMap in addExtensionConstraints "+qRMap.toString());
+
+		for(QuantifiedRole qR : qRoles){
+
+			System.out.println("qR in addExtensionConstraints "+qR.toString());
+
+			List<QuantifiedRole> list = qRMap.get(qR.getRole());
+
+			if(list == null){
+				list = new ArrayList<QuantifiedRole>();
+				qRMap.put(qR.getRole(),list);
+			}
+			list.add(qR);
+			System.out.println("list of QuantifiedRole in AddExtension"+list.toString());
+		}
+		
+		for(Entry<Role, List<QuantifiedRole>> e: qRMap.entrySet()){
+			List<QuantifiedRole> qrL = e.getValue();
+
+			System.out.println("qrL in AddExtension"+qrL.toString());
+
+			Collections.sort(qrL, new Comparator<QuantifiedRole>() {
+				@Override
+				public int compare(QuantifiedRole o1, QuantifiedRole o2) {
+					return o2.getQ()-o1.getQ();
+				}
+			});
+			
+			for(int i = 0;i < qrL.size() - 1;i++){
+				cardinalities.add(new ImplicationFormula(
+						conceptToFormula(qrL.get(i)),
+						conceptToFormula(qrL.get(i + 1))));
+
+				System.out.println("Extending TBox Checking (2) in formula"+qrL.get(i)+" "+qrL.get(i+1));
+			}
+		}
+		
+		/* G: + >qR \subseteq BOX >qR 
+		 * for >qR \in T an R is rigid role
+		 * 
+		 * TODO: Avoid duplications
+		 */
+		for(QuantifiedRole qR : qRoles){
+
+			System.out.println("Exending TBox Checking (3) in formula (roles)"+qR.toString());
+
+			if(qR.getRole().getRefersTo() instanceof AtomicRigidRole){
+
+				System.out.println("Exending TBox Checking (3) in formula (if roles are rigid)"+qR.toString());
+
+				rigidR.add(new ImplicationFormula(
+					conceptToFormula(qR), 
+					new Always(conceptToFormula(qR)).normalize()));
+
+					System.out.println("Exending TBox Checking (3) in formula (if roles are rigid)"+rigidR.toString());
+				    
+			}
+		}
+		
+	}
+
 	/**
-	 * Not factorised Epsilon formulas */	
+	 * Not factorised Epsilon formulas 
+	 * */	
 	private Formula getEpsilon(Role s){
 		 /*
 		  *  epsilon(S) =
@@ -360,149 +443,6 @@ public class TDLLiteFPXConverter {
 		ConjunctiveFormula eps = new ConjunctiveFormula(fA,fB);
 
 		return eps;
-	}	
-
-	private Formula getFactorizedEpsilon1(){
-		/* A reduced version (with less modal operators) : 
-		 * 		
-		 * 
-		 *  	/\_all S epsilon'(S) /\ 
-		 *  	\box /\_all S epsilon''(S)
-		 *  
-		 *   with epsilon'(S) = ((pS -> E1S(ds)) /\ (pS -> E1SInv(dsinv)))
-		 * 		
-		 * 		  epsilon''(S) =((E1S(x)-> \box ps ) /\ E1SInv(x) -> \box ps)
-		 */
-		ConjunctiveFormula eps1 = new ConjunctiveFormula();
-		ConjunctiveFormula eps2 = new ConjunctiveFormula();
-		
-		for( Role s : tbox.getRoles()){
-			if(s instanceof PositiveRole){
-				Proposition pS = (Proposition) a.get("p"+s.toString(),0);
-				Role SInv = s.getInverse();
-				
-				Concept E1S = new QuantifiedRole(s, 1);
-				Concept E1SInv = new QuantifiedRole(SInv, 1);
-				
-				Constant ds = new Constant("d"+s.toString());
-				Constant dsinv = new Constant("d"+SInv.toString());
-				
-				Formula fE1S_ds = conceptToFormula(E1S);
-				fE1S_ds.substitute(x, ds);
-				
-				Formula fE1SInv_ds = conceptToFormula(E1SInv);
-				fE1SInv_ds.substitute(x, dsinv);
-				
-				eps1.add(new ImplicationFormula(
-								pS,
-								fE1S_ds));
-				eps1.add(new ImplicationFormula(
-								pS,
-								fE1SInv_ds));
-				
-				eps2.add(new ImplicationFormula(
-								conceptToFormula(E1S), 
-								new Always(pS)));
-				eps2.add(new ImplicationFormula(
-								conceptToFormula(E1SInv),
-								new Always(pS)));
-			}
-		}
-		
-		return new ConjunctiveFormula(eps1, eps2);
 	}
-	
-	private Formula getEpsilon1(Role s){
-		 /*
-		  *  epsilon(S) =
-		  *  A.  ((pS -> E1S(ds)) /\ (pS -> E1SInv(dsinv))) /\
-		  *  B.  (\box \forall x ((E1S(x)-> \box ps ) /\ E1SInv(x) -> \box ps))
-		  *  
-		  */
-		 
-		Proposition pS = (Proposition) a.get("p"+s.toString(),0);
-		Role SInv = s.getInverse();
-		
-		Concept E1S = new QuantifiedRole(s, 1);
-		Concept E1SInv = new QuantifiedRole(SInv, 1);
-		
-		Constant ds = new Constant("d"+s.toString());
-		Constant dsinv = new Constant("d"+SInv.toString());
-		
-		Formula fE1S_ds = conceptToFormula(E1S);
-		fE1S_ds.substitute(x, ds);
-		
-		Formula fE1SInv_ds = conceptToFormula(E1SInv);
-		fE1SInv_ds.substitute(x, dsinv);
-		
-		ConjunctiveFormula fA = new ConjunctiveFormula(
-				new ImplicationFormula(
-						pS,
-						fE1S_ds),
-				new ImplicationFormula(
-						pS,
-						fE1SInv_ds));
-		
-		Always fB = new Always(new UniversalFormula(
-				new ConjunctiveFormula(
-						new ImplicationFormula(
-								conceptToFormula(E1S), 
-								new Always(pS)),
-						new ImplicationFormula(
-								conceptToFormula(E1SInv),
-								new Always(pS))),
-				x));
-		
-		ConjunctiveFormula eps = new ConjunctiveFormula(fA,fB);
-		
-		return eps;
-	}
-	
-	private Formula getEpsilon2(Role s){
-		 /*
-		  *  epsilon(S) =
-		  *  A.  ((pS -> E1S(ds)) /\ (pS -> E1SInv(dsinv))) /\
-		  *  B.  (\box \forall x ((E1S(x)-> \box ps ) /\ E1SInv(x) -> \box ps))
-		  *  
-		  */
-		 
-		Proposition pS = (Proposition) a.get("p"+s.toString(),0);
-		Role SInv = s.getInverse();
-		
-		Concept E1S = new QuantifiedRole(s, 1);
-		Concept E1SInv = new QuantifiedRole(SInv, 1);
-		
-		Constant ds = new Constant("d"+s.toString());
-		Constant dsinv = new Constant("d"+SInv.toString());
-		
-		Formula fE1S_ds = conceptToFormula(E1S);
-		fE1S_ds.substitute(x, ds);
-		
-		Formula fE1SInv_ds = conceptToFormula(E1SInv);
-		fE1SInv_ds.substitute(x, dsinv);
-		
-		ConjunctiveFormula fA = new ConjunctiveFormula(
-				new ImplicationFormula(
-						pS,
-						fE1S_ds),
-				new ImplicationFormula(
-						pS,
-						fE1SInv_ds));
-		
-		Always fB = new Always(new UniversalFormula(
-				new ConjunctiveFormula(
-						new ImplicationFormula(
-								conceptToFormula(E1S), 
-								new Always(pS)),
-						new ImplicationFormula(
-								conceptToFormula(E1SInv),
-								new Always(pS))),
-				x));
-		
-		ConjunctiveFormula eps = new ConjunctiveFormula(fA,fB);
-		
-		return eps;
-	}
-	
 	
 }

@@ -152,7 +152,7 @@ public class TDLLiteFPXReasoner {
 		
 		long start_tbox2QTL = System.currentTimeMillis();
 		// Extends the TBox, adding the delta_R and G
-		t.addExtensionConstraints();
+		//t.addExtensionConstraints();
 		
 		TDLLiteFPXConverter conv = new TDLLiteFPXConverter(t);
 		Formula qtl = conv.getFormula();
@@ -403,7 +403,7 @@ public class TDLLiteFPXReasoner {
 		long start_tbox2QTL = System.currentTimeMillis();
 		
 		// Extends the TBox, adding the delta_R and G
-		t.addExtensionConstraints();
+		//t.addExtensionConstraints();
 		
 		TDLLiteFPXConverter conv = new TDLLiteFPXConverter(t);
 		Formula qtl = conv.getFormula();
@@ -579,7 +579,7 @@ public class TDLLiteFPXReasoner {
 		long start_tbox2QTL = System.currentTimeMillis();
 		
 		// Extends the TBox, adding the delta_R and G
-		t.addExtensionConstraints();
+		//t.addExtensionConstraints();
 		
 		TDLLiteFPXConverter conv = new TDLLiteFPXConverter(t);
 		Formula qtl = conv.getFormula();
@@ -763,7 +763,7 @@ public class TDLLiteFPXReasoner {
 		
 		long start_tbox2QTL = System.currentTimeMillis();
 		// Extends the TBox, adding the delta_R and G
-		t.addExtensionConstraints();
+		//t.addExtensionConstraints();
 	
 		TDLLiteFPXConverter conv = new TDLLiteFPXConverter(t);
 		Formula qtl = conv.getFormula();
@@ -893,7 +893,7 @@ public class TDLLiteFPXReasoner {
 		
 		long start_tbox2QTL = System.currentTimeMillis();
 		// Extends the TBox only future
-		t.addExtensionConstraintsF();
+		//t.addExtensionConstraintsF();
 	
 		TDLLiteFPXConverter conv = new TDLLiteFPXConverter(t);
 		Formula qtl = conv.getFormula();
@@ -1014,7 +1014,7 @@ public class TDLLiteFPXReasoner {
 		
 		long start_tbox2QTL = System.currentTimeMillis();
 		// Extends the TBox, adding the delta_R and G
-		t.addExtensionConstraints();
+		//t.addExtensionConstraints();
 	
 		TDLLiteFPXConverter conv = new TDLLiteFPXConverter(t);
 		Formula qtl = conv.getFormula();
@@ -1128,7 +1128,7 @@ public class TDLLiteFPXReasoner {
 		
 		long start_tbox2QTL = System.currentTimeMillis();
 		// Extends the TBox, adding the delta_R and G
-		t.addExtensionConstraintsF();
+		//t.addExtensionConstraintsF();
 	
 		TDLLiteFPXConverter conv = new TDLLiteFPXConverter(t);
 		Formula qtl = conv.getFormula();
