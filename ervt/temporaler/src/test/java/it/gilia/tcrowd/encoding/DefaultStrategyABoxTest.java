@@ -131,7 +131,7 @@ public class DefaultStrategyABoxTest {
         TBox tbox = strategy.to_dllitefpx(this.getJSONfromFile("Adult_TBOX"));
         ABox abox = strategy.to_dllitefpxABox(this.getJSONfromFile("Adult_ABOX"));
         
-        tbox.addExtensionConstraints();
+        //tbox.addExtensionConstraints();
         abox.addExtensionConstraintsABox(tbox);
 
 		Iterator<ABoxConceptAssertion> iterator = abox.getABoxConceptAssertions().iterator();
@@ -170,7 +170,7 @@ public class DefaultStrategyABoxTest {
         TBox tbox = strategy.to_dllitefpx(this.getJSONfromFile("rigidRoleQ_TBOX"));
         ABox abox = strategy.to_dllitefpxABox(this.getJSONfromFile("rigidRoleQ_ABOX"));
         
-        tbox.addExtensionConstraints();
+        //tbox.addExtensionConstraints();
         abox.addExtensionConstraintsABox(tbox);
 		
         Set<ABoxConceptAssertion> conceptAssertions = abox.getABoxConceptAssertions();
@@ -193,7 +193,7 @@ public class DefaultStrategyABoxTest {
         TBox tbox = strategy.to_dllitefpx(this.getJSONfromFile("localRoleQ_TBOX"));
         ABox abox = strategy.to_dllitefpxABox(this.getJSONfromFile("localRoleQ_ABOX"));
         
-        tbox.addExtensionConstraints();
+        //tbox.addExtensionConstraints();
         abox.addExtensionConstraintsABox(tbox);
 		
         Set<ABoxConceptAssertion> conceptAssertions = abox.getABoxConceptAssertions();
