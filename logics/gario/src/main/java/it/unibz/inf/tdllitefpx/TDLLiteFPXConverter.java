@@ -72,8 +72,9 @@ public class TDLLiteFPXConverter {
 													epsX),x);
 
 		System.out.println("Formula for pure future in Converter"+F.toString());							
-		return F; //new Always(getEpsilonX());
+		return F;
 	}
+
 	/**
 	 * Returns a K+ given an Extended TBox T*. 
 	 * If factorize is set to true, the formula returned will
@@ -236,7 +237,9 @@ public class TDLLiteFPXConverter {
 		return eps;
 	}
 
-	@deprecated
+    /**
+	 * @deprecated
+    */
 	private Formula getEpsilon(){
 		/* Given S the name of the role:
 		 * 
