@@ -65,36 +65,13 @@ public class Name {
 	}
 
 	public TBox getTBox() {
-
-		TBox t = new TBox();
-		t.addAll(getTBoxT0());
-		t.addAll(getTBoxT1());
-
-		// t.addAll(getTBoxExtension());
-
-		return t;
-	}
-
-	private TBox getTBoxT0() {
-		TBox t0 = new TBox();
-
-		return t0;
-	}
-
-	private TBox getTBoxT1() {
 		TBox t1 = new TBox();
 
 		t1.add(new ConceptInclusionAssertion(Person,new QuantifiedRole(Name, 1)));
-		
 		t1.add(new ConceptInclusionAssertion(Person,new NegatedConcept(new QuantifiedRole(Name, 2))));
 
 
 		return t1;
-	}
-
-	private TBox getTBoxExtension() {
-		TBox t = new TBox();
-		return t;
 	}
 
 }
