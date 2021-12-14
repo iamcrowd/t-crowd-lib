@@ -28,7 +28,6 @@ import it.unibz.inf.qtl1.terms.Term;
 import it.unibz.inf.qtl1.terms.Variable;
 import it.unibz.inf.tdllitefpx.concepts.Concept;
 import it.unibz.inf.tdllitefpx.concepts.AtomicConcept;
-import it.unibz.inf.tdllitefpx.concepts.Concept;
 import it.unibz.inf.tdllitefpx.concepts.temporal.NextFuture;
 import it.unibz.inf.tdllitefpx.output.LatexOutputDocument;
 import it.unibz.inf.tdllitefpx.roles.AtomicRigidRole;
