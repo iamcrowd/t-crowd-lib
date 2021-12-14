@@ -2,33 +2,23 @@ package it.unibz.inf.tdllitefpx.tbox;
 
 import it.unibz.inf.tdllitefpx.concepts.Concept;
 import it.unibz.inf.tdllitefpx.concepts.QuantifiedRole;
-import it.unibz.inf.tdllitefpx.concepts.temporal.AlwaysFuture;
-import it.unibz.inf.tdllitefpx.concepts.temporal.SometimeFuture;
-import it.unibz.inf.tdllitefpx.concepts.temporal.AlwaysPast;
-import it.unibz.inf.tdllitefpx.roles.AtomicRigidRole;
 import it.unibz.inf.tdllitefpx.roles.Role;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.Map.Entry;
 
 import org.gario.code.output.FormattableObj;
 import org.gario.code.output.OutputFormat;
 import org.gario.code.output.SymbolUndefinedException;
 
 
-
+/**
+ *  TBox class manipulates the original TBox by getting the concetps and roles in the input
+ */
 public class TBox extends LinkedList<ConceptInclusionAssertion> implements FormattableObj{
-	/**
-	 * 
-	 */
 
 	private static final long serialVersionUID = 1L;
 	
@@ -36,6 +26,11 @@ public class TBox extends LinkedList<ConceptInclusionAssertion> implements Forma
 		return super.add(ci);
 	}
 	
+	/**
+	 * Getting the set of rigid and locals roles in the TBox.
+	 * 
+	 * @return a set of rigid and local roles
+	 */
 	public Set<Role> getRoles(){
 		
 		HashSet<Role> roles = new HashSet<Role>();
@@ -43,8 +38,6 @@ public class TBox extends LinkedList<ConceptInclusionAssertion> implements Forma
 			roles.addAll(ci.getLHS().getRoles());
 			roles.addAll(ci.getRHS().getRoles());
 		}
-
-		System.out.println("Set of Roles in getRoles() TBox"+roles.toString());
 		return roles;
 	}
 
@@ -74,7 +67,6 @@ public class TBox extends LinkedList<ConceptInclusionAssertion> implements Forma
 		for(Concept c: concepts){
 			if(c instanceof QuantifiedRole){
 				qR.add((QuantifiedRole) c);
-				System.out.println("Qrole in getQuantifiedRoles:"+c.toString());
 			}
 		}
 		
@@ -91,10 +83,14 @@ public class TBox extends LinkedList<ConceptInclusionAssertion> implements Forma
 				qRQ.replace(qr.getRole().toString(), qr.getQ());
 		   }	
 		}
-		System.out.println("getQuantifiedRolesQ in TBox"+qRQ.toString());
 		return qRQ;
 	}
 	
+	/**
+	 * Get the atomic concepts in each concept inclusion
+	 * 
+	 * @return a set of atomic TDL-Lite concepts
+	 */
 	public Set<Concept> getAtomicConcepts(){
 		HashSet<Concept> concepts = new HashSet<Concept>();
 
@@ -107,22 +103,17 @@ public class TBox extends LinkedList<ConceptInclusionAssertion> implements Forma
 	
 	
 	/**
-	 * This function rewrite the quantified roles list in order to extend TBox 
+	 * This function rewrite the quantified roles list in order to extend the formulas 
 	 * with the right cardinalities
-	 * @return
+	 * 
+	 * @return a set of quantified roles
 	 */
 	public Set<QuantifiedRole> getQuantifiedRoles1(){
 		
 		Set<QuantifiedRole> qR = getQuantifiedRoles();
-
-		System.out.println("qR in TBox getQuantifiedRoles1:"+qR.toString());
-
 		Set<QuantifiedRole> qR1 = new HashSet<QuantifiedRole>();
 		
 		for(QuantifiedRole r: qR){
-
-			System.out.println("r in TBox getQuantifiedRoles1:"+qR.toString());
-
 			QuantifiedRole r1 = new QuantifiedRole(r.getRole(), 1);
 			System.out.println("Qrole:"+r.toString());
 			qR1.add(r);

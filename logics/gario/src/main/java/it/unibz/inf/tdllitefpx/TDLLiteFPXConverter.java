@@ -35,8 +35,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -65,49 +63,54 @@ public class TDLLiteFPXConverter {
 		return getFormula(true);
 	}
 
+	/**
+	 * Getting the universal formula to remove past operators. In this formula we
+	 * remove eps subformulas in order to avoid redundancies. However, it should be appended
+	 * again when reducing to LTL.
+	 * 
+	 * @return a Formula to remove past operators
+	 */
 	public Formula getFormulaToRemovePast(){
-
 		Formula F = new UniversalFormula(
-							new ConjunctiveFormula(new Always(getFactorizedT()).normalize(),
-													epsX),x);
+							new Always(
+								new ConjunctiveFormula(getFactorizedT(),
+										new ConjunctiveFormula(epsX,
+											new ConjunctiveFormula(cardinalities,
+														   	   	   rigidR)))).normalize(), 
+						x);
 
 		System.out.println("Formula for pure future in Converter"+F.toString());							
 		return F;
 	}
 
 	/**
-	 * Returns a K+ given an Extended TBox T*. 
+	 * Returns a K+ given an TBox T. 
 	 * If factorize is set to true, the formula returned will
 	 * have only 1 outermost universal quantifier, and the rest
 	 * will be quantifier free. Moreover less box operators will be used
 	 * 
+	 * The result formula has the following structure
+	 * F = T /\ e
+	 * 
+	 * where
+	 * 
+	 * T = /\ \boxPF \forall x ( C1(x) -> C2(x) )  			(1)
+	 * 		(For each concept inclusion in T*)
+	 * 
+	 * 	   /\ \boxPF \forall x ( Eq'S(x) -> EqS(x) )  		(2)
+	 * 		(for each q,q' \in Qrt with q' > q. 
+	 * 		 there is no q'' in Qrt with q < q'' < q')
+	 * 
+	 * 	   /\ \boxPF \forall x ( EqS(x) -> \boxPF EqS(x) )  (3)
+	 * 		(for each global/ridig role s \in Qrt) 
+	 * 
+	 * e = /\ epsilon(s)    (For each role S) 				(4)
+	 *    
+	 *
 	 * @param factorize
 	 * @return
 	 */
 	public Formula getFormula(boolean factorize){
-		/* The result formula has the following structure
-		 * F = T /\ e
-		 * 
-		 * where
-		 * 
-		 * T = /\ \boxPF \forall x ( C1(x) -> C2(x) ) 
-		 * 		(For each concept inclusion in T*)
-		 * 
-		 * e = /\ epsilon(s)    (For each role S)
-		 *    
-		 */
-		
-		/* supprimer pour Eviter la redondance des formules
-	 	
-	 	if(!tbox.isExtended())
-		tbox.addExtensionConstraints();
-		
-		*/
-/*		if(factorize){
-			return new UniversalFormula(
-					new ConjunctiveFormula(
-							new Always(getFactorizedT()),
-							getFactorizedEpsilon()), x);*/
 		Formula F;
 
 		this.getFactorizedEpsilon();
@@ -126,6 +129,7 @@ public class TDLLiteFPXConverter {
 			F = new ConjunctiveFormula(getT(), 
 									  getEpsilon());
 		}
+		System.out.println("Formula F final in Converter"+F.toString());
 		return F;
 	}
 	
@@ -164,7 +168,13 @@ public class TDLLiteFPXConverter {
 		}
 		return out;
 	}
-	
+
+	/**
+	 * Converting TDLLite concetps into QTL1 formulas
+	 * 
+	 * @param c a TDLlite Concept
+	 * @return a QTL1 formula
+	 */
 	public Formula conceptToFormula(Concept c){
 		if(c instanceof AtomicConcept)
 			return new Atom(c.toString(), x);
@@ -218,7 +228,7 @@ public class TDLLiteFPXConverter {
 		return null;
 	}
 
-		/** 
+	/** 
 	 * Gathering formula with the variable "x"
 	*/
 	public Formula getEpsilonX(){
@@ -239,7 +249,7 @@ public class TDLLiteFPXConverter {
 
     /**
 	 * @deprecated
-    */
+	 */
 	private Formula getEpsilon(){
 		/* Given S the name of the role:
 		 * 
@@ -259,6 +269,56 @@ public class TDLLiteFPXConverter {
 		return cf;
 	}
 	
+	/**
+	 * Not factorised Epsilon formulas 
+	 * */	
+	private Formula getEpsilon(Role s){
+		/*
+		 *  epsilon(S) =
+		 *  A. (\box \forall x ((E1S(x)-> \box pS )) /\ (pinvS -> E1S(ds))
+		 *  B. (\box \forall x ((E1SInv(x)-> \box pSinv )) /\ (pS -> E1SInv(dsinv))
+		 */
+		
+	   Proposition pS = (Proposition) a.get("p"+s.toString(),0);
+	   Proposition pinvS = (Proposition) a.get("pinv"+s.toString(),0);
+
+	   Role SInv = s.getInverse();
+	   Concept E1S = new QuantifiedRole(s, 1);
+	   Concept E1SInv = new QuantifiedRole(SInv, 1);
+	   
+	   Constant ds = new Constant("d"+s.toString());
+	   Constant dsinv = new Constant("d"+SInv.toString());
+	   
+	   Formula fE1S_ds = conceptToFormula(E1S);
+	   fE1S_ds.substitute(x, ds);
+	   
+	   Formula fE1SInv_ds = conceptToFormula(E1SInv);
+	   fE1SInv_ds.substitute(x, dsinv);
+   
+	   
+	   UniversalFormula fA = new UniversalFormula(
+			   new ConjunctiveFormula(
+					   new Always(new ImplicationFormula(
+							   conceptToFormula(E1S), 
+							   new Always(pS))),
+					   new ImplicationFormula(
+							   pinvS, 
+							   fE1S_ds)),
+			   x);
+	   UniversalFormula fB = new UniversalFormula(
+			   new ConjunctiveFormula(
+					   new Always(new ImplicationFormula(
+							   conceptToFormula(E1SInv), 
+							   new Always(pinvS))),
+					   new ImplicationFormula(
+							   pS, 
+							   fE1SInv_ds)),
+			   x);
+	   
+	   ConjunctiveFormula eps = new ConjunctiveFormula(fA,fB);
+
+	   return eps;
+   }
 	
 	/* A reduced version (with less modal operators) :
 		*
@@ -295,11 +355,6 @@ public class TDLLiteFPXConverter {
 				fE1SInv_ds.substitute(x, dsinv);
 
 
-				epsX.add(new ImplicationFormula(conceptToFormula(E1SInv),
-					 						new Always(conceptToFormula(E1SInv)).normalize()
-										   )
-					);
-
 				epsX.add(new ImplicationFormula(conceptToFormula(E1S),
 					 						new Always(pS).normalize()
 										   )
@@ -325,14 +380,21 @@ public class TDLLiteFPXConverter {
 	/***
 	 * Reduction to QTL1
 	 * Assert cardinality axioms (2) and rigid roles axioms (3) as explained in the report.
+	 * 
+	 *     /\ \boxPF \forall x ( Eq'S(x) -> EqS(x) )  		(2)
+	 * 		(for each q,q' \in Qrt with q' > q. 
+	 * 		 there is no q'' in Qrt with q < q'' < q')
+	 * 
+	 * 	   /\ \boxPF \forall x ( EqS(x) -> \boxPF EqS(x) )  (3)
+	 * 		(for each global/ridig role s \in Qrt) 
 	 */
 	public void getExtendedFormula(){
 		Set<QuantifiedRole> qRoles= tbox.getQuantifiedRoles1();
 
 		System.out.println("set of qRoles in addExtensionConstraints:"+qRoles.toString());
 		
-		/* delta: + >qR \subseteq >q'R
-		 * for q > q' and >qR, >q'R in T an thre's no q'' s.t. q>q''>q' and q''R \in T
+		/* 
+		 * (2)
 		 */
 		Map<Role,List<QuantifiedRole>> qRMap = new HashMap<Role, List<QuantifiedRole>>();
 		
@@ -373,18 +435,22 @@ public class TDLLiteFPXConverter {
 			}
 		}
 		
-		/* G: + >qR \subseteq BOX >qR 
-		 * for >qR \in T an R is rigid role
-		 * 
+		/* 
+		 * (3)
 		 * TODO: Avoid duplications
 		 */
+
+		Set<Role> roles = tbox.getRoles();
+
 		for(QuantifiedRole qR : qRoles){
+
+			System.out.println("Set of Roles in (3) extended formula"+roles.toString());
 
 			System.out.println("Exending TBox Checking (3) in formula (roles)"+qR.toString());
 
 			if(qR.getRole().getRefersTo() instanceof AtomicRigidRole){
 
-				System.out.println("Exending TBox Checking (3) in formula (if roles are rigid)"+qR.toString());
+				roles.remove(qR.getRole());
 
 				rigidR.add(new ImplicationFormula(
 					conceptToFormula(qR), 
@@ -394,58 +460,23 @@ public class TDLLiteFPXConverter {
 				    
 			}
 		}
+		System.out.println("Set of Roles in (3) extended formula after removing"+roles.toString());
 		
-	}
+		for (Role role : roles) {
+			if(role.getRefersTo() instanceof AtomicRigidRole){
 
-	/**
-	 * Not factorised Epsilon formulas 
-	 * */	
-	private Formula getEpsilon(Role s){
-		 /*
-		  *  epsilon(S) =
-		  *  A. (\box \forall x ((E1S(x)-> \box pS )) /\ (pinvS -> E1S(ds))
-		  *  B. (\box \forall x ((E1SInv(x)-> \box pSinv )) /\ (pS -> E1SInv(dsinv))
-		  */
-		 
-		Proposition pS = (Proposition) a.get("p"+s.toString(),0);
-		Proposition pinvS = (Proposition) a.get("pinv"+s.toString(),0);
+				System.out.println("Exending TBox Checking (3) for remaining rigid roles"+role.toString());
 
-		Role SInv = s.getInverse();
-		Concept E1S = new QuantifiedRole(s, 1);
-		Concept E1SInv = new QuantifiedRole(SInv, 1);
-		
-		Constant ds = new Constant("d"+s.toString());
-		Constant dsinv = new Constant("d"+SInv.toString());
-		
-		Formula fE1S_ds = conceptToFormula(E1S);
-		fE1S_ds.substitute(x, ds);
-		
-		Formula fE1SInv_ds = conceptToFormula(E1SInv);
-		fE1SInv_ds.substitute(x, dsinv);
-	
-		
-		UniversalFormula fA = new UniversalFormula(
-				new ConjunctiveFormula(
-						new Always(new ImplicationFormula(
-								conceptToFormula(E1S), 
-								new Always(pS))),
-						new ImplicationFormula(
-								pinvS, 
-								fE1S_ds)),
-				x);
-		UniversalFormula fB = new UniversalFormula(
-				new ConjunctiveFormula(
-						new Always(new ImplicationFormula(
-								conceptToFormula(E1SInv), 
-								new Always(pinvS))),
-						new ImplicationFormula(
-								pS, 
-								fE1SInv_ds)),
-				x);
-		
-		ConjunctiveFormula eps = new ConjunctiveFormula(fA,fB);
+				QuantifiedRole qRoleRem = new QuantifiedRole(role, 1);
 
-		return eps;
+				rigidR.add(new ImplicationFormula(
+									conceptToFormula(qRoleRem), 
+									new Always(conceptToFormula(qRoleRem)).normalize()));
+			
+				System.out.println("Exending TBox Checking (3) in formula (if roles are rigid)"+rigidR.toString());
+			}				
+		}
+		
 	}
 	
 }

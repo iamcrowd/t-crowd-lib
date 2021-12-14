@@ -402,9 +402,6 @@ public class TDLLiteFPXReasoner {
 		
 		long start_tbox2QTL = System.currentTimeMillis();
 		
-		// Extends the TBox, adding the delta_R and G
-		//t.addExtensionConstraints();
-		
 		TDLLiteFPXConverter conv = new TDLLiteFPXConverter(t);
 		Formula qtl = conv.getFormula();
 		
