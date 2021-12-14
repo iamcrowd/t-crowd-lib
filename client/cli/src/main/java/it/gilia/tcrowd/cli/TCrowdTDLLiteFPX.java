@@ -80,7 +80,7 @@ public class TCrowdTDLLiteFPX extends TCrowdEncodingERvtRelatedCommand {
             TBox tbox = strategy.to_dllitefpx(object);
             ABox abox = strategy.to_dllitefpxABox(objectData);
             
-            tbox.addExtensionConstraints();
+            //tbox.addExtensionConstraints();
 		    abox.addExtensionConstraintsABox(tbox);
     		
     		System.out.println("Saving in "+fileNameOut);

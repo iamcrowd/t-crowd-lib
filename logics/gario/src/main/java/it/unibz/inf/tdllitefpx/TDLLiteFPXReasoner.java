@@ -7,9 +7,9 @@ import it.unibz.inf.qtl1.atoms.Atom;
 import it.unibz.inf.qtl1.formulae.ConjunctiveFormula;
 import it.unibz.inf.qtl1.formulae.temporal.Always;
 import it.unibz.inf.qtl1.formulae.temporal.AlwaysFuture;
+import it.unibz.inf.qtl1.formulae.temporal.AlwaysPast;
 import it.unibz.inf.qtl1.formulae.Formula;
 import it.unibz.inf.qtl1.formulae.quantified.UniversalFormula;
-import it.unibz.inf.qtl1.formulae.temporal.Always;
 import it.unibz.inf.qtl1.output.LatexDocumentCNF;
 
 import org.gario.code.output.StatsOutputDocument;
@@ -30,7 +30,6 @@ import it.unibz.inf.tdllitefpx.concepts.Concept;
 import it.unibz.inf.tdllitefpx.concepts.AtomicConcept;
 import it.unibz.inf.tdllitefpx.concepts.Concept;
 import it.unibz.inf.tdllitefpx.concepts.temporal.NextFuture;
-
 import it.unibz.inf.tdllitefpx.output.LatexOutputDocument;
 import it.unibz.inf.tdllitefpx.roles.AtomicRigidRole;
 import it.unibz.inf.tdllitefpx.roles.PositiveRole;
@@ -153,7 +152,7 @@ public class TDLLiteFPXReasoner {
 		
 		long start_tbox2QTL = System.currentTimeMillis();
 		// Extends the TBox, adding the delta_R and G
-		t.addExtensionConstraints();
+		//t.addExtensionConstraints();
 		
 		TDLLiteFPXConverter conv = new TDLLiteFPXConverter(t);
 		Formula qtl = conv.getFormula();
@@ -211,7 +210,7 @@ public class TDLLiteFPXReasoner {
 			
 			long start_QTL2QTLN = System.currentTimeMillis();
 			
-			PureFutureTranslator purefutureFormulaX = new PureFutureTranslator(qtlX);
+			PureFutureTranslator purefutureFormulaX = new PureFutureTranslator(conv.getFormulaToRemovePast());
 			qtl_NX = purefutureFormulaX.getPureFutureTranslation();
 			
 			long end_QTL2QTLN = System.currentTimeMillis() - start_QTL2QTLN;
@@ -383,9 +382,7 @@ public class TDLLiteFPXReasoner {
 	}
 	
 	
-	/**
-	 * For tdlliteN
-	 */
+	
 	private static void buildLTLCheck(
 			TBox t, 
 			boolean verbose, 
@@ -405,23 +402,20 @@ public class TDLLiteFPXReasoner {
 		
 		long start_tbox2QTL = System.currentTimeMillis();
 		
-		// Extends the TBox, adding the delta_R and G
-		t.addExtensionConstraintsF();
-		
 		TDLLiteFPXConverter conv = new TDLLiteFPXConverter(t);
-		Formula qtl_N = conv.getFormula();
+		Formula qtl = conv.getFormula();
 		
-		/*Formula qtl_N;
-		Formula qtl_NX;*/
+		Formula qtl_N;
+		Formula qtl_NX;
 		
 		if (!reflexive) {
-			qtl_N = qtl_N.makeTemporalStrict();	
+			qtl = qtl.makeTemporalStrict();	
 		}
 		
-		/*Formula qtlX = conv.getEpsilonX();
-		Formula qtlWithoutX = conv.getEpsilonWithoutX();*/
+		Formula qtlX = conv.getEpsilonX();
+		Formula qtlWithoutX = conv.getEpsilonWithoutX();
 		
-		Set<Constant> consts = qtl_N.getConstants();
+		Set<Constant> consts = qtl.getConstants();
 		
 		long end_tbox2QTL = System.currentTimeMillis() - start_tbox2QTL;
 
@@ -433,19 +427,23 @@ public class TDLLiteFPXReasoner {
 		
 		ABox.getStatsABox();
 		
-		if(verbose)
-			(new LatexDocumentCNF(qtl_N)).toFile(prefix+"qtlN.tex");
-		
+		if(verbose) {
+			(new LatexDocumentCNF(qtl)).toFile(prefix+"qtl.tex");
+			
+		}	
 
-		//long start_QTL2QTLN = 0;
+		long start_QTL2QTLN = System.currentTimeMillis();
 		
-		//PureFutureTranslator purefutureFormulaX = new PureFutureTranslator(qtlX);
-		//qtl_NX = purefutureFormulaX.getPureFutureTranslation();
+		PureFutureTranslator purefutureFormulaX = new PureFutureTranslator(conv.getFormulaToRemovePast());
+		qtl_NX = purefutureFormulaX.getPureFutureTranslation();
 		
-		long end_QTL2QTLN = 0;
+		long end_QTL2QTLN = System.currentTimeMillis() - start_QTL2QTLN;
 		
+		qtl_N = new ConjunctiveFormula(qtl_NX,qtlWithoutX);
 		
-        //qtl_N = new ConjunctiveFormula(qtlX,qtlWithoutX);
+			
+		if(verbose)
+			(new LatexDocumentCNF(qtl_N)).toFile(prefix+"qtlN.tex");	
 		
 		long end_ABox = 0;
 		
@@ -490,13 +488,10 @@ public class TDLLiteFPXReasoner {
 
 		long start_QTLN2LTL = System.currentTimeMillis();
 		
-		//Formula ltl = qtl_NX.makePropositional(consts);
-        //Formula ltl = qtlX.makePropositional(consts);
-		Formula ltl = qtl_N.makePropositional(consts);
-		//Formula ltlnox = qtlWithoutX.makePropositional();
-	    //ltl = new ConjunctiveFormula(ltl, ltlnox);
+		Formula ltl = qtl_NX.makePropositional(consts);
+		Formula ltlnox = qtlWithoutX.makePropositional();
+	    ltl = new ConjunctiveFormula(ltl, ltlnox);
 		o = o.makePropositional(consts);
-		//ltl = new ConjunctiveFormula(new Always(ltl), o);
 		ltl = new ConjunctiveFormula(ltl, o);
 
 		
@@ -581,7 +576,7 @@ public class TDLLiteFPXReasoner {
 		long start_tbox2QTL = System.currentTimeMillis();
 		
 		// Extends the TBox, adding the delta_R and G
-		t.addExtensionConstraints();
+		//t.addExtensionConstraints();
 		
 		TDLLiteFPXConverter conv = new TDLLiteFPXConverter(t);
 		Formula qtl = conv.getFormula();
@@ -765,7 +760,7 @@ public class TDLLiteFPXReasoner {
 		
 		long start_tbox2QTL = System.currentTimeMillis();
 		// Extends the TBox, adding the delta_R and G
-		t.addExtensionConstraints();
+		//t.addExtensionConstraints();
 	
 		TDLLiteFPXConverter conv = new TDLLiteFPXConverter(t);
 		Formula qtl = conv.getFormula();
@@ -895,7 +890,7 @@ public class TDLLiteFPXReasoner {
 		
 		long start_tbox2QTL = System.currentTimeMillis();
 		// Extends the TBox only future
-		t.addExtensionConstraintsF();
+		//t.addExtensionConstraintsF();
 	
 		TDLLiteFPXConverter conv = new TDLLiteFPXConverter(t);
 		Formula qtl = conv.getFormula();
@@ -1016,7 +1011,7 @@ public class TDLLiteFPXReasoner {
 		
 		long start_tbox2QTL = System.currentTimeMillis();
 		// Extends the TBox, adding the delta_R and G
-		t.addExtensionConstraints();
+		//t.addExtensionConstraints();
 	
 		TDLLiteFPXConverter conv = new TDLLiteFPXConverter(t);
 		Formula qtl = conv.getFormula();
@@ -1089,7 +1084,7 @@ public class TDLLiteFPXReasoner {
 		
 	}
 	
-	/** FO - Only Future TBox and ABox
+	/** FO - Only Future
 	 * 
 	 * @param t
 	 * @param verbose
@@ -1130,7 +1125,7 @@ public class TDLLiteFPXReasoner {
 		
 		long start_tbox2QTL = System.currentTimeMillis();
 		// Extends the TBox, adding the delta_R and G
-		t.addExtensionConstraintsF();
+		//t.addExtensionConstraintsF();
 	
 		TDLLiteFPXConverter conv = new TDLLiteFPXConverter(t);
 		Formula qtl = conv.getFormula();
@@ -1201,9 +1196,6 @@ public class TDLLiteFPXReasoner {
 		(new NuSMVOutput(pltl)).toFile(prefix+".smv");
 		(new AaltaOutput(pltl)).toFile(prefix+".aalta");
 		
-		System.out.println("Solver" + Constants.pltl);
-		(new PltlOutput(pltl)).toFile(prefix+".pltl");
-		
 		System.out.println("Generating FO file...");
 		(new FOOutput(qtlABox)).toFile(prefix+".tptp");
 
@@ -1217,100 +1209,6 @@ public class TDLLiteFPXReasoner {
 			out = new StatsOutputDocument(false);
 			out.toStatsFile(prefix+"Stats.stats", end_tbox2QTL, end_QTL2PLTL, pltl.getPropositions().size());
 		}
-		
-	}
-	
-	/** FO - Only Future TBox
-	 * 
-	 * @param t
-	 * @param verbose
-	 * @param prefix
-	 * @param reflexive
-	 * @throws Exception
-	 */
-	public static void buildFOCheckTBoxSatisfiabilityOnlyFuture(
-			TBox t,
-			boolean verbose,
-			String prefix,
-			boolean reflexive) 
-					throws Exception{
-		TDLLiteFPXReasoner.buildFOCheckTBoxOnlyFuture(t, 
-									  verbose, 
-									  prefix, 
-									  CheckType.satisfiability, 
-									  reflexive);
-	}
-	
-	
-	private static void buildFOCheckTBoxOnlyFuture(
-			TBox t, 
-			boolean verbose, 
-			String prefix, 
-			CheckType type, 
-			boolean reflexive) 
-					throws Exception{
-		long total_time = System.currentTimeMillis();
-		long start_time;
-		
-		System.out.println("TBox -> Qtl1");
-		start_time = System.currentTimeMillis();
-		
-		long start_tbox2QTL = System.currentTimeMillis();
-		// Extends the TBox, adding the delta_R and G
-		t.addExtensionConstraintsF();
-	
-		TDLLiteFPXConverter conv = new TDLLiteFPXConverter(t);
-		Formula qtl_N = conv.getFormula();
-		
-		//Formula qtlX = conv.getEpsilonX();
-		//Formula qtlWithoutX = conv.getEpsilonWithoutX();
-		
-		Set<Constant> consts = qtl_N.getConstants();
-		
-		if (!reflexive) {
-			qtl_N = qtl_N.makeTemporalStrict();	
-		}
-		
-		if(verbose) 
-			(new LatexDocumentCNF(qtl_N)).toFile(prefix+"qtlN.tex");
-		
-		long end_tbox2QTL = System.currentTimeMillis() - start_tbox2QTL;
-
-		if(verbose) (new LatexOutputDocument(t)).toFile(prefix+"tbox.tex");
-		
-		long start_QTL2PLTL = System.currentTimeMillis();
-		
-		//Formula ltl = qtlX.makePropositional(consts);
-		//Formula ltlnox = qtlWithoutX.makePropositional();
-
-		Formula ltl = qtl_N.makePropositional(consts);
-		
-	    //ltl = new ConjunctiveFormula(ltl, ltlnox);
-		//ltl = new Always(ltl);
-		
-		
-		long end_QTL2PLTL = System.currentTimeMillis() - start_QTL2PLTL;
-		
-		System.out.println("Num of Propositions: "+ltl.getPropositions().size());		
-
-		if(verbose) 
-			(new LatexDocumentCNF(ltl)).toFile(prefix+"pltl.tex");
-		
-		System.out.println("Generating NuSMV file...");
-		(new NuSMVOutput(ltl)).toFile(prefix+".smv");
-		(new AaltaOutput(ltl)).toFile(prefix+".aalta");
-		
-		System.out.println("Solver" + Constants.pltl);
-		(new PltlOutput(ltl)).toFile(prefix+".pltl");
-		
-		System.out.println("Generating FO file...");
-		(new FOOutput(qtl_N)).toFile(prefix+".tptp");
-
-		System.out.println("Done! Total time:" + (System.currentTimeMillis()-total_time) + "ms");
-		
-		StatsOutputDocument out;
-		out = new StatsOutputDocument(false);
-		out.toStatsFile(prefix+"Stats.stats", end_tbox2QTL, end_QTL2PLTL, ltl.getPropositions().size());
 		
 	}
 	

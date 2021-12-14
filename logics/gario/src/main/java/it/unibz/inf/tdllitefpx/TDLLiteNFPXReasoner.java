@@ -9,7 +9,6 @@ import it.unibz.inf.qtl1.formulae.temporal.Always;
 import it.unibz.inf.qtl1.formulae.temporal.AlwaysFuture;
 import it.unibz.inf.qtl1.formulae.Formula;
 import it.unibz.inf.qtl1.formulae.quantified.UniversalFormula;
-import it.unibz.inf.qtl1.formulae.temporal.Always;
 import it.unibz.inf.qtl1.output.LatexDocumentCNF;
 
 import org.gario.code.output.StatsOutputDocument;
@@ -28,7 +27,6 @@ import it.unibz.inf.qtl1.terms.Term;
 import it.unibz.inf.qtl1.terms.Variable;
 import it.unibz.inf.tdllitefpx.concepts.Concept;
 import it.unibz.inf.tdllitefpx.concepts.AtomicConcept;
-import it.unibz.inf.tdllitefpx.concepts.Concept;
 import it.unibz.inf.tdllitefpx.concepts.temporal.NextFuture;
 
 import it.unibz.inf.tdllitefpx.output.LatexOutputDocument;
@@ -60,9 +58,7 @@ import java.util.Set;
  *
  */
 public class TDLLiteNFPXReasoner {
-	/* TODO: Add stats */
 
-	
 	// Considering TBox and ABox
 	
 	/**
@@ -116,10 +112,7 @@ public class TDLLiteNFPXReasoner {
 		
 		long start_tbox2QTL = System.currentTimeMillis();
 		
-		// Extends the TBox, adding the delta_R and G
-		t.addExtensionConstraintsF();
-		
-		TDLLiteFPXConverter conv = new TDLLiteFPXConverter(t);
+		TDLLiteNFPXConverter conv = new TDLLiteNFPXConverter(t);
 		Formula qtl_N = conv.getFormula();
 		
 		/*Formula qtl_N;
@@ -146,12 +139,6 @@ public class TDLLiteNFPXReasoner {
 		
 		if(verbose)
 			(new LatexDocumentCNF(qtl_N)).toFile(prefix+"qtlN.tex");
-		
-
-		//long start_QTL2QTLN = 0;
-		
-		//PureFutureTranslator purefutureFormulaX = new PureFutureTranslator(qtlX);
-		//qtl_NX = purefutureFormulaX.getPureFutureTranslation();
 		
 		long end_QTL2QTLN = 0;
 		
@@ -308,10 +295,8 @@ public class TDLLiteNFPXReasoner {
 		start_time = System.currentTimeMillis();
 		
 		long start_tbox2QTL = System.currentTimeMillis();
-		// Extends the TBox, adding the delta_R and G
-		t.addExtensionConstraintsF();
 	
-		TDLLiteFPXConverter conv = new TDLLiteFPXConverter(t);
+		TDLLiteNFPXConverter conv = new TDLLiteNFPXConverter(t);
 		Formula qtl_N = conv.getFormula();
 		
 		//Formula qtlX = conv.getEpsilonX();

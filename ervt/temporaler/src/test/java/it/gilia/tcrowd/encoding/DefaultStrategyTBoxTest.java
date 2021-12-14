@@ -204,7 +204,7 @@ public class DefaultStrategyTBoxTest {
         DefaultStrategy strategy = new DefaultStrategy();
         TBox tbox = strategy.to_dllitefpx(this.getJSONfromFile("testERvtEntitiesWithAttrKandNToDL"));
         
-        tbox.addExtensionConstraints();
+        //tbox.addExtensionConstraints();
 
         Iterator<ConceptInclusionAssertion> iterator = tbox.iterator();
 	    String actual = new String();
@@ -222,7 +222,7 @@ public class DefaultStrategyTBoxTest {
         DefaultStrategy strategy = new DefaultStrategy();
         TBox tbox = strategy.to_dllitefpx(this.getJSONfromFile("testERvtEntitiesWithAttrToDLExtended"));
         
-        tbox.addExtensionConstraints();
+        //tbox.addExtensionConstraints();
 	    
 		Iterator<ConceptInclusionAssertion> iterator = tbox.iterator();
 	    String actual = new String();
@@ -240,7 +240,7 @@ public class DefaultStrategyTBoxTest {
         DefaultStrategy strategy = new DefaultStrategy();
         TBox tbox = strategy.to_dllitefpx(this.getJSONfromFile("testERvtEntitiesWithStringAttrToDLExtended"));
         
-        tbox.addExtensionConstraints();
+       //tbox.addExtensionConstraints();
 	    
 		Iterator<ConceptInclusionAssertion> iterator = tbox.iterator();
 	    String actual = new String();
@@ -258,7 +258,7 @@ public class DefaultStrategyTBoxTest {
         DefaultStrategy strategy = new DefaultStrategy();
         TBox tbox = strategy.to_dllitefpx(this.getJSONfromFile("testERvtEntitiesWithTempAttrToDLExtended"));
         
-        tbox.addExtensionConstraints();
+        //tbox.addExtensionConstraints();
 	    
 		Iterator<ConceptInclusionAssertion> iterator = tbox.iterator();
 	    String actual = new String();
@@ -276,7 +276,7 @@ public class DefaultStrategyTBoxTest {
         DefaultStrategy strategy = new DefaultStrategy();
         TBox tbox = strategy.to_dllitefpx(this.getJSONfromFile("testERvtEntitiesWithSnapAttrToDL"));
         
-        tbox.addExtensionConstraints();
+        //tbox.addExtensionConstraints();
 
 	    Iterator<ConceptInclusionAssertion> iterator = tbox.iterator();
 	    String actual = new String();
@@ -295,7 +295,7 @@ public class DefaultStrategyTBoxTest {
         DefaultStrategy strategy = new DefaultStrategy();
         TBox tbox = strategy.to_dllitefpx(this.getJSONfromFile("testERvtEntitiesWithTemporalAttrToDL"));
 
-        tbox.addExtensionConstraints();
+        //tbox.addExtensionConstraints();
         
 	    Iterator<ConceptInclusionAssertion> iterator = tbox.iterator();
 	    String actual = new String();
@@ -393,7 +393,8 @@ public class DefaultStrategyTBoxTest {
 	public void testERvtSimpleReltoDLExtendedTbox() {
         DefaultStrategy strategy = new DefaultStrategy();
         TBox tbox = strategy.to_dllitefpx(this.getJSONfromFile("testERvtSimpleReltoDLExtendedTbox"));
-        tbox.addExtensionConstraints();
+        
+		//tbox.addExtensionConstraints();
         
 	    Iterator<ConceptInclusionAssertion> iterator = tbox.iterator();
 	    String actual = new String();

@@ -41,7 +41,7 @@ import java.util.Set;
 import java.util.Map.Entry;
 
 
-public class TDLLiteFPXConverter {
+public class TDLLiteNFPXConverter {
 	
 	TBox tbox;
 	Alphabet a;
@@ -52,7 +52,7 @@ public class TDLLiteFPXConverter {
 	ConjunctiveFormula epsX = new ConjunctiveFormula();
 	ConjunctiveFormula eps = new ConjunctiveFormula();
 	
-	public TDLLiteFPXConverter(TBox tbox){
+	public TDLLiteNFPXConverter(TBox tbox){
 		this.tbox = tbox;
 		a = new Alphabet();
 		x = new Variable("X");
@@ -61,26 +61,6 @@ public class TDLLiteFPXConverter {
 	
 	public Formula getFormula(){
 		return getFormula(true);
-	}
-
-	/**
-	 * Getting the universal formula to remove past operators. In this formula we
-	 * remove eps subformulas in order to avoid redundancies. However, it should be appended
-	 * again when reducing to LTL.
-	 * 
-	 * @return a Formula to remove past operators
-	 */
-	public Formula getFormulaToRemovePast(){
-		Formula F = new UniversalFormula(
-							new Always(
-								new ConjunctiveFormula(getFactorizedT(),
-										new ConjunctiveFormula(epsX,
-											new ConjunctiveFormula(cardinalities,
-														   	   	   rigidR)))).normalize(), 
-						x);
-
-		System.out.println("Formula for pure future in Converter"+F.toString());							
-		return F;
 	}
 
 	/**
@@ -94,14 +74,14 @@ public class TDLLiteFPXConverter {
 	 * 
 	 * where
 	 * 
-	 * T = /\ \boxPF \forall x ( C1(x) -> C2(x) )  			(1)
+	 * T = /\ \boxF \forall x ( C1(x) -> C2(x) )  			(1)
 	 * 		(For each concept inclusion in T*)
 	 * 
-	 * 	   /\ \boxPF \forall x ( Eq'S(x) -> EqS(x) )  		(2)
+	 * 	   /\ \boxF \forall x ( Eq'S(x) -> EqS(x) )  		(2)
 	 * 		(for each q,q' \in Qrt with q' > q. 
 	 * 		 there is no q'' in Qrt with q < q'' < q')
 	 * 
-	 * 	   /\ \boxPF \forall x ( EqS(x) -> \boxPF EqS(x) )  (3)
+	 * 	   /\ \forall x ( \diamondF EqS(x) -> \boxF EqS(x) )  (3)
 	 * 		(for each global/ridig role s \in Qrt) 
 	 * 
 	 * e = /\ epsilon(s)    (For each role S) 				(4)
@@ -119,12 +99,15 @@ public class TDLLiteFPXConverter {
 
 		
 		if(factorize){
-			F = new ConjunctiveFormula(
-					    new Always(
-							new ConjunctiveFormula(epsilonx, 
-												   new ConjunctiveFormula(cardinalities,
-												   						  rigidR))).normalize(), 
-						eps);
+			F = new UniversalFormula(
+								new ConjunctiveFormula(
+					    		 	new it.unibz.inf.qtl1.formulae.temporal.AlwaysFuture(
+									 							new ConjunctiveFormula(epsilonx, 
+												   									   cardinalities)
+																),
+								 rigidR),
+						 x); 
+			F = new ConjunctiveFormula(F, eps);
 		}else {
 			F = new ConjunctiveFormula(getT(), 
 									  getEpsilon());
@@ -236,8 +219,7 @@ public class TDLLiteFPXConverter {
 	 * Gathering formula with the variable "x"
 	*/
 	public Formula getEpsilonX(){
-		Formula F = new UniversalFormula(
-				new ConjunctiveFormula(getFactorizedT(),epsX),x);
+		Formula F = new ConjunctiveFormula(getFactorizedT(), epsX);
 
 		System.out.println("GetEpsilonX "+F.toString());
 		return F;
@@ -361,23 +343,25 @@ public class TDLLiteFPXConverter {
 
 	
 
-				epsX.add(new ImplicationFormula(conceptToFormula(E1S),
-					 						new Always(pS).normalize()
+				epsX.add(new ImplicationFormula(
+											new it.unibz.inf.qtl1.formulae.temporal.SometimeFuture(conceptToFormula(E1S)),
+					 						new it.unibz.inf.qtl1.formulae.temporal.AlwaysFuture(pS)
 										   )
 					);
 
-				epsX.add(new ImplicationFormula(conceptToFormula(E1SInv),
-					 						new Always(pinvS).normalize()
+				epsX.add(new ImplicationFormula(
+											new it.unibz.inf.qtl1.formulae.temporal.SometimeFuture(conceptToFormula(E1SInv)),
+					 						new it.unibz.inf.qtl1.formulae.temporal.AlwaysFuture(pinvS)
 										   )
 					);
 
 				eps.add(new ImplicationFormula(
-						pinvS,
-						fE1S_ds));
+											pinvS,
+											fE1S_ds));
 			
 				eps.add(new ImplicationFormula(
-						pS,
-						fE1SInv_ds));
+											pS,
+											fE1SInv_ds));
 
 				}
 			}
@@ -459,11 +443,12 @@ public class TDLLiteFPXConverter {
 				roles.remove(qR.getRole());
 
 				rigidR.add(new ImplicationFormula(
-					conceptToFormula(qR), 
-					new Always(conceptToFormula(qR)).normalize()));
+							new it.unibz.inf.qtl1.formulae.temporal.SometimeFuture(conceptToFormula(qR)), 
+							new it.unibz.inf.qtl1.formulae.temporal.AlwaysFuture(conceptToFormula(qR))
+							)
+						);
 
-					System.out.println("Exending TBox Checking (3) in formula (if roles are rigid)"+rigidR.toString());
-				    
+				System.out.println("Exending TBox Checking (3) in formula (if roles are rigid)"+rigidR.toString());    
 			}
 		}
 		System.out.println("Set of Roles in (3) extended formula after removing"+roles.toString());
@@ -476,8 +461,10 @@ public class TDLLiteFPXConverter {
 				QuantifiedRole qRoleRem = new QuantifiedRole(role, 1);
 
 				rigidR.add(new ImplicationFormula(
-									conceptToFormula(qRoleRem), 
-									new Always(conceptToFormula(qRoleRem)).normalize()));
+								new it.unibz.inf.qtl1.formulae.temporal.SometimeFuture(conceptToFormula(qRoleRem)), 
+								new it.unibz.inf.qtl1.formulae.temporal.AlwaysFuture(conceptToFormula(qRoleRem))
+								)
+							);
 			
 				System.out.println("Exending TBox Checking (3) in formula (if roles are rigid)"+rigidR.toString());
 			}				
