@@ -1,8 +1,6 @@
 package it.gilia.tcrowd.cli;
 
 import com.github.rvesse.airline.annotations.Command;
-//import com.github.rvesse.airline.annotations.Option;
-//import com.github.rvesse.airline.annotations.OptionType;
 import com.github.rvesse.airline.annotations.Option;
 import com.github.rvesse.airline.annotations.OptionType;
 import com.github.rvesse.airline.annotations.help.BashCompletion;
@@ -14,8 +12,8 @@ import it.unibz.inf.qtl1.formulae.Formula;
 import it.unibz.inf.qtl1.output.LatexDocumentCNF;
 import it.unibz.inf.qtl1.output.NuSMVOutput;
 import it.unibz.inf.tdllitefpx.ExampleTDL;
-import it.unibz.inf.tdllitefpx.TDLLiteFPXConverter;
-import it.unibz.inf.tdllitefpx.TDLLiteFPXReasoner;
+import it.unibz.inf.tdllitefpx.TDLLiteNFPXConverter;
+import it.unibz.inf.tdllitefpx.TDLLiteNFPXReasoner;
 import it.unibz.inf.tdllitefpx.output.LatexOutputDocument;
 import it.unibz.inf.tdllitefpx.concepts.Concept;
 import it.unibz.inf.tdllitefpx.tbox.TBox;
@@ -70,7 +68,7 @@ public class TCrowdRandomTBoxFuture extends TCrowdRandomTDLRelatedCommand {
     		TBox tbox = new TBox();
     		tbox = exTDLITE_N.getTbox(ltbox, lc, n, qm, pt, pr);
                    	         	    
-            TDLLiteFPXReasoner.buildFOCheckTBoxSatisfiabilityOnlyFuture(
+            TDLLiteNFPXReasoner.buildFOCheckTBoxSatisfiabilityOnlyFuture(
                     		tbox,
                     		true, 
                     		"random",
