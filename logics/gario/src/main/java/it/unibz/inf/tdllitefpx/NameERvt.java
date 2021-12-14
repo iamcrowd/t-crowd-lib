@@ -15,15 +15,15 @@ import it.unibz.inf.tdllitefpx.abox.ABox;
 import it.unibz.inf.tdllitefpx.abox.ABoxConceptAssertion;
 import it.unibz.inf.tdllitefpx.abox.ABoxRoleAssertion;
 
-public class Name {
+public class NameERvt {
 
 	public static void main(String[] args) throws Exception {
-		Name exTDL = new Name();
+		NameERvt exTDL = new NameERvt();
 
 		TDLLiteFPXReasoner.buildCheckABoxLTLSatisfiability(
 				exTDL.getTBox(), 
 				true, 
-				"Name", 
+				"NameERvt", 
 				exTDL.getABox(),
 				true,
 				"Black",
@@ -49,6 +49,7 @@ public class Name {
 	}
 
 	Concept Person = new AtomicConcept("Person");
+	Concept String = new AtomicConcept("String");
 	Role Name = new PositiveRole(new AtomicRigidRole("Name"));
 
 
@@ -67,8 +68,12 @@ public class Name {
 	public TBox getTBox() {
 		TBox t1 = new TBox();
 
-		t1.add(new ConceptInclusionAssertion(Person,new QuantifiedRole(Name, 1)));
-		t1.add(new ConceptInclusionAssertion(Person,new NegatedConcept(new QuantifiedRole(Name, 2))));
+		t1.add(new ConceptInclusionAssertion(String, new NegatedConcept(Person)));
+		t1.add(new ConceptInclusionAssertion(Person, new QuantifiedRole(Name, 1)));
+		t1.add(new ConceptInclusionAssertion(Person, new NegatedConcept(new QuantifiedRole(Name, 2))));
+		t1.add(new ConceptInclusionAssertion(
+			new QuantifiedRole(Name.getInverse(), 1),
+			String));
 
 		return t1;
 	}

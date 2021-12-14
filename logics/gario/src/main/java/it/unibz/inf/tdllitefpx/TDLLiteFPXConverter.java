@@ -437,7 +437,7 @@ public class TDLLiteFPXConverter {
 		
 		/* 
 		 * (3)
-		 * TODO: Avoid duplications
+		 * @TODO: Avoid duplications
 		 */
 
 		Set<Role> roles = tbox.getRoles();
