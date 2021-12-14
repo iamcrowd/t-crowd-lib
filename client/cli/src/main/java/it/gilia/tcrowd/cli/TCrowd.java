@@ -56,15 +56,10 @@ public class TCrowd {
                         TCrowdRandomTBoxABoxPLTL.class,
                         //past and future random
                         TCrowdRandomTBox.class,
-                        TCrowdRandomUNSATTBoxPastAndFuture.class,
                         TCrowdRandomTBoxABoxPastAndFuture.class,
-                        //abstraction
-                        //TCrowdRandomTBoxABoxPastAndFutureAbstract.class,
                         //future random
                         TCrowdRandomTBoxFuture.class,
-                        TCrowdRandomUNSATTBoxFuture.class,
-                        TCrowdRandomTBoxABoxFuture.class,
-                        TCrowdRandomTBoxUNSATABoxFuture.class
+                        TCrowdRandomTBoxABoxFuture.class
 
                 );
         return builder.build();
