@@ -434,6 +434,10 @@ public class TDLLiteFPXReasoner {
 		long start_QTL2QTLN = System.currentTimeMillis();
 		
 		PureFutureTranslator purefutureFormulaX = new PureFutureTranslator(conv.getFormulaToRemovePast());
+
+		if(verbose)
+			(new LatexDocumentCNF(conv.getFormulaToRemovePast())).toFile(prefix+"qtltoremovePast.tex");
+
 		qtl_NX = purefutureFormulaX.getPureFutureTranslation();
 		
 		long end_QTL2QTLN = System.currentTimeMillis() - start_QTL2QTLN;

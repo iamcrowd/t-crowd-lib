@@ -112,23 +112,16 @@ public class TDLLiteFPXConverter {
 	 */
 	public Formula getFormula(boolean factorize){
 		Formula F;
-
-		this.getFactorizedEpsilon();
-		this.getExtendedFormula();
-		Formula epsilonx = getEpsilonX();
-
 		
 		if(factorize){
-			F = new ConjunctiveFormula(
-					    new Always(
-							new ConjunctiveFormula(epsilonx, 
-												   new ConjunctiveFormula(cardinalities,
-												   						  rigidR))).normalize(), 
+			F =  new ConjunctiveFormula(
+					    new Always(getEpsilonX()).normalize(), 
 						eps);
-		}else {
+		} else {
 			F = new ConjunctiveFormula(getT(), 
 									  getEpsilon());
 		}
+
 		System.out.println("Formula F final in Converter"+F.toString());
 		return F;
 	}
@@ -232,10 +225,18 @@ public class TDLLiteFPXConverter {
 	 * Gathering formula with the variable "x"
 	*/
 	public Formula getEpsilonX(){
-		Formula F = new UniversalFormula(
-				new ConjunctiveFormula(getFactorizedT(),epsX),x);
+		this.getFactorizedEpsilon();
+		this.getExtendedFormula();
+
+		Formula F = new ConjunctiveFormula(
+							cardinalities,
+							new ConjunctiveFormula(epsX, rigidR));
+
+		F = new ConjunctiveFormula(getFactorizedT(),F);
+		F = new UniversalFormula(F,x);
 
 		System.out.println("GetEpsilonX "+F.toString());
+		
 		return F;
 	}
 	
