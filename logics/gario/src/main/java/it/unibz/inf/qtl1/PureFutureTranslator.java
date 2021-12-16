@@ -1,30 +1,16 @@
 package it.unibz.inf.qtl1;
 
-import java.util.LinkedList;
-import java.util.List;
-
-import it.unibz.inf.qtl1.NaturalTranslator;
-
-import it.unibz.inf.qtl1.atoms.Atom;
-import it.unibz.inf.qtl1.formulae.Alphabet;
 import it.unibz.inf.qtl1.formulae.BimplicationFormula;
 import it.unibz.inf.qtl1.formulae.ConjunctiveFormula;
 import it.unibz.inf.qtl1.formulae.DisjunctiveFormula;
-import it.unibz.inf.qtl1.formulae.ExistentialFormulaException;
 import it.unibz.inf.qtl1.formulae.Formula;
-import it.unibz.inf.qtl1.formulae.ImplicationFormula;
-import it.unibz.inf.qtl1.formulae.NegatedFormula;
 import it.unibz.inf.qtl1.formulae.quantified.UniversalFormula;
-import it.unibz.inf.qtl1.formulae.temporal.Always;
 import it.unibz.inf.qtl1.formulae.temporal.AlwaysFuture;
 import it.unibz.inf.qtl1.formulae.temporal.AlwaysPast;
 import it.unibz.inf.qtl1.formulae.temporal.NextFuture;
 import it.unibz.inf.qtl1.formulae.temporal.NextPast;
-import it.unibz.inf.qtl1.formulae.temporal.Sometime;
 import it.unibz.inf.qtl1.formulae.temporal.SometimeFuture;
 import it.unibz.inf.qtl1.formulae.temporal.SometimePast;
-import it.unibz.inf.qtl1.formulae.temporal.TemporalFormula;
-import it.unibz.inf.qtl1.terms.Variable;
 
 
 /**

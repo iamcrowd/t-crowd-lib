@@ -356,10 +356,26 @@ public class NaturalTranslator {
 				Atom future = a.get(s);
 				Atom past = a.get(s.substring(0,s.length()-1)+past_post);
 				cf.add(new BimplicationFormula(future,past));
+				System.out.println("Future"+future.toString());
+				System.out.println("Past"+past.toString());
 			}
 		}
-		for(Atom a: atoms)
-			cf.add(new BimplicationFormula(tr(a,false),tr(a,true)));
+		for(Atom a: atoms){
+			System.out.println("atom"+a.toString());
+
+			Formula left = tr(a,false);
+			Formula right = tr(a,true);
+
+			System.out.println("left"+left.toString());
+			System.out.println("right"+right.toString());
+
+			if (! left.equals(right)){
+				BimplicationFormula BF = new BimplicationFormula(left,right);
+				System.out.println("BF"+BF.toString());
+				cf.add(BF);
+			}
+		}
+		System.out.println("cf"+cf.toString());
 		return cf;
 	}
 
@@ -390,7 +406,7 @@ public class NaturalTranslator {
 	 * @param past
 	 * @return
 	 */
-	public Formula tr(Formula f,boolean past){
+	public Formula tr(Formula f, boolean past){
 		/*
 		 * We return the translation of each subformula.
 		 * Particular cases are Atoms and 

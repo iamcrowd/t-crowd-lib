@@ -434,17 +434,15 @@ public class TDLLiteFPXReasoner {
 		long start_QTL2QTLN = System.currentTimeMillis();
 		
 		PureFutureTranslator purefutureFormulaX = new PureFutureTranslator(conv.getFormulaToRemovePast());
-
-		if(verbose)
-			(new LatexDocumentCNF(conv.getFormulaToRemovePast())).toFile(prefix+"qtltoremovePast.tex");
+		PureFutureTranslator reformulaEPS = new PureFutureTranslator(qtlWithoutX);
 
 		qtl_NX = purefutureFormulaX.getPureFutureTranslation();
+		Formula qtl_NWX = reformulaEPS.getReformulation();
 		
 		long end_QTL2QTLN = System.currentTimeMillis() - start_QTL2QTLN;
 		
-		qtl_N = new ConjunctiveFormula(qtl_NX,qtlWithoutX);
+		qtl_N = new ConjunctiveFormula(qtl_NX, qtl_NWX);
 		
-			
 		if(verbose)
 			(new LatexDocumentCNF(qtl_N)).toFile(prefix+"qtlN.tex");	
 		
