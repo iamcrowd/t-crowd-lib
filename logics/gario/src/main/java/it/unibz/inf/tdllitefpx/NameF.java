@@ -55,11 +55,9 @@ public class NameF {
 	public ABox getABox() {
 		ABox A = new ABox();
 		
-		ABoxConceptAssertion a2 = new ABoxConceptAssertion(Person,"John");//t=0;
-		ABoxRoleAssertion a3 = new ABoxRoleAssertion(Name,"John", "N0", 1);//t=1;
+		ABoxConceptAssertion a2 = new ABoxConceptAssertion(Person,"Marc");//t=0;
 		
 		A.addConceptsAssertion(a2);
-		A.addABoxRoleAssertion(a3);
 							
 		return A;
 	}
