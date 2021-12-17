@@ -1,16 +1,11 @@
 package it.unibz.inf.tdllitefpx.abox;
 import it.unibz.inf.tdllitefpx.*;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.Map.Entry;
 
 import org.gario.code.output.FormattableObj;
 import org.gario.code.output.OutputFormat;
@@ -23,7 +18,6 @@ import it.unibz.inf.qtl1.formulae.Alphabet;
 import it.unibz.inf.qtl1.formulae.ConjunctiveFormula;
 import it.unibz.inf.qtl1.formulae.Formula;
 import it.unibz.inf.qtl1.formulae.NegatedFormula;
-import it.unibz.inf.qtl1.formulae.quantified.UniversalFormula;
 import it.unibz.inf.qtl1.terms.Constant;
 import it.unibz.inf.qtl1.terms.Variable;
 import it.unibz.inf.tdllitefpx.concepts.AtomicConcept;
@@ -42,9 +36,7 @@ import it.unibz.inf.tdllitefpx.concepts.temporal.TemporalConcept;
 import it.unibz.inf.tdllitefpx.roles.AtomicLocalRole;
 import it.unibz.inf.tdllitefpx.roles.AtomicRigidRole;
 import it.unibz.inf.tdllitefpx.roles.Role;
-import it.unibz.inf.tdllitefpx.tbox.ConceptInclusionAssertion;
 import it.unibz.inf.tdllitefpx.tbox.TBox;
-import it.unibz.inf.tdllitefpx.abox.ABoxRoleAssertion;
 
 public class ABox extends ConjunctiveFormula implements FormattableObj {
 
@@ -434,15 +426,17 @@ public class ABox extends ConjunctiveFormula implements FormattableObj {
 	/**
 	 * 
 	 * @param c
-	 * @param futur
+	 * @param futur if true add "P" to the predicates. If false, add "F"
 	 * @return
+	 * @note The P stands for + and F for - for ABox assertions made at positive time we must use P, 
+	 * while if there are assertions at negative time points we need to use F. In time zero they are both fine
 	 */
 	public Formula conceptToFormula(Concept c, boolean futur) {
 			if (c instanceof AtomicConcept) {
 				if (futur) {
-					return new Atom(c.toString() + "F", x);
+					return new Atom(c.toString() + "P", x);
 				} else {
-					return new Atom(c.toString(), x);
+					return new Atom(c.toString() + "F", x);
 				}
 			}
 			else if (c instanceof QuantifiedRole) {
@@ -450,9 +444,9 @@ public class ABox extends ConjunctiveFormula implements FormattableObj {
 			    Atom atom;
 			    
 				if (futur){
-					atom = a.get("E"+qE.getQ()+qE.getRole().toString()+"F",1);
+					atom = a.get("E"+qE.getQ()+qE.getRole().toString() + "P", 1);
 				} else {
-				    atom = a.get("E"+qE.getQ()+qE.getRole().toString(),1); //Modif
+				    atom = a.get("E"+qE.getQ()+qE.getRole().toString() + "F", 1); //Modif
 				}
 				
 				atom.setArg(0, x);
@@ -462,9 +456,9 @@ public class ABox extends ConjunctiveFormula implements FormattableObj {
 				QuantifiedRole qE = (QuantifiedRole)c;
 				Atom atom;
 				if (futur){
-					atom = a.get("E"+qE.getQ()+qE.getRole().getInverse().toString()+"F",1); //Modif
+					atom = a.get("E"+qE.getQ()+qE.getRole().getInverse().toString() + "P", 1); //Modif
 				} else {
-					atom = a.get("E"+qE.getQ()+qE.getRole().getInverse().toString(),1);	
+					atom = a.get("E"+qE.getQ()+qE.getRole().getInverse().toString() + "F", 1);	
 				}
 				
 				atom.setArg(0, x);

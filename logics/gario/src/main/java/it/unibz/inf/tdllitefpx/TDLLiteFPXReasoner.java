@@ -890,8 +890,6 @@ public class TDLLiteFPXReasoner {
 		start_time = System.currentTimeMillis();
 		
 		long start_tbox2QTL = System.currentTimeMillis();
-		// Extends the TBox only future
-		//t.addExtensionConstraintsF();
 	
 		TDLLiteFPXConverter conv = new TDLLiteFPXConverter(t);
 		Formula qtl = conv.getFormula();
