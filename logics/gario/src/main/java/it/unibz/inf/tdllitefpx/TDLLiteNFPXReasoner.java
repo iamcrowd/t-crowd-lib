@@ -168,7 +168,7 @@ public class TDLLiteNFPXReasoner {
 
 			    ABox.addExtensionConstraintsABox(t);
 			    
-			    o = ABox.getABoxFormula(true);
+			    o = ABox.getABoxFormula(false);
 			
 				//qtlABox= new ConjunctiveFormula(qtl_N,o);
 				

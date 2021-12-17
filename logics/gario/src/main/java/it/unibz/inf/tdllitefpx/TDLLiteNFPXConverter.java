@@ -95,17 +95,14 @@ public class TDLLiteNFPXConverter {
 
 		this.getFactorizedEpsilon();
 		this.getExtendedFormula();
-		Formula epsilonx = getEpsilonX();
-
 		
 		if(factorize){
+			F = new it.unibz.inf.qtl1.formulae.temporal.AlwaysFuture(new ConjunctiveFormula(this.getFactorizedT(),
+									   								cardinalities));
 			F = new UniversalFormula(
-								new ConjunctiveFormula(
-					    		 	new it.unibz.inf.qtl1.formulae.temporal.AlwaysFuture(
-									 							new ConjunctiveFormula(epsilonx, 
-												   									   cardinalities)
-																),
-								 rigidR),
+								new ConjunctiveFormula(F,
+										new ConjunctiveFormula(epsX, 
+															   rigidR)),
 						 x); 
 			F = new ConjunctiveFormula(F, eps);
 		}else {
