@@ -355,27 +355,17 @@ public class NaturalTranslator {
 			if(s.substring(s.length()-1).equals(future_post)){
 				Atom future = a.get(s);
 				Atom past = a.get(s.substring(0,s.length()-1)+past_post);
-				cf.add(new BimplicationFormula(future,past));
-				System.out.println("Future"+future.toString());
-				System.out.println("Past"+past.toString());
+				cf.add(new BimplicationFormula(future, past));
 			}
 		}
-		for(Atom a: atoms){
-			System.out.println("atom"+a.toString());
 
+		for(Atom a: atoms){
 			Formula left = tr(a,false);
 			Formula right = tr(a,true);
 
-			System.out.println("left"+left.toString());
-			System.out.println("right"+right.toString());
-
-			if (! left.equals(right)){
-				BimplicationFormula BF = new BimplicationFormula(left,right);
-				System.out.println("BF"+BF.toString());
-				cf.add(BF);
-			}
+			if (! left.equals(right))
+				cf.add(new BimplicationFormula(left,right));
 		}
-		System.out.println("cf"+cf.toString());
 		return cf;
 	}
 
@@ -430,8 +420,9 @@ public class NaturalTranslator {
 			Atom newAtom;
 			// We return the requested atom, but we build both the future and the past
 			
-			newAtom = a.get(fAtom.getName()+future_post);
-			if(newAtom==null){
+			newAtom = a.get(fAtom.getName()+post);
+
+			if(newAtom == null){
 				Atom newPAtom = a.get(fAtom.getName()+past_post,fAtom.getArity());
 				Atom newFAtom = a.get(fAtom.getName()+future_post,fAtom.getArity());
 				for(int i=0; i<fAtom.getArity(); i++){
@@ -445,6 +436,7 @@ public class NaturalTranslator {
 				}
 			}
 			return newAtom;
+
 		}else if(f instanceof TemporalFormula){
 			Atom atom = a.get(f.toString()+post);
 			if(atom==null){

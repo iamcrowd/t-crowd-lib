@@ -49,8 +49,8 @@ public class PureFutureTranslator extends NaturalTranslator{
 			System.out.println("Rerformulation: "+ super.getReformulation());
 			System.out.println("\n");
 			
-			cf.add(getModalEquivalences());
-			System.out.println("Modal Equiv Pure Future: "+ getModalEquivalences());
+			cf.add(this.getModalEquivalences());
+			System.out.println("Modal Equiv Pure Future: "+ this.getModalEquivalences());
 			System.out.println("\n");
 			
 			cf.add(super.getAtomicEquivalences());
