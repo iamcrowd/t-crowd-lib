@@ -434,9 +434,9 @@ public class ABox extends ConjunctiveFormula implements FormattableObj {
 	public Formula conceptToFormula(Concept c, boolean futur) {
 			if (c instanceof AtomicConcept) {
 				if (futur) {
-					return new Atom(c.toString() + "P", x);
-				} else {
 					return new Atom(c.toString() + "F", x);
+				} else {
+					return new Atom(c.toString() + "P", x);
 				}
 			}
 			else if (c instanceof QuantifiedRole) {
@@ -444,9 +444,9 @@ public class ABox extends ConjunctiveFormula implements FormattableObj {
 			    Atom atom;
 			    
 				if (futur){
-					atom = a.get("E"+qE.getQ()+qE.getRole().toString() + "P", 1);
+					atom = a.get("E"+qE.getQ()+qE.getRole().toString() + "F", 1);
 				} else {
-				    atom = a.get("E"+qE.getQ()+qE.getRole().toString() + "F", 1); //Modif
+				    atom = a.get("E"+qE.getQ()+qE.getRole().toString() + "P", 1); //Modif
 				}
 				
 				atom.setArg(0, x);
@@ -456,9 +456,9 @@ public class ABox extends ConjunctiveFormula implements FormattableObj {
 				QuantifiedRole qE = (QuantifiedRole)c;
 				Atom atom;
 				if (futur){
-					atom = a.get("E"+qE.getQ()+qE.getRole().getInverse().toString() + "P", 1); //Modif
+					atom = a.get("E"+qE.getQ()+qE.getRole().getInverse().toString() + "F", 1); //Modif
 				} else {
-					atom = a.get("E"+qE.getQ()+qE.getRole().getInverse().toString() + "F", 1);	
+					atom = a.get("E"+qE.getQ()+qE.getRole().getInverse().toString() + "P", 1);	
 				}
 				
 				atom.setArg(0, x);
