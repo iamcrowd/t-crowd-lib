@@ -45,17 +45,9 @@ public class PureFutureTranslator extends NaturalTranslator{
 			 * - Propositional equivalence
 			 * - Modal equivalence removing past operators
 			 */
-			cf.add(super.getReformulation());
-			System.out.println("Rerformulation: "+ super.getReformulation());
-			System.out.println("\n");
-			
-			cf.add(this.getModalEquivalences());
-			System.out.println("Modal Equiv Pure Future: "+ this.getModalEquivalences());
-			System.out.println("\n");
-			
+			cf.add(super.getReformulation());		
+			cf.add(this.getModalEquivalences());			
 			cf.add(super.getAtomicEquivalences());
-			System.out.println("Atomic Equiv: "+ super.getAtomicEquivalences());
-			System.out.println("\n");
 			
 			translation = new UniversalFormula(cf, x);
 		}

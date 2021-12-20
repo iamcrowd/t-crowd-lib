@@ -151,9 +151,9 @@ public class ABox extends ConjunctiveFormula implements FormattableObj {
 			QLocal.replace(r.ro.toString()+"_"+r.x+"_"+r.t,successorL); // XE1G1(a2) <=> G1_a2_1 (1: timeStamp)
 			QLocal.replace(r.ro.getInverse().toString()+"_"+r.x+"_"+r.t,PredecessorL);
 		}
-		System.out.println("QRigid:"+QRigid.toString());
-		System.out.println("QRigidL:"+QRigidL.toString());
-		System.out.println("QLocal:"+QLocal.toString());
+		//System.out.println("QRigid:"+QRigid.toString());
+		//System.out.println("QRigidL:"+QRigidL.toString());
+		//System.out.println("QLocal:"+QLocal.toString());
 
 	}
 
@@ -419,7 +419,7 @@ public class ABox extends ConjunctiveFormula implements FormattableObj {
 			cf.substitute(x, new Constant(c.value));
 			qtl.addConjunct(cf);
 		}
-		System.out.println("ABox: " + qtl);
+		//System.out.println("ABox: " + qtl);
 		return qtl;
 	}
 

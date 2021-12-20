@@ -77,9 +77,7 @@ public class TDLLiteFPXConverter {
 										new ConjunctiveFormula(epsX,
 											new ConjunctiveFormula(cardinalities,
 														   	   	   rigidR)))).normalize(), 
-						x);
-
-		System.out.println("Formula for pure future in Converter"+F.toString());							
+						x);							
 		return F;
 	}
 
@@ -121,8 +119,6 @@ public class TDLLiteFPXConverter {
 			F = new ConjunctiveFormula(getT(), 
 									  getEpsilon());
 		}
-
-		System.out.println("Formula F final in Converter"+F.toString());
 		return F;
 	}
 	
@@ -234,8 +230,6 @@ public class TDLLiteFPXConverter {
 
 		F = new ConjunctiveFormula(getFactorizedT(),F);
 		F = new UniversalFormula(F,x);
-
-		System.out.println("GetEpsilonX "+F.toString());
 		
 		return F;
 	}
@@ -331,11 +325,7 @@ public class TDLLiteFPXConverter {
 
 		for( Role s : tbox.getRoles()){
 
-			System.out.println("s in getFactorizedEpsilon "+s.toString());
-
 			if(s instanceof PositiveRole){
-
-				System.out.println("s is PositiveRole in getFactorizedEpsilon "+s.toString());
 				
 				Proposition pS = (Proposition) a.get("P"+s.toString(),0);
 				Proposition pinvS = (Proposition) a.get("Pinv"+s.toString(),0);
@@ -391,19 +381,13 @@ public class TDLLiteFPXConverter {
 	 */
 	public void getExtendedFormula(){
 		Set<QuantifiedRole> qRoles= tbox.getQuantifiedRoles1();
-
-		System.out.println("set of qRoles in addExtensionConstraints:"+qRoles.toString());
 		
 		/* 
 		 * (2)
 		 */
 		Map<Role,List<QuantifiedRole>> qRMap = new HashMap<Role, List<QuantifiedRole>>();
-		
-		System.out.println("qRMap in addExtensionConstraints "+qRMap.toString());
 
 		for(QuantifiedRole qR : qRoles){
-
-			System.out.println("qR in addExtensionConstraints "+qR.toString());
 
 			List<QuantifiedRole> list = qRMap.get(qR.getRole());
 
@@ -412,13 +396,10 @@ public class TDLLiteFPXConverter {
 				qRMap.put(qR.getRole(),list);
 			}
 			list.add(qR);
-			System.out.println("list of QuantifiedRole in AddExtension"+list.toString());
 		}
 		
 		for(Entry<Role, List<QuantifiedRole>> e: qRMap.entrySet()){
 			List<QuantifiedRole> qrL = e.getValue();
-
-			System.out.println("qrL in AddExtension"+qrL.toString());
 
 			Collections.sort(qrL, new Comparator<QuantifiedRole>() {
 				@Override
@@ -431,8 +412,6 @@ public class TDLLiteFPXConverter {
 				cardinalities.add(new ImplicationFormula(
 						conceptToFormula(qrL.get(i)),
 						conceptToFormula(qrL.get(i + 1))));
-
-				System.out.println("Extending TBox Checking (2) in formula"+qrL.get(i)+" "+qrL.get(i+1));
 			}
 		}
 		
@@ -445,10 +424,6 @@ public class TDLLiteFPXConverter {
 
 		for(QuantifiedRole qR : qRoles){
 
-			System.out.println("Set of Roles in (3) extended formula"+roles.toString());
-
-			System.out.println("Exending TBox Checking (3) in formula (roles)"+qR.toString());
-
 			if(qR.getRole().getRefersTo() instanceof AtomicRigidRole){
 
 				roles.remove(qR.getRole());
@@ -456,25 +431,17 @@ public class TDLLiteFPXConverter {
 				rigidR.add(new ImplicationFormula(
 					conceptToFormula(qR), 
 					new Always(conceptToFormula(qR)).normalize()));
-
-					System.out.println("Exending TBox Checking (3) in formula (if roles are rigid)"+rigidR.toString());
-				    
 			}
 		}
-		System.out.println("Set of Roles in (3) extended formula after removing"+roles.toString());
 		
 		for (Role role : roles) {
 			if(role.getRefersTo() instanceof AtomicRigidRole){
-
-				System.out.println("Exending TBox Checking (3) for remaining rigid roles"+role.toString());
 
 				QuantifiedRole qRoleRem = new QuantifiedRole(role, 1);
 
 				rigidR.add(new ImplicationFormula(
 									conceptToFormula(qRoleRem), 
 									new Always(conceptToFormula(qRoleRem)).normalize()));
-			
-				System.out.println("Exending TBox Checking (3) in formula (if roles are rigid)"+rigidR.toString());
 			}				
 		}
 		
