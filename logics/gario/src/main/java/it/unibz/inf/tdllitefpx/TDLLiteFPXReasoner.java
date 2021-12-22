@@ -437,6 +437,7 @@ public class TDLLiteFPXReasoner {
 		PureFutureTranslator reformulaEPS = new PureFutureTranslator(qtlWithoutX);
 
 		qtl_NX = purefutureFormulaX.getPureFutureTranslation();
+
 		Formula qtl_NWX = reformulaEPS.getReformulation();
 		
 		long end_QTL2QTLN = System.currentTimeMillis() - start_QTL2QTLN;
@@ -490,7 +491,9 @@ public class TDLLiteFPXReasoner {
 		long start_QTLN2LTL = System.currentTimeMillis();
 		
 		Formula ltl = qtl_NX.makePropositional(consts);
-		Formula ltlnox = qtlWithoutX.makePropositional();
+
+		Formula ltlnox = qtl_NWX.makePropositional();
+
 	    ltl = new ConjunctiveFormula(ltl, ltlnox);
 		o = o.makePropositional(consts);
 		ltl = new ConjunctiveFormula(ltl, o);
@@ -536,14 +539,14 @@ public class TDLLiteFPXReasoner {
 			break;
 			
 			case Constants.all:
-				System.out.println("Solver..." + Constants.NuSMV);
+			/*	System.out.println("Solver..." + Constants.NuSMV);
 				(new NuSMVOutput(ltl)).toFile(prefix+".smv");
 				System.out.println("Solver" + Constants.Aalta);
 				(new AaltaOutput(ltl)).toFile(prefix+".aalta");
 				System.out.println("Solver" + Constants.pltl);
 				(new PltlOutput(ltl)).toFile(prefix+".pltl");
 				System.out.println("Solver" + Constants.TRPUC);
-				(new TrpucOutput(ltl)).toFile(prefix+".ltl");
+				(new TrpucOutput(ltl)).toFile(prefix+".ltl"); */
 				System.out.println("Generating FO file...");
 				(new FOOutput(qtlFO)).toFile(prefix+".tptp");
 			break;
