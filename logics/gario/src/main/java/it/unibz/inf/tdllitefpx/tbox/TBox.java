@@ -115,10 +115,8 @@ public class TBox extends LinkedList<ConceptInclusionAssertion> implements Forma
 		
 		for(QuantifiedRole r: qR){
 			QuantifiedRole r1 = new QuantifiedRole(r.getRole(), 1);
-			System.out.println("Qrole:"+r.toString());
 			qR1.add(r);
 			qR1.add(r1);
-			System.out.println("Qrole1:"+r1.toString());
 		}	
 		return qR1;
 	}
