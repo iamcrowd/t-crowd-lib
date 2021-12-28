@@ -115,15 +115,10 @@ public class TDLLiteNFPXReasoner {
 		TDLLiteNFPXConverter conv = new TDLLiteNFPXConverter(t);
 		Formula qtl_N = conv.getFormula();
 		
-		/*Formula qtl_N;
-		Formula qtl_NX;*/
-		
 		if (!reflexive) {
 			qtl_N = qtl_N.makeTemporalStrict();	
 		}
 		
-		/*Formula qtlX = conv.getEpsilonX();
-		Formula qtlWithoutX = conv.getEpsilonWithoutX();*/
 		
 		Set<Constant> consts = qtl_N.getConstants();
 		
@@ -141,9 +136,6 @@ public class TDLLiteNFPXReasoner {
 			(new LatexDocumentCNF(qtl_N)).toFile(prefix+"qtlN.tex");
 		
 		long end_QTL2QTLN = 0;
-		
-		
-        //qtl_N = new ConjunctiveFormula(qtlX,qtlWithoutX);
 		
 		long end_ABox = 0;
 		
@@ -169,13 +161,10 @@ public class TDLLiteNFPXReasoner {
 			    ABox.addExtensionConstraintsABox(t);
 			    
 			    o = ABox.getABoxFormula(false);
-			
-				//qtlABox= new ConjunctiveFormula(qtl_N,o);
 				
 				end_ABox = System.currentTimeMillis() - start_ABox;
 				
 				// only for FO solvers
-				//qtlFO = new ConjunctiveFormula(new Always(qtl_N), o);
 				qtlFO = new ConjunctiveFormula(qtl_N, o);
 				
 				if(verbose)
@@ -188,13 +177,9 @@ public class TDLLiteNFPXReasoner {
 
 		long start_QTLN2LTL = System.currentTimeMillis();
 		
-		//Formula ltl = qtl_NX.makePropositional(consts);
-        //Formula ltl = qtlX.makePropositional(consts);
 		Formula ltl = qtl_N.makePropositional(consts);
-		//Formula ltlnox = qtlWithoutX.makePropositional();
-	    //ltl = new ConjunctiveFormula(ltl, ltlnox);
+
 		o = o.makePropositional(consts);
-		//ltl = new ConjunctiveFormula(new Always(ltl), o);
 		ltl = new ConjunctiveFormula(ltl, o);
 
 		
@@ -299,9 +284,6 @@ public class TDLLiteNFPXReasoner {
 		TDLLiteNFPXConverter conv = new TDLLiteNFPXConverter(t);
 		Formula qtl_N = conv.getFormula();
 		
-		//Formula qtlX = conv.getEpsilonX();
-		//Formula qtlWithoutX = conv.getEpsilonWithoutX();
-		
 		Set<Constant> consts = qtl_N.getConstants();
 		
 		if (!reflexive) {
@@ -316,15 +298,8 @@ public class TDLLiteNFPXReasoner {
 		if(verbose) (new LatexOutputDocument(t)).toFile(prefix+"tbox.tex");
 		
 		long start_QTL2PLTL = System.currentTimeMillis();
-		
-		//Formula ltl = qtlX.makePropositional(consts);
-		//Formula ltlnox = qtlWithoutX.makePropositional();
 
 		Formula ltl = qtl_N.makePropositional(consts);
-		
-	    //ltl = new ConjunctiveFormula(ltl, ltlnox);
-		//ltl = new Always(ltl);
-		
 		
 		long end_QTL2PLTL = System.currentTimeMillis() - start_QTL2PLTL;
 		
