@@ -48,6 +48,8 @@ import it.unibz.inf.tdllitefpx.abox.ABoxRoleAssertion;
 
 public class ABox extends ConjunctiveFormula implements FormattableObj {
 
+	Set <ABoxConceptAssertion> ABox = new HashSet<ABoxConceptAssertion>();
+
 	Set<ABoxConceptAssertion> ConceptsAssertion = new HashSet<ABoxConceptAssertion>();
 	Set<ABoxRoleAssertion> RolesAssertion = new HashSet<ABoxRoleAssertion>();
 	Set<Formula> ABoxFormula = new HashSet<Formula>();
@@ -55,7 +57,31 @@ public class ABox extends ConjunctiveFormula implements FormattableObj {
 	HashMap<String, Set<String>> QRigidL = new HashMap<String, Set<String>>();
 	HashMap<String, Set<String>> QLocal = new HashMap<String, Set<String>>();
 	HashMap<String, Set<String>> QRigidinv = new HashMap<String, Set<String>>();
+
+	// Global added for the abstraction
+
+	HashMap<String, Set<String>> QNegRigid = new HashMap<String, Set<String>>();
+	HashMap<String, Set<String>> QNegRigidL = new HashMap<String, Set<String>>(); //rigid timestamped
+	HashMap<String, Set<String>> QNegLocal = new HashMap<String, Set<String>>();
+
+	Set <ABoxConceptAssertion> FORigid = new HashSet<ABoxConceptAssertion>();
+	Set <ABoxConceptAssertion> FOLocal = new HashSet<ABoxConceptAssertion>();
+		
+	Set <ABoxConceptAssertion> ShiftABox = new HashSet<ABoxConceptAssertion>();
+	Set <ABoxConceptAssertion> AbstractABox = new HashSet<ABoxConceptAssertion>();
+		
+	Set <ABoxRoleAssertion> ABoxLocal = new HashSet<ABoxRoleAssertion>();
+	Set <ABoxRoleAssertion> ABoxShiftGlobal = new HashSet<ABoxRoleAssertion>();
+	boolean inconsistent;
+
+	Set<ABoxRoleAssertion> ShiftedRolesAssertion = new HashSet<ABoxRoleAssertion>();
+		
+	Set<ABoxRoleAssertion> NegatedRolesAssertion = new HashSet<ABoxRoleAssertion>();
+	Set<ABoxRoleAssertion> ShiftedNegatedRolesAssertion = new HashSet<ABoxRoleAssertion>();
 	
+	HashMap<String, Set<Concept>> To = new HashMap<String, Set<Concept>>();
+	HashMap<Integer, Set<String>> ToHash = new HashMap<Integer, Set<String>>();
+
 	Alphabet a = new Alphabet();
 	Variable x = new Variable("x");
 
@@ -65,8 +91,63 @@ public class ABox extends ConjunctiveFormula implements FormattableObj {
 	 * Create the list of Concepts Assertion	
 	 * @param c an ABox Concept Assertion
 	 */
-	public void addConceptsAssertion(ABoxConceptAssertion c) {
-		ConceptsAssertion.add(c);
+	public boolean addConceptsAssertion(ABoxConceptAssertion c) {
+		boolean s = ConceptsAssertion.add(c);
+		Set<Concept>ToList=new HashSet<Concept>();
+		To.putIfAbsent(c.value, ToList);
+		ToList=To.get(c.value);
+		ToList.add(c.getConceptAssertion());
+		To.replace(c.value, ToList);
+		return s;
+	}
+
+	//	Create the list of Concept Assertions
+	public boolean addABox(ABoxConceptAssertion c){
+		boolean s = ABox.add(c);
+		return s;
+	}
+
+	//	Create the list of Abstract Concept Assertions
+	public void ShiftABox(ABoxConceptAssertion c){
+		ShiftABox.add(c);
+	}
+
+	//	Create the list of Abstract Concept Assertions
+	public void AbstractABox() {
+		if (inconsistent == false) {
+			for(String indexTo : To.keySet()){
+				Set <String> Hashvalue= new HashSet<String>();
+				Integer newindex=To.get(indexTo).hashCode();
+				ToHash.putIfAbsent(newindex, Hashvalue);
+				Hashvalue=ToHash.get(newindex);
+				Hashvalue.add(indexTo);
+				ToHash.replace(newindex, Hashvalue);
+			}
+ //     System.out.println("To:"+To.toString());
+ //     System.out.println("ToHash:"+ToHash.toString());
+			System.out.println("Indv:"+To.size());
+			System.out.println("New Indv:"+ToHash.size());
+	   
+			if (To.size() != ToHash.size()){
+				for(Integer indexToHash : ToHash.keySet()){
+   					Set <String> values= ToHash.get(indexToHash);
+					Set<Concept> ConceptsAbstract= new HashSet <Concept>();
+					String concatinstance= String.join("_", values);
+		
+					for(String instance : values){
+						ConceptsAbstract=To.get(instance);
+					}
+		
+					for(Concept c : ConceptsAbstract){
+						AbstractABox.add(new ABoxConceptAssertion(c,concatinstance));
+					}
+				}
+	   		}
+	   		else {
+		   		AbstractABox=ABox;
+	   		}
+	   		System.out.println("Size FO ABstract ABox: "+AbstractABox.size());
+		}
 	}
 	
 	/**
