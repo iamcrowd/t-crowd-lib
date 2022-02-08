@@ -1,16 +1,12 @@
 package it.unibz.inf.tdllitefpx.abox;
 import it.unibz.inf.tdllitefpx.*;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.Map.Entry;
+import java.util.Random;
 
 import org.gario.code.output.FormattableObj;
 import org.gario.code.output.OutputFormat;
@@ -23,7 +19,6 @@ import it.unibz.inf.qtl1.formulae.Alphabet;
 import it.unibz.inf.qtl1.formulae.ConjunctiveFormula;
 import it.unibz.inf.qtl1.formulae.Formula;
 import it.unibz.inf.qtl1.formulae.NegatedFormula;
-import it.unibz.inf.qtl1.formulae.quantified.UniversalFormula;
 import it.unibz.inf.qtl1.terms.Constant;
 import it.unibz.inf.qtl1.terms.Variable;
 import it.unibz.inf.tdllitefpx.concepts.AtomicConcept;
@@ -42,9 +37,8 @@ import it.unibz.inf.tdllitefpx.concepts.temporal.TemporalConcept;
 import it.unibz.inf.tdllitefpx.roles.AtomicLocalRole;
 import it.unibz.inf.tdllitefpx.roles.AtomicRigidRole;
 import it.unibz.inf.tdllitefpx.roles.Role;
-import it.unibz.inf.tdllitefpx.tbox.ConceptInclusionAssertion;
 import it.unibz.inf.tdllitefpx.tbox.TBox;
-import it.unibz.inf.tdllitefpx.abox.ABoxRoleAssertion;
+
 
 public class ABox extends ConjunctiveFormula implements FormattableObj {
 
@@ -93,9 +87,9 @@ public class ABox extends ConjunctiveFormula implements FormattableObj {
 	 */
 	public boolean addConceptsAssertion(ABoxConceptAssertion c) {
 		boolean s = ConceptsAssertion.add(c);
-		Set<Concept>ToList=new HashSet<Concept>();
+		Set<Concept>ToList = new HashSet<Concept>();
 		To.putIfAbsent(c.value, ToList);
-		ToList=To.get(c.value);
+		ToList = To.get(c.value);
 		ToList.add(c.getConceptAssertion());
 		To.replace(c.value, ToList);
 		return s;
@@ -107,48 +101,23 @@ public class ABox extends ConjunctiveFormula implements FormattableObj {
 		return s;
 	}
 
-	//	Create the list of Abstract Concept Assertions
-	public void ShiftABox(ABoxConceptAssertion c){
-		ShiftABox.add(c);
+	//	Create the list of Concept Assertions
+	public boolean addABoxLocal(ABoxRoleAssertion r){
+		boolean s = ABoxLocal.add(r);
+		return s;
+	}
+	
+	//	Create the list of Role Assertions
+	public boolean addABoxRoleAssertions(ABoxRoleAssertion r){ 
+		boolean s = RolesAssertion.add(r);
+		return s;
 	}
 
-	//	Create the list of Abstract Concept Assertions
-	public void AbstractABox() {
-		if (inconsistent == false) {
-			for(String indexTo : To.keySet()){
-				Set <String> Hashvalue= new HashSet<String>();
-				Integer newindex=To.get(indexTo).hashCode();
-				ToHash.putIfAbsent(newindex, Hashvalue);
-				Hashvalue=ToHash.get(newindex);
-				Hashvalue.add(indexTo);
-				ToHash.replace(newindex, Hashvalue);
-			}
- //     System.out.println("To:"+To.toString());
- //     System.out.println("ToHash:"+ToHash.toString());
-			System.out.println("Indv:"+To.size());
-			System.out.println("New Indv:"+ToHash.size());
-	   
-			if (To.size() != ToHash.size()){
-				for(Integer indexToHash : ToHash.keySet()){
-   					Set <String> values= ToHash.get(indexToHash);
-					Set<Concept> ConceptsAbstract= new HashSet <Concept>();
-					String concatinstance= String.join("_", values);
-		
-					for(String instance : values){
-						ConceptsAbstract=To.get(instance);
-					}
-		
-					for(Concept c : ConceptsAbstract){
-						AbstractABox.add(new ABoxConceptAssertion(c,concatinstance));
-					}
-				}
-	   		}
-	   		else {
-		   		AbstractABox=ABox;
-	   		}
-	   		System.out.println("Size FO ABstract ABox: "+AbstractABox.size());
-		}
-	}
+	//	Create the list of Role Assertions
+	public boolean addABoxNegatedRoleAssertions(ABoxRoleAssertion r){
+		boolean s = NegatedRolesAssertion.add(r);
+		return s;
+	}	
 	
 	/**
 	 * Return the set of ABox concept assertions
@@ -180,6 +149,21 @@ public class ABox extends ConjunctiveFormula implements FormattableObj {
 		}
 		return roles;
 	}
+
+	/**
+	 * Return a list of negated role names included in the current ABox
+	 * 
+	 * @return Set<Role>
+	 */
+	public Set<Role> getNegatedRolesAbox(){
+		HashSet<Role> roles = new HashSet<Role>();
+		for(ABoxRoleAssertion r: NegatedRolesAssertion){
+			roles.add(r.ro);
+		
+		}
+		return roles;
+	}
+
 
 	/**
 	 * Create the list of Role Assertion
@@ -283,6 +267,24 @@ public class ABox extends ConjunctiveFormula implements FormattableObj {
 		}
 		return qRAQ;
 	}
+
+
+	public Map<String, Integer> getQuantifiedRolesABox(int Q){
+		HashMap<String, Integer> qRQ = new HashMap<String, Integer>();
+		Set<Role> Roles = getRolesABox();
+		for (Role r: Roles) {
+			int q = new Random().nextInt(Q)+1;
+			qRQ.putIfAbsent(r.toString(), q);
+				
+		}
+		Set<Role> NRoles=getNegatedRolesAbox();
+		for (Role nr: NRoles) {
+			int q = new Random().nextInt(Q)+1;
+			qRQ.putIfAbsent(nr.toString(), q);
+				
+		}
+		return qRQ;
+	}	
 	
 	/**
 	 * Stats for ABox
@@ -393,122 +395,29 @@ public class ABox extends ConjunctiveFormula implements FormattableObj {
 			}
 		}
 	}
-
-	/**
-	 * Extend the ABox constraints from given TBox
-	 * 
-	 * @param tbox a TBox
-	 * @param abstract a boolean. true if ABox should be abstracted. Otherwise, false.
-	 */
-	public void addExtensionConstraintsABox(TBox tbox, boolean Abstract) {
-
-		Set<QuantifiedRole> qRoles = tbox.getQuantifiedRoles();
-		Map<String, Integer> qRolesQ = tbox.getQuantifiedRolesQ(qRoles);
-		// Set <Role> Roles=getRolesAbox();
-		/*
-		 * >= 2.Name(John) >= 1.Name(John) /*>= 2.NameInv(Kennedy) >= 1.NameInv(Kennedy)
-		 */
-		Set<Role> Roles = getRolesABox();
-		for (Role r : Roles) {
-			if (r.getRefersTo() instanceof AtomicRigidRole) {
-
-				for (String keyL : QRigidL.keySet()) {
-					String[] keyLi = keyL.split("_");
-					String index = keyLi[0].concat("_" + keyLi[1]);
-
-					int Qtabox = QRigid.get(index).size();
-					if (r.toString().equals(keyLi[0])) {
-						int Qtbox = qRolesQ.get(keyLi[0]);
-						int j = Math.min(Qtbox, Qtabox);
-
-			//			For ABox just take max cardinality of each role
-						QuantifiedRole qL = new QuantifiedRole(r, j);
-						Concept cr = (Concept) qL;
-
-						if (!Abstract) {
-							int t = Integer.parseInt(keyLi[2]);
-							while (t != 0) { // States
-								Concept tqL1 = new NextFuture(cr);
-								cr = tqL1;
-								t--;
-							}
-						}
-						addConceptsAssertion(new ABoxConceptAssertion(cr, keyLi[1]));
-
-					} else if (r.getInverse().toString().equals(keyLi[0])) {
-						int Qtbox = qRolesQ.get(r.toString());
-						int j = Math.min(Qtbox, Qtabox);
-						
-						QuantifiedRole qLinv = new QuantifiedRole(r.getInverse(), j);
-						Concept cinvr = (Concept) qLinv;
-
-						if (!Abstract) {
-							int t = Integer.parseInt(keyLi[2]);
-							while (t != 0){ // States
-								Concept tqL2 = new NextFuture(cinvr);
-								cinvr = tqL2;
-								t--;
-							}
-						}
-						addConceptsAssertion(new ABoxConceptAssertion(cinvr, keyLi[1]));
-					}
-				}
-			} // Local Roles
-			else {
-				for (String keyL : QLocal.keySet()) {
-					String[] keyLi = keyL.split("_");
-					int Qtaboxi = QLocal.get(keyL).size();
-
-					if (r.toString().equals(keyLi[0])) {
-						int Qtbox = qRolesQ.get(keyLi[0]);
-						int j = Math.min(Qtbox, Qtaboxi);
-							
-						QuantifiedRole qL = new QuantifiedRole(r, j);
-						Concept cr = (Concept) qL;
-						int t = Integer.parseInt(keyLi[2]);
-							
-						while (t != 0) { // States
-							Concept tqL1 = new NextFuture(cr);
-							cr = tqL1;
-							t--;
-						}
-						addConceptsAssertion(new ABoxConceptAssertion(cr, keyLi[1]));
-
-					} else if (r.getInverse().toString().equals(keyLi[0])) {
-						qRolesQ.putIfAbsent(r.getInverse().toString(), 1);
-						int Qtbox = qRolesQ.get(r.toString());
-						int j = Math.min(Qtbox, Qtaboxi);
-
-						QuantifiedRole qLinv = new QuantifiedRole(r.getInverse(), j);
-						Concept cinvr = (Concept) qLinv;
-						int t = Integer.parseInt(keyLi[2]);
-							
-						while (t != 0) { // States
-							Concept tqL2 = new NextFuture(cinvr);
-							cinvr = tqL2;
-							t--;
-						}
-						addConceptsAssertion(new ABoxConceptAssertion(cinvr, keyLi[1]));
-
-					}
-				}
-			}
-		}
-	}
 	
 	/**
 	 * Generate QTL formula
 	 * 
 	 * @return Formula
 	 */
-	public Formula getABoxFormula(boolean futur) {
+	public Formula getABoxFormula(boolean r){
 		ConjunctiveFormula qtl = new ConjunctiveFormula();
-		for (ABoxConceptAssertion c : ConceptsAssertion) {
-			Formula cf = conceptToFormula(c.c, futur);
-			cf.substitute(x, new Constant(c.value));
-			qtl.addConjunct(cf);
+	//	int gain= ShiftABox.size()-ABox.size();
+	//	System.out.println("*******Abox gain: "+gain);
+		System.out.println("FO Local="+FOLocal.size());
+		System.out.println("FO Global="+FORigid.size());
+	//	ABox.addAll(ConceptsAssertion);
+		int i = 0;
+		if (inconsistent==false){
+			for(ABoxConceptAssertion c: ABox){
+				Formula cf = conceptToFormula(c.c, r);
+				cf.substitute(x, new Constant(c.value));
+				qtl.addConjunct(cf);
+				i++;
+			}
+			System.out.println("Size FO ABox: "+i);
 		}
-		System.out.println("ABox: " + qtl);
 		return qtl;
 	}
 
