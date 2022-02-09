@@ -61,20 +61,6 @@ OPTIONS
 
 ```
 
-
-#### Gario Legacy example
-
-`$ java -cp target/dependency/t-crowd-cli-4.0.0-SNAPSHOT.jar it.gilia.tcrowd.cli.TCrowd tdllitefpx -t value.json`
-
-`$ java -cp target/dependency/t-crowd-cli-4.0.0-SNAPSHOT.jar it.gilia.tcrowd.cli.TCrowd qtlz -t value.json`
-
-`$ java -cp target/dependency/t-crowd-cli-4.0.0-SNAPSHOT.jar it.gilia.tcrowd.cli.TCrowd qtln -t value.json`
-
-`$ java -cp target/dependency/t-crowd-cli-4.0.0-SNAPSHOT.jar it.gilia.tcrowd.cli.TCrowd ltl -t value.json`
-
-`$ java -cp target/dependency/t-crowd-cli-4.0.0-SNAPSHOT.jar it.gilia.tcrowd.cli.TCrowd NuSMV -t value.json`
-
-
 ## For Developers
 
 #### JAVA 8 (at least)
@@ -83,9 +69,9 @@ OPTIONS
 #### Using Maven for creating JAR and dependencies
 
 ```
-$ mvn clean verify -Dmaven.javadoc.skip=true
+$ mvn clean compile
 
-$ mvn clean dependency:copy-dependencies package -Dmaven.javadoc.skip=true
+$ dependency:copy-dependencies -DskipTests -Dmaven.javadoc.skip package
 
 ```
 ### Tests
@@ -98,3 +84,12 @@ https://www.petrikainulainen.net/programming/testing/junit-5-tutorial-running-un
 
 `$ mvn -Dtest=it.gilia.tcrowd.encoding.DefaultStrategyABoxTest -DfailIfNoTests=false test`
 
+### Library Structure
+
+`client' : it implements the library cli. https://rvesse.github.io/airline/guide/
+
+`ervt' : it parses ERvt input models (given as a JSON objects) and generates a TDL-Lite knowledge base (TBox, ABox)
+
+`logics' : it implements the core of this library. It also allow to manipulate both QTL1 and TDL-Litepfx formulas
+
+`outputs': it implements the output documents
