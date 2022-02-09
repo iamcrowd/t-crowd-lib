@@ -30,7 +30,7 @@ public class NaturalTranslator {
 	int modalCnt=0;
 	Formula original;
 	Formula translation=null;
-	Variable x = new Variable("x");
+	Variable x = new Variable("X");
 	static final String past_post = "P";
 	static final String future_post = "F";
 	

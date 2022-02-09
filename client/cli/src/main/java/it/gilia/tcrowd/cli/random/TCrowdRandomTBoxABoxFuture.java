@@ -22,6 +22,7 @@ import it.unibz.inf.tdllitefpx.tbox.TBox;
 import it.unibz.inf.tdllitefpx.abox.ABox;
 
 import it.unibz.inf.tdllitefpx.tbox.TD_LITE;
+import it.unibz.inf.tdllitefpx.tbox.TD_LITE_N;
 
 import it.gilia.tcrowd.encoding.DefaultStrategy;
 import it.gilia.tcrowd.utils.*;
@@ -45,20 +46,31 @@ import java.io.FileReader;
 import java.io.IOException;
 
 
-@Command(name = "RandomTBoxABoxSatPLTL",
-description = " TBox|ABox -> QTL1 -> PLTL (only NuSMV)"
+@Command(name = "RandomTBoxABoxFuture",
+description = " TBox|ABox on N -> QTL1 -> LTL. No past to future translation is required"
 			  + "\n"
-			  + "\t \t \t \t TBox is randomly generated given the required parameters. Output LTL includes Past Operators"
-			  + "\n"
-			  + "\t \t \t \t \t * If ABox is empty, only TBox is checked for SAT")
+			  + "\t \t \t \t Both TBox and ABox with only future operators are randomly generated given the required parameters."
+			  + "\n")
 
-public class TCrowdRandomTBoxABoxSatPLTL extends TCrowdRandomTDLRelatedCommand {
+public class TCrowdRandomTBoxABoxFuture extends TCrowdRandomTDLRelatedCommand {
 	
-	@Option(type = OptionType.COMMAND, name = {"-a", "--tdata"}, title = "Temporal Data",
-			description = "JSON file input containing temporal data")
+	@Option(type = OptionType.COMMAND, name = {"-aS", "--aboxS"}, title = "Size",
+			description = "Size of ABox")
 	@Required
-	@BashCompletion(behaviour = CompletionBehaviour.FILENAMES)
-	String tData;
+	@BashCompletion(behaviour = CompletionBehaviour.NONE)
+	int aboxS;
+	
+	@Option(type = OptionType.COMMAND, name = {"-aM", "--aboxM"}, title = "Max for ABox",
+			description = "Max for ABox")
+	@Required
+	@BashCompletion(behaviour = CompletionBehaviour.NONE)
+	int aboxM;
+	
+	@Option(type = OptionType.COMMAND, name = {"-aQ", "--aboxQ"}, title = "Q for ABox",
+			description = "Q for ABox")
+	@Required
+	@BashCompletion(behaviour = CompletionBehaviour.NONE)
+	int aboxQ;
 	
 
     @Override
@@ -72,49 +84,22 @@ public class TCrowdRandomTBoxABoxSatPLTL extends TCrowdRandomTDLRelatedCommand {
             Objects.requireNonNull(pt, "Probability of generating Temporal Concepts must not be null");
             Objects.requireNonNull(pr, "Probability of generating Rigid Roles must not be null");
             
-            Objects.requireNonNull(tData, "JSON temporal data file must not be null");
+            Objects.requireNonNull(aboxS, "ABoxS must not be null");
+            Objects.requireNonNull(aboxM, "ABoxM must not be null");
+            Objects.requireNonNull(aboxQ, "ABoxQ must not be null");
+
             
-    		TD_LITE exTDLITE = new TD_LITE();
+    		TD_LITE_N exTDLITE_N = new TD_LITE_N();
     		TBox tbox = new TBox();
-    		tbox = exTDLITE.getTbox(ltbox, lc, n, qm, pt, pr);
-
-            InputStream td = new FileInputStream(tData);
-                    
-            if (td == null) {
-            	throw new NullPointerException("Cannot find resource file " + tData);
-            } else {
-            	BufferedReader reader = new BufferedReader(new FileReader(tData));
-                String line = reader.readLine();
-                
-                PathsManager pathMan = new PathsManager();
-                String pathToTemp = pathMan.getPathToTmp(tData);
-        		String fileNameOut = pathToTemp+"random";
-                   	    
-                if (line == null) { /*Check only for TBox satisfiability if ABox is empty*/
-                	    TDLLiteFPXReasoner.buildCheckSatisfiability(
-                   	    		tbox,
-                   	    		true, 
-                   	    		fileNameOut,
-                   	    		false,
-                   	    		"NuSMV",
-                   	    		true);
-                    	    
-                } else { /*Check for TBox and ABox satisfiability */
-                   	String jsonTxtData = IOUtils.toString(td, "UTF-8");
-                    System.out.println(jsonTxtData);
-                    JSONObject objectData = new JSONObject(jsonTxtData);
-
-                    DefaultStrategy strategy = new DefaultStrategy();
-                    ABox abox = strategy.to_dllitefpxABox(objectData);
-                        	    
-                    TDLLiteFPXReasoner.buildCheckABoxtSatisfiability(
+    		tbox = exTDLITE_N.getTbox(ltbox, lc, n, qm, pt, pr);
+                   	         	    
+            TDLLiteFPXReasoner.buildFOCheckSatisfiabilityOnlyFuture(
                     		tbox,
                     		true, 
-                    		fileNameOut,
-                    		abox,
+                    		"random",
+                    		exTDLITE_N.getABox(aboxS, aboxM, aboxQ),
                     		true);
-                }
-            }
+            
         } catch (Exception e) {
             System.err.println("Error occurred during encoding: "
                     + e.getMessage());
@@ -123,4 +108,5 @@ public class TCrowdRandomTBoxABoxSatPLTL extends TCrowdRandomTDLRelatedCommand {
         }
 
     }
+    
 }

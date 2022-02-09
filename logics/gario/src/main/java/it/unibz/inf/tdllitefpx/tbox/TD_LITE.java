@@ -10,8 +10,11 @@ import java.util.Scanner;
 import java.util.Set;
 
 import it.unibz.inf.tdllitefpx.TDLLiteFPXReasoner;
+import it.unibz.inf.tdllitefpx.abox.ABox;
+import it.unibz.inf.tdllitefpx.abox.ABoxRoleAssertion;
 import it.unibz.inf.tdllitefpx.abox.ABoxConceptAssertion;
 import it.unibz.inf.tdllitefpx.concepts.AtomicConcept;
+import it.unibz.inf.tdllitefpx.concepts.BottomConcept;
 import it.unibz.inf.tdllitefpx.concepts.BasicConcept;
 import it.unibz.inf.tdllitefpx.concepts.Concept;
 import it.unibz.inf.tdllitefpx.concepts.ConjunctiveConcept;
@@ -26,12 +29,20 @@ import it.unibz.inf.tdllitefpx.roles.Role;
 import it.unibz.inf.tdllitefpx.tbox.ConceptInclusionAssertion;
 import it.unibz.inf.tdllitefpx.tbox.TBox;
 
+import org.gario.code.output.SymbolUndefinedException;
+
+/**
+ * Random TBox and ABox TDL-Lite with Past and Future Operators
+ * 
+ * @author gab
+ *
+ */
 public class TD_LITE {
 
 	public static Set <Concept> ConceptsSet = new HashSet<Concept>();
 	public static Set<Role> RolesSet = new HashSet<Role>();
 	
-/*	public static Concept getABoxConcept( ){
+	public static Concept getABoxConcept( ){
 		
 		Concept[] ArrayC= new Concept[ConceptsSet.size()];
 		ConceptsSet.toArray(ArrayC);
@@ -47,7 +58,7 @@ public class TD_LITE {
 		int index= new Random().nextInt(ArrayR.length);
 		
 		return ArrayR[index];
-	}*/
+	}
 	
 	/**
 	 * Random generation of TBox TDLLITE
@@ -70,6 +81,56 @@ public class TD_LITE {
 		
 			t.add(new ConceptInclusionAssertion(C1, C2));
 			System.out.println("Tbox: " + C1 + " << " + C2);
+		}
+		return t;
+	}
+	
+	/**
+	 * Random generation of UNSAT TBox TDLLITE
+	 * 
+	 * @param size
+	 * @param Lc
+	 * @param N
+	 * @param Q
+	 * @param Pr
+	 * @param Pt
+	 * @return
+	 */
+	public TBox getUnsatTBox(int size, int Lc, int N, int Q, int Pr, int Pt){
+		TBox t = new TBox();
+		int r = size / 2;
+		
+		if (r == 0){
+			Concept C1 = getConcept(Lc, N, Q, Pr, Pt);
+			Concept C2 = getConcept(Lc, N, Q, Pr, Pt);
+			
+			t.add(new ConceptInclusionAssertion(C1, C2));
+			System.out.println("Tbox: "+C1+" << "+C2 );
+		}
+		else {
+			int bot = (int)( 1 + (Math.random() * (r)));
+	
+			for (int j = 1; j <= bot; j++){
+				Concept C1 = getConcept(Lc, N, Q, Pr, Pt);
+				Concept C2 = getConcept(Lc, N, Q, Pr, Pt);
+		
+				t.add(new ConceptInclusionAssertion(C1,C2));
+				//create an Unsat TBox
+				t.add(new ConceptInclusionAssertion(new NegatedConcept(new BottomConcept()),
+													new ConjunctiveConcept(C1, new NegatedConcept(C1))));
+				System.out.println("Tbox: "+C1+" << "+C2 );
+				System.out.println("Tbox: "+C1+" << not "+C1 );
+			}
+			
+			int size1=size-bot*2;
+		
+			for (int i = 1; i <= size1; i++){
+				Concept C1=getConcept(Lc,N,Q, Pr, Pt);
+				Concept C2=getConcept(Lc,N,Q, Pr, Pt);
+		
+				t.add(new ConceptInclusionAssertion(C1,C2));
+				System.out.println("Tbox: "+C1+" << "+C2 );
+			}
 		}
 		return t;
 	}
@@ -201,7 +262,9 @@ public class TD_LITE {
 	 * @return
 	 */
 	public static TemporalConcept getTemporalConcept(Concept C){
-		int n = (int)(Math.random() * 4); //values from 0 to 3
+		//int n = (int)(Math.random() * 4); //values from 0 to 3
+		
+		int n = (int)(Math.random() * 4);
 	
 		switch (n){
 		  case 0:
@@ -216,26 +279,176 @@ public class TD_LITE {
 		return null;
 	}
 	
-/*	public ABox getABox(int size, int max){
+	public ABox getABox(int size, int max, int q) throws SymbolUndefinedException{
+		//the cardinality
 		ABox A = new ABox();
-		
-		for (int i = 1; i <= size; i++){
-			int s= new Random().nextInt(2);
-			int j= new Random().nextInt(max+1);
+		int i = size;
+		while ( i >= 0){
+			int f = i;
+			int s = (int)(Math.random() * 3);
+			int j = new Random().nextInt(max + 1);
+			int l = new Random().nextInt(q + 1);
 			
+			if (ConceptsSet.isEmpty()) {
+				s = 2;
+			}
+			if (RolesSet.isEmpty()) {
+				s = (int)(Math.random() * 2);
+			}
+			
+		
 			switch (s){
 			  case 0:
 				//	Concept assertion;
-				ABoxConceptAssertion a= new ABoxConceptAssertion(getABoxConcept(),"a" + i);
-				A.addConceptsAssertion(a); 
+				  System.out.println("concept");
+				  Concept Ca = getABoxConcept();	
+				  while (j != 0 ){ 
+						Concept nexta = new NextFuture(Ca);
+						Ca = nexta;
+		    			j--;	
+				  }
+				  ABoxConceptAssertion a= new ABoxConceptAssertion(Ca,"a"+i);
+				  A.addConceptsAssertion(a);
+				  i--;
+				  break;
+			  
 			  case 1:
-				  //	Role assertion;	  
-				  ABoxRoleAssertion r= new ABoxRoleAssertion(getABoxRole(),"a" + i, "b" + i, j);
-				  A.addABoxRoleAssertion(r);
+	              // negated concept assertion
+				  System.out.println("negated concept");
+				  Concept Cna =new NegatedConcept(getABoxConcept());	
+				  while (j!=0 ){ 
+						Concept nextna= new NextFuture(Cna);
+						Cna= nextna;
+		    			j--;	
+				  }
+				  ABoxConceptAssertion nega= new ABoxConceptAssertion(Cna,"a"+i);
+				  A.addConceptsAssertion(nega);
+				  i--;
+				  break;
+			  
+			  case 2:
+				  //	Role assertion;	
+				  System.out.println("role");					  
+					  while (l!= 0 & i > 0  ){//cardinality
+						  ABoxRoleAssertion r = new ABoxRoleAssertion(getABoxRole(),"a"+f, "b"+l,j);
+						  A.addABoxRoleAssertion(r);
+						  l--;
+						  i--;
+						  i--;
+					}
+				  
+				  break;
 			}
 		}
+		A.toString(null);
 		return A;
-	}*/
+	}
+	
+	/**
+	 * Get an UNSAT random ABox
+	 * 
+	 * @param size
+	 * @param max
+	 * @param q
+	 * @return
+	 * @throws SymbolUndefinedException
+	 */
+	public ABox getUnsatABox(int size, int max, int q) throws SymbolUndefinedException{
+		//the cardinality
+		ABox A = new ABox();
+		int i = size;
+		int rand = size / 2;
+
+		if (rand == 0){
+			
+			int j = new Random().nextInt(max + 1);
+			Concept Ca = getABoxConcept();	
+			while (j != 0 ){ 
+				Concept nexta= new NextFuture(Ca);
+				Ca= nexta;
+	 			j--;	
+			}
+		
+			ABoxConceptAssertion a = new ABoxConceptAssertion(Ca,"a" + i);
+		    A.addConceptsAssertion(a);	 
+		}
+		else {
+			
+			int bot = (int)( 1 + (Math.random() * (rand)));
+			System.out.println("bot:"+bot);
+			
+			for (int k = 1; k <= bot; k++){
+				int j = new Random().nextInt(max + 1);
+				System.out.println("INSAT");
+				Concept Ca =getABoxConcept(); 
+				while (j != 0 ){ 
+					Concept nexta= new NextFuture(Ca);
+					Ca= nexta;
+		 			j--;	
+				}
+				Concept Cna = new NegatedConcept(Ca);
+				ABoxConceptAssertion a = new ABoxConceptAssertion(Ca,"a"+i);
+				ABoxConceptAssertion nota = new ABoxConceptAssertion(Cna,"a"+i);
+				A.addConceptsAssertion(a);
+				A.addConceptsAssertion(nota);	
+			}
+	        
+			int size1 = size - bot * 2;
+			
+			for (int k = 1; k <= size1; k++){
+		
+				int f = k;
+				int s = (int)(Math.random() * 3);
+				int j = new Random().nextInt(max + 1);
+				int l = 1 + new Random().nextInt(q); // we dont broke cardinality
+				
+				if (ConceptsSet.isEmpty()) { s = 2;}
+				if (RolesSet.isEmpty()) { s = (int)(Math.random() * 2);}
+				
+				switch (s){
+					case 0:
+						//	Concept assertion;
+						Concept Ca = getABoxConcept();	
+						while (j != 0 ){ 
+							Concept nexta = new NextFuture(Ca);
+							Ca = nexta;
+							j--;	
+						}
+						ABoxConceptAssertion a= new ABoxConceptAssertion(Ca,"a" + k);
+						A.addConceptsAssertion(a);
+					break;
+			  
+					case 1:
+						// negated concept assertion
+						Concept Cna =new NegatedConcept(getABoxConcept());	
+						while (j!=0 ){ 
+							Concept nextna = new NextFuture(Cna);
+							Cna = nextna;
+							j--;	
+						}
+						ABoxConceptAssertion nega= new ABoxConceptAssertion(Cna,"a" + k);
+						A.addConceptsAssertion(nega);
+					break;
+			  
+					case 2:
+						// Role assertion;	
+						System.out.println("role");
+						while (l!=0 & k <= size1  ){ 
+							ABoxRoleAssertion r = new ABoxRoleAssertion(getABoxRole(),"a" + f, "b" + l,j);
+							A.addABoxRoleAssertion(r);
+							l--;
+							k++;
+						}
+				  
+					break;
+				}
+				i--;
+			}
+		}
+		A.toString(null);
+		
+		return A;
+	}
 	
 	/**
 	 * 

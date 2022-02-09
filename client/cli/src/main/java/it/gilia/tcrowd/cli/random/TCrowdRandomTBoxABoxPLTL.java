@@ -45,16 +45,14 @@ import java.io.FileReader;
 import java.io.IOException;
 
 
-@Command(name = "RandomTBoxABoxSatLTL",
-description = " TBox|ABox -> QTL1 -> QTLN -> LTL "
-				+ "\n"
-				+ "\t \t \t \t TBox is randomly generated given the required parameters. Output is a Pure Future LTL"
-				+ "\n"
-				+ "\t \t  \t \t \t * If ABox is empty, only TBox is checked for SAT"
-				+ "\n"
-        		+ "\t \t \t \t \t * option -s requires entering a solver name (NuSMV|Aalta|pltl|TRP++UC|all)")
+@Command(name = "RandomTBoxABoxSatPLTL",
+description = " TBox|ABox -> QTL1 -> PLTL (only NuSMV)"
+			  + "\n"
+			  + "\t \t \t \t TBox is randomly generated given the required parameters. Output LTL includes Past Operators"
+			  + "\n"
+			  + "\t \t \t \t \t * If ABox is empty, only TBox is checked for SAT")
 
-public class TCrowdRandomTBoxABoxSatLTL extends TCrowdRandomTDLRelatedCommand {
+public class TCrowdRandomTBoxABoxPLTL extends TCrowdRandomTDLRelatedCommand {
 	
 	@Option(type = OptionType.COMMAND, name = {"-a", "--tdata"}, title = "Temporal Data",
 			description = "JSON file input containing temporal data")
@@ -62,11 +60,6 @@ public class TCrowdRandomTBoxABoxSatLTL extends TCrowdRandomTDLRelatedCommand {
 	@BashCompletion(behaviour = CompletionBehaviour.FILENAMES)
 	String tData;
 	
-	@Option(type = OptionType.COMMAND, name = {"-s", "--solver"}, title = "solver",
-			description = "Solver (NuSMV|Aalta|pltl|TRP++UC)")
-	@Required
-	@BashCompletion(behaviour = CompletionBehaviour.NONE)
-	String solver;
 
     @Override
     public void run() {
@@ -78,54 +71,50 @@ public class TCrowdRandomTBoxABoxSatLTL extends TCrowdRandomTDLRelatedCommand {
             Objects.requireNonNull(qm, "Maximum Cardinality of Qualified Roles must not be null");
             Objects.requireNonNull(pt, "Probability of generating Temporal Concepts must not be null");
             Objects.requireNonNull(pr, "Probability of generating Rigid Roles must not be null");
-
-            Objects.requireNonNull(solver, "Solver (NuSMV|Aalta|pltl|TRP++UC) must be specified");
+            
             Objects.requireNonNull(tData, "JSON temporal data file must not be null");
-            		
+            
     		TD_LITE exTDLITE = new TD_LITE();
     		TBox tbox = new TBox();
     		tbox = exTDLITE.getTbox(ltbox, lc, n, qm, pt, pr);
-    		
+
             InputStream td = new FileInputStream(tData);
                     
             if (td == null) {
             	throw new NullPointerException("Cannot find resource file " + tData);
-            }else {
+            } else {
             	BufferedReader reader = new BufferedReader(new FileReader(tData));
                 String line = reader.readLine();
                 
                 PathsManager pathMan = new PathsManager();
                 String pathToTemp = pathMan.getPathToTmp(tData);
         		String fileNameOut = pathToTemp+"random";
-                    	
-                if (line == null) {
-                	/*Check for TBox satisfiability if ABox is empty*/
-                	TDLLiteFPXReasoner.buildCheckSatisfiability(
-                    			tbox,
-                    			true, 
-                    			fileNameOut,
-                    			true,
-                    			solver,
-                    			true);
+                   	    
+                if (line == null) { /*Check only for TBox satisfiability if ABox is empty*/
+                	    TDLLiteFPXReasoner.buildCheckSatisfiability(
+                   	    		tbox,
+                   	    		true, 
+                   	    		fileNameOut,
+                   	    		false,
+                   	    		"NuSMV",
+                   	    		true);
                     	    
-                 } else { /*Check for TBox and ABox satisfiability.*/
-                	 String jsonTxtData = IOUtils.toString(td, "UTF-8");
-                     System.out.println(jsonTxtData);
-                     JSONObject objectData = new JSONObject(jsonTxtData);
+                } else { /*Check for TBox and ABox satisfiability */
+                   	String jsonTxtData = IOUtils.toString(td, "UTF-8");
+                    System.out.println(jsonTxtData);
+                    JSONObject objectData = new JSONObject(jsonTxtData);
 
-                     DefaultStrategy strategy = new DefaultStrategy();
-                     ABox abox = strategy.to_dllitefpxABox(objectData);
-                    		
-                     TDLLiteFPXReasoner.buildCheckABoxLTLSatisfiability(
-                    			tbox,
-                    			true, 
-                    			fileNameOut,
-                    			abox,
-                    			true,
-                    			solver,
-                    			true);
-                 }
-              }
+                    DefaultStrategy strategy = new DefaultStrategy();
+                    ABox abox = strategy.to_dllitefpxABox(objectData);
+                        	    
+                    TDLLiteFPXReasoner.buildCheckABoxtSatisfiability(
+                    		tbox,
+                    		true, 
+                    		fileNameOut,
+                    		abox,
+                    		true);
+                }
+            }
         } catch (Exception e) {
             System.err.println("Error occurred during encoding: "
                     + e.getMessage());

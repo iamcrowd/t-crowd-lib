@@ -2,26 +2,28 @@ package it.unibz.inf.tdllitefpx;
 
 import java.util.Map;
 
-
-import it.unibz.inf.tdllitefpx.TDLLiteFPXReasoner;
 import it.unibz.inf.tdllitefpx.concepts.AtomicConcept;
 import it.unibz.inf.tdllitefpx.concepts.Concept;
-import it.unibz.inf.tdllitefpx.concepts.temporal.NextFuture;
-import it.unibz.inf.tdllitefpx.concepts.temporal.SometimePast;
+import it.unibz.inf.tdllitefpx.concepts.NegatedConcept;
+import it.unibz.inf.tdllitefpx.concepts.QuantifiedRole;
+import it.unibz.inf.tdllitefpx.roles.AtomicLocalRole;
+import it.unibz.inf.tdllitefpx.roles.PositiveRole;
+import it.unibz.inf.tdllitefpx.roles.Role;
 import it.unibz.inf.tdllitefpx.tbox.ConceptInclusionAssertion;
 import it.unibz.inf.tdllitefpx.tbox.TBox;
 import it.unibz.inf.tdllitefpx.abox.ABox;
 import it.unibz.inf.tdllitefpx.abox.ABoxConceptAssertion;
+import it.unibz.inf.tdllitefpx.abox.ABoxRoleAssertion;
 
-public class Adult {
+public class Salary {
 
 	public static void main(String[] args) throws Exception {
-		Adult exTDL = new Adult();
-		
+		Salary exTDL = new Salary();
+
 		TDLLiteFPXReasoner.buildCheckABoxLTLSatisfiability(
 				exTDL.getTBox(), 
 				true, 
-				"Adult", 
+				"Salary", 
 				exTDL.getABox(),
 				true,
 				"Black",
@@ -46,25 +48,53 @@ public class Adult {
 
 	}
 
-	Concept Adult = new AtomicConcept("Adult");
-	Concept Minor = new AtomicConcept("Minor");
+	Concept Person = new AtomicConcept("Person");
+	Role Salary = new PositiveRole(new AtomicLocalRole("Salary"));
+
 
 	public ABox getABox() {
 		ABox A = new ABox();
-
-		ABoxConceptAssertion a2 = new ABoxConceptAssertion(Minor, "Marc");
+		
+		ABoxConceptAssertion a2 = new ABoxConceptAssertion(Person,"John");//t=0;
+		ABoxRoleAssertion a3 = new ABoxRoleAssertion(Salary,"John", "100000", 1);//t=1;
 		
 		A.addConceptsAssertion(a2);
-		
+		A.addABoxRoleAssertion(a3);
+							
 		return A;
 	}
 
 	public TBox getTBox() {
+
+		TBox t = new TBox();
+		t.addAll(getTBoxT0());
+		t.addAll(getTBoxT1());
+
+		// t.addAll(getTBoxExtension());
+
+		return t;
+	}
+
+	private TBox getTBoxT0() {
+		TBox t0 = new TBox();
+
+		return t0;
+	}
+
+	private TBox getTBoxT1() {
 		TBox t1 = new TBox();
+
+		t1.add(new ConceptInclusionAssertion(Person,new QuantifiedRole(Salary, 1)));
 		
-		t1.add(new ConceptInclusionAssertion(Adult, new SometimePast(Minor)));
-		
+		t1.add(new ConceptInclusionAssertion(Person,new NegatedConcept(new QuantifiedRole(Salary, 2))));
+
+
 		return t1;
+	}
+
+	private TBox getTBoxExtension() {
+		TBox t = new TBox();
+		return t;
 	}
 
 }
