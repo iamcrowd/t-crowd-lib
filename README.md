@@ -86,10 +86,14 @@ https://www.petrikainulainen.net/programming/testing/junit-5-tutorial-running-un
 
 ### Library Structure
 
-`client' : it implements the library cli. https://rvesse.github.io/airline/guide/
+```
 
-`ervt' : it parses ERvt input models (given as a JSON objects) and generates a TDL-Lite knowledge base (TBox, ABox)
+'client' : it implements the library cli. https://rvesse.github.io/airline/guide/
 
-`logics' : it implements the core of this library. It also allow to manipulate both QTL1 and TDL-Litepfx formulas
+'ervt' : it parses ERvt input models (given as a JSON objects) and generates a TDL-Lite knowledge base (TBox, ABox)
 
-`outputs': it implements the output documents
+'logics' : it implements the core of this library. It also allow to manipulate both QTL1 and TDL-Litepfx formulas
+
+'outputs': it implements the output documents
+
+```
