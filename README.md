@@ -1,4 +1,4 @@
-### This library encodes Temporal Models into DL-Lite and reason over them. It outs a file for feeding off-the-shelf QTL/LTL reasoners. t-crowd library is partially based on a legacy library built by Marco Gario at Free University of Bozen-Bolzano (Italy)
+### This library encodes Temporal Models into DL-Lite and reason over them. It outs a file for feeding off-the-shelf QTL/LTL reasoners. t-crowd library is a joint work between the Universidad Nacional del Comahue (Argentina) and the Free University of Bozen-Bolzano (Italy)
 
 `$ java -cp t-crowd-cli-4.0.0-SNAPSHOT.jar it.gilia.tcrowd.cli.TCrowd help`
 
@@ -97,3 +97,15 @@ https://www.petrikainulainen.net/programming/testing/junit-5-tutorial-running-un
 'outputs': it implements the output documents
 
 ```
+
+### Collaborators
+
+Alessandro Artale
+
+Ana Ozaki
+
+Sabiha Tahrat
+
+Marco Gario
+
+Germán Braun
