@@ -1,0 +1,6 @@
+Minor(John)
+X X Minor(John)
+X X X X Adult(John)
+X Adult(John)
+X X X X X Adult(John)
+X X X Adult(John)

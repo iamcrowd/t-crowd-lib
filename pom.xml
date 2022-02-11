@@ -54,6 +54,7 @@
         <module>logics</module>
         <module>outputs</module>
         <module>ervt</module>
+        <module>owl</module>
     </modules>
  
      <profiles>
@@ -267,6 +268,19 @@
     </build>
     
   <dependencies>
+
+    <dependency>
+        <groupId>net.sourceforge.owlapi</groupId>
+        <artifactId>owlapi-distribution</artifactId>
+        <version>5.1.9</version>
+        <exclusions>
+            <exclusion>
+                <groupId>com.github.jsonld-java</groupId>
+                <artifactId>jsonld-java</artifactId>
+            </exclusion>
+        </exclusions>
+    </dependency>
+
  	<dependency>
         <groupId>org.junit.jupiter</groupId>
         <artifactId>junit-jupiter-api</artifactId>

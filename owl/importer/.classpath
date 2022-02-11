@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" output="target/test-classes" path="src/test/java">
+		<attributes>
+			<attribute name="optional" value="true"/>
+			<attribute name="maven.pomderived" value="true"/>
+			<attribute name="test" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry excluding="**" kind="src" output="target/test-classes" path="src/test/resources">
+		<attributes>
+			<attribute name="maven.pomderived" value="true"/>
+			<attribute name="test" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="src" output="target/classes" path="src/main/java">
+		<attributes>
+			<attribute name="optional" value="true"/>
+			<attribute name="maven.pomderived" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="var" path="M2_REPO/javax/inject/javax.inject/1/javax.inject-1.jar" sourcepath="M2_REPO/javax/inject/javax.inject/1/javax.inject-1-sources.jar"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8">
+		<attributes>
+			<attribute name="maven.pomderived" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="src" path="/t-crowd-gario"/>
+	<classpathentry kind="src" path="/t-crowd-out"/>
+	<classpathentry kind="var" path="M2_REPO/com/github/rvesse/airline/2.7.2/airline-2.7.2.jar" sourcepath="M2_REPO/com/github/rvesse/airline/2.7.2/airline-2.7.2-sources.jar"/>
+	<classpathentry kind="var" path="M2_REPO/com/github/rvesse/airline-io/2.7.2/airline-io-2.7.2.jar" sourcepath="M2_REPO/com/github/rvesse/airline-io/2.7.2/airline-io-2.7.2-sources.jar"/>
+	<classpathentry kind="var" path="M2_REPO/org/apache/commons/commons-lang3/3.7/commons-lang3-3.7.jar" sourcepath="M2_REPO/org/apache/commons/commons-lang3/3.7/commons-lang3-3.7-sources.jar"/>
+	<classpathentry kind="var" path="M2_REPO/org/apache/commons/commons-collections4/4.2/commons-collections4-4.2.jar" sourcepath="M2_REPO/org/apache/commons/commons-collections4/4.2/commons-collections4-4.2-sources.jar"/>
+	<classpathentry kind="var" path="M2_REPO/com/github/rvesse/airline-help-bash/2.7.2/airline-help-bash-2.7.2.jar" sourcepath="M2_REPO/com/github/rvesse/airline-help-bash/2.7.2/airline-help-bash-2.7.2-sources.jar"/>
+	<classpathentry kind="var" path="M2_REPO/org/json/json/20180130/json-20180130.jar" sourcepath="M2_REPO/org/json/json/20180130/json-20180130-sources.jar"/>
+	<classpathentry kind="var" path="M2_REPO/commons-io/commons-io/2.6/commons-io-2.6.jar" sourcepath="M2_REPO/commons-io/commons-io/2.6/commons-io-2.6-sources.jar"/>
+	<classpathentry kind="var" path="M2_REPO/org/junit/jupiter/junit-jupiter-api/5.4.2/junit-jupiter-api-5.4.2.jar" sourcepath="M2_REPO/org/junit/jupiter/junit-jupiter-api/5.4.2/junit-jupiter-api-5.4.2-sources.jar"/>
+	<classpathentry kind="var" path="M2_REPO/org/apiguardian/apiguardian-api/1.0.0/apiguardian-api-1.0.0.jar" sourcepath="M2_REPO/org/apiguardian/apiguardian-api/1.0.0/apiguardian-api-1.0.0-sources.jar"/>
+	<classpathentry kind="var" path="M2_REPO/org/opentest4j/opentest4j/1.1.1/opentest4j-1.1.1.jar" sourcepath="M2_REPO/org/opentest4j/opentest4j/1.1.1/opentest4j-1.1.1-sources.jar"/>
+	<classpathentry kind="var" path="M2_REPO/org/junit/platform/junit-platform-commons/1.4.2/junit-platform-commons-1.4.2.jar" sourcepath="M2_REPO/org/junit/platform/junit-platform-commons/1.4.2/junit-platform-commons-1.4.2-sources.jar"/>
+	<classpathentry kind="var" path="M2_REPO/org/junit/jupiter/junit-jupiter-engine/5.4.2/junit-jupiter-engine-5.4.2.jar" sourcepath="M2_REPO/org/junit/jupiter/junit-jupiter-engine/5.4.2/junit-jupiter-engine-5.4.2-sources.jar"/>
+	<classpathentry kind="var" path="M2_REPO/org/junit/platform/junit-platform-engine/1.4.2/junit-platform-engine-1.4.2.jar" sourcepath="M2_REPO/org/junit/platform/junit-platform-engine/1.4.2/junit-platform-engine-1.4.2-sources.jar"/>
+	<classpathentry kind="con" path="org.eclipse.m2e.MAVEN2_CLASSPATH_CONTAINER">
+		<attributes>
+			<attribute name="maven.pomderived" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="src" path="target/generated-sources/annotations">
+		<attributes>
+			<attribute name="optional" value="true"/>
+			<attribute name="maven.pomderived" value="true"/>
+			<attribute name="ignore_optional_problems" value="true"/>
+			<attribute name="m2e-apt" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="src" output="target/test-classes" path="target/generated-test-sources/test-annotations">
+		<attributes>
+			<attribute name="optional" value="true"/>
+			<attribute name="maven.pomderived" value="true"/>
+			<attribute name="ignore_optional_problems" value="true"/>
+			<attribute name="m2e-apt" value="true"/>
+			<attribute name="test" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="output" path="target/classes"/>
+</classpath>
