@@ -1,8 +1,0 @@
->= 1.attribute 1Inv -> Integer
-entity 1 -> >= 1.attribute 1
-entity 1 -> !>= 2.attribute 1
-Integer -> !entity 1
->= 2.attribute 1 -> >= 1.attribute 1
->= 1.attribute 1 -> G H >= 1.attribute 1
->= 1.attribute 1Inv -> G H >= 1.attribute 1Inv
->= 2.attribute 1 -> G H >= 2.attribute 1

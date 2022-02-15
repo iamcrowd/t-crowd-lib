@@ -1,8 +1,0 @@
-{"concepts":[
-	{"concept":"Person","instance":"John","timestamp":"0"}],
-"roles":[
-	{"role":"Name","from":"John","to":"Mcking","timestamp":"0"},
-	{"role":"Name","from":"Maria","to":"Kennedy","timestamp":"0"},
-	{"role":"Name","from":"John","to":"Kennedy","timestamp":"1"},
-	{"role":"Name","from":"Ana","to":"Kennedy","timestamp":"3"}]
-}

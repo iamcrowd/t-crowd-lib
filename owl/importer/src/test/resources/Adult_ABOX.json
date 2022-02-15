@@ -1,9 +1,0 @@
-{"concepts":[
-	{"concept":"Minor","instance":"John","timestamp":"0"},
-	{"concept":"Adult","instance":"John","timestamp":"1"},
-	{"concept":"Minor","instance":"John","timestamp":"2"},
-	{"concept":"Adult","instance":"John","timestamp":"3"},
-	{"concept":"Adult","instance":"John","timestamp":"4"},
-	{"concept":"Adult","instance":"John","timestamp":"5"}],
-"roles":[]
-}

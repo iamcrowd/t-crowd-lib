@@ -1,7 +1,0 @@
-Person(John)
->= 1.Salary(John)
-X >= 1.Salary(John)
-X X >= 1.Salary(John)
->= 1.SalaryInv(S1)
-X >= 1.SalaryInv(S1)
-X X >= 1.SalaryInv(S1)

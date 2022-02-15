@@ -1,3 +1,0 @@
-Person(Maria)
-X Person(Maria)
-X X Person(Maria)
