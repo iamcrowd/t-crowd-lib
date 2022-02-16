@@ -60,7 +60,7 @@ import it.unibz.inf.tdllitefpx.abox.ABoxRoleAssertion;
 
 	/**
  	* 
- 	* @author gab
+ 	* @author
  	*
  	*/
 	public class OWLImport {
@@ -79,7 +79,8 @@ import it.unibz.inf.tdllitefpx.abox.ABoxRoleAssertion;
 		}
 
 		/**
-     	*
+     	* It loads an OWL 2 ontology from a URI
+		*
      	* @param iri a String containing an Ontology URI.
      	*/
     	public void load(IRI iri) {
@@ -92,7 +93,8 @@ import it.unibz.inf.tdllitefpx.abox.ABoxRoleAssertion;
     	}
 
 		/**
-     	*
+     	* It loads an OWL 2 ontology from a file
+		*
      	* @param path a String containing a file path to an Ontology File.
      	*/
     	public void loadFromPath(String path) {
@@ -107,9 +109,8 @@ import it.unibz.inf.tdllitefpx.abox.ABoxRoleAssertion;
     	}
 
 		/**
-	 	* @param ontology
 	 	* 
-	 	* Prints the TBox of {@code ontology} on the standard output.
+	 	* It prints the TBox of {@code ontology} on the standard output.
 	 	*/
 		public void printTBox() {
 			Stream<OWLAxiom> tBoxAxioms = this.ontology.tboxAxioms(Imports.EXCLUDED);
@@ -117,6 +118,12 @@ import it.unibz.inf.tdllitefpx.abox.ABoxRoleAssertion;
 		}
 
 
+		/**
+		 * It checks if an OWLClassExpression is an atomic concept
+		 * 
+		 * @param e an OWLClassExpression object
+		 * @return
+		 */
 		public static boolean isAtomic(OWLClassExpression e) {
 			return e.isOWLClass() || e.isTopEntity() || e.isBottomEntity();
 		}
