@@ -92,11 +92,6 @@ public class Salary {
 		return t1;
 	}
 
-	private TBox getTBoxExtension() {
-		TBox t = new TBox();
-		return t;
-	}
-
 }
 
 

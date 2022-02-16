@@ -13,7 +13,6 @@ import it.unibz.inf.tdllitefpx.tbox.ConceptInclusionAssertion;
 import it.unibz.inf.tdllitefpx.tbox.TBox;
 import it.unibz.inf.tdllitefpx.abox.ABox;
 import it.unibz.inf.tdllitefpx.abox.ABoxConceptAssertion;
-import it.unibz.inf.tdllitefpx.abox.ABoxRoleAssertion;
 
 public class NameF {
 
@@ -55,7 +54,7 @@ public class NameF {
 	public ABox getABox() {
 		ABox A = new ABox();
 		
-		ABoxConceptAssertion a2 = new ABoxConceptAssertion(Person,"Marc");//t=0;
+		ABoxConceptAssertion a2 = new ABoxConceptAssertion(Person, "Marc");//t=0;
 		
 		A.addConceptsAssertion(a2);
 							
