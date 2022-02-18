@@ -35,7 +35,7 @@ public class AbstractionTestRandom {
 //		int NbAssertion,int N, int sizeInd, int max
 		
 		//a = ABS.getABox(100500,2,100,5);
-		a = ABS.getABox(100,2,2,5);
+		a = ABS.getABox(2000,2,10,5);
 
 		TDLLiteNABSFPXReasoner.buildCheckAboxtLTLSatisfiability(
 				t, 

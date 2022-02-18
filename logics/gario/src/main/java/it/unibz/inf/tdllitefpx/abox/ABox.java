@@ -88,7 +88,7 @@ public class ABox extends ConjunctiveFormula implements FormattableObj {
 	public boolean addConceptsAssertion(ABoxConceptAssertion c) {
 		boolean s = ConceptsAssertion.add(c);
 
-		System.out.println("ABox concept assertion: " + c.getConceptAssertion().toString());
+		//System.out.println("ABox concept assertion: " + c.getConceptAssertion().toString());
 
 		Set<Concept>ToList = new HashSet<Concept>();
 		To.putIfAbsent(c.value, ToList);
@@ -96,8 +96,8 @@ public class ABox extends ConjunctiveFormula implements FormattableObj {
 		ToList.add(c.getConceptAssertion());
 		To.replace(c.value, ToList);
 
-		System.out.println("To in add" + To.toString());
-		System.out.println("ToList in add" + ToList.toString());
+		//System.out.println("To in add" + To.toString());
+		//System.out.println("ToList in add" + ToList.toString());
 
 		return s;
 	}
@@ -405,19 +405,14 @@ public class ABox extends ConjunctiveFormula implements FormattableObj {
 	//	ABox.addAll(ConceptsAssertion);
 		int i = 0;
 		if (inconsistent==false){
-			System.out.println("before conceptToformula in ABox");
 			for(ABoxConceptAssertion c: ConceptsAssertion){
 				Formula cf = conceptToFormula(c.c, r);
-				System.out.println("Formula in getABoxFormula"+cf.toString());
 				cf.substitute(x, new Constant(c.value));
-				System.out.println("Formula in getABoxFormula to add"+cf.toString());
 				qtl.addConjunct(cf);
 				i++;
 			}
 			System.out.println("Size FO ABox: "+i);
 		}
-		System.out.println("qtl ABox:" + qtl);
-		System.out.println("ABox size:" + ConceptsAssertion.size());
 		return qtl;
 	}
 
@@ -537,7 +532,7 @@ public class ABox extends ConjunctiveFormula implements FormattableObj {
 					}
 		
 					for(Concept c : ConceptsAbstract){
-						AbstractABox.add(new ABoxConceptAssertion(c,concatinstance));
+						AbstractABox.add(new ABoxConceptAssertion(c, concatinstance));
 					}
 				}
 	   		}
@@ -1079,6 +1074,7 @@ public class ABox extends ConjunctiveFormula implements FormattableObj {
 		
 		for(ABoxConceptAssertion c: AbstractABox){
 			Formula cf = conceptToFormula(c.c, r);
+			System.out.println("Formula in getAbstractABoxFormula " + cf.toString());
 			cf.substitute(x, new Constant(c.value));
 			qtl.addConjunct(cf);			
 		}

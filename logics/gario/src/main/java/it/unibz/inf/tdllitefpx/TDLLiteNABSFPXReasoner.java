@@ -119,10 +119,10 @@ public class TDLLiteNABSFPXReasoner {
 		*/
 		Set<Constant> constsABox = ABox.getConstantsABox();
 		consts.addAll(constsABox);	
-		//	System.out.println("constants:"+consts.toString());
 				
-		if (qtl instanceof UniversalFormula){	
-			ABox.addExtensionConstraintsABox(t);
+		if (qtl instanceof ConjunctiveFormula){
+
+			ABox.addExtensionConstraintsAbsABox(t);
 			System.out.println("");
 			System.out.println("------ABox -> FO :");
 				
@@ -136,12 +136,11 @@ public class TDLLiteNABSFPXReasoner {
 			    
 			long start_time_abs = System.currentTimeMillis();
 			    
-			//get constances from the ABox
+			//calculate the abstraction
 			ABox.AbstractABox();
 			Set<Constant> constsABoxAbs = ABox.getConstantsABoxAbs();
 			constsAbs.addAll(constsABoxAbs); 
 
-			//calculate the abstraction
 			Formula oAbs = ABox.getAbstractABoxFormula(false);
 				
 			long end_time_abs = System.currentTimeMillis()-start_time_abs;
@@ -151,6 +150,12 @@ public class TDLLiteNABSFPXReasoner {
 				// only for FO solvers
 			Formula qtlFO = new ConjunctiveFormula(qtl, o);
 			Formula qtlFOA = new ConjunctiveFormula(qtl, oAbs);
+
+			if(verbose) 
+				(new LatexDocumentCNF(qtlFO)).toFile(prefix+"qtlNABox.tex");
+
+			if(verbose) 
+				(new LatexDocumentCNF(qtlFOA)).toFile(prefix+"qtlNAbsABox.tex");
 				
 			System.out.print("Qtl N -> LTL:\n");
 		
@@ -217,7 +222,34 @@ public class TDLLiteNABSFPXReasoner {
 			System.out.println("Num of Propositions ABSTRACT: "+ltlAbs.getPropositions().size());
 
 		} else
-			throw new Exception("Undefined consistency check for qtl not in factorized form");
+			throw new Exception("qtlN formula is not a ConjunctiveFormula");
+	}
+
+
+	private static void buildAbstract(ABox ABox, int Q) throws Exception {
+		
+		long total_time = System.currentTimeMillis();
+		long start_time;
+	
+		start_time = System.currentTimeMillis();
+		ABox.addExtensionConstraintsAbsABox(Q);
+		System.out.println("");
+		System.out.println("------ABox -> FO :");
+			
+		Formula o = ABox.getABoxFormula(false);
+		System.out.println("ABox: " + o.toString());
+		System.out.println(System.currentTimeMillis()-start_time + "ms");	
+		System.out.println("");
+		System.out.println("------FO -> Abstract FO :");
+		   
+		start_time = System.currentTimeMillis();
+		ABox.AbstractABox();
+		System.out.println(System.currentTimeMillis()-start_time + "ms");
+		Formula oAbs =ABox.getAbstractABoxFormula(false); 
+		System.out.println("ABox: " + oAbs.toString());
+
+		System.out.println("");
+		System.out.println("Done! Total time:" + (System.currentTimeMillis()-total_time) + "ms");
 	}
 	
 }
