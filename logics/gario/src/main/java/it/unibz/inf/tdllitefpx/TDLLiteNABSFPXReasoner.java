@@ -73,33 +73,28 @@ public class TDLLiteNABSFPXReasoner {
 	 * @throws Exception
 	 */
 	public static void buildCheckAboxtLTLSatisfiability(TBox t,boolean verbose,
-														String prefix, ABox Abox, 
-														boolean futur, String solver, 
-														boolean Abstract) throws Exception {
+														String prefix, ABox ABox, 
+														String solver) throws Exception {
 		//A call for on Both the ABox and the ABstracted ABox		
-		TDLLiteNABSFPXReasoner.buildCheckABox(t, verbose, prefix, Abox, futur);
-
+		TDLLiteNABSFPXReasoner.buildCheckABox(t, verbose, prefix, ABox);
 	}
 
 	private static void buildCheckABox(TBox t, boolean verbose, String prefix, 
-									   ABox ABox, boolean futur) throws Exception {
+									   ABox ABox) throws Exception {
 		
 		long start_timeNA;
 		start_timeNA = System.currentTimeMillis();
 		
-		// Extends the TBox, adding the delta_R and G
-		//t.addExtensionConstraints();
-		
 		if(verbose)
 			(new LatexOutputDocument(t)).toFile(prefix+"tbox.tex");
-			if (ABox!=null) {
+			if (ABox != null) {
 				ABox.getStatsABox();
 				(new LatexOutputDocument(ABox)).toFile(prefix+"abox.tex");
 			}
 		//	System.out.println("TBox -> Qtl :");
 		//	start_time = System.currentTimeMillis();
 			
-		TDLLiteFPXConverter conv = new TDLLiteFPXConverter(t);
+		TDLLiteNFPXConverter conv = new TDLLiteNFPXConverter(t);
 		Formula qtl = conv.getFormula();
 			
 		//Formula qtlX = conv.getEpsilonX();
@@ -154,8 +149,8 @@ public class TDLLiteNABSFPXReasoner {
 			System.out.println("TIME ABS:"+(System.currentTimeMillis()-start_time_abs) + "ms");	
 				
 				// only for FO solvers
-			Formula qtlFO = new ConjunctiveFormula(qtl,o);
-			Formula qtlFOA = new ConjunctiveFormula(qtl,oAbs);
+			Formula qtlFO = new ConjunctiveFormula(qtl, o);
+			Formula qtlFOA = new ConjunctiveFormula(qtl, oAbs);
 				
 			System.out.print("Qtl N -> LTL:\n");
 		
