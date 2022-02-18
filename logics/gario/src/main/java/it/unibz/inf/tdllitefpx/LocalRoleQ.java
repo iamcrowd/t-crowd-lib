@@ -47,7 +47,7 @@ public class LocalRoleQ {
 		key="CIs:";
 		System.out.println(key+ stats.get(key));
 		System.out.println("------ABOX------");
-		Map<String, String> statsA = exLRTDL.getABox().getStatsABox();
+		Map<String, Integer> statsA = exLRTDL.getABox().getStatsABox();
 		key="Concept_Assertion:";
 		System.out.println(key+ statsA.get(key));
 		key="Roles_Assertion:";

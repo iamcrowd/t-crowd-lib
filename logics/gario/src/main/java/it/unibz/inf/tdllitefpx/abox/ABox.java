@@ -88,7 +88,7 @@ public class ABox extends ConjunctiveFormula implements FormattableObj {
 	public boolean addConceptsAssertion(ABoxConceptAssertion c) {
 		boolean s = ConceptsAssertion.add(c);
 
-		System.out.println("ABox concept assertion" + c.toString());
+		System.out.println("ABox concept assertion: " + c.getConceptAssertion().toString());
 
 		Set<Concept>ToList = new HashSet<Concept>();
 		To.putIfAbsent(c.value, ToList);
@@ -406,16 +406,18 @@ public class ABox extends ConjunctiveFormula implements FormattableObj {
 		int i = 0;
 		if (inconsistent==false){
 			System.out.println("before conceptToformula in ABox");
-			for(ABoxConceptAssertion c: ABox){
+			for(ABoxConceptAssertion c: ConceptsAssertion){
 				Formula cf = conceptToFormula(c.c, r);
-				System.out.println("Formula in getABoxFormula"+cf);
+				System.out.println("Formula in getABoxFormula"+cf.toString());
 				cf.substitute(x, new Constant(c.value));
-				System.out.println("Formula in getABoxFormula to add"+cf);
+				System.out.println("Formula in getABoxFormula to add"+cf.toString());
 				qtl.addConjunct(cf);
 				i++;
 			}
 			System.out.println("Size FO ABox: "+i);
 		}
+		System.out.println("qtl ABox:" + qtl);
+		System.out.println("ABox size:" + ConceptsAssertion.size());
 		return qtl;
 	}
 
@@ -702,13 +704,13 @@ public class ABox extends ConjunctiveFormula implements FormattableObj {
 		/**
 	 * Stats for ABox
 	 * 
-	 * @return Map<String, String>
+	 * @return Map<String, Integer>
 	 */
-	public Map<String, String> getStatsABox() {
-		HashMap<String, String> stats = new HashMap<String, String>();
+	public Map<String, Integer> getStatsABox() {
+		HashMap<String, Integer> stats = new HashMap<String, Integer>();
 
-		stats.put("Concept_Assertion:", " " + ConceptsAssertion.size());
-		stats.put("Roles_Assertion:", " " + RolesAssertion.size());
+		stats.put("Concept_Assertion:", ConceptsAssertion.size());
+		stats.put("Roles_Assertion:", RolesAssertion.size());
 		return stats;
 	}
 

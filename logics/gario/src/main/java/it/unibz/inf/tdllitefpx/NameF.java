@@ -39,8 +39,8 @@ public class NameF {
 		key = "CIs:";
 		System.out.println(key + stats.get(key));
 		System.out.println("------ABOX------");
-		Map<String, String> statsA = exTDL.getABox().getStatsABox();
-		key = "Concept_Assertion";
+		Map<String, Integer> statsA = exTDL.getABox().getStatsABox();
+		key = "Concept_Assertion:";
 		System.out.println(key + statsA.get(key));
 		key = "Roles_Assertion:";
 		System.out.println(key + statsA.get(key));

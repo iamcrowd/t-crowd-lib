@@ -63,7 +63,7 @@ public class TCrowdAboxSat extends TCrowdEncodingERvtRelatedCommand {
 			key = "CIs:";
 			System.out.println(key + stats.get(key));
 			System.out.println("------ABOX------");
-			Map<String, String> statsA = exTDL.getABox().getStatsABox();
+			Map<String, Integer> statsA = exTDL.getABox().getStatsABox();
 			key = "Concept_Assertion";
 			System.out.println(key + statsA.get(key));
 			key = "Roles_Assertion:";
@@ -84,7 +84,7 @@ public class TCrowdAboxSat extends TCrowdEncodingERvtRelatedCommand {
 			key1 = "CIs:";
 			System.out.println(key1 + stats1.get(key1));
 			System.out.println("------ABOX Adult------");
-			Map<String, String> statsA1 = exAdultTDL.getABox().getStatsABox();
+			Map<String, Integer> statsA1 = exAdultTDL.getABox().getStatsABox();
 			key1 = "Concept_Assertion";
 			System.out.println(key1 + statsA1.get(key1));
 			key1 = "Roles_Assertion:";
@@ -105,7 +105,7 @@ public class TCrowdAboxSat extends TCrowdEncodingERvtRelatedCommand {
 			key2 = "CIs:";
 			System.out.println(key2 + stats2.get(key2));
 			System.out.println("------ABOX RigidRoleQ------");
-			Map<String, String> statsA2 = exRigidRoleQTDL.getABox().getStatsABox();
+			Map<String, Integer> statsA2 = exRigidRoleQTDL.getABox().getStatsABox();
 			key2 = "Concept_Assertion";
 			System.out.println(key2 + statsA2.get(key2));
 			key2 = "Roles_Assertion:";

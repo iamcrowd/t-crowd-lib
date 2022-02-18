@@ -40,7 +40,7 @@ public class Salary {
 		key = "CIs:";
 		System.out.println(key + stats.get(key));
 		System.out.println("------ABOX------");
-		Map<String, String> statsA = exTDL.getABox().getStatsABox();
+		Map<String, Integer> statsA = exTDL.getABox().getStatsABox();
 		key = "Concept_Assertion";
 		System.out.println(key + statsA.get(key));
 		key = "Roles_Assertion:";
