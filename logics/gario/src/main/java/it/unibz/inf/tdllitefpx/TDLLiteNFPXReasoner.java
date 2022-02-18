@@ -158,6 +158,8 @@ public class TDLLiteNFPXReasoner {
 				long start_ABox = System.currentTimeMillis();
 
 			    ABox.addExtensionConstraintsABox(t);
+
+				System.out.println("ABox in Reasoner after extension"+ ABox.toString());
 			    
 			    o = ABox.getABoxFormula(false);
 				

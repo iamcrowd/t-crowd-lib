@@ -87,11 +87,18 @@ public class ABox extends ConjunctiveFormula implements FormattableObj {
 	 */
 	public boolean addConceptsAssertion(ABoxConceptAssertion c) {
 		boolean s = ConceptsAssertion.add(c);
+
+		System.out.println("ABox concept assertion" + c.toString());
+
 		Set<Concept>ToList = new HashSet<Concept>();
 		To.putIfAbsent(c.value, ToList);
 		ToList = To.get(c.value);
 		ToList.add(c.getConceptAssertion());
 		To.replace(c.value, ToList);
+
+		System.out.println("To in add" + To.toString());
+		System.out.println("ToList in add" + ToList.toString());
+
 		return s;
 	}
 
@@ -398,9 +405,12 @@ public class ABox extends ConjunctiveFormula implements FormattableObj {
 	//	ABox.addAll(ConceptsAssertion);
 		int i = 0;
 		if (inconsistent==false){
+			System.out.println("before conceptToformula in ABox");
 			for(ABoxConceptAssertion c: ABox){
 				Formula cf = conceptToFormula(c.c, r);
+				System.out.println("Formula in getABoxFormula"+cf);
 				cf.substitute(x, new Constant(c.value));
+				System.out.println("Formula in getABoxFormula to add"+cf);
 				qtl.addConjunct(cf);
 				i++;
 			}
