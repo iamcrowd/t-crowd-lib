@@ -32,24 +32,22 @@ import it.unibz.inf.tdllitefpx.tbox.TBox;
 import org.gario.code.output.SymbolUndefinedException;
 
 /**
- * Random Future TBox and UNSAT ABox TDL-Lite
+ * Random KB
  * 
  * @author gab
  *
  */
 public class TD_LITE_N_ABox {
 
-	public static Set <Concept> ConceptsSet = new HashSet<Concept>();
+	public static Set<Concept> ConceptsSet = new HashSet<Concept>();
 	public static Set<Role> RolesSet = new HashSet<Role>();
 	public static Set<Role> RolesSetG = new HashSet<Role>();
 	public static Set<Role> RolesSetL = new HashSet<Role>();
 	
 	public static Concept getABoxConcept( ){
-		
 		Concept[] ArrayC = new Concept[ConceptsSet.size()];
 		ConceptsSet.toArray(ArrayC);
 		int index = new Random().nextInt(ArrayC.length);
-		
 		return ArrayC[index];
 	}
 	
@@ -163,9 +161,9 @@ public class TD_LITE_N_ABox {
 	}
 	
 
-	public ABox getABox(int NbAssertion,int N, int sizeInd, int max) throws SymbolUndefinedException{
+	public ABox getABox(int NbAssertion, int N, int sizeInd, int max) throws SymbolUndefinedException{
 		ABox A = new ABox();
-		int space = (N*sizeInd*max) + (2*N*sizeInd*sizeInd*max);
+		int space = (N * sizeInd * max) + (2 * N * sizeInd * sizeInd * max);
 		int countR=0;
 		
 		System.out.println("");
@@ -185,6 +183,8 @@ public class TD_LITE_N_ABox {
 		
 			if (p <= (N*sizeInd*10)){	 
 			  //	Concept assertion;
+
+				System.out.println("Im going to guess a Concept");
 			  	Concept Basic = getABoxConcept();
 			  	Concept Ca = Basic; 
 			  
@@ -243,8 +243,8 @@ public class TD_LITE_N_ABox {
 
 				switch (opr){	 		    
 			  		case 0:  // System.out.println("I'm rigid"); 
-					  ABoxRoleAssertion rr= new ABoxRoleAssertion(getABoxRoleG(),"a"+f, "a"+g,j);
-					  ABoxRoleAssertion r0= new ABoxRoleAssertion(getABoxRoleG(),"a"+f, "a"+g,0);
+					  ABoxRoleAssertion rr = new ABoxRoleAssertion(getABoxRoleG(),"a"+f, "a"+g,j);
+					  ABoxRoleAssertion r0 = new ABoxRoleAssertion(getABoxRoleG(),"a"+f, "a"+g,0);
 					  A.addABoxRoleAssertion(r0);
 					  A.addABoxRoleAssertions(rr);
 				//	  System.out.print(rr.toString());

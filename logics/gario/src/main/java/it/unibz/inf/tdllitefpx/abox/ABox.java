@@ -113,6 +113,11 @@ public class ABox extends ConjunctiveFormula implements FormattableObj {
 		boolean s = ABoxLocal.add(r);
 		return s;
 	}
+
+	public boolean addABoxShiftGlobal(ABoxRoleAssertion r){
+		boolean s = ABoxShiftGlobal.add(r);
+		return s;
+	}
 	
 	//	Create the list of Role Assertions
 	public boolean addABoxRoleAssertions(ABoxRoleAssertion r){ 
@@ -231,9 +236,9 @@ public class ABox extends ConjunctiveFormula implements FormattableObj {
 			QLocal.replace(r.ro.toString()+"_"+r.x+"_"+r.t,successorL); // XE1G1(a2) <=> G1_a2_1 (1: timeStamp)
 			QLocal.replace(r.ro.getInverse().toString()+"_"+r.x+"_"+r.t,PredecessorL);
 		}
-		System.out.println("QRigid:"+QRigid.toString());
-		System.out.println("QRigidL:"+QRigidL.toString());
-		System.out.println("QLocal:"+QLocal.toString());
+		//System.out.println("QRigid:"+QRigid.toString());
+		//System.out.println("QRigidL:"+QRigidL.toString());
+		//System.out.println("QLocal:"+QLocal.toString());
 
 	}
 
@@ -405,7 +410,7 @@ public class ABox extends ConjunctiveFormula implements FormattableObj {
 	//	ABox.addAll(ConceptsAssertion);
 		int i = 0;
 		if (inconsistent==false){
-			for(ABoxConceptAssertion c: ConceptsAssertion){
+			for(ABoxConceptAssertion c: ABox){ //previous ConceptAssertion
 				Formula cf = conceptToFormula(c.c, r);
 				cf.substitute(x, new Constant(c.value));
 				qtl.addConjunct(cf);
@@ -1074,7 +1079,6 @@ public class ABox extends ConjunctiveFormula implements FormattableObj {
 		
 		for(ABoxConceptAssertion c: AbstractABox){
 			Formula cf = conceptToFormula(c.c, r);
-			System.out.println("Formula in getAbstractABoxFormula " + cf.toString());
 			cf.substitute(x, new Constant(c.value));
 			qtl.addConjunct(cf);			
 		}

@@ -72,7 +72,7 @@ public class TDLLiteNABSFPXReasoner {
 	 * @param solver
 	 * @throws Exception
 	 */
-	public static void buildCheckAboxtLTLSatisfiability(TBox t,boolean verbose,
+	public static void buildCheckAboxtLTLSatisfiability(TBox t, boolean verbose,
 														String prefix, ABox ABox, 
 														String solver) throws Exception {
 		//A call for on Both the ABox and the ABstracted ABox		
@@ -226,7 +226,7 @@ public class TDLLiteNABSFPXReasoner {
 	}
 
 
-	private static void buildAbstract(ABox ABox, int Q) throws Exception {
+	public static void buildAbstract(ABox ABox, int Q) throws Exception {
 		
 		long total_time = System.currentTimeMillis();
 		long start_time;
