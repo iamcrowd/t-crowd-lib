@@ -4,6 +4,8 @@ import com.github.rvesse.airline.Cli;
 import com.github.rvesse.airline.builder.CliBuilder;
 import com.github.rvesse.airline.parser.errors.*;
 
+import it.gilia.tcrowd.cli.random.*;
+
 public class TCrowd {
 
     public static void main(String... args) {
@@ -59,7 +61,9 @@ public class TCrowd {
                         TCrowdRandomTBoxABoxPastAndFuture.class,
                         //future random
                         TCrowdRandomTBoxFuture.class,
-                        TCrowdRandomTBoxABoxFuture.class
+                        TCrowdRandomTBoxABoxFuture.class,
+                        //Abs
+                        TCrowdRandomAbsABox.class
 
                 );
         return builder.build();

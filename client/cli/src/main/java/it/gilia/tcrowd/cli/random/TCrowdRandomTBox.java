@@ -1,4 +1,4 @@
-package it.gilia.tcrowd.cli;
+package it.gilia.tcrowd.cli.random;
 
 import com.github.rvesse.airline.annotations.Command;
 //import com.github.rvesse.airline.annotations.Option;
@@ -54,7 +54,7 @@ description = " TBox|ABox -> QTL1 -> QTLN -> LTL "
 				+ "\n"
         		+ "\t \t \t \t \t * option -s requires entering a solver name (NuSMV|Aalta|pltl|TRP++UC|all)")
 
-public class TCrowdRandomTBox extends TCrowdRandomTDLRelatedCommand {
+public class TCrowdRandomTBox extends TCrowdRandomRelatedCommand {
 	
 	@Option(type = OptionType.COMMAND, name = {"-a", "--tdata"}, title = "Temporal Data",
 			description = "JSON file input containing temporal data")
