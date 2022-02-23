@@ -56,7 +56,7 @@ public class TD_LITE_N_AbsABox {
 		System.out.println("Total_Assertions: "+NbAssertion+"  Indiv:"+sizeInd+"  N:"+N+"  T:"+max);
 
 		Set<Integer> hs_1 = new HashSet<Integer>(); 
-		for (int j=1; j<=sizeInd; j++) {
+		for (int j = 1; j <= sizeInd; j++) {
 			hs_1.add(j); 
 		}
 	
@@ -67,7 +67,7 @@ public class TD_LITE_N_AbsABox {
 		int countR = 0;
 		int z = 0;
 		
-		while (i<=NbAssertion){
+		while (i <= NbAssertion){
 			int p = new Random().nextInt(space);//0...1
 			int j = new Random().nextInt(max); //Timestamp
 			int f,g,l;
@@ -125,16 +125,18 @@ public class TD_LITE_N_AbsABox {
 
 				if (rr.getRefersTo() instanceof AtomicLocalRole ) {
 					ass = A.addABoxRoleAssertions(r);
-					A.addABoxRoleAssertion(r);
+					A.addAbsABoxRoleAssertion(r);  // here we are invoking the method for abstraction. we need to generalise this.
 					if (ass){ 
-						A.addABoxLocal(r); i++;
+						A.addABoxLocal(r); 
+						i++;
 					}
 				} else {  
-				  	ABoxRoleAssertion r0 = new ABoxRoleAssertion(rr,"a" + f, "a" + g, 0); 
-					A.addABoxRoleAssertion(r0);
+				  	ABoxRoleAssertion r0 = new ABoxRoleAssertion(rr,"a" + f, "a" + g, 0); // should it be done here?
+					A.addAbsABoxRoleAssertion(r0); // here we are invoking the method for abstraction. we need to generalise this.
 				  	ass = A.addABoxRoleAssertions(r);
 				  	if (ass){
-						A.addABoxShiftGlobal(r0); i++;
+						A.addABoxShiftGlobal(r0); 
+						i++;
 					}
 				}
 		  	}

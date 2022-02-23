@@ -1,11 +1,12 @@
 package it.unibz.inf.tdllitefpx.abox;
-import it.unibz.inf.tdllitefpx.*;
 
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.Map.Entry;
 import java.util.Random;
 
 import org.gario.code.output.FormattableObj;
@@ -86,6 +87,7 @@ public class ABox extends ConjunctiveFormula implements FormattableObj {
 	 * @param c an ABox Concept Assertion
 	 */
 	public boolean addConceptsAssertion(ABoxConceptAssertion c) {
+
 		boolean s = ConceptsAssertion.add(c);
 
 		//System.out.println("ABox concept assertion: " + c.getConceptAssertion().toString());
@@ -174,6 +176,17 @@ public class ABox extends ConjunctiveFormula implements FormattableObj {
 		
 		}
 		return roles;
+	}
+
+	public void PrintABoxRoleAssertions(Set<ABoxRoleAssertion> s){ 
+		//	Create the list of Role Assertions
+		String list = "";
+		Iterator iterator = s.iterator();
+		while(iterator.hasNext()) {
+			String c = iterator.next().toString();
+			list = list + c;
+		} 
+		System.out.println(list);
 	}
 
 
@@ -405,12 +418,12 @@ public class ABox extends ConjunctiveFormula implements FormattableObj {
 		ConjunctiveFormula qtl = new ConjunctiveFormula();
 	//	int gain= ShiftABox.size()-ABox.size();
 	//	System.out.println("*******Abox gain: "+gain);
-		System.out.println("FO Local="+FOLocal.size());
-		System.out.println("FO Global="+FORigid.size());
+	//	System.out.println("FO Local="+FOLocal.size());
+	//	System.out.println("FO Global="+FORigid.size());
 	//	ABox.addAll(ConceptsAssertion);
 		int i = 0;
-		if (inconsistent==false){
-			for(ABoxConceptAssertion c: ABox){ //previous ConceptAssertion
+		if (inconsistent == false){
+			for(ABoxConceptAssertion c: ABox){ //previous ConceptsAssertion
 				Formula cf = conceptToFormula(c.c, r);
 				cf.substitute(x, new Constant(c.value));
 				qtl.addConjunct(cf);
@@ -511,10 +524,11 @@ public class ABox extends ConjunctiveFormula implements FormattableObj {
 		ShiftABox.add(c);
 	}
 
+
 	public void AbstractABox() {
 		if (inconsistent == false) {
 			for(String indexTo : To.keySet()){
-				Set <String> Hashvalue = new HashSet<String>();
+				Set<String> Hashvalue = new HashSet<String>();
 				Integer newindex = To.get(indexTo).hashCode();
 				ToHash.putIfAbsent(newindex, Hashvalue);
 				Hashvalue = ToHash.get(newindex);
@@ -709,8 +723,8 @@ public class ABox extends ConjunctiveFormula implements FormattableObj {
 	public Map<String, Integer> getStatsABox() {
 		HashMap<String, Integer> stats = new HashMap<String, Integer>();
 
-		stats.put("Concept_Assertion:", ConceptsAssertion.size());
-		stats.put("Roles_Assertion:", RolesAssertion.size());
+		stats.put("Concept_Assertions:", ConceptsAssertion.size());
+		stats.put("Role_Assertions:", RolesAssertion.size() + NegatedRolesAssertion.size());
 		return stats;
 	}
 
@@ -902,9 +916,9 @@ public class ABox extends ConjunctiveFormula implements FormattableObj {
 	public void addExtensionConstraintsAbsABox(int Q){
 		System.out.println("");
 		System.out.println("------ Shifted TDLITE ABOX");
-	//	System.out.println("**RolesAssertion:"+RolesAssertion.size());
-	//	PrintAboxRoleAssertions(RolesAssertion);
-	//	PrintAboxRoleAssertions(ShiftedRolesAssertion);
+		System.out.println("**RolesAssertion:"+RolesAssertion.size());
+		//PrintABoxRoleAssertions(RolesAssertion);
+		//PrintABoxRoleAssertions(ShiftedRolesAssertion);
 	//	System.out.println("**NegatedRolesAssertion:");
 		int GainP = RolesAssertion.size() - (ShiftedRolesAssertion.size());
 	//	int GainN= NegatedRolesAssertion.size()-ShiftedNegatedRolesAssertion.size();
@@ -941,15 +955,15 @@ public class ABox extends ConjunctiveFormula implements FormattableObj {
 				 /*>= 2.NameInv(Kennedy)
 				 * >= 1.NameInv(Kennedy)
 				 */
+
 			Set<Role> Roles = getRolesABox();
 			for (Role r: Roles){
 				if (r.getRefersTo() instanceof AtomicRigidRole){
-						//	System.out.println("rigid role:"+r.toString());	
 					for(String keyL : QRigid.keySet()){
+
 						String[]keyLi = keyL.split("_"); //keyL:G1_a2_1
-						String index = keyLi[0].concat("_"+keyLi[1]); //index:G1_a2
-							
-						int Qtabox = QRigid.get(index).size();// exp: get(G1_a8)=size([b2, b1])=2				
+						String index = keyLi[0].concat("_"+keyLi[1]); //index:G1_a2			
+						int Qtabox = QRigid.get(index).size();// exp: get(G1_a8)=size([b2, b1])=2	
 						int q = Math.min(Qtabox,Q);
 						
 						if (r.toString().equals(keyLi[0])){
@@ -957,19 +971,17 @@ public class ABox extends ConjunctiveFormula implements FormattableObj {
 							Set<Concept>ToList = new HashSet<Concept>();
 							QuantifiedRole qL = new QuantifiedRole(r, q);	//Cardinality
 							Concept cr = (Concept)qL;
-							ass = addABox(new ABoxConceptAssertion (cr,keyLi[1])); 
-							FORigid.add(new ABoxConceptAssertion (cr,keyLi[1]));
+							ass = addABox(new ABoxConceptAssertion(cr, keyLi[1])); 
+							FORigid.add(new ABoxConceptAssertion(cr, keyLi[1]));
 							
 							if (ass = false){
 								System.out.println("duplicate: "+ cr.toString()+"("+keyLi[1]);
 							}
-							//	ShiftABox(new AboxConceptAssertion (cr,keyLi[1])); //abstract assertion rigid at 0		
+	
 							To.putIfAbsent(keyLi[1], ToList);
 							ToList=To.get(keyLi[1]);
 							ToList.add(cr);
 							To.replace(keyLi[1], ToList);
-									
-							//	System.out.println("To:"+To.toString());
 						}
 						else if (r.getInverse().toString().equals(keyLi[0])){
 								//	qRolesQ.putIfAbsent(r.getInverse().toString(), 1);
@@ -979,7 +991,6 @@ public class ABox extends ConjunctiveFormula implements FormattableObj {
 									//Cardinality
 								QuantifiedRole qLinv = new QuantifiedRole(r.getInverse(), q);
 								Concept cinvr = (Concept)qLinv;
-							//		ShiftABox(new AboxConceptAssertion (cinvr,keyLi[1])); //abstract assertion rigid at 0
 								ass = addABox(new ABoxConceptAssertion (cinvr,keyLi[1]));
 								FORigid.add(new ABoxConceptAssertion (cinvr,keyLi[1]));
 								
@@ -1064,7 +1075,7 @@ public class ABox extends ConjunctiveFormula implements FormattableObj {
 			}
 			ABox.addAll(ConceptsAssertion);
 		} else {
-				ABox=null;
+				ABox = null;
 				System.out.println("Inconsistency on role assertions");
 		}
 	}
@@ -1112,14 +1123,12 @@ public class ABox extends ConjunctiveFormula implements FormattableObj {
 				if (ri.ro.equals(qR.getRole()))
 					qrigid++;
 			}
-			System.out.println("Qrigid:" + qrigid);
 		}
 		if (qR.getRole().getRefersTo() instanceof AtomicLocalRole) {
 			for (ABoxRoleAssertion ri : rigidAs) {
 				if (ri.ro.equals(qR.getRole()))
 					qrigid++;
 			}
-			// System.out.println("Qrigid:"+qrigid);
 		}
 		return 0;
 	}

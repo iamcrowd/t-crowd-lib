@@ -1,20 +1,14 @@
 package it.unibz.inf.tdllitefpx.abox;
 
-
 import org.gario.code.output.FormattableObj;
 import org.gario.code.output.OutputFormat;
 import org.gario.code.output.SymbolUndefinedException;
 
 import it.unibz.inf.qtl1.atoms.Atom;
 import it.unibz.inf.qtl1.formulae.Formula;
-import it.unibz.inf.qtl1.formulae.quantified.UniversalFormula;
-import it.unibz.inf.qtl1.formulae.temporal.SometimeFuture;
 import it.unibz.inf.qtl1.terms.Constant;
 import it.unibz.inf.qtl1.terms.Variable;
 import it.unibz.inf.tdllitefpx.concepts.Concept;
-import it.unibz.inf.qtl1.formulae.Formula;
-import it.unibz.inf.qtl1.terms.Variable;
-import it.unibz.inf.tdllitefpx.TDLLiteFPXConverter;
 
 public class ABoxConceptAssertion implements FormattableObj{
 	Concept c;
@@ -44,25 +38,34 @@ public class ABoxConceptAssertion implements FormattableObj{
 	public Formula getFormula(){
 		Variable x = new Variable("x");
 		Formula fa = new Atom(c.toString(), x);
-		//Formula fc=conceptToFormula(c);
-		//UniversalFormula fa = new UniversalFormula(fc, x);
 		return fa;
 	}
 	
 
 	public Formula makeAssertionPropositional(){
 		Variable x = new Variable("x");
-		Formula fa= this.getFormula();
+		Formula fa = this.getFormula();
 		fa.substitute(x, new Constant(value));
-		//System.out.println("insertionltl:"+fa);
 		return fa;
 	}
 	
+	public boolean equals(Object obj){
+		if(obj instanceof ABoxConceptAssertion){
+			ABoxConceptAssertion co = (ABoxConceptAssertion) obj;
+			return (co.c.equals(this.c) & co.value.equals(this.value));
+		} else
+			return false;	
+	}
+	
+	public int hashCode(){
+		return this.getConceptAssertion().hashCode();
+	}
+
 	@Override
 	public String toString(OutputFormat fmt) throws SymbolUndefinedException {
-		//return getConceptAssertion().toString(fmt) + "(" + 
-		//getConstant() + ")\\\\ \n  ";
-		return this.toString();
+		return this.makeAssertionPropositional().toString();
 	}
+
+
 
 }

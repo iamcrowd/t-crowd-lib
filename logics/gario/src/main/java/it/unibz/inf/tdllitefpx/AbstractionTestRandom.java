@@ -13,23 +13,18 @@ public class AbstractionTestRandom {
 
 		ABox a = new ABox();
 		
-//		int size, int Lc, int N, int Q, int Pr, int Pt
-		
-		a = ABS.getABox(100, 10, 2, 5);
+		//		int NbAssertion, int sizeInd, int N, int max
+		a = ABS.getABox(10, 2, 2, 5);
 		
 		Map<String, Integer> statsABox = a.getStatsABox();
 		System.out.println("");
 		System.out.println("------TDLITE ABOX");
 		
 		String keyA;
-		keyA="Concept_Assertion:";
+		keyA="Concept_Assertions:";
 		System.out.println(keyA+ statsABox.get(keyA));
-		keyA="Roles_Assertion:";
+		keyA="Role_Assertions:";
 		System.out.println(keyA+ statsABox.get(keyA));
-		
-//		int NbAssertion,int N, int sizeInd, int max
-		
-		//a = ABS.getABox(100500,2,100,5);
 
 		TDLLiteNABSFPXReasoner.buildAbstract(a, 3);
 

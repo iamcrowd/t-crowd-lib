@@ -6,6 +6,7 @@ import it.unibz.inf.tdllitefpx.concepts.AtomicConcept;
 import it.unibz.inf.tdllitefpx.concepts.Concept;
 import it.unibz.inf.tdllitefpx.concepts.NegatedConcept;
 import it.unibz.inf.tdllitefpx.concepts.QuantifiedRole;
+import it.unibz.inf.tdllitefpx.concepts.temporal.NextFuture;
 import it.unibz.inf.tdllitefpx.roles.AtomicRigidRole;
 import it.unibz.inf.tdllitefpx.roles.PositiveRole;
 import it.unibz.inf.tdllitefpx.roles.Role;
@@ -13,6 +14,7 @@ import it.unibz.inf.tdllitefpx.tbox.ConceptInclusionAssertion;
 import it.unibz.inf.tdllitefpx.tbox.TBox;
 import it.unibz.inf.tdllitefpx.abox.ABox;
 import it.unibz.inf.tdllitefpx.abox.ABoxConceptAssertion;
+import it.unibz.inf.tdllitefpx.abox.ABoxRoleAssertion;
 
 public class NameF {
 
@@ -40,9 +42,9 @@ public class NameF {
 		System.out.println(key + stats.get(key));
 		System.out.println("------ABOX------");
 		Map<String, Integer> statsA = exTDL.getABox().getStatsABox();
-		key = "Concept_Assertion:";
+		key = "Concept_Assertions:";
 		System.out.println(key + statsA.get(key));
-		key = "Roles_Assertion:";
+		key = "Role_Assertions:";
 		System.out.println(key + statsA.get(key));
 
 	}
@@ -54,9 +56,34 @@ public class NameF {
 	public ABox getABox() {
 		ABox A = new ABox();
 		
-		ABoxConceptAssertion a2 = new ABoxConceptAssertion(Person, "Marc");//t=0;
+		ABoxConceptAssertion a1 = new ABoxConceptAssertion(Person, "A");//t=0;
+		ABoxConceptAssertion a2 = new ABoxConceptAssertion(Person, "B");//t=0;
+		ABoxConceptAssertion a3 = new ABoxConceptAssertion(Person, "C");//t=0;
+
+		ABoxConceptAssertion a10 = new ABoxConceptAssertion(new NextFuture(Person), "A");//t=0;
+		ABoxConceptAssertion a11 = new ABoxConceptAssertion(new NextFuture(Person), "B");//t=0;
+		ABoxConceptAssertion a12 = new ABoxConceptAssertion(new NextFuture(Person), "C");//t=0;
+
+		ABoxRoleAssertion a4 = new ABoxRoleAssertion(Name, "A", "Marc", 0);//t=1;
+		ABoxRoleAssertion a5 = new ABoxRoleAssertion(Name, "B", "Pipo", 0);//t=1;
+		ABoxRoleAssertion a6 = new ABoxRoleAssertion(Name, "C", "Charles", 0);//t=1;
+		ABoxRoleAssertion a7 = new ABoxRoleAssertion(Name, "A", "Marc", 1);//t=1;
+		ABoxRoleAssertion a8 = new ABoxRoleAssertion(Name, "B", "Pipo", 1);//t=1;
+		ABoxRoleAssertion a9 = new ABoxRoleAssertion(Name, "C", "Charles", 1);//t=1;
 		
+		A.addConceptsAssertion(a1);
 		A.addConceptsAssertion(a2);
+		A.addConceptsAssertion(a3);
+		A.addConceptsAssertion(a10);
+		A.addConceptsAssertion(a11);
+		A.addConceptsAssertion(a12);
+
+		A.addABoxRoleAssertion(a4);
+		A.addABoxRoleAssertion(a5);
+		A.addABoxRoleAssertion(a6);
+		A.addABoxRoleAssertion(a7);
+		A.addABoxRoleAssertion(a8);
+		A.addABoxRoleAssertion(a9);
 							
 		return A;
 	}
