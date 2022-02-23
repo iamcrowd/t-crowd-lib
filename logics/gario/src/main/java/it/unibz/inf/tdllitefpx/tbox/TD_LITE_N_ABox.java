@@ -1,33 +1,23 @@
 package it.unibz.inf.tdllitefpx.tbox;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Random;
-import java.util.Scanner;
 import java.util.Set;
 
-import it.unibz.inf.tdllitefpx.TDLLiteFPXReasoner;
 import it.unibz.inf.tdllitefpx.abox.ABox;
 import it.unibz.inf.tdllitefpx.abox.ABoxRoleAssertion;
 import it.unibz.inf.tdllitefpx.abox.ABoxConceptAssertion;
 import it.unibz.inf.tdllitefpx.concepts.AtomicConcept;
-import it.unibz.inf.tdllitefpx.concepts.BottomConcept;
 import it.unibz.inf.tdllitefpx.concepts.BasicConcept;
 import it.unibz.inf.tdllitefpx.concepts.Concept;
 import it.unibz.inf.tdllitefpx.concepts.ConjunctiveConcept;
 import it.unibz.inf.tdllitefpx.concepts.NegatedConcept;
 import it.unibz.inf.tdllitefpx.concepts.QuantifiedRole;
 import it.unibz.inf.tdllitefpx.concepts.temporal.*;
-import it.unibz.inf.tdllitefpx.output.LatexOutputDocument;
 import it.unibz.inf.tdllitefpx.roles.AtomicLocalRole;
 import it.unibz.inf.tdllitefpx.roles.AtomicRigidRole;
 import it.unibz.inf.tdllitefpx.roles.PositiveRole;
 import it.unibz.inf.tdllitefpx.roles.Role;
-import it.unibz.inf.tdllitefpx.tbox.ConceptInclusionAssertion;
-import it.unibz.inf.tdllitefpx.tbox.TBox;
 
 import org.gario.code.output.SymbolUndefinedException;
 
@@ -184,7 +174,6 @@ public class TD_LITE_N_ABox {
 			if (p <= (N*sizeInd*10)){	 
 			  //	Concept assertion;
 
-				System.out.println("Im going to guess a Concept");
 			  	Concept Basic = getABoxConcept();
 			  	Concept Ca = Basic; 
 			  
@@ -245,7 +234,7 @@ public class TD_LITE_N_ABox {
 			  		case 0:  // System.out.println("I'm rigid"); 
 					  ABoxRoleAssertion rr = new ABoxRoleAssertion(getABoxRoleG(),"a"+f, "a"+g,j);
 					  ABoxRoleAssertion r0 = new ABoxRoleAssertion(getABoxRoleG(),"a"+f, "a"+g,0);
-					  A.addABoxRoleAssertion(r0);
+					  A.addAbsABoxRoleAssertion(r0);
 					  A.addABoxRoleAssertions(rr);
 				//	  System.out.print(rr.toString());
 					  i++;		    
@@ -253,7 +242,7 @@ public class TD_LITE_N_ABox {
 				     
 			  		case 1:  // System.out.println("I'm local");     
 					   ABoxRoleAssertion rl= new ABoxRoleAssertion(getABoxRoleL(),"a"+f, "a"+g,j);
-					   A.addABoxRoleAssertion(rl);
+					   A.addAbsABoxRoleAssertion(rl);
 					   A.addABoxRoleAssertions(rl);
 			//		   System.out.print(rl.toString());
 					   i++;		    

@@ -416,10 +416,8 @@ public class ABox extends ConjunctiveFormula implements FormattableObj {
 	 */
 	public Formula getABoxFormula(boolean r){
 		ConjunctiveFormula qtl = new ConjunctiveFormula();
-	//	int gain= ShiftABox.size()-ABox.size();
-	//	System.out.println("*******Abox gain: "+gain);
-	//	System.out.println("FO Local="+FOLocal.size());
-	//	System.out.println("FO Global="+FORigid.size());
+		System.out.println("FO Local="+FOLocal.size());
+		System.out.println("FO Global="+FORigid.size());
 	//	ABox.addAll(ConceptsAssertion);
 		int i = 0;
 		if (inconsistent == false){

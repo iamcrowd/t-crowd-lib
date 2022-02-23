@@ -72,7 +72,7 @@ public class TDLLiteNABSFPXReasoner {
 	 * @param solver
 	 * @throws Exception
 	 */
-	public static void buildCheckAboxtLTLSatisfiability(TBox t, boolean verbose,
+	public static void buildCheckTBoxAbsABoxSAT(TBox t, boolean verbose,
 														String prefix, ABox ABox, 
 														String solver) throws Exception {
 		//A call for on Both the ABox and the ABstracted ABox		
@@ -235,7 +235,7 @@ public class TDLLiteNABSFPXReasoner {
 		ABox.addExtensionConstraintsAbsABox(Q);
 		System.out.println("");
 		System.out.println("------ABox -> FO :");	
-		//Formula o = ABox.getABoxFormula(false);
+		Formula o = ABox.getABoxFormula(false);
 		
 		System.out.println(System.currentTimeMillis()-start_time + "ms");	
 		System.out.println("");
