@@ -232,8 +232,8 @@ public class TD_LITE_N_ABox {
 
 				switch (opr){	 		    
 			  		case 0:  // System.out.println("I'm rigid"); 
-					  ABoxRoleAssertion rr = new ABoxRoleAssertion(getABoxRoleG(),"a"+f, "a"+g,j);
-					  ABoxRoleAssertion r0 = new ABoxRoleAssertion(getABoxRoleG(),"a"+f, "a"+g,0);
+					  ABoxRoleAssertion rr = new ABoxRoleAssertion(getABoxRoleG(),"a"+f, "a"+g, j);
+					  ABoxRoleAssertion r0 = new ABoxRoleAssertion(getABoxRoleG(),"a"+f, "a"+g, 0);
 					  A.addAbsABoxRoleAssertion(r0);
 					  A.addABoxRoleAssertions(rr);
 				//	  System.out.print(rr.toString());

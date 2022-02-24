@@ -13,7 +13,7 @@ public class AbstractionTestRandom {
 
 		ABox a = new ABox();
 		
-		//int NbAssertion, int sizeInd, int N, int max
+		//int NbAssertion, int I, int N, int T
 		a = ABS.getABox(100500, 100, 2, 5);
 		
 		Map<String, Integer> statsABox = a.getStatsABox();

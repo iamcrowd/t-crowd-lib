@@ -90,16 +90,11 @@ public class ABox extends ConjunctiveFormula implements FormattableObj {
 
 		boolean s = ConceptsAssertion.add(c);
 
-		//System.out.println("ABox concept assertion: " + c.getConceptAssertion().toString());
-
 		Set<Concept>ToList = new HashSet<Concept>();
 		To.putIfAbsent(c.value, ToList);
 		ToList = To.get(c.value);
 		ToList.add(c.getConceptAssertion());
 		To.replace(c.value, ToList);
-
-		//System.out.println("To in add" + To.toString());
-		//System.out.println("ToList in add" + ToList.toString());
 
 		return s;
 	}
@@ -191,12 +186,13 @@ public class ABox extends ConjunctiveFormula implements FormattableObj {
 
 
 	/**
-	 * Create the list of Role Assertion
+	 * Add a role assertion to a list of roles together with their successor and predecessor
+	 * 
+	 * @implNote check repetitions
 	 * 
 	 * @param r an ABox Role Assertion
 	 */
 	public void addABoxRoleAssertion(ABoxRoleAssertion r) {
-		// Create the list of Role Assertions
 		RolesAssertion.add(r);
 		Set<String>successorR = new HashSet<String>();
 		Set<String>successorL = new HashSet<String>();
@@ -518,6 +514,32 @@ public class ABox extends ConjunctiveFormula implements FormattableObj {
 	 * Abstract code
 	 */
 
+
+
+	/**
+	 * Shift Rigid Roles
+	 * i.e. all of the rigid roles are moved to time 0.
+	 * This is the first abstracting step.
+	 * 
+	 * @implNote Name(A, Marc, 1), Name(A, Marc, 2), ... become Name(A, Marc, 0) 
+	 * 
+	 */
+	public void shiftRigidRolesAssertions(){
+		Iterator iterator = RolesAssertion.iterator();
+		while(iterator.hasNext()) {
+			ABoxRoleAssertion ra = (ABoxRoleAssertion) iterator.next();
+			ABoxRoleAssertion shiftedR = new ABoxRoleAssertion(ra.getRole(),
+															   ra.getx().toString(), 
+															   ra.gety().toString(), 
+															   0);
+			ShiftedRolesAssertion.add(shiftedR);
+		} 
+	}
+
+	/**
+	 * Useless method?
+	 * @param c
+	 */
 	public void ShiftABox(ABoxConceptAssertion c){
 		ShiftABox.add(c);
 	}
@@ -527,6 +549,8 @@ public class ABox extends ConjunctiveFormula implements FormattableObj {
 		if (inconsistent == false) {
 			for(String indexTo : To.keySet()){
 				Set<String> Hashvalue = new HashSet<String>();
+				
+				System.out.println();
 				Integer newindex = To.get(indexTo).hashCode();
 				ToHash.putIfAbsent(newindex, Hashvalue);
 				Hashvalue = ToHash.get(newindex);
@@ -564,10 +588,11 @@ public class ABox extends ConjunctiveFormula implements FormattableObj {
 	/**
 	 * Role assertion in Abstracted ABox
 	 * 
+	 * @implNote should we check if role is rigid or local here?
+	 * 
 	 * @param ABoxRoleAssertion r
 	 */
 	public void addAbsABoxRoleAssertion(ABoxRoleAssertion r){
-		//	Create the list of Role Assertions
 		ShiftedRolesAssertion.add(r);
 		Set<String>successorR=new HashSet<String>();
 		Set<String>successorL=new HashSet<String>();
@@ -734,7 +759,7 @@ public class ABox extends ConjunctiveFormula implements FormattableObj {
 	public void addExtensionConstraintsAbsABox(TBox tbox){
 			
 		Set<QuantifiedRole> qRoles = tbox.getQuantifiedRoles();
-		Map<String, Integer> qRolesQ=tbox.getQuantifiedRolesQ(qRoles);
+		Map<String, Integer> qRolesQ = tbox.getQuantifiedRolesQ(qRoles);
 		
 			//Set <Role> Roles=getRolesAbox();
 			/* >= 2.Name(John)
@@ -749,7 +774,7 @@ public class ABox extends ConjunctiveFormula implements FormattableObj {
 //			PrintAboxRoleAssertions(RolesAssertion);
 //			PrintAboxRoleAssertions(ShiftedRolesAssertion);
 //			System.out.println("**NegatedRolesAssertion:");
-		int GainP= RolesAssertion.size()-(ShiftedRolesAssertion.size());
+		int GainP = RolesAssertion.size() - (ShiftedRolesAssertion.size());
 //			int GainN= NegatedRolesAssertion.size()-ShiftedNegatedRolesAssertion.size();
 		System.out.println("Gain_Rigid= "+GainP); //+"+GainN+"="+(GainP+GainN));
 //			System.out.println("ShiftedRolesAssertion:"+ShiftedRolesAssertion.size());

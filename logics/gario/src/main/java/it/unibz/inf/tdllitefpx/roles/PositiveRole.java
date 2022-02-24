@@ -12,5 +12,7 @@ public class PositiveRole extends Role {
 		this.inverseOf = new NegativeRole(refersTo,this);
 	}
 	
-	public String toString(){return refersTo.name;}
+	public String toString(){
+		return refersTo.name;
+	}
 }

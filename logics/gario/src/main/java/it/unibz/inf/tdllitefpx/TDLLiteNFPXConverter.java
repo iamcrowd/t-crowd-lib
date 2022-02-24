@@ -12,6 +12,7 @@ import it.unibz.inf.qtl1.formulae.quantified.UniversalFormula;
 import it.unibz.inf.qtl1.formulae.temporal.Always;
 import it.unibz.inf.qtl1.terms.Constant;
 import it.unibz.inf.qtl1.terms.Variable;
+import it.unibz.inf.tdllitefpx.abox.ABox;
 import it.unibz.inf.tdllitefpx.concepts.AtomicConcept;
 import it.unibz.inf.tdllitefpx.concepts.BottomConcept;
 import it.unibz.inf.tdllitefpx.concepts.Concept;
@@ -44,6 +45,8 @@ import java.util.Map.Entry;
 public class TDLLiteNFPXConverter {
 	
 	TBox tbox;
+	ABox abox;
+	Boolean abs;
 	Alphabet a;
 	Variable x;
 	
@@ -52,13 +55,41 @@ public class TDLLiteNFPXConverter {
 	ConjunctiveFormula epsX = new ConjunctiveFormula();
 	ConjunctiveFormula eps = new ConjunctiveFormula();
 	
+	/**
+	 * It starts the conversion of a TDLlite TBox to a QTL formula. ABox is empty.
+	 * 
+	 * @param tbox
+	 */
 	public TDLLiteNFPXConverter(TBox tbox){
 		this.tbox = tbox;
 		a = new Alphabet();
 		x = new Variable("X");
 		
 	}
+
+	/**
+	 * It starts the conversion of both TDLlite TBox and ABox to a QTL formula. ABox is not empty.
+	 * 
+	 * @param tbox
+	 * @param abox
+	 */
+	public TDLLiteNFPXConverter(TBox tbox, ABox abox){
+		this.tbox = tbox;
+		this.abox = abox;
+		a = new Alphabet();
+		x = new Variable("X");	
+	}
+
+	/**
+	 * It set the abstraction true or false given a flag as parameter
+	 * 
+	 * @param flag a boolean value.
+	 */
+	public void setAbstraction(Boolean flag){
+		this.abs = flag;
+	}
 	
+
 	public Formula getFormula(){
 		return getFormula(true);
 	}

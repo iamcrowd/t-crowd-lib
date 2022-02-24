@@ -90,9 +90,10 @@ public class TD_LITE_N_AbsABox {
 			  	ass = A.addConceptsAssertion(a);
 			   	countC++;
 
-			  	if (ass == true){
+			/**  	if (ass == true){
 				  i++;
-				}
+				}*/
+				i++;
 		
 			} else {
 			  	countR++;
@@ -126,19 +127,20 @@ public class TD_LITE_N_AbsABox {
 				if (rr.getRefersTo() instanceof AtomicLocalRole ) {
 					ass = A.addABoxRoleAssertions(r);
 					A.addAbsABoxRoleAssertion(r);  // here we are invoking the method for abstraction. we need to generalise this.
-					if (ass){ 
+					/**if (ass){ 
 						A.addABoxLocal(r); 
 						i++;
-					}
+					}*/
 				} else {  
 				  	ABoxRoleAssertion r0 = new ABoxRoleAssertion(rr,"a" + f, "a" + g, 0); // should it be done here?
 					A.addAbsABoxRoleAssertion(r0); // here we are invoking the method for abstraction. we need to generalise this.
 				  	ass = A.addABoxRoleAssertions(r);
-				  	if (ass){
+				  /** 	if (ass){
 						A.addABoxShiftGlobal(r0); 
 						i++;
-					}
+					}*/
 				}
+				i++;
 		  	}
 		}
 		System.out.println("");
