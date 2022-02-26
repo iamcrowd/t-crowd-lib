@@ -24,7 +24,7 @@ import org.gario.code.output.SymbolUndefinedException;
  * @author gab
  *
  */
-public class TD_LITE_N_AbsABox {
+public class TDLLiteN_AbsABox {
 
 	public static Set<Concept> ConceptsSet = new HashSet<Concept>();
 	public static Set<Role> RolesSet = new HashSet<Role>();
@@ -49,7 +49,6 @@ public class TD_LITE_N_AbsABox {
 	
 	public ABox getABox(int Assertion, int sizeInd, int N, int max) throws SymbolUndefinedException{
 		ABox A = new ABox();
-		int k = new Random().nextInt(9) + 2;
 		int NbAssertion = Assertion;//max*sizeInd*k;
 		int space = (N * sizeInd * max) + (2 * N * sizeInd * sizeInd * max);
 		
@@ -61,11 +60,9 @@ public class TD_LITE_N_AbsABox {
 		}
 	
 		int i = 1;
-		boolean ass;
 		System.out.print("TDLITE ABox: "); 
 		int countC = 0;
 		int countR = 0;
-		int z = 0;
 		
 		while (i <= NbAssertion){
 			int p = new Random().nextInt(space);//0...1
@@ -78,7 +75,7 @@ public class TD_LITE_N_AbsABox {
 			  	Concept Ca = Basic;
 			  	ConceptsSet.add(Ca);  
 			  
-			  	while (j!=0 ){ 
+			  	while (j != 0 ){ 
 					Concept nexta = new NextFuture(Ca);
 					Ca = nexta;
 	    			j--;	
@@ -87,12 +84,8 @@ public class TD_LITE_N_AbsABox {
 				f = new Random().nextInt(sizeInd) + 1;
 			  	hs_1.remove(f);
 			  	ABoxConceptAssertion a = new ABoxConceptAssertion(Ca, "a" + f); 
-			  	ass = A.addConceptsAssertion(a);
+			  	A.addConceptsAssertion(a);
 			   	countC++;
-
-			/**  	if (ass == true){
-				  i++;
-				}*/
 				i++;
 		
 			} else {
@@ -125,20 +118,12 @@ public class TD_LITE_N_AbsABox {
 			  	ABoxRoleAssertion r = new ABoxRoleAssertion(rr, "a" + f, "a" + g, j);
 
 				if (rr.getRefersTo() instanceof AtomicLocalRole ) {
-					ass = A.addABoxRoleAssertions(r);
+					A.addABoxRoleAssertions(r);
 					A.addAbsABoxRoleAssertion(r);  // here we are invoking the method for abstraction. we need to generalise this.
-					/**if (ass){ 
-						A.addABoxLocal(r); 
-						i++;
-					}*/
 				} else {  
 				  	ABoxRoleAssertion r0 = new ABoxRoleAssertion(rr,"a" + f, "a" + g, 0); // should it be done here?
 					A.addAbsABoxRoleAssertion(r0); // here we are invoking the method for abstraction. we need to generalise this.
-				  	ass = A.addABoxRoleAssertions(r);
-				  /** 	if (ass){
-						A.addABoxShiftGlobal(r0); 
-						i++;
-					}*/
+				  	A.addABoxRoleAssertions(r);
 				}
 				i++;
 		  	}
@@ -147,8 +132,6 @@ public class TD_LITE_N_AbsABox {
 		if (hs_1.isEmpty()) {
 			System.out.println("ALL Individual are evolved");
 		}
-
-	//	 A.toString(null);
 		return A;
 	}
 

@@ -23,11 +23,12 @@ import org.gario.code.output.SymbolUndefinedException;
 
 /**
  * Random KB
+ * This class aims at randomly generating both TDLLiteN TBox and ABox.
  * 
- * @author gab
+ * @author
  *
  */
-public class TD_LITE_N_ABox {
+public class TDLLiteN_TBox_AbsABox {
 
 	public static Set<Concept> ConceptsSet = new HashSet<Concept>();
 	public static Set<Role> RolesSet = new HashSet<Role>();
@@ -162,8 +163,7 @@ public class TD_LITE_N_ABox {
 		Set<Integer> hs_1 = new HashSet<Integer>(); 
 		for (int j = 1; j <= sizeInd; j++) {
 			hs_1.add(j); 
-		} //fill the list of individuals
-		Set<Integer> hs_2 = new HashSet<Integer>(); //empty list to compare later if all individuals are involved
+		}
 	
 		int i = 1;
 	 	while (i <= NbAssertion){
@@ -231,7 +231,7 @@ public class TD_LITE_N_ABox {
 			 	countR++;
 
 				switch (opr){	 		    
-			  		case 0:  // System.out.println("I'm rigid"); 
+			  		case 0:
 					  ABoxRoleAssertion rr = new ABoxRoleAssertion(getABoxRoleG(),"a"+f, "a"+g, j);
 					  ABoxRoleAssertion r0 = new ABoxRoleAssertion(getABoxRoleG(),"a"+f, "a"+g, 0);
 					  A.addAbsABoxRoleAssertion(r0);
@@ -240,11 +240,10 @@ public class TD_LITE_N_ABox {
 					  i++;		    
 			  		break;
 				     
-			  		case 1:  // System.out.println("I'm local");     
+			  		case 1:     
 					   ABoxRoleAssertion rl= new ABoxRoleAssertion(getABoxRoleL(),"a"+f, "a"+g,j);
 					   A.addAbsABoxRoleAssertion(rl);
 					   A.addABoxRoleAssertions(rl);
-			//		   System.out.print(rl.toString());
 					   i++;		    
 			  		break;
 			  		case 2:
