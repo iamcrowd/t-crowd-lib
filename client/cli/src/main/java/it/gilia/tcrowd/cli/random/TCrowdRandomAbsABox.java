@@ -10,7 +10,7 @@ import com.github.rvesse.airline.help.cli.bash.CompletionBehaviour;
 import it.unibz.inf.tdllitefpx.TDLLiteNABSFPXReasoner;
 import it.unibz.inf.tdllitefpx.abox.ABox;
 
-import it.unibz.inf.tdllitefpx.tbox.TD_LITE_N_AbsABox;
+import it.unibz.inf.tdllitefpx.tbox.TDLLiteN_AbsABox;
 
 import java.util.Map;
 import java.util.Objects;
@@ -60,11 +60,10 @@ public class TCrowdRandomAbsABox extends TCrowdRandomAbstractionCommand {
             Objects.requireNonNull(I, "Number of Individuals Names must not be null");
             Objects.requireNonNull(N, "Number of Concepts and Roles must not be null");
             Objects.requireNonNull(T, "Maximum Time must not be null");
-			//Objects.requireNonNull(B, "Maximum Time must not be null");
 
 			if (Objects.isNull(B)){
             		
-    			TD_LITE_N_AbsABox absABox = new TD_LITE_N_AbsABox();
+    			TDLLiteN_AbsABox absABox = new TDLLiteN_AbsABox();
 
 				ABox a = new ABox();
 			
@@ -81,9 +80,11 @@ public class TCrowdRandomAbsABox extends TCrowdRandomAbstractionCommand {
 				System.out.println(keyA+ statsABox.get(keyA));
                     		
             	TDLLiteNABSFPXReasoner.buildAbstract(a, 3);
+
 			} else {
-				for (int i = 0; i < B; i++) {
-					TD_LITE_N_AbsABox absABox = new TD_LITE_N_AbsABox();
+				for (int i = 1; i <= B; i++) {
+					System.out.println("-------------------------Starting iteration N° " + i);
+					TDLLiteN_AbsABox absABox = new TDLLiteN_AbsABox();
 
 					ABox a = new ABox();
 				
@@ -94,12 +95,13 @@ public class TCrowdRandomAbsABox extends TCrowdRandomAbstractionCommand {
 					System.out.println("------TDLITE ABOX");
 				
 					String keyA;
-					keyA="Concept_Assertion:";
+					keyA="Concept_Assertions:";
 					System.out.println(keyA+ statsABox.get(keyA));
-					keyA="Role_Assertion:";
+					keyA="Role_Assertions:";
 					System.out.println(keyA+ statsABox.get(keyA));
 								
 					TDLLiteNABSFPXReasoner.buildAbstract(a, 3);
+					System.out.println("-------------------------Ending iteration N° " + i);
 				}
 			}
 
