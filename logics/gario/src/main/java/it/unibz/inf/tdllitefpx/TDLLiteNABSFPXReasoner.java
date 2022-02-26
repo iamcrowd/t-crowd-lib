@@ -73,8 +73,8 @@ public class TDLLiteNABSFPXReasoner {
 	 * @throws Exception
 	 */
 	public static void buildCheckTBoxAbsABoxSAT(TBox t, boolean verbose,
-														String prefix, ABox ABox, 
-														String solver) throws Exception {
+														String prefix, ABox ABox
+														) throws Exception {
 		//A call for on Both the ABox and the ABstracted ABox		
 		TDLLiteNABSFPXReasoner.buildCheckABox(t, verbose, prefix, ABox);
 	}
@@ -244,7 +244,7 @@ public class TDLLiteNABSFPXReasoner {
 		start_time = System.currentTimeMillis();
 		ABox.AbstractABox();
 		System.out.println(System.currentTimeMillis()-start_time + "ms");
-		//Formula oAbs =ABox.getAbstractABoxFormula(false); 
+		Formula oAbs =ABox.getAbstractABoxFormula(false); 
 
 		System.out.println("");
 		System.out.println("Done! Total time:" + (System.currentTimeMillis()-total_time) + "ms");

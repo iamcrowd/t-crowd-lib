@@ -4,12 +4,12 @@ import java.util.Map;
 
 import it.unibz.inf.tdllitefpx.abox.ABox;
 
-import it.unibz.inf.tdllitefpx.tbox.TD_LITE_N_AbsABox;
+import it.unibz.inf.tdllitefpx.tbox.TDLLiteN_AbsABox;
 
 public class AbstractionTestRandom {
 
 	public static void main(String[] args) throws Exception {
-		TD_LITE_N_AbsABox ABS = new TD_LITE_N_AbsABox();
+		TDLLiteN_AbsABox ABS = new TDLLiteN_AbsABox();
 
 		ABox a = new ABox();
 		

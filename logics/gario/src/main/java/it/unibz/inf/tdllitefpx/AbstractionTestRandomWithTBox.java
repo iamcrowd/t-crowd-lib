@@ -4,12 +4,12 @@ import java.util.Map;
 
 import it.unibz.inf.tdllitefpx.abox.ABox;
 import it.unibz.inf.tdllitefpx.tbox.TBox;
-import it.unibz.inf.tdllitefpx.tbox.TD_LITE_N_ABox;
+import it.unibz.inf.tdllitefpx.tbox.TDLLiteN_TBox_AbsABox;
 
 public class AbstractionTestRandomWithTBox {
 
 	public static void main(String[] args) throws Exception {
-		TD_LITE_N_ABox ABS = new TD_LITE_N_ABox();
+		TDLLiteN_TBox_AbsABox ABS = new TDLLiteN_TBox_AbsABox();
 
 		TBox t = new TBox();
 		ABox a = new ABox();
@@ -29,7 +29,7 @@ public class AbstractionTestRandomWithTBox {
 		keyA="Role_Assertions:";
 		System.out.println(keyA+ statsABox.get(keyA));
 
-		TDLLiteNABSFPXReasoner.buildCheckTBoxAbsABoxSAT(t, true, "test", a, "NuSVM");
+		TDLLiteNABSFPXReasoner.buildCheckTBoxAbsABoxSAT(t, true, "test", a);
 
 	}
 

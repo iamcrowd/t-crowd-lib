@@ -549,8 +549,6 @@ public class ABox extends ConjunctiveFormula implements FormattableObj {
 		if (inconsistent == false) {
 			for(String indexTo : To.keySet()){
 				Set<String> Hashvalue = new HashSet<String>();
-				
-				System.out.println();
 				Integer newindex = To.get(indexTo).hashCode();
 				ToHash.putIfAbsent(newindex, Hashvalue);
 				Hashvalue = ToHash.get(newindex);
