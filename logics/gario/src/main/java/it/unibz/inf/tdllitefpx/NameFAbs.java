@@ -25,8 +25,7 @@ public class NameFAbs {
 				exTDL.getTBox(), 
 				true, 
 				"NameFAbs", 
-				exTDL.getABox(),
-				"Black"
+				exTDL.getABox()
 				);
 
 		Map<String, String> stats = exTDL.getTBox().getStats();
