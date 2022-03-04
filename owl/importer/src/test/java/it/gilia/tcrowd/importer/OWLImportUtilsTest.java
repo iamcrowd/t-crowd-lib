@@ -36,9 +36,5 @@ public class OWLImportUtilsTest {
             e.printStackTrace();
         }
     }
-
-
-
-	
 }
 

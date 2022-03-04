@@ -128,6 +128,18 @@ import it.unibz.inf.tdllitefpx.abox.ABoxRoleAssertion;
 			return e.isOWLClass() || e.isTopEntity() || e.isBottomEntity();
 		}
 
+		public static boolean isNegated(OWLClassExpression e) {
+			return e.getClassExpressionType() == ClassExpressionType.OBJECT_COMPLEMENT_OF;
+		}
+
+		public static boolean isConjunctive(OWLClassExpression e) {
+			return e.getClassExpressionType() == ClassExpressionType.OBJECT_INTERSECTION_OF;
+		}
+
+		public static boolean isQuantifiedRole(OWLClassExpression e) {
+			return e.getClassExpressionType() == ClassExpressionType.OBJECT_MIN_CARDINALITY;
+		}
+
 		/**
      	* Example with atomic CI
      	*
@@ -144,25 +156,61 @@ import it.unibz.inf.tdllitefpx.abox.ABoxRoleAssertion;
                     	// get left and right expressions (SubClass -> SuperClass)
                     	OWLClassExpression left = ((OWLSubClassOfAxiom) axiom).getSubClass();
                     	OWLClassExpression right = ((OWLSubClassOfAxiom) axiom).getSuperClass();
+						
+						Concept dllite_left = ConvertToDllite(left);
+						Concept dllite_right = ConvertToDllite(right);
 
-                    	// check if axiom is of (atomic, atomic)
-                    	if (isAtomic(left) && isAtomic(right)) {
-							System.out.println(axiom.toString());
-							this.myTBox.add(new ConceptInclusionAssertion(new AtomicConcept(left.asOWLClass().getIRI().getFragment()), 
-																		  new AtomicConcept(right.asOWLClass().getIRI().getFragment())));
-                   	 	} else {
-                       	 	throw new EmptyStackException();
-                    	}
-                	}
+						System.out.println(axiom.toString());
+						this.myTBox.add(new ConceptInclusionAssertion(dllite_left, dllite_right));
+                	} 
             	} catch (Exception e) {
 
             	}
         	});
 
-
 			try{
 				(new LatexOutputDocument(this.myTBox)).toFile("dllitetbox.tex");
 			} catch (Exception e) {}
+		}
+
+		/**
+		 * Converts an OWL Class Expression to a DL-Lite concept
+		 * 
+		 * @param e - an OWL Class Expression
+		 * @return result - a DL-Lite concept
+		 */
+		private static Concept ConvertToDllite(OWLClassExpression e) {
+			if (isAtomic(e)) {
+				return new AtomicConcept(e.asOWLClass().getIRI().getFragment());
+			}
+
+			if (isNegated(e)) {
+				OWLClassExpression operand = ((OWLObjectComplementOf)e).getOperand();
+				return new NegatedConcept(ConvertToDllite(operand));
+			}
+
+			if (isConjunctive(e)) {
+				ConjunctiveConcept concept = new ConjunctiveConcept();
+				Set<OWLClassExpression> conjunctions = e.asConjunctSet();
+
+				for (OWLClassExpression c : conjunctions) {
+					concept.add(ConvertToDllite(c));
+				}
+
+				return concept;
+			}
+
+			if (isQuantifiedRole(e)) {
+				OWLClassExpression filler = ((OWLCardinalityRestriction<OWLClassExpression>)e).getFiller();
+				AtomicRole atomic_role = new AtomicRigidRole(filler.asOWLClass().getIRI().getFragment());
+				PositiveRole positive_role = new PositiveRole(atomic_role);
+
+				int cardinality = ((OWLCardinalityRestriction<OWLClassExpression>)e).getCardinality();
+
+				return new QuantifiedRole(positive_role, cardinality);
+			}
+
+			throw new EmptyStackException();
 		}
 
 	}	

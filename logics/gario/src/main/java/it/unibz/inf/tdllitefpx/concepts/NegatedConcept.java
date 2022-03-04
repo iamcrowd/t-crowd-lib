@@ -10,7 +10,7 @@ import org.gario.code.output.SymbolUndefinedException;
 public class NegatedConcept extends Concept {
 	Concept refersTo;
 	
-	public NegatedConcept(Concept refersTo){
+	public NegatedConcept(Concept refersTo) {
 		this.refersTo = refersTo;
 	}
 
@@ -34,5 +34,4 @@ public class NegatedConcept extends Concept {
 	public Set<Concept> getBasicConcepts() {
 		return refersTo.getBasicConcepts();
 	}
-	
 }
