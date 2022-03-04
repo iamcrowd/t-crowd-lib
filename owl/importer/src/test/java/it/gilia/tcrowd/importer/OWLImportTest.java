@@ -62,5 +62,21 @@ public class OWLImportTest {
         }
     }
 
+    @Test
+    public void testToyDomainRange() {
+        try {
+            String path = new String(OWLImport.class.getClassLoader().getResource("ontologies/toyDomainRange.owl").toString());
+            String[] owlfilepath = path.split(":", 2);
+            OWLImport importer = new OWLImport();
+			importer.loadFromPath(owlfilepath[1]);
+			importer.dlliteCI();
+            try{
+				(new LatexOutputDocument(importer.getTBox())).toFile("toyDomainRange.tex");
+			} catch (Exception e) {}
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
 }
 
