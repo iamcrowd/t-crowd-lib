@@ -20,9 +20,6 @@ import org.semanticweb.owlapi.model.*;
 import org.semanticweb.owlapi.model.parameters.*;
 import org.semanticweb.owlapi.util.*;
 
-import org.semanticweb.owlapi.model.AxiomType;
-import org.semanticweb.owlapi.model.OWLAxiom;
-
 import uk.ac.manchester.cs.owl.owlapi.OWLClassImpl;
 import uk.ac.manchester.cs.owl.owlapi.OWLObjectSomeValuesFromImpl;
 import uk.ac.manchester.cs.owl.owlapi.OWLQuantifiedRestrictionImpl;
@@ -74,8 +71,22 @@ import it.unibz.inf.tdllitefpx.abox.ABoxRoleAssertion;
 			this.manager = OWLManager.createOWLOntologyManager();
 		}
 
+		/**
+		 * Returns the OWL ontology being imported.
+		 * 
+		 * @return
+		 */
 		public OWLOntology getOntology(){
 			return ontology;
+		}
+
+		/**
+		 * Returns the current TBox
+		 * 
+		 * @return
+		 */
+		public TBox getTBox(){
+			return this.myTBox;
 		}
 
 		/**
@@ -152,6 +163,8 @@ import it.unibz.inf.tdllitefpx.abox.ABoxRoleAssertion;
         	tboxAxioms.forEach(axiom -> {
             	try {
                 	// determine if axiom is of type SubClassOf
+					System.out.println(axiom.toString());
+
                 	if (axiom.isOfType(AxiomType.SUBCLASS_OF)) {
                     	// get left and right expressions (SubClass -> SuperClass)
                     	OWLClassExpression left = ((OWLSubClassOfAxiom) axiom).getSubClass();
@@ -159,18 +172,27 @@ import it.unibz.inf.tdllitefpx.abox.ABoxRoleAssertion;
 						
 						Concept dllite_left = ConvertToDllite(left);
 						Concept dllite_right = ConvertToDllite(right);
-
-						System.out.println(axiom.toString());
 						this.myTBox.add(new ConceptInclusionAssertion(dllite_left, dllite_right));
-                	} 
+
+                	} else if (axiom.isOfType(AxiomType.EQUIVALENT_CLASSES)){
+						Collection<OWLSubClassOfAxiom> subClassOfAxioms = new ArrayList<OWLSubClassOfAxiom>();
+						subClassOfAxioms = ((OWLEquivalentClassesAxiom) axiom).asOWLSubClassOfAxioms();
+
+						subClassOfAxioms.forEach(ax -> {
+							OWLClassExpression left = ((OWLSubClassOfAxiom) ax).getSubClass();
+                    		OWLClassExpression right = ((OWLSubClassOfAxiom) ax).getSuperClass();
+					
+							Concept dllite_left = ConvertToDllite(left);
+							Concept dllite_right = ConvertToDllite(right);
+							this.myTBox.add(new ConceptInclusionAssertion(dllite_left, dllite_right));
+
+						});
+
+					}
             	} catch (Exception e) {
 
             	}
         	});
-
-			try{
-				(new LatexOutputDocument(this.myTBox)).toFile("dllitetbox.tex");
-			} catch (Exception e) {}
 		}
 
 		/**
