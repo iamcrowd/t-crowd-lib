@@ -261,8 +261,6 @@ import it.unibz.inf.tdllitefpx.abox.ABoxRoleAssertion;
 
 			if (isQuantifiedRole(e)) {
 				OWLClassExpression filler = ((OWLObjectCardinalityRestrictionImpl)e).getFiller();
-
-				System.out.println("NO ES TOP!!!!" + filler.toString());
 				
 				if (filler.equals(TOP)){
 					OWLPropertyExpression property = ((OWLObjectCardinalityRestrictionImpl) e).getProperty();
