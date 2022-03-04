@@ -21,8 +21,12 @@ import org.semanticweb.owlapi.model.parameters.*;
 import org.semanticweb.owlapi.util.*;
 
 import uk.ac.manchester.cs.owl.owlapi.OWLClassImpl;
+import uk.ac.manchester.cs.owl.owlapi.OWLDataFactoryImpl;
+import uk.ac.manchester.cs.owl.owlapi.OWLObjectCardinalityRestrictionImpl;
+import uk.ac.manchester.cs.owl.owlapi.OWLObjectMinCardinalityImpl;
 import uk.ac.manchester.cs.owl.owlapi.OWLObjectSomeValuesFromImpl;
 import uk.ac.manchester.cs.owl.owlapi.OWLQuantifiedRestrictionImpl;
+import uk.ac.manchester.cs.owl.owlapi.OWLSubClassOfAxiomImpl;
 import uk.ac.manchester.cs.owl.owlapi.OWLSubClassOfAxiomImpl;
 
 import it.unibz.inf.qtl1.NaturalTranslator;
@@ -64,6 +68,9 @@ import it.unibz.inf.tdllitefpx.abox.ABoxRoleAssertion;
 
 		private OWLOntology ontology;
 		private OWLOntologyManager manager;
+
+		private static final OWLClassExpression TOP = new OWLDataFactoryImpl().getOWLThing();
+		private static final OWLClassExpression BOT = new OWLDataFactoryImpl().getOWLNothing();
 
 		TBox myTBox = new TBox();
 		
@@ -153,7 +160,15 @@ import it.unibz.inf.tdllitefpx.abox.ABoxRoleAssertion;
 
 		/**
      	* Example with atomic CI
-     	*
+		* 
+     	* @implSpec EQUIVALENT_CLASSES(A, B) can be rewritten as SUBCLASS_OF(A, B) and SUBCLASS_OF(B, A)
+		* @implSpec DISJOINT_CLASSES(A, B) can be rewritten as SUBCLASS_OF(A, COMPLEMENT_OF(B)) and SUBCLASS_OF(B, COMPLEMENT_OF(A))
+		* @implSpec OBJECT_PROPERTY_DOMAIN(p, A) can be rewritten as SUBCLASS_OF(>= 1 p.TOP, A)
+		* @implSpec OBJECT_PROPERTY_RANGE(p, B) can be rewritten as SUBCLASS_OF(>= 1 p^-.TOP, B)
+		* @implSpec FUNCTIONAL_OBJECT_PROPERTY(p) can be rewritten as SUBCLASS_OF(TOP, <= 1 p.TOP), i.e. SUBCLASS_OF(TOP, COMPLEMENT_OF(>= 1 p.TOP + 1R))
+		* @implSpec DATA_PROPERTY_DOMAIN(d, A) can be rewritten as SUBCLASS_OF(>= 1 d.TOP, A)
+		* @implSpec DATA_PROPERTY_RANGE(d, DT) can be rewritten as SUBCLASS_OF(>= 1 d^-.TOP, DT)
+		*
      	*/
     	public void dlliteCI() {
         	// get all tbox axioms
@@ -188,7 +203,29 @@ import it.unibz.inf.tdllitefpx.abox.ABoxRoleAssertion;
 
 						});
 
-					}
+					} else if (axiom.isOfType(AxiomType.DISJOINT_CLASSES)){
+						Collection<OWLSubClassOfAxiom> subClassOfAxioms = new ArrayList<OWLSubClassOfAxiom>();
+						subClassOfAxioms = ((OWLDisjointClassesAxiom) axiom).asOWLSubClassOfAxioms();
+
+						subClassOfAxioms.forEach(ax -> {
+							OWLClassExpression left = ((OWLSubClassOfAxiom) ax).getSubClass();
+                    		OWLClassExpression right = ((OWLSubClassOfAxiom) ax).getSuperClass();
+					
+							Concept dllite_left = ConvertToDllite(left);
+							Concept dllite_right = ConvertToDllite(right);
+							this.myTBox.add(new ConceptInclusionAssertion(dllite_left, dllite_right));
+						});
+
+					} else if (axiom.isOfType(AxiomType.OBJECT_PROPERTY_DOMAIN)) {
+						OWLObjectPropertyExpression property = ((OWLObjectPropertyDomainAxiom) axiom).getProperty();
+						OWLClassExpression domain = ((OWLObjectPropertyDomainAxiom) axiom).getDomain();
+						OWLObjectMinCardinality scoa = new OWLObjectMinCardinalityImpl(property, 1, TOP);
+					
+						Concept dllite_left = ConvertToDllite(scoa);
+						Concept dllite_right = ConvertToDllite(domain);
+						this.myTBox.add(new ConceptInclusionAssertion(dllite_left, dllite_right));
+					} 
+
             	} catch (Exception e) {
 
             	}
@@ -223,11 +260,10 @@ import it.unibz.inf.tdllitefpx.abox.ABoxRoleAssertion;
 			}
 
 			if (isQuantifiedRole(e)) {
-				OWLClassExpression filler = ((OWLCardinalityRestriction<OWLClassExpression>)e).getFiller();
-				AtomicRole atomic_role = new AtomicRigidRole(filler.asOWLClass().getIRI().getFragment());
-				PositiveRole positive_role = new PositiveRole(atomic_role);
-
-				int cardinality = ((OWLCardinalityRestriction<OWLClassExpression>)e).getCardinality();
+				//OWLClassExpression filler = ((OWLCardinalityRestriction<OWLClassExpression>)e).getFiller();
+				OWLPropertyExpression property = ((OWLObjectCardinalityRestrictionImpl) e).getProperty();
+				Role positive_role = new PositiveRole(new AtomicRigidRole(property.asOWLObjectProperty().getIRI().getFragment()));
+				int cardinality = ((OWLObjectCardinalityRestrictionImpl)e).getCardinality();
 
 				return new QuantifiedRole(positive_role, cardinality);
 			}
