@@ -260,12 +260,18 @@ import it.unibz.inf.tdllitefpx.abox.ABoxRoleAssertion;
 			}
 
 			if (isQuantifiedRole(e)) {
-				//OWLClassExpression filler = ((OWLCardinalityRestriction<OWLClassExpression>)e).getFiller();
-				OWLPropertyExpression property = ((OWLObjectCardinalityRestrictionImpl) e).getProperty();
-				Role positive_role = new PositiveRole(new AtomicRigidRole(property.asOWLObjectProperty().getIRI().getFragment()));
-				int cardinality = ((OWLObjectCardinalityRestrictionImpl)e).getCardinality();
+				OWLClassExpression filler = ((OWLObjectCardinalityRestrictionImpl)e).getFiller();
 
-				return new QuantifiedRole(positive_role, cardinality);
+				System.out.println("NO ES TOP!!!!" + filler.toString());
+				
+				if (filler.equals(TOP)){
+					OWLPropertyExpression property = ((OWLObjectCardinalityRestrictionImpl) e).getProperty();
+					Role positive_role = new PositiveRole(new AtomicRigidRole(property.asOWLObjectProperty().getIRI().getFragment()));
+					int cardinality = ((OWLObjectCardinalityRestrictionImpl)e).getCardinality();
+
+					return new QuantifiedRole(positive_role, cardinality);
+				}
+
 			}
 
 			throw new EmptyStackException();
