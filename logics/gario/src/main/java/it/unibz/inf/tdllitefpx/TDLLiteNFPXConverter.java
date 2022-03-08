@@ -43,9 +43,9 @@ import java.util.Map.Entry;
 
 public class TDLLiteNFPXConverter {
 	
-	TBox tbox;
-	Alphabet a;
-	Variable x;
+	protected TBox tbox;
+	protected Alphabet a;
+	protected Variable x;
 	
 	ConjunctiveFormula cardinalities = new ConjunctiveFormula();
 	ConjunctiveFormula rigidR = new ConjunctiveFormula();

@@ -12,6 +12,7 @@ public class Constants {
     public static final String NuSMV = "NuSMV";
     public static final String Aalta = "Aalta";
     public static final String pltl = "pltl";
+    public static final String black = "Black";
     public static final String TRPUC = "TRP++UC";
     public static final String FO = "FO";
     public static final String all = "all";
