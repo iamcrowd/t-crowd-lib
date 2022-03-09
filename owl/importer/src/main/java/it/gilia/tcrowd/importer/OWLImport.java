@@ -224,8 +224,15 @@ import it.unibz.inf.tdllitefpx.abox.ABoxRoleAssertion;
 						Concept dllite_left = ConvertToDllite(scoa);
 						Concept dllite_right = ConvertToDllite(domain);
 						this.myTBox.add(new ConceptInclusionAssertion(dllite_left, dllite_right));
-					} 
-
+					} else if (axiom.isOfType(AxiomType.OBJECT_PROPERTY_RANGE)) {
+						OWLObjectPropertyExpression property = ((OWLObjectPropertyRangeAxiom) axiom).getProperty();
+						OWLClassExpression range = ((OWLObjectPropertyRangeAxiom) axiom).getRange();
+						OWLObjectMinCardinality scoa = new OWLObjectMinCardinalityImpl(property, 1, TOP);
+					
+						Concept dllite_left = ConvertToDllite(scoa);
+						Concept dllite_right = ConvertToDllite(range);
+						this.myTBox.add(new ConceptInclusionAssertion(dllite_left, dllite_right));
+					}
             	} catch (Exception e) {
 
             	}
