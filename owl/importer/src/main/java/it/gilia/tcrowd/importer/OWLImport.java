@@ -157,17 +157,19 @@ import it.unibz.inf.tdllitefpx.abox.ABoxRoleAssertion;
 		public static boolean isQuantifiedRole(OWLClassExpression e) {
 			return e.getClassExpressionType() == ClassExpressionType.OBJECT_MIN_CARDINALITY;
 		}
-
 		/**
      	* Example with atomic CI
 		* 
      	* @implSpec EQUIVALENT_CLASSES(A, B) can be rewritten as SUBCLASS_OF(A, B) and SUBCLASS_OF(B, A)
-		* @implSpec DISJOINT_CLASSES(A, B) can be rewritten as SUBCLASS_OF(A, COMPLEMENT_OF(B)) and SUBCLASS_OF(B, COMPLEMENT_OF(A))
-		* @implSpec OBJECT_PROPERTY_DOMAIN(p, A) can be rewritten as SUBCLASS_OF(>= 1 p.TOP, A)
-		* @implSpec OBJECT_PROPERTY_RANGE(p, B) can be rewritten as SUBCLASS_OF(>= 1 p^-.TOP, B)
-		* @implSpec FUNCTIONAL_OBJECT_PROPERTY(p) can be rewritten as SUBCLASS_OF(TOP, <= 1 p.TOP), i.e. SUBCLASS_OF(TOP, COMPLEMENT_OF(>= 1 p.TOP + 1R))
-		* @implSpec DATA_PROPERTY_DOMAIN(d, A) can be rewritten as SUBCLASS_OF(>= 1 d.TOP, A)
-		* @implSpec DATA_PROPERTY_RANGE(d, DT) can be rewritten as SUBCLASS_OF(>= 1 d^-.TOP, DT)
+		* @implSpec DISJOINT_CLASSES(A, B) can be rewritten as OBJECT_INTERSECTION_OF(SUBCLASS_OF(A, COMPLEMENT_OF(B)) and SUBCLASS_OF(B, COMPLEMENT_OF(A)))
+		* @implSpec OBJECT_PROPERTY_DOMAIN(P, A) can be rewritten as SUBCLASS_OF(OBJECT_MIN_CARDINALITY(1, P, TOP), A)
+		* @implSpec OBJECT_PROPERTY_RANGE(P, B) can be rewritten as SUBCLASS_OF(OBJECT_MIN_CARDINALITY(1, P^-, TOP), B)
+		* @implSpec FUNCTIONAL_OBJECT_PROPERTY(P) can be rewritten as SUBCLASS_OF(TOP, <= 1 P.TOP), i.e. SUBCLASS_OF(TOP, COMPLEMENT_OF(>= 1 P.TOP + 1R))
+		* @implSpec DATA_PROPERTY_DOMAIN(d, A) can be rewritten as SUBCLASS_OF(DATA_MIN_CARDINALITY(1, d, TOP), A)
+		* @implSpec DATA_PROPERTY_RANGE(d, DT) can be rewritten as SUBCLASS_OF(DATA_MIN_CARDINALITY(1, d^-, TOP), DT)
+		* @implSpec DISJOINT_UNION
+		* @implSpec OBJECT_UNION(A, B) can be rewritten as COMPLEMENT_OF(OBJECT_INTERSECTION_OF(COMPLEMENT_OF(A) and COMPLEMENT_OF(B)))
+		* @implSpec OBJECT_SOME_VALUES_FROM(P, TOP) as OBJECT_MIN_CARDINALITY(1, P, TOP)				
 		*
      	*/
     	public void dlliteCI() {
