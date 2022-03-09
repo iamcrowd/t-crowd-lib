@@ -224,10 +224,11 @@ import it.unibz.inf.tdllitefpx.abox.ABoxRoleAssertion;
 						Concept dllite_left = ConvertToDllite(scoa);
 						Concept dllite_right = ConvertToDllite(domain);
 						this.myTBox.add(new ConceptInclusionAssertion(dllite_left, dllite_right));
+
 					} else if (axiom.isOfType(AxiomType.OBJECT_PROPERTY_RANGE)) {
 						OWLObjectPropertyExpression property = ((OWLObjectPropertyRangeAxiom) axiom).getProperty();
 						OWLClassExpression range = ((OWLObjectPropertyRangeAxiom) axiom).getRange();
-						OWLObjectMinCardinality scoa = new OWLObjectMinCardinalityImpl(property, 1, TOP);
+						OWLObjectMinCardinality scoa = new OWLObjectMinCardinalityImpl(property.getInverseProperty(), 1, TOP);
 					
 						Concept dllite_left = ConvertToDllite(scoa);
 						Concept dllite_right = ConvertToDllite(range);
@@ -268,13 +269,20 @@ import it.unibz.inf.tdllitefpx.abox.ABoxRoleAssertion;
 
 			if (isQuantifiedRole(e)) {
 				OWLClassExpression filler = ((OWLObjectCardinalityRestrictionImpl)e).getFiller();
-				
+
 				if (filler.equals(TOP)){
-					OWLPropertyExpression property = ((OWLObjectCardinalityRestrictionImpl) e).getProperty();
-					Role positive_role = new PositiveRole(new AtomicRigidRole(property.asOWLObjectProperty().getIRI().getFragment()));
+					OWLPropertyExpression namedProperty = ((OWLObjectCardinalityRestrictionImpl) e).getProperty().getNamedProperty();
+					OWLPropertyExpression property = ((OWLObjectCardinalityRestrictionImpl) e).getProperty().getInverseProperty();
+
+					Role positive_role = new PositiveRole(new AtomicRigidRole(namedProperty.asOWLObjectProperty().getIRI().getFragment()));
 					int cardinality = ((OWLObjectCardinalityRestrictionImpl)e).getCardinality();
 
-					return new QuantifiedRole(positive_role, cardinality);
+					// if prop is inverse
+					if (namedProperty.equals(property)){
+						return new QuantifiedRole(positive_role.getInverse(), cardinality);
+					} else { // if pro is not inverse
+						return new QuantifiedRole(positive_role, cardinality);
+					}
 				}
 
 			}
