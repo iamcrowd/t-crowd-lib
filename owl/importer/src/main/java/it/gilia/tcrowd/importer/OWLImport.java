@@ -182,65 +182,116 @@ import it.unibz.inf.tdllitefpx.abox.ABoxRoleAssertion;
                 	// determine if axiom is of type SubClassOf
 					System.out.println(axiom.toString());
 
+					// CLASS AXIOMS
+
                 	if (axiom.isOfType(AxiomType.SUBCLASS_OF)) {
-                    	// get left and right expressions (SubClass -> SuperClass)
-                    	OWLClassExpression left = ((OWLSubClassOfAxiom) axiom).getSubClass();
-                    	OWLClassExpression right = ((OWLSubClassOfAxiom) axiom).getSuperClass();
-						
-						Concept dllite_left = ConvertToDllite(left);
-						Concept dllite_right = ConvertToDllite(right);
-						this.myTBox.add(new ConceptInclusionAssertion(dllite_left, dllite_right));
-
+                    	ProcessAxiomSubclass(axiom);
                 	} else if (axiom.isOfType(AxiomType.EQUIVALENT_CLASSES)){
-						Collection<OWLSubClassOfAxiom> subClassOfAxioms = new ArrayList<OWLSubClassOfAxiom>();
-						subClassOfAxioms = ((OWLEquivalentClassesAxiom) axiom).asOWLSubClassOfAxioms();
-
-						subClassOfAxioms.forEach(ax -> {
-							OWLClassExpression left = ((OWLSubClassOfAxiom) ax).getSubClass();
-                    		OWLClassExpression right = ((OWLSubClassOfAxiom) ax).getSuperClass();
-					
-							Concept dllite_left = ConvertToDllite(left);
-							Concept dllite_right = ConvertToDllite(right);
-							this.myTBox.add(new ConceptInclusionAssertion(dllite_left, dllite_right));
-
-						});
-
+						ProcessAxiomEquivalentClasses(axiom);
 					} else if (axiom.isOfType(AxiomType.DISJOINT_CLASSES)){
-						Collection<OWLSubClassOfAxiom> subClassOfAxioms = new ArrayList<OWLSubClassOfAxiom>();
-						subClassOfAxioms = ((OWLDisjointClassesAxiom) axiom).asOWLSubClassOfAxioms();
+						ProcessAxiomDisjointClasses(axiom);
+					} else if (axiom.isOfType(AxiomType.DISJOINT_UNION)) {
+						OWLAxiom disjointness_part = ((OWLDisjointUnionAxiom) axiom).getOWLDisjointClassesAxiom();
+						OWLAxiom equivalence_part = ((OWLDisjointUnionAxiom) axiom).getOWLEquivalentClassesAxiom();
 
-						subClassOfAxioms.forEach(ax -> {
-							OWLClassExpression left = ((OWLSubClassOfAxiom) ax).getSubClass();
-                    		OWLClassExpression right = ((OWLSubClassOfAxiom) ax).getSuperClass();
-					
-							Concept dllite_left = ConvertToDllite(left);
-							Concept dllite_right = ConvertToDllite(right);
-							this.myTBox.add(new ConceptInclusionAssertion(dllite_left, dllite_right));
-						});
+						ProcessAxiomDisjointClasses(disjointness_part);
+						ProcessAxiomEquivalentClasses(equivalence_part);
+						
+					// PROPERTY AXIOMS
 
 					} else if (axiom.isOfType(AxiomType.OBJECT_PROPERTY_DOMAIN)) {
-						OWLObjectPropertyExpression property = ((OWLObjectPropertyDomainAxiom) axiom).getProperty();
-						OWLClassExpression domain = ((OWLObjectPropertyDomainAxiom) axiom).getDomain();
-						OWLObjectMinCardinality scoa = new OWLObjectMinCardinalityImpl(property, 1, TOP);
-					
-						Concept dllite_left = ConvertToDllite(scoa);
-						Concept dllite_right = ConvertToDllite(domain);
-						this.myTBox.add(new ConceptInclusionAssertion(dllite_left, dllite_right));
-
+						ProcessAxiomPropertyDomain(axiom);
 					} else if (axiom.isOfType(AxiomType.OBJECT_PROPERTY_RANGE)) {
-						OWLObjectPropertyExpression property = ((OWLObjectPropertyRangeAxiom) axiom).getProperty();
-						OWLClassExpression range = ((OWLObjectPropertyRangeAxiom) axiom).getRange();
-						OWLObjectMinCardinality scoa = new OWLObjectMinCardinalityImpl(property.getInverseProperty(), 1, TOP);
-					
-						Concept dllite_left = ConvertToDllite(scoa);
-						Concept dllite_right = ConvertToDllite(range);
-						this.myTBox.add(new ConceptInclusionAssertion(dllite_left, dllite_right));
+						ProcessAxiomPropertyRange(axiom);
+					} else if (axiom.isOfType(AxiomType.FUNCTIONAL_OBJECT_PROPERTY)) {
+						ProcessAxiomFunctionalProperty(axiom);
+					} else if (axiom.isOfType(AxiomType.INVERSE_FUNCTIONAL_OBJECT_PROPERTY)) {
+						ProcessAxiomInverseFunctionalProperty(axiom);
 					}
             	} catch (Exception e) {
 
             	}
         	});
 		}
+
+		private void ProcessAxiomInverseFunctionalProperty(OWLAxiom axiom) {
+			OWLObjectPropertyExpression property = ((OWLObjectPropertyRangeAxiom) axiom).getProperty();
+			OWLObjectMinCardinality scoa = new OWLObjectMinCardinalityImpl(property.getInverseProperty(), 2, TOP);
+
+			Concept dllite_left = ConvertToDllite(scoa);
+			Concept bottom = new BottomConcept();
+			this.myTBox.add(new ConceptInclusionAssertion(dllite_left, bottom));
+		}
+
+		private void ProcessAxiomFunctionalProperty(OWLAxiom axiom) {
+			OWLObjectPropertyExpression property = ((OWLObjectPropertyDomainAxiom) axiom).getProperty();
+			OWLObjectMinCardinality scoa = new OWLObjectMinCardinalityImpl(property, 2, TOP);
+
+			Concept dllite_left = ConvertToDllite(scoa);
+			Concept bottom = new BottomConcept();
+			this.myTBox.add(new ConceptInclusionAssertion(dllite_left, bottom));
+		}
+
+		private void ProcessAxiomPropertyRange(OWLAxiom axiom) {
+			OWLObjectPropertyExpression property = ((OWLObjectPropertyRangeAxiom) axiom).getProperty();
+			OWLClassExpression range = ((OWLObjectPropertyRangeAxiom) axiom).getRange();
+			OWLObjectMinCardinality scoa = new OWLObjectMinCardinalityImpl(property.getInverseProperty(), 1, TOP);
+
+			Concept dllite_left = ConvertToDllite(scoa);
+			Concept dllite_right = ConvertToDllite(range);
+			this.myTBox.add(new ConceptInclusionAssertion(dllite_left, dllite_right));
+		}
+
+		private void ProcessAxiomPropertyDomain(OWLAxiom axiom) {
+			OWLObjectPropertyExpression property = ((OWLObjectPropertyDomainAxiom) axiom).getProperty();
+			OWLClassExpression domain = ((OWLObjectPropertyDomainAxiom) axiom).getDomain();
+			OWLObjectMinCardinality scoa = new OWLObjectMinCardinalityImpl(property, 1, TOP);
+
+			Concept dllite_left = ConvertToDllite(scoa);
+			Concept dllite_right = ConvertToDllite(domain);
+			this.myTBox.add(new ConceptInclusionAssertion(dllite_left, dllite_right));
+		}
+
+		private void ProcessAxiomDisjointClasses(OWLAxiom axiom) {
+			Collection<OWLSubClassOfAxiom> subClassOfAxioms = new ArrayList<OWLSubClassOfAxiom>();
+			subClassOfAxioms = ((OWLDisjointClassesAxiom) axiom).asOWLSubClassOfAxioms();
+
+			subClassOfAxioms.forEach(ax -> {
+				OWLClassExpression left = ((OWLSubClassOfAxiom) ax).getSubClass();
+				OWLClassExpression right = ((OWLSubClassOfAxiom) ax).getSuperClass();
+
+				Concept dllite_left = ConvertToDllite(left);
+				Concept dllite_right = ConvertToDllite(right);
+				this.myTBox.add(new ConceptInclusionAssertion(dllite_left, dllite_right));
+			});
+		}
+
+		private void ProcessAxiomEquivalentClasses(OWLAxiom axiom) {
+			Collection<OWLSubClassOfAxiom> subClassOfAxioms = new ArrayList<OWLSubClassOfAxiom>();
+			subClassOfAxioms = ((OWLEquivalentClassesAxiom) axiom).asOWLSubClassOfAxioms();
+
+			subClassOfAxioms.forEach(ax -> {
+				OWLClassExpression left = ((OWLSubClassOfAxiom) ax).getSubClass();
+				OWLClassExpression right = ((OWLSubClassOfAxiom) ax).getSuperClass();
+
+				Concept dllite_left = ConvertToDllite(left);
+				Concept dllite_right = ConvertToDllite(right);
+				this.myTBox.add(new ConceptInclusionAssertion(dllite_left, dllite_right));
+
+			});
+		}
+
+		private void ProcessAxiomSubclass(OWLAxiom axiom) {
+			// get left and right expressions (SubClass -> SuperClass)
+			OWLClassExpression left = ((OWLSubClassOfAxiom) axiom).getSubClass();
+			OWLClassExpression right = ((OWLSubClassOfAxiom) axiom).getSuperClass();
+			
+			Concept dllite_left = ConvertToDllite(left);
+			Concept dllite_right = ConvertToDllite(right);
+			this.myTBox.add(new ConceptInclusionAssertion(dllite_left, dllite_right));
+		}
+
+
 
 		/**
 		 * Converts an OWL Class Expression to a DL-Lite concept
