@@ -157,6 +157,10 @@ import it.unibz.inf.tdllitefpx.abox.ABoxRoleAssertion;
 		public static boolean isQuantifiedRole(OWLClassExpression e) {
 			return e.getClassExpressionType() == ClassExpressionType.OBJECT_MIN_CARDINALITY;
 		}
+
+		public static boolean isUnion(OWLClassExpression e) {
+			return e.getClassExpressionType() == ClassExpressionType.OBJECT_UNION_OF;
+		}
 		/**
      	* Example with atomic CI
 		* 
@@ -311,13 +315,25 @@ import it.unibz.inf.tdllitefpx.abox.ABoxRoleAssertion;
 
 			if (isConjunctive(e)) {
 				ConjunctiveConcept concept = new ConjunctiveConcept();
-				Set<OWLClassExpression> conjunctions = e.asConjunctSet();
+				Set<OWLClassExpression> conjuncts = e.asConjunctSet();
 
-				for (OWLClassExpression c : conjunctions) {
+				for (OWLClassExpression c : conjuncts) {
 					concept.add(ConvertToDllite(c));
 				}
 
 				return concept;
+			}
+
+
+			if (isUnion(e)) {
+				ConjunctiveConcept conjunction_of_negations = new ConjunctiveConcept();
+				Set<OWLClassExpression> disjuncts = e.asDisjunctSet();
+
+				for (OWLClassExpression c : disjuncts) {
+					conjunction_of_negations.add(ConvertToDllite(c));
+				}
+
+				return new NegatedConcept(conjunction_of_negations);
 			}
 
 			if (isQuantifiedRole(e)) {
