@@ -317,10 +317,20 @@ import it.unibz.inf.tdllitefpx.abox.ABoxRoleAssertion;
 			// get left and right expressions (SubClass -> SuperClass)
 			OWLClassExpression left = ((OWLSubClassOfAxiom) axiom).getSubClass();
 			OWLClassExpression right = ((OWLSubClassOfAxiom) axiom).getSuperClass();
-			
-			Concept dllite_left = ConvertConceptToDllite(left);
-			Concept dllite_right = ConvertConceptToDllite(right);
-			this.myTBox.add(new ConceptInclusionAssertion(dllite_left, dllite_right));
+
+			// normalise UNION_OF -> Atom
+			if (isUnion(left) && isAtomic(right)){
+				Set<OWLClassExpression> disjuncts = left.asDisjunctSet();
+				Concept dllite_right = ConvertConceptToDllite(right);
+				for (OWLClassExpression d : disjuncts) {
+					Concept dllite_left = ConvertConceptToDllite(d);
+					this.myTBox.add(new ConceptInclusionAssertion(dllite_left, dllite_right));
+				}
+			} else {
+				Concept dllite_left = ConvertConceptToDllite(left);
+				Concept dllite_right = ConvertConceptToDllite(right);
+				this.myTBox.add(new ConceptInclusionAssertion(dllite_left, dllite_right));
+			}
 		}
 
 
