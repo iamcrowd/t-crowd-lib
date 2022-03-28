@@ -405,6 +405,15 @@ public class ABox extends ConjunctiveFormula implements FormattableObj {
 		}
 	}
 	
+
+
+	/**
+	 * Get the size of the original ABox (# of assertions)
+	 * @return the size of the original ABox
+	 */
+	public Integer getABoxSize(){
+		return ABox.size();
+	}
 	/**
 	 * Generate QTL formula
 	 * 
@@ -555,8 +564,7 @@ public class ABox extends ConjunctiveFormula implements FormattableObj {
 				Hashvalue.add(indexTo);
 				ToHash.replace(newindex, Hashvalue);
 			}
- //     System.out.println("To:"+To.toString());
- //     System.out.println("ToHash:"+ToHash.toString());
+
 			System.out.println("Indv:"+To.size());
 			System.out.println("New Indv:"+ToHash.size());
 	   
