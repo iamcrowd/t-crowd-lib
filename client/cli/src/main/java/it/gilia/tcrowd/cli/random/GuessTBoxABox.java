@@ -16,12 +16,12 @@ import java.util.Map;
 import java.util.Objects;
 
 
-@Command(name = "RandomTBoxAbsABox",
+@Command(name = "GuessTBoxABox",
 description = "Random TBox, ABox -> Abstracted KB for Experiments"
 				+ "\n"
 				+ "\t \t \t \t \t TBox and ABox are randomly generated with future operators and the required parameters.")
 
-public class TCrowdRandomTBoxAbsABox extends TCrowdRandomAbstractionCommand {
+public class GuessTBoxABox extends TCrowdRandomAbstractionCommand {
 
 	// TBox
 	@Option(type = OptionType.COMMAND, name = {"-ltbox", "--lengthTBox"}, title = "Concept Inclusion",
@@ -79,11 +79,6 @@ public class TCrowdRandomTBoxAbsABox extends TCrowdRandomAbstractionCommand {
 	@BashCompletion(behaviour = CompletionBehaviour.NONE)
 	Integer T;
 
-	@Option(type = OptionType.COMMAND, name = {"-it", "--iteration"}, title = "Number of Iterations for Experiments",
-	description = "Number of batches generated for s, t and i")
-	@BashCompletion(behaviour = CompletionBehaviour.NONE)
-	Integer B;
-
     @Override
     public void run() {
 
@@ -101,68 +96,31 @@ public class TCrowdRandomTBoxAbsABox extends TCrowdRandomAbstractionCommand {
             Objects.requireNonNull(N, "Number of Concepts and Roles must not be null");
             Objects.requireNonNull(T, "Maximum Time must not be null");
 
-			if (Objects.isNull(B)){
+
             		
-    			TDLLiteN_TBox_AbsABox tboxAbsABox = new TDLLiteN_TBox_AbsABox();
+    		TDLLiteN_TBox_AbsABox tboxAbsABox = new TDLLiteN_TBox_AbsABox();
 
-				TBox t = new TBox();
-				ABox a = new ABox();
+			TBox t = new TBox();
+			ABox a = new ABox();
 
 				
-				t = tboxAbsABox.getFTBox(ltbox, lc, N, qm, pr, pt);
+			t = tboxAbsABox.getFTBox(ltbox, lc, N, qm, pr, pt);
 
-				Runtime runtime = Runtime.getRuntime();
-
-				a = tboxAbsABox.getABox(assertions, N, I, T);
-
-				// Run the garbage collector to release memory after guessing our input KB
-				runtime.gc();
+			System.out.println("Start: " + (double) (Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory()) / 1024);
+			a = tboxAbsABox.getABox(assertions, N, I, T);
+			System.out.println("Used: " + (double) (Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory()) / 1024);
 			
-				Map<String, Integer> statsABox = a.getStatsABox();
-				System.out.println("");
-				System.out.println("------TDLITE ABOX");
+			Map<String, Integer> statsABox = a.getStatsABox();
+			System.out.println("");
+			System.out.println("------TDLITE ABOX");
 			
-				String keyA;
-				keyA="Concept_Assertions:";
-				System.out.println(keyA+ statsABox.get(keyA));
-				keyA="Role_Assertions:";
-				System.out.println(keyA+ statsABox.get(keyA));
+			String keyA;
+			keyA="Concept_Assertions:";
+			System.out.println(keyA+ statsABox.get(keyA));
+			keyA="Role_Assertions:";
+			System.out.println(keyA+ statsABox.get(keyA));
                     		
-            	TDLLiteNABSFPXReasoner.buildCheckTBoxAbsABoxSAT(t, true, "test", a);
-
-			} else {
-				TDLLiteN_TBox_AbsABox tboxAbsABox = new TDLLiteN_TBox_AbsABox();
-				TBox t = new TBox();
-				t = tboxAbsABox.getFTBox(ltbox, lc, N, qm, pr, pt);
-
-				for (int i = 1; i <= B; i++) {
-					System.out.println("-------------------------Starting iteration N° " + i);
-
-					ABox a = new ABox();
-
-					Runtime runtime = Runtime.getRuntime();
-
-					a = tboxAbsABox.getABox(assertions, N, I, T);
-
-					// Run the garbage collector to release memory after guessing our input KB
-					runtime.gc();
-				
-					Map<String, Integer> statsABox = a.getStatsABox();
-					System.out.println("");
-					System.out.println("------TDLITE ABOX");
-				
-					String keyA;
-					keyA="Concept_Assertions:";
-					System.out.println(keyA+ statsABox.get(keyA));
-					keyA="Role_Assertions:";
-					System.out.println(keyA+ statsABox.get(keyA));
-					String prefix = assertions.toString() + "_" + i;
-								
-					TDLLiteNABSFPXReasoner.buildCheckTBoxAbsABoxSAT(t, true, prefix, a);
-
-					System.out.println("-------------------------Ending iteration N° " + i);
-				}
-			}
+            	//TDLLiteNABSFPXReasoner.buildCheckTBoxAbsABoxSAT(t, true, "test", a);
 
         } catch (Exception e) {
             System.err.println("Error occurred during encoding: "
