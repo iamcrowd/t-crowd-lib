@@ -9,6 +9,8 @@ import org.json.JSONTokener;
 import org.json.JSONException;
 
 import org.jgrapht.graph.DefaultDirectedGraph;
+import org.jgrapht.graph.DefaultEdge;
+import org.jgrapht.graph.DirectedAcyclicGraph;
 
 import java.util.*;
 import java.text.*;
@@ -73,7 +75,8 @@ import it.unibz.inf.tdllitefpx.abox.ABoxRoleAssertion;
 		private static final OWLClassExpression TOP = new OWLDataFactoryImpl().getOWLThing();
 		private static final OWLClassExpression BOT = new OWLDataFactoryImpl().getOWLNothing();
 
-		// private DefaultDirectedGraph<OWLPropertyExpression, edgeClass> role_hierarchy;
+		private DefaultDirectedGraph<OWLPropertyExpression, DefaultEdge> role_hierarchy;
+		private Set<OWLPropertyExpression> number_restrictions_allowed;
 
 		TBox myTBox = new TBox();
 		
@@ -179,6 +182,40 @@ import it.unibz.inf.tdllitefpx.abox.ABoxRoleAssertion;
 		* @implSpec OBJECT_SOME_VALUES_FROM(P, TOP) as OBJECT_MIN_CARDINALITY(1, P, TOP)				
 		*
      	*/
+		public void dlliteRI() {
+			// get all tbox axioms
+        	Set<OWLAxiom> tboxAxioms = this.ontology.tboxAxioms(Imports.EXCLUDED).collect(Collectors.toSet());
+
+        	// iterate each axiom
+        	tboxAxioms.forEach(axiom -> {
+            	try {
+                	// PROCESSING ONLY ROLE INCLUSIONS
+					System.out.println(axiom.toString());
+
+					// PROPERTY AXIOMS -- INCLUSIONS
+
+					if (axiom.isOfType(AxiomType.SUB_OBJECT_PROPERTY)) {
+						ProcessAxiomSubObjectPropertyOf(axiom);
+					} else if (axiom.isOfType(AxiomType.EQUIVALENT_OBJECT_PROPERTIES)) {
+						ProcessAxiomEquivelentObjectProperties(axiom);
+					} else if (axiom.isOfType(AxiomType.DISJOINT_OBJECT_PROPERTIES)) {
+						ProcessAxiomDisjointObjectProperties(axiom);
+					} else if (axiom.isOfType(AxiomType.INVERSE_OBJECT_PROPERTIES)) {
+						ProcessAxiomInverseObjectProperties(axiom);
+					}
+
+				
+            	} catch (Exception e) {
+
+            	}
+        	});
+
+			 DirectedAcyclicGraph<OWLPropertyExpression, DefaultEdge> rh_condensation = role_hierarchy.getCondensation();
+			 for each (role) in (rh_condensation source scc's):
+					number_restrictions_allowed.add(role)
+
+		}
+
     	public void dlliteCI() {
         	// get all tbox axioms
         	Set<OWLAxiom> tboxAxioms = this.ontology.tboxAxioms(Imports.EXCLUDED).collect(Collectors.toSet());
@@ -186,17 +223,21 @@ import it.unibz.inf.tdllitefpx.abox.ABoxRoleAssertion;
         	// iterate each axiom
         	tboxAxioms.forEach(axiom -> {
             	try {
-                	// determine if axiom is of type SubClassOf
+                	// PROCESSING ONLY CONCEPT INCLUSIONS
+
 					System.out.println(axiom.toString());
 
 					// CLASS AXIOMS
 
                 	if (axiom.isOfType(AxiomType.SUBCLASS_OF)) {
                     	ProcessAxiomSubclass(axiom);
+						
                 	} else if (axiom.isOfType(AxiomType.EQUIVALENT_CLASSES)){
 						ProcessAxiomEquivalentClasses(axiom);
+
 					} else if (axiom.isOfType(AxiomType.DISJOINT_CLASSES)){
 						ProcessAxiomDisjointClasses(axiom);
+
 					} else if (axiom.isOfType(AxiomType.DISJOINT_UNION)) {
 						OWLAxiom disjointness_part = ((OWLDisjointUnionAxiom) axiom).getOWLDisjointClassesAxiom();
 						OWLAxiom equivalence_part = ((OWLDisjointUnionAxiom) axiom).getOWLEquivalentClassesAxiom();
@@ -208,25 +249,17 @@ import it.unibz.inf.tdllitefpx.abox.ABoxRoleAssertion;
 
 					} else if (axiom.isOfType(AxiomType.OBJECT_PROPERTY_DOMAIN)) {
 						ProcessAxiomPropertyDomain(axiom);
+
 					} else if (axiom.isOfType(AxiomType.OBJECT_PROPERTY_RANGE)) {
 						ProcessAxiomPropertyRange(axiom);
+
 					} else if (axiom.isOfType(AxiomType.FUNCTIONAL_OBJECT_PROPERTY)) {
 						ProcessAxiomFunctionalProperty(axiom);
+
 					} else if (axiom.isOfType(AxiomType.INVERSE_FUNCTIONAL_OBJECT_PROPERTY)) {
 						ProcessAxiomInverseFunctionalProperty(axiom);
 
-					// PROPERTY AXIOMS -- INCLUSIONS
-
-					} else if (axiom.isOfType(AxiomType.SUB_OBJECT_PROPERTY)) {
-						ProcessAxiomSubProperty(axiom);
-					} else if (axiom.isOfType(AxiomType.EQUIVALENT_OBJECT_PROPERTIES)) {
-						ProcessAxiomEquivelentProperties(axiom);
-					} else if (axiom.isOfType(AxiomType.DISJOINT_OBJECT_PROPERTIES)) {
-						ProcessAxiomDisjointProperties(axiom);
-					} else if (axiom.isOfType(AxiomType.INVERSE_OBJECT_PROPERTIES)) {
-						ProcessAxiomInverseProperties(axiom);
-					}
-
+					} 
 				
             	} catch (Exception e) {
 
@@ -234,73 +267,19 @@ import it.unibz.inf.tdllitefpx.abox.ABoxRoleAssertion;
         	});
 		}
 
-		private void ProcessAxiomInverseProperties(OWLAxiom axiom) {
+		// AXIOM PROCESSORS ///////////////////////////////////////////////////
+		///////////////////////////////////////////////////////////////////////
 
-		}
+		// CLASS AXIOMS ///////////////////////////////////////////////////////
 
-		private void ProcessAxiomDisjointProperties(OWLAxiom axiom) {
-		}
-
-		private void ProcessAxiomEquivelentProperties(OWLAxiom axiom) {
-
-		}
-
-		private void ProcessAxiomSubProperty(OWLAxiom axiom) {
-			// OWLPropertyExpression left = ((OWLSubPropertyOfAxiom) axiom).getSubProperty();
-			// OWLPropertyExpression right = ((OWLSubPropertyOfAxiom) axiom).getSuperProperty();
-
-			// role_hierarchy.addEdge(left, right);
+		private void ProcessAxiomSubclass(OWLAxiom axiom) {
+			// get left and right expressions (SubClass -> SuperClass)
+			OWLClassExpression left = ((OWLSubClassOfAxiom) axiom).getSubClass();
+			OWLClassExpression right = ((OWLSubClassOfAxiom) axiom).getSuperClass();
 			
-			// Role dllite_left = ConvertRoleToDllite(left);
-			// Role dllite_right = ConvertRoleToDllite(right);
-			// this.myTBox.add(new RoleInclusionAssertion(dllite_left, dllite_right));
-		}
-
-		private void ProcessAxiomInverseFunctionalProperty(OWLAxiom axiom) {
-			OWLObjectPropertyExpression property = ((OWLObjectPropertyRangeAxiom) axiom).getProperty();
-			OWLObjectMinCardinality scoa = new OWLObjectMinCardinalityImpl(property.getInverseProperty(), 2, TOP);
-
-			Concept dllite_left = ConvertConceptToDllite(scoa);
-			Concept bottom = new BottomConcept();
-			this.myTBox.add(new ConceptInclusionAssertion(dllite_left, bottom));
-		}
-
-		private void ProcessAxiomFunctionalProperty(OWLAxiom axiom) {
-			OWLObjectPropertyExpression property = ((OWLObjectPropertyDomainAxiom) axiom).getProperty();
-			OWLObjectMinCardinality scoa = new OWLObjectMinCardinalityImpl(property, 2, TOP);
-
-			Concept dllite_left = ConvertConceptToDllite(scoa);
-			Concept bottom = new BottomConcept();
-			this.myTBox.add(new ConceptInclusionAssertion(dllite_left, bottom));
-		}
-
-		private void ProcessAxiomPropertyRange(OWLAxiom axiom) {
-			OWLObjectPropertyExpression property = ((OWLObjectPropertyRangeAxiom) axiom).getProperty();
-			OWLClassExpression range = ((OWLObjectPropertyRangeAxiom) axiom).getRange();
-			OWLObjectMinCardinality scoa = new OWLObjectMinCardinalityImpl(property.getInverseProperty(), 1, TOP);
-
-			Concept dllite_left = ConvertConceptToDllite(scoa);
-			Concept dllite_right = ConvertConceptToDllite(range);
+			Concept dllite_left = ConvertConceptToDllite(left);
+			Concept dllite_right = ConvertConceptToDllite(right);
 			this.myTBox.add(new ConceptInclusionAssertion(dllite_left, dllite_right));
-		}
-
-		private void ProcessAxiomPropertyDomain(OWLAxiom axiom) {
-			OWLObjectPropertyExpression property = ((OWLObjectPropertyDomainAxiom) axiom).getProperty();
-			OWLClassExpression domain = ((OWLObjectPropertyDomainAxiom) axiom).getDomain();
-			OWLObjectMinCardinality scoa = new OWLObjectMinCardinalityImpl(property, 1, TOP);
-
-			Concept dllite_left = ConvertConceptToDllite(scoa);
-			Concept dllite_right = ConvertConceptToDllite(domain);
-			this.myTBox.add(new ConceptInclusionAssertion(dllite_left, dllite_right));
-		}
-
-		private void ProcessAxiomDisjointClasses(OWLAxiom axiom) {
-			Collection<OWLSubClassOfAxiom> subClassOfAxioms = new ArrayList<OWLSubClassOfAxiom>();
-			subClassOfAxioms = ((OWLDisjointClassesAxiom) axiom).asOWLSubClassOfAxioms();
-
-			subClassOfAxioms.forEach(ax -> {
-				ProcessAxiomSubclass(ax);
-			});
 		}
 
 		private void ProcessAxiomEquivalentClasses(OWLAxiom axiom) {
@@ -313,17 +292,96 @@ import it.unibz.inf.tdllitefpx.abox.ABoxRoleAssertion;
 			});
 		}
 
-		private void ProcessAxiomSubclass(OWLAxiom axiom) {
-			// get left and right expressions (SubClass -> SuperClass)
-			OWLClassExpression left = ((OWLSubClassOfAxiom) axiom).getSubClass();
-			OWLClassExpression right = ((OWLSubClassOfAxiom) axiom).getSuperClass();
-			
-			Concept dllite_left = ConvertConceptToDllite(left);
-			Concept dllite_right = ConvertConceptToDllite(right);
+		private void ProcessAxiomDisjointClasses(OWLAxiom axiom) {
+			Collection<OWLSubClassOfAxiom> subClassOfAxioms = new ArrayList<OWLSubClassOfAxiom>();
+			subClassOfAxioms = ((OWLDisjointClassesAxiom) axiom).asOWLSubClassOfAxioms();
+
+			subClassOfAxioms.forEach(ax -> {
+				ProcessAxiomSubclass(ax);
+			});
+		}
+
+		// OBJECT PROPERTY AXIOMS: DOMAIN AND RANGE ///////////////////////////
+
+		private void ProcessAxiomPropertyDomain(OWLAxiom axiom) {
+			OWLObjectPropertyExpression property = ((OWLObjectPropertyDomainAxiom) axiom).getProperty();
+			OWLClassExpression domain = ((OWLObjectPropertyDomainAxiom) axiom).getDomain();
+			OWLObjectMinCardinality scoa = new OWLObjectMinCardinalityImpl(property, 1, TOP);
+
+			Concept dllite_left = ConvertConceptToDllite(scoa);
+			Concept dllite_right = ConvertConceptToDllite(domain);
 			this.myTBox.add(new ConceptInclusionAssertion(dllite_left, dllite_right));
 		}
 
+		private void ProcessAxiomPropertyRange(OWLAxiom axiom) {
+			OWLObjectPropertyExpression property = ((OWLObjectPropertyRangeAxiom) axiom).getProperty();
+			OWLClassExpression range = ((OWLObjectPropertyRangeAxiom) axiom).getRange();
+			OWLObjectMinCardinality scoa = new OWLObjectMinCardinalityImpl(property.getInverseProperty(), 1, TOP);
 
+			Concept dllite_left = ConvertConceptToDllite(scoa);
+			Concept dllite_right = ConvertConceptToDllite(range);
+			this.myTBox.add(new ConceptInclusionAssertion(dllite_left, dllite_right));
+		}
+
+		// OBJECT PROPERTY AXIOMS: FUNCTIONALITY //////////////////////////////
+		
+		private void ProcessAxiomFunctionalProperty(OWLAxiom axiom) {
+			OWLObjectPropertyExpression property = ((OWLObjectPropertyDomainAxiom) axiom).getProperty();
+			OWLObjectMinCardinality scoa = new OWLObjectMinCardinalityImpl(property, 2, TOP);
+
+			Concept dllite_left = ConvertConceptToDllite(scoa);
+			Concept bottom = new BottomConcept();
+			this.myTBox.add(new ConceptInclusionAssertion(dllite_left, bottom));
+		}
+
+		private void ProcessAxiomInverseFunctionalProperty(OWLAxiom axiom) {
+			OWLObjectPropertyExpression property = ((OWLObjectPropertyRangeAxiom) axiom).getProperty();
+			OWLObjectMinCardinality scoa = new OWLObjectMinCardinalityImpl(property.getInverseProperty(), 2, TOP);
+
+			Concept dllite_left = ConvertConceptToDllite(scoa);
+			Concept bottom = new BottomConcept();
+			this.myTBox.add(new ConceptInclusionAssertion(dllite_left, bottom));
+		}
+
+		// OBJECT PROPERTY AXIOMS: INCLUSIONS /////////////////////////////////
+
+		private void ProcessAxiomSubObjectPropertyOf(OWLAxiom axiom) {
+			OWLPropertyExpression left = ((OWLSubObjectPropertyOfAxiom) axiom).getSubProperty();
+			OWLPropertyExpression right = ((OWLSubObjectPropertyOfAxiom) axiom).getSuperProperty();
+
+			role_hierarchy.addEdge(left, right);
+			
+			Role dllite_left = ConvertRoleToDllite(left);
+			Role dllite_right = ConvertRoleToDllite(right);
+			this.myTBox.add(new RoleInclusionAssertion(dllite_left, dllite_right));
+		}
+
+		private void ProcessAxiomEquivelentObjectProperties(OWLAxiom axiom) {
+			Collection<OWLSubObjectPropertyOfAxiom> subPropertyOfAxioms = new ArrayList<OWLSubObjectPropertyOfAxiom>();
+			subPropertyOfAxioms = ((OWLEquivalentObjectPropertiesAxiom) axiom).asSubObjectPropertyOfAxioms();
+
+			subPropertyOfAxioms.forEach(ax -> {
+				ProcessAxiomSubObjectPropertyOf(ax);
+
+			});
+		}
+
+		private void ProcessAxiomInverseObjectProperties(OWLAxiom axiom) {
+			// COSA FARE?
+		}
+
+		private void ProcessAxiomDisjointObjectProperties(OWLAxiom axiom) {
+			Collection<OWLSubObjectPropertyOfAxiom> subPropertyOfAxioms = new ArrayList<OWLSubObjectPropertyOfAxiom>();
+			subPropertyOfAxioms = ((OWLEquivalentObjectPropertiesAxiom) axiom).asSubObjectPropertyOfAxioms();
+
+			subPropertyOfAxioms.forEach(ax -> {
+				ProcessAxiomSubObjectPropertyOf(ax);
+
+			});
+		}
+
+		
+		
 
 		/**
 		 * Converts an OWL Class Expression to a DL-Lite concept
