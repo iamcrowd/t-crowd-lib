@@ -366,8 +366,29 @@ import it.unibz.inf.tdllitefpx.abox.ABoxRoleAssertion;
 			});
 		}
 
+<<<<<<< HEAD
 		private void ProcessAxiomInverseObjectProperties(OWLAxiom axiom) {
 			// COSA FARE?
+=======
+		private void ProcessAxiomSubclass(OWLAxiom axiom) {
+			// get left and right expressions (SubClass -> SuperClass)
+			OWLClassExpression left = ((OWLSubClassOfAxiom) axiom).getSubClass();
+			OWLClassExpression right = ((OWLSubClassOfAxiom) axiom).getSuperClass();
+
+			// normalise UNION_OF -> Atom
+			if (isUnion(left) && isAtomic(right)){
+				Set<OWLClassExpression> disjuncts = left.asDisjunctSet();
+				Concept dllite_right = ConvertConceptToDllite(right);
+				for (OWLClassExpression d : disjuncts) {
+					Concept dllite_left = ConvertConceptToDllite(d);
+					this.myTBox.add(new ConceptInclusionAssertion(dllite_left, dllite_right));
+				}
+			} else {
+				Concept dllite_left = ConvertConceptToDllite(left);
+				Concept dllite_right = ConvertConceptToDllite(right);
+				this.myTBox.add(new ConceptInclusionAssertion(dllite_left, dllite_right));
+			}
+>>>>>>> fb141964f36b6cd1fa146037a16a5e41beb668bb
 		}
 
 		private void ProcessAxiomDisjointObjectProperties(OWLAxiom axiom) {
