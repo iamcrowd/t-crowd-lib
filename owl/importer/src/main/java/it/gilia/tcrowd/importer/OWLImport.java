@@ -7,10 +7,12 @@ import org.json.JSONObject;
 import org.json.JSONStringer;
 import org.json.JSONTokener;
 import org.json.JSONException;
-
+import org.jgrapht.alg.connectivity.KosarajuStrongConnectivityInspector;
+import org.jgrapht.alg.interfaces.StrongConnectivityAlgorithm;
 import org.jgrapht.graph.DefaultDirectedGraph;
 import org.jgrapht.graph.DefaultEdge;
 import org.jgrapht.graph.DirectedAcyclicGraph;
+import org.jgrapht.Graph;
 
 import java.util.*;
 import java.text.*;
@@ -56,10 +58,12 @@ import it.unibz.inf.tdllitefpx.roles.PositiveRole;
 import it.unibz.inf.tdllitefpx.roles.Role;
 import it.unibz.inf.tdllitefpx.roles.AtomicRole;
 import it.unibz.inf.tdllitefpx.tbox.ConceptInclusionAssertion;
+import it.unibz.inf.tdllitefpx.tbox.RBox;
 import it.unibz.inf.tdllitefpx.tbox.TBox;
 import it.unibz.inf.tdllitefpx.abox.ABox;
 import it.unibz.inf.tdllitefpx.abox.ABoxConceptAssertion;
 import it.unibz.inf.tdllitefpx.abox.ABoxRoleAssertion;
+import it.unibz.inf.tdllitefpx.tbox.RoleInclusionAssertion;
 
 
 	/**
@@ -75,10 +79,11 @@ import it.unibz.inf.tdllitefpx.abox.ABoxRoleAssertion;
 		private static final OWLClassExpression TOP = new OWLDataFactoryImpl().getOWLThing();
 		private static final OWLClassExpression BOT = new OWLDataFactoryImpl().getOWLNothing();
 
-		private DefaultDirectedGraph<OWLPropertyExpression, DefaultEdge> role_hierarchy;
-		private Set<OWLPropertyExpression> number_restrictions_allowed;
-
 		TBox myTBox = new TBox();
+		RBox myRBox = new RBox();
+
+		Graph<OWLPropertyExpression, DefaultEdge> role_hierarchy;
+		Set<OWLPropertyExpression> number_resrtictions_allowed_for;
 		
 		public OWLImport() {
 			this.manager = OWLManager.createOWLOntologyManager();
@@ -89,7 +94,7 @@ import it.unibz.inf.tdllitefpx.abox.ABoxRoleAssertion;
 		 * 
 		 * @return
 		 */
-		public OWLOntology getOntology(){
+		public OWLOntology getOntology() {
 			return ontology;
 		}
 
@@ -98,7 +103,7 @@ import it.unibz.inf.tdllitefpx.abox.ABoxRoleAssertion;
 		 * 
 		 * @return
 		 */
-		public TBox getTBox(){
+		public TBox getTBox() {
 			return this.myTBox;
 		}
 
@@ -210,9 +215,15 @@ import it.unibz.inf.tdllitefpx.abox.ABoxRoleAssertion;
             	}
         	});
 
-			 DirectedAcyclicGraph<OWLPropertyExpression, DefaultEdge> rh_condensation = role_hierarchy.getCondensation();
-			 for each (role) in (rh_condensation source scc's):
-					number_restrictions_allowed.add(role)
+			// Find all roles for which number restrictions are allowed
+
+			StrongConnectivityAlgorithm<OWLPropertyExpression, DefaultEdge> scc_computer =
+				new KosarajuStrongConnectivityInspector<OWLPropertyExpression, DefaultEdge>(role_hierarchy);
+
+			Graph<Graph<OWLPropertyExpression, DefaultEdge>, DefaultEdge> condensation =
+				scc_computer.getCondensation();
+
+			// I will add number_restrictions_allowed_for construction here
 
 		}
 
@@ -230,7 +241,7 @@ import it.unibz.inf.tdllitefpx.abox.ABoxRoleAssertion;
 					// CLASS AXIOMS
 
                 	if (axiom.isOfType(AxiomType.SUBCLASS_OF)) {
-                    	ProcessAxiomSubclass(axiom);
+                    	ProcessAxiomSubclassOf(axiom);
 						
                 	} else if (axiom.isOfType(AxiomType.EQUIVALENT_CLASSES)){
 						ProcessAxiomEquivalentClasses(axiom);
@@ -272,14 +283,26 @@ import it.unibz.inf.tdllitefpx.abox.ABoxRoleAssertion;
 
 		// CLASS AXIOMS ///////////////////////////////////////////////////////
 
-		private void ProcessAxiomSubclass(OWLAxiom axiom) {
+		private void ProcessAxiomSubclassOf(OWLAxiom axiom) {
+
 			// get left and right expressions (SubClass -> SuperClass)
+
 			OWLClassExpression left = ((OWLSubClassOfAxiom) axiom).getSubClass();
 			OWLClassExpression right = ((OWLSubClassOfAxiom) axiom).getSuperClass();
-			
-			Concept dllite_left = ConvertConceptToDllite(left);
-			Concept dllite_right = ConvertConceptToDllite(right);
-			this.myTBox.add(new ConceptInclusionAssertion(dllite_left, dllite_right));
+
+			// normalise UNION_OF -> Atom
+			if (isUnion(left) && isAtomic(right)){
+				Set<OWLClassExpression> disjuncts = left.asDisjunctSet();
+				Concept dllite_right = ConvertConceptToDllite(right, true);
+				for (OWLClassExpression d : disjuncts) {
+					Concept dllite_left = ConvertConceptToDllite(d, false);
+					this.myTBox.add(new ConceptInclusionAssertion(dllite_left, dllite_right));
+				}
+			} else {
+				Concept dllite_left = ConvertConceptToDllite(left, false);
+				Concept dllite_right = ConvertConceptToDllite(right, true);
+				this.myTBox.add(new ConceptInclusionAssertion(dllite_left, dllite_right));
+			}
 		}
 
 		private void ProcessAxiomEquivalentClasses(OWLAxiom axiom) {
@@ -287,7 +310,7 @@ import it.unibz.inf.tdllitefpx.abox.ABoxRoleAssertion;
 			subClassOfAxioms = ((OWLEquivalentClassesAxiom) axiom).asOWLSubClassOfAxioms();
 
 			subClassOfAxioms.forEach(ax -> {
-				ProcessAxiomSubclass(ax);
+				ProcessAxiomSubclassOf(ax);
 
 			});
 		}
@@ -297,7 +320,7 @@ import it.unibz.inf.tdllitefpx.abox.ABoxRoleAssertion;
 			subClassOfAxioms = ((OWLDisjointClassesAxiom) axiom).asOWLSubClassOfAxioms();
 
 			subClassOfAxioms.forEach(ax -> {
-				ProcessAxiomSubclass(ax);
+				ProcessAxiomSubclassOf(ax);
 			});
 		}
 
@@ -308,8 +331,8 @@ import it.unibz.inf.tdllitefpx.abox.ABoxRoleAssertion;
 			OWLClassExpression domain = ((OWLObjectPropertyDomainAxiom) axiom).getDomain();
 			OWLObjectMinCardinality scoa = new OWLObjectMinCardinalityImpl(property, 1, TOP);
 
-			Concept dllite_left = ConvertConceptToDllite(scoa);
-			Concept dllite_right = ConvertConceptToDllite(domain);
+			Concept dllite_left = ConvertConceptToDllite(scoa, false);
+			Concept dllite_right = ConvertConceptToDllite(domain, true);
 			this.myTBox.add(new ConceptInclusionAssertion(dllite_left, dllite_right));
 		}
 
@@ -318,8 +341,8 @@ import it.unibz.inf.tdllitefpx.abox.ABoxRoleAssertion;
 			OWLClassExpression range = ((OWLObjectPropertyRangeAxiom) axiom).getRange();
 			OWLObjectMinCardinality scoa = new OWLObjectMinCardinalityImpl(property.getInverseProperty(), 1, TOP);
 
-			Concept dllite_left = ConvertConceptToDllite(scoa);
-			Concept dllite_right = ConvertConceptToDllite(range);
+			Concept dllite_left = ConvertConceptToDllite(scoa, false);
+			Concept dllite_right = ConvertConceptToDllite(range, true);
 			this.myTBox.add(new ConceptInclusionAssertion(dllite_left, dllite_right));
 		}
 
@@ -329,7 +352,7 @@ import it.unibz.inf.tdllitefpx.abox.ABoxRoleAssertion;
 			OWLObjectPropertyExpression property = ((OWLObjectPropertyDomainAxiom) axiom).getProperty();
 			OWLObjectMinCardinality scoa = new OWLObjectMinCardinalityImpl(property, 2, TOP);
 
-			Concept dllite_left = ConvertConceptToDllite(scoa);
+			Concept dllite_left = ConvertConceptToDllite(scoa, false);
 			Concept bottom = new BottomConcept();
 			this.myTBox.add(new ConceptInclusionAssertion(dllite_left, bottom));
 		}
@@ -338,7 +361,7 @@ import it.unibz.inf.tdllitefpx.abox.ABoxRoleAssertion;
 			OWLObjectPropertyExpression property = ((OWLObjectPropertyRangeAxiom) axiom).getProperty();
 			OWLObjectMinCardinality scoa = new OWLObjectMinCardinalityImpl(property.getInverseProperty(), 2, TOP);
 
-			Concept dllite_left = ConvertConceptToDllite(scoa);
+			Concept dllite_left = ConvertConceptToDllite(scoa, false);
 			Concept bottom = new BottomConcept();
 			this.myTBox.add(new ConceptInclusionAssertion(dllite_left, bottom));
 		}
@@ -348,12 +371,14 @@ import it.unibz.inf.tdllitefpx.abox.ABoxRoleAssertion;
 		private void ProcessAxiomSubObjectPropertyOf(OWLAxiom axiom) {
 			OWLPropertyExpression left = ((OWLSubObjectPropertyOfAxiom) axiom).getSubProperty();
 			OWLPropertyExpression right = ((OWLSubObjectPropertyOfAxiom) axiom).getSuperProperty();
-
-			role_hierarchy.addEdge(left, right);
 			
+			role_hierarchy.addVertex(left);
+			role_hierarchy.addVertex(right);
+			role_hierarchy.addEdge(left, right);
+
 			Role dllite_left = ConvertRoleToDllite(left);
 			Role dllite_right = ConvertRoleToDllite(right);
-			this.myTBox.add(new RoleInclusionAssertion(dllite_left, dllite_right));
+			this.myRBox.add(new RoleInclusionAssertion(dllite_left, dllite_right));
 		}
 
 		private void ProcessAxiomEquivelentObjectProperties(OWLAxiom axiom) {
@@ -366,29 +391,14 @@ import it.unibz.inf.tdllitefpx.abox.ABoxRoleAssertion;
 			});
 		}
 
-<<<<<<< HEAD
 		private void ProcessAxiomInverseObjectProperties(OWLAxiom axiom) {
-			// COSA FARE?
-=======
-		private void ProcessAxiomSubclass(OWLAxiom axiom) {
-			// get left and right expressions (SubClass -> SuperClass)
-			OWLClassExpression left = ((OWLSubClassOfAxiom) axiom).getSubClass();
-			OWLClassExpression right = ((OWLSubClassOfAxiom) axiom).getSuperClass();
+			Collection<OWLSubObjectPropertyOfAxiom> subPropertyOfAxioms = new ArrayList<OWLSubObjectPropertyOfAxiom>();
+			subPropertyOfAxioms = ((OWLInverseObjectPropertiesAxiom) axiom).asSubObjectPropertyOfAxioms();
 
-			// normalise UNION_OF -> Atom
-			if (isUnion(left) && isAtomic(right)){
-				Set<OWLClassExpression> disjuncts = left.asDisjunctSet();
-				Concept dllite_right = ConvertConceptToDllite(right);
-				for (OWLClassExpression d : disjuncts) {
-					Concept dllite_left = ConvertConceptToDllite(d);
-					this.myTBox.add(new ConceptInclusionAssertion(dllite_left, dllite_right));
-				}
-			} else {
-				Concept dllite_left = ConvertConceptToDllite(left);
-				Concept dllite_right = ConvertConceptToDllite(right);
-				this.myTBox.add(new ConceptInclusionAssertion(dllite_left, dllite_right));
-			}
->>>>>>> fb141964f36b6cd1fa146037a16a5e41beb668bb
+			subPropertyOfAxioms.forEach(ax -> {
+				ProcessAxiomSubObjectPropertyOf(ax);
+
+			});
 		}
 
 		private void ProcessAxiomDisjointObjectProperties(OWLAxiom axiom) {
@@ -410,14 +420,14 @@ import it.unibz.inf.tdllitefpx.abox.ABoxRoleAssertion;
 		 * @param e - an OWL Class Expression
 		 * @return result - a DL-Lite concept
 		 */
-		private static Concept ConvertConceptToDllite(OWLClassExpression e) {
+		private Concept ConvertConceptToDllite(OWLClassExpression e, boolean is_positive) {
 			if (isAtomic(e)) {
 				return new AtomicConcept(e.asOWLClass().getIRI().getFragment());
 			}
 
 			if (isNegated(e)) {
 				OWLClassExpression operand = ((OWLObjectComplementOf)e).getOperand();
-				return new NegatedConcept(ConvertConceptToDllite(operand));
+				return new NegatedConcept(ConvertConceptToDllite(operand, !is_positive));
 			}
 
 			if (isConjunctive(e)) {
@@ -425,7 +435,7 @@ import it.unibz.inf.tdllitefpx.abox.ABoxRoleAssertion;
 				Set<OWLClassExpression> conjuncts = e.asConjunctSet();
 
 				for (OWLClassExpression c : conjuncts) {
-					concept.add(ConvertConceptToDllite(c));
+					concept.add(ConvertConceptToDllite(c, is_positive));
 				}
 
 				return concept;
@@ -437,7 +447,7 @@ import it.unibz.inf.tdllitefpx.abox.ABoxRoleAssertion;
 				Set<OWLClassExpression> disjuncts = e.asDisjunctSet();
 
 				for (OWLClassExpression d : disjuncts) {
-					Concept dld = ConvertConceptToDllite(d);
+					Concept dld = ConvertConceptToDllite(d, is_positive);
 					conjunction_of_negations.add(new NegatedConcept(dld));
 				}
 
@@ -447,24 +457,43 @@ import it.unibz.inf.tdllitefpx.abox.ABoxRoleAssertion;
 			if (isQuantifiedRole(e)) {
 				OWLClassExpression filler = ((OWLObjectCardinalityRestrictionImpl)e).getFiller();
 
-				if (filler.equals(TOP)){
+				if (filler.equals(TOP)) {
 					OWLPropertyExpression namedProperty = ((OWLObjectCardinalityRestrictionImpl) e).getProperty().getNamedProperty();
 					OWLPropertyExpression property = ((OWLObjectCardinalityRestrictionImpl) e).getProperty().getInverseProperty();
 
 					Role positive_role = new PositiveRole(new AtomicRigidRole(namedProperty.asOWLObjectProperty().getIRI().getFragment()));
 					int cardinality = ((OWLObjectCardinalityRestrictionImpl)e).getCardinality();
+					
 
-					// if prop is inverse
-					if (namedProperty.equals(property)){
-						return new QuantifiedRole(positive_role.getInverse(), cardinality);
-					} else { // if pro is not inverse
-						return new QuantifiedRole(positive_role, cardinality);
+					if (is_positive || cardinality < 2 || number_resrtictions_allowed_for.contains(namedProperty)) {
+
+						// if prop is inverse
+						if (namedProperty.equals(property)){
+							return new QuantifiedRole(positive_role.getInverse(), cardinality);
+						} else { // if pro is not inverse
+						
+							return new QuantifiedRole(positive_role, cardinality);
+						}
 					}
 				}
 
 			}
 
 			throw new EmptyStackException();
+		}
+
+		private Role ConvertRoleToDllite(OWLPropertyExpression e) {
+			OWLPropertyExpression named_property = e.asOWLObjectProperty().getNamedProperty();
+			OWLPropertyExpression inverse_property = e.asOWLObjectProperty().getInverseProperty();
+
+			Role positive_role = 
+				new PositiveRole(new AtomicRigidRole(named_property.asOWLObjectProperty().getIRI().getFragment()));
+
+			if (named_property.equals(inverse_property)) {
+				return positive_role;
+			} else {
+				return positive_role.getInverse();
+			}
 		}
 
 	}	

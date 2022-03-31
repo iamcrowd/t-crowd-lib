@@ -1,6 +1,8 @@
 package it.unibz.inf.tdllitefpx.roles;
 
-public abstract class Role {
+import org.gario.code.output.FormattableObj;
+
+public abstract class Role implements FormattableObj {
 	AtomicRole refersTo;
 	Role inverseOf;
 	
