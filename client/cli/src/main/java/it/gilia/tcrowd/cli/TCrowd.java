@@ -64,6 +64,7 @@ public class TCrowd {
                         TCrowdRandomTBoxABoxFuture.class,
                         //Abs
                         TCrowdRandomAbsABox.class,
+                        TCrowdRandomTBoxJUSTAbsABox.class,
                         TCrowdRandomTBoxAbsABox.class
 
                 );

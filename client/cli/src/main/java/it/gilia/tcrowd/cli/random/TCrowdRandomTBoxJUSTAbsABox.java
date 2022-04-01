@@ -16,12 +16,12 @@ import java.util.Map;
 import java.util.Objects;
 
 
-@Command(name = "RandomTBoxAbsABox",
+@Command(name = "RandomTBoxJUSTAbsABox",
 description = "Random TBox, ABox -> Abstracted KB for Experiments"
 				+ "\n"
 				+ "\t \t \t \t \t TBox and ABox are randomly generated with future operators and the required parameters.")
 
-public class TCrowdRandomTBoxAbsABox extends TCrowdRandomAbstractionCommand {
+public class TCrowdRandomTBoxJUSTAbsABox extends TCrowdRandomAbstractionCommand {
 
 	// TBox
 	@Option(type = OptionType.COMMAND, name = {"-ltbox", "--lengthTBox"}, title = "Concept Inclusion",
@@ -121,7 +121,7 @@ public class TCrowdRandomTBoxAbsABox extends TCrowdRandomAbstractionCommand {
 				keyA="Role_Assertions:";
 				System.out.println(keyA+ statsABox.get(keyA));
                     		
-            	TDLLiteNABSFPXReasoner.buildCheckTBoxAbsABoxSAT(t, true, "test", a);
+            	TDLLiteNABSFPXReasoner.justAbsReasoner(t, true, "test", a);
 
 			} else {
 				TDLLiteN_TBox_AbsABox tboxAbsABox = new TDLLiteN_TBox_AbsABox();
@@ -146,7 +146,7 @@ public class TCrowdRandomTBoxAbsABox extends TCrowdRandomAbstractionCommand {
 
 					String prefix = assertions.toString() + "_" + i;
 								
-					TDLLiteNABSFPXReasoner.buildCheckTBoxAbsABoxSAT(t, true, prefix, a);
+					TDLLiteNABSFPXReasoner.justAbsReasoner(t, true, prefix, a);
 					System.out.println("-------------------------Ending iteration N° " + i);
 				}
 			}

@@ -14,10 +14,10 @@ public class AbstractionTestRandomWithTBox {
 		TBox t = new TBox();
 		ABox a = new ABox();
 
-		t = ABS.getFTBox(10, 5, 2, 3, 5, 5);
+		t = ABS.getFTBox(20, 5, 6, 3, 5, 5);
 		
 		//int NbAssertion, int sizeInd, int N, int max
-		a = ABS.getABox(100500, 2, 100, 5);
+		a = ABS.getABox(1400000, 6, 100, 5);
 		
 		Map<String, Integer> statsABox = a.getStatsABox();
 		System.out.println("");
