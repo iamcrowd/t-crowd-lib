@@ -110,5 +110,38 @@ public class OWLImportTest {
         }
     }
 
+    @Test
+    public void testAllCI() {
+        try {
+            String path = new String(OWLImport.class.getClassLoader().getResource("ontologies/toyAnimals.owl").toString());
+            String[] owlfilepath = path.split(":", 2);
+            OWLImport importer = new OWLImport();
+			importer.loadFromPath(owlfilepath[1]);
+			importer.dlliteCI();
+            try{
+				(new LatexOutputDocument(importer.getTBox())).toFile("toyAnimalsTbox.tex");
+                (new LatexOutputDocument(importer.getABox())).toFile("toyAnimalsAbox.tex");
+			} catch (Exception e) {}
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Test
+    public void testFunctionalRoles() {
+        try {
+            String path = new String(OWLImport.class.getClassLoader().getResource("ontologies/toyFunctionalRoles.owl").toString());
+            String[] owlfilepath = path.split(":", 2);
+            OWLImport importer = new OWLImport();
+			importer.loadFromPath(owlfilepath[1]);
+			importer.dlliteCI();
+            try{
+				(new LatexOutputDocument(importer.getTBox())).toFile("toyFunctionalRoles.tex");
+			} catch (Exception e) {}
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
 }
 
