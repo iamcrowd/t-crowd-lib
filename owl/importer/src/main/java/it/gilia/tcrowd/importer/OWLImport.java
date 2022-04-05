@@ -24,6 +24,7 @@ import uk.ac.manchester.cs.owl.owlapi.OWLClassImpl;
 import uk.ac.manchester.cs.owl.owlapi.OWLDataFactoryImpl;
 import uk.ac.manchester.cs.owl.owlapi.OWLObjectCardinalityRestrictionImpl;
 import uk.ac.manchester.cs.owl.owlapi.OWLObjectMinCardinalityImpl;
+import uk.ac.manchester.cs.owl.owlapi.OWLObjectPropertyCharacteristicAxiomImpl;
 import uk.ac.manchester.cs.owl.owlapi.OWLObjectSomeValuesFromImpl;
 import uk.ac.manchester.cs.owl.owlapi.OWLQuantifiedRestrictionImpl;
 import uk.ac.manchester.cs.owl.owlapi.OWLSubClassOfAxiomImpl;
@@ -346,8 +347,15 @@ import it.unibz.inf.tdllitefpx.tbox.RoleInclusionAssertion;
 		// OBJECT PROPERTY AXIOMS: FUNCTIONALITY //////////////////////////////
 		
 		private void ProcessAxiomFunctionalProperty(OWLAxiom axiom) {
-			OWLObjectPropertyExpression property = ((OWLObjectPropertyDomainAxiom) axiom).getProperty();
+			System.out.println("Parsing Functional OP");
+
+			OWLObjectPropertyExpression property = ((OWLObjectPropertyCharacteristicAxiomImpl) axiom).getProperty();
+
+			System.out.println("Property " + property.toString());
+
 			OWLObjectMinCardinality scoa = new OWLObjectMinCardinalityImpl(property, 2, TOP);
+
+			System.out.println("Min Card " + scoa.toString());
 
 			Concept dllite_left = ConvertConceptToDllite(scoa);
 			Concept bottom = new BottomConcept();
