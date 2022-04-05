@@ -263,9 +263,11 @@ import it.unibz.inf.tdllitefpx.tbox.RoleInclusionAssertion;
 						OWLIndividual subject = ((OWLObjectPropertyAssertionAxiom) axiom).getSubject();
 						OWLIndividual object = ((OWLObjectPropertyAssertionAxiom) axiom).getObject();
 
-						PositiveRole role = new PositiveRole(new AtomicRigidRole(property.toString()));
+						PositiveRole role = new PositiveRole(new AtomicRigidRole(property.asOWLObjectProperty().getIRI().getFragment()));
 
-						this.myABox.addABoxRoleAssertion(new ABoxRoleAssertion(role, subject.toString(), object.toString(), 0));
+						this.myABox.addABoxRoleAssertion(new ABoxRoleAssertion(role, 
+																			   subject.asOWLNamedIndividual().getIRI().getFragment(), 
+																			   object.asOWLNamedIndividual().getIRI().getFragment(), 0));
 					}
 				} catch (Exception e) {
 
