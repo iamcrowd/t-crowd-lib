@@ -14,16 +14,51 @@ import it.unibz.inf.dllite.DLLiteReasoner;
 public class DLLiteTest {
 
 	@Test
-	public void AdultDLLiteTest(){
+	public void AdultDLLiteSATTest(){
 		try{
-			String path = new String(OWLImport.class.getClassLoader().getResource("ontologies/AdultExampleDLLite.owl").toString());
+			String path = new String(OWLImport.class.getClassLoader().getResource("ontologies/AdultExampleDLLiteSAT.owl").toString());
+        	String[] owlfilepath = path.split(":", 2);
+        	OWLImport importer = new OWLImport();
+			importer.loadFromPath(owlfilepath[1]);
+			importer.dlliteCI();
+			importer.dlliteAbox();
+
+			try{
+				(new LatexOutputDocument(importer.getTBox())).toFile("AdultExampleDLLiteSAT.tex");
+			} catch (Exception e) {}
+
+			DLLiteReasoner.checkKB(
+				importer.getTBox(),
+				importer.getABox(), 
+				true, 
+				"Adult",
+				"all");
+
+
+			Map<String, String> stats = importer.getTBox().getStats();
+			System.out.println("");
+			System.out.println("------TBOX------");
+			String key;
+			key = "Basic Concepts:";
+			System.out.println(key + stats.get(key));
+			key = "Roles:";
+			System.out.println(key + stats.get(key));
+			key = "CIs:";
+			System.out.println(key + stats.get(key));
+		} catch (Exception e) {}
+	}
+
+	@Test
+	public void AdultDLLiteUNSATTest(){
+		try{
+			String path = new String(OWLImport.class.getClassLoader().getResource("ontologies/AdultExampleDLLiteUNSAT.owl").toString());
         	String[] owlfilepath = path.split(":", 2);
         	OWLImport importer = new OWLImport();
 			importer.loadFromPath(owlfilepath[1]);
 			importer.dlliteCI();
 
 			try{
-				(new LatexOutputDocument(importer.getTBox())).toFile("AdultExampleDLLite.tex");
+				(new LatexOutputDocument(importer.getTBox())).toFile("AdultExampleDLLiteUNSAT.tex");
 			} catch (Exception e) {}
 
 			DLLiteReasoner.checkTBoxSat(
