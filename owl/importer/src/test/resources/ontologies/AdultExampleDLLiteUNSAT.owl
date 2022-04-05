@@ -45,7 +45,7 @@
     </ClassAssertion>
     <ClassAssertion>
         <Class IRI="#Minor"/>
-        <NamedIndividual IRI="#Pipo"/>
+        <NamedIndividual IRI="#Marc"/>
     </ClassAssertion>
 </Ontology>
 
