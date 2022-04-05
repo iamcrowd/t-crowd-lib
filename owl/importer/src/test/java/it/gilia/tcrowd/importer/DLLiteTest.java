@@ -56,13 +56,15 @@ public class DLLiteTest {
         	OWLImport importer = new OWLImport();
 			importer.loadFromPath(owlfilepath[1]);
 			importer.dlliteCI();
+			importer.dlliteAbox();
 
 			try{
 				(new LatexOutputDocument(importer.getTBox())).toFile("AdultExampleDLLiteUNSAT.tex");
 			} catch (Exception e) {}
 
-			DLLiteReasoner.checkTBoxSat(
-				importer.getTBox(), 
+			DLLiteReasoner.checkKB(
+				importer.getTBox(),
+				importer.getABox(),
 				true, 
 				"Adult",
 				"all");
@@ -82,22 +84,59 @@ public class DLLiteTest {
 	}
 
 	@Test
-	public void StudentDLLiteTest(){
+	public void StudentDLLiteSATTest(){
 		try{
-			String path = new String(OWLImport.class.getClassLoader().getResource("ontologies/toyDomainRange.owl").toString());
+			String path = new String(OWLImport.class.getClassLoader().getResource("ontologies/toyDomainRangeSAT.owl").toString());
         	String[] owlfilepath = path.split(":", 2);
         	OWLImport importer = new OWLImport();
 			importer.loadFromPath(owlfilepath[1]);
 			importer.dlliteCI();
+			importer.dlliteAbox();
 
 			try{
-				(new LatexOutputDocument(importer.getTBox())).toFile("StudentDLLite.tex");
+				(new LatexOutputDocument(importer.getTBox())).toFile("StudentDLLiteSAT.tex");
 			} catch (Exception e) {}
 
-			DLLiteReasoner.checkTBoxSat(
-				importer.getTBox(), 
+			DLLiteReasoner.checkKB(
+				importer.getTBox(),
+				importer.getABox(),
 				true, 
 				"Student",
+				"all");
+
+
+			Map<String, String> stats = importer.getTBox().getStats();
+			System.out.println("");
+			System.out.println("------TBOX------");
+			String key;
+			key = "Basic Concepts:";
+			System.out.println(key + stats.get(key));
+			key = "Roles:";
+			System.out.println(key + stats.get(key));
+			key = "CIs:";
+			System.out.println(key + stats.get(key));
+		} catch (Exception e) {}
+	}
+
+	@Test
+	public void StudentDLLiteUNSATTest(){
+		try{
+			String path = new String(OWLImport.class.getClassLoader().getResource("ontologies/toyDomainRangeUNSAT.owl").toString());
+        	String[] owlfilepath = path.split(":", 2);
+        	OWLImport importer = new OWLImport();
+			importer.loadFromPath(owlfilepath[1]);
+			importer.dlliteCI();
+			importer.dlliteAbox();
+
+			try{
+				(new LatexOutputDocument(importer.getTBox())).toFile("StudentDLLiteUNSAT.tex");
+			} catch (Exception e) {}
+
+			DLLiteReasoner.checkKB(
+				importer.getTBox(),
+				importer.getABox(),
+				true, 
+				"StudentUNSAT",
 				"all");
 
 
