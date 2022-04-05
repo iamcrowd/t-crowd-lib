@@ -132,8 +132,14 @@ public class DLLiteReasoner {
 
 		// Parse ABox
 		a.addExtensionConstraintsABox(t);
-		Formula o = a.getABoxFormula(true);
+		Formula o = a.getABoxFormula(false);
 		
+		
+		Formula KB = new ConjunctiveFormula(qtl_N, o);
+				
+		if(verbose)
+				(new LatexDocumentCNF(KB)).toFile(prefix+"KB.tex");	
+
 		// Ground the final formula
 		Formula ltl = qtl_N.makePropositional(consts);
 		o = o.makePropositional(consts);
