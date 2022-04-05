@@ -42,6 +42,10 @@
         <Class IRI="#School"/>
         <NamedIndividual IRI="#School2"/>
     </ClassAssertion>
+    <DifferentIndividuals>
+        <NamedIndividual IRI="#School1"/>
+        <NamedIndividual IRI="#School2"/>
+    </DifferentIndividuals>
     <ObjectPropertyAssertion>
         <ObjectProperty IRI="#isEnrolled"/>
         <NamedIndividual IRI="#Pipo"/>
@@ -52,11 +56,9 @@
         <NamedIndividual IRI="#Pipo"/>
         <NamedIndividual IRI="#School2"/>
     </ObjectPropertyAssertion>
-    <NegativeObjectPropertyAssertion>
+    <FunctionalObjectProperty>
         <ObjectProperty IRI="#isEnrolled"/>
-        <NamedIndividual IRI="#Pipo"/>
-        <NamedIndividual IRI="#School1"/>
-    </NegativeObjectPropertyAssertion>
+    </FunctionalObjectProperty>
     <ObjectPropertyDomain>
         <ObjectProperty IRI="#isEnrolled"/>
         <Class IRI="#Student"/>

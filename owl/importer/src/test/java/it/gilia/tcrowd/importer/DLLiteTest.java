@@ -31,7 +31,7 @@ public class DLLiteTest {
 				importer.getTBox(),
 				importer.getABox(), 
 				true, 
-				"Adult",
+				"AdultSAT",
 				"all");
 
 
@@ -66,7 +66,7 @@ public class DLLiteTest {
 				importer.getTBox(),
 				importer.getABox(),
 				true, 
-				"Adult",
+				"AdultUNSAT",
 				"all");
 
 
@@ -101,7 +101,7 @@ public class DLLiteTest {
 				importer.getTBox(),
 				importer.getABox(),
 				true, 
-				"Student",
+				"StudentSAT",
 				"all");
 
 
