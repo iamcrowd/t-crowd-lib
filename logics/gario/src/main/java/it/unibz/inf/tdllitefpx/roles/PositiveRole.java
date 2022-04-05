@@ -1,5 +1,8 @@
 package it.unibz.inf.tdllitefpx.roles;
 
+import org.gario.code.output.OutputFormat;
+import org.gario.code.output.SymbolUndefinedException;
+
 public class PositiveRole extends Role {
 	
 	public PositiveRole(AtomicRole refersTo, NegativeRole inverseOf) {
@@ -13,4 +16,10 @@ public class PositiveRole extends Role {
 	}
 	
 	public String toString(){return refersTo.name;}
+
+	@Override
+	public String toString(OutputFormat fmt) throws SymbolUndefinedException {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }
