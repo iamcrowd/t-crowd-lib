@@ -3,7 +3,6 @@ package it.unibz.inf.dllite;
 import it.unibz.inf.qtl1.formulae.Formula;
 import it.unibz.inf.qtl1.output.LatexDocumentCNF;
 import it.unibz.inf.qtl1.output.NuSMVOutput;
-import it.unibz.inf.qtl1.output.fo.FOOutput;
 import it.unibz.inf.qtl1.output.pltl.PltlOutput;
 import it.unibz.inf.qtl1.terms.Constant;
 import it.unibz.inf.tdllitefpx.output.LatexOutputDocument;
@@ -69,19 +68,12 @@ public class DLLiteReasoner {
 				System.out.println("Solver" + Constants.black);
 				(new PltlOutput(ltl)).toFile(prefix+".pltl");
 			break;
-
-			case Constants.FO:
-				System.out.println("Generating FO file...");
-				(new FOOutput(qtl_N)).toFile(prefix+".tptp");
-			break;
 			
 			case Constants.all:
 				System.out.println("Solver..." + Constants.NuSMV);
 				(new NuSMVOutput(ltl)).toFile(prefix+".smv");
 				System.out.println("Solver" + Constants.black);
 				(new PltlOutput(ltl)).toFile(prefix+".pltl");
-				System.out.println("Generating FO file...");
-				(new FOOutput(qtl_N)).toFile(prefix+".tptp");
 			break;
 		
 			default:
