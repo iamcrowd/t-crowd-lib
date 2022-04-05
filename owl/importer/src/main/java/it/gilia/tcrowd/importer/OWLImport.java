@@ -253,7 +253,8 @@ import it.unibz.inf.tdllitefpx.tbox.RoleInclusionAssertion;
 						OWLClassExpression owl_class = ((OWLClassAssertionAxiom) axiom).getClassExpression();
 						OWLIndividual individual = ((OWLClassAssertionAxiom) axiom).getIndividual();
 
-						this.myABox.addConceptsAssertion(new ABoxConceptAssertion(new AtomicConcept(owl_class.toString()), individual.toString()));
+						this.myABox.addConceptsAssertion(new ABoxConceptAssertion(new AtomicConcept(owl_class.asOWLClass().getIRI().getFragment()), 
+																									individual.asOWLNamedIndividual().getIRI().getFragment()));
 
 					} else if (axiom.isOfType(AxiomType.OBJECT_PROPERTY_ASSERTION)) {
 						OWLObjectPropertyExpression property = 
