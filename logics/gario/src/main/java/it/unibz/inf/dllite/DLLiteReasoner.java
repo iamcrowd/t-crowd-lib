@@ -132,8 +132,8 @@ public class DLLiteReasoner {
 
 		// Parse ABox
 		a.addExtensionConstraintsABox(t);
+
 		Formula o = a.getABoxFormula(false);
-		
 		
 		Formula KB = new ConjunctiveFormula(qtl_N, o);
 				

@@ -87,14 +87,8 @@ public class DLLiteConverter extends TDLLiteNFPXConverter{
 	public Formula getFormula(){
 		Formula F;
 
-		System.out.println("Estoy aca!!");
-
 		this.getFactorizedEpsilon();
-
-		System.out.println("Estoy aca!!");
-
 		this.getExtendedFormula();
-		System.out.println("Estoy aca!!");
 
 		F = new ConjunctiveFormula(this.getFactorizedT(), cardinalities);
 		F = new UniversalFormula(
