@@ -248,7 +248,7 @@ import it.unibz.inf.tdllitefpx.tbox.RoleInclusionAssertion;
             	try {
                 	// PROCESSING ONLY CONCEPT INCLUSIONS
 
-					System.out.println(axiom.toString());
+					//System.out.println(axiom.toString());
 
 					if (axiom.isOfType(AxiomType.CLASS_ASSERTION)) {
 						OWLClassExpression owl_class = ((OWLClassAssertionAxiom) axiom).getClassExpression();
@@ -347,15 +347,8 @@ import it.unibz.inf.tdllitefpx.tbox.RoleInclusionAssertion;
 		// OBJECT PROPERTY AXIOMS: FUNCTIONALITY //////////////////////////////
 		
 		private void ProcessAxiomFunctionalProperty(OWLAxiom axiom) {
-			System.out.println("Parsing Functional OP");
-
 			OWLObjectPropertyExpression property = ((OWLObjectPropertyCharacteristicAxiomImpl) axiom).getProperty();
-
-			System.out.println("Property " + property.toString());
-
 			OWLObjectMinCardinality scoa = new OWLObjectMinCardinalityImpl(property, 2, TOP);
-
-			System.out.println("Min Card " + scoa.toString());
 
 			Concept dllite_left = ConvertConceptToDllite(scoa);
 			Concept bottom = new BottomConcept();
