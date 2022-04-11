@@ -317,9 +317,20 @@ import it.unibz.inf.tdllitefpx.tbox.RoleInclusionAssertion;
 			Collection<OWLSubClassOfAxiom> subClassOfAxioms = new ArrayList<OWLSubClassOfAxiom>();
 			subClassOfAxioms = ((OWLDisjointClassesAxiom) axiom).asOWLSubClassOfAxioms();
 
+			List<String> leftTracked = new ArrayList<String>();
 			subClassOfAxioms.forEach(ax -> {
-				ProcessAxiomSubclassOf(ax);
+				OWLClassExpression left = ((OWLSubClassOfAxiom) ax).getSubClass();
+				OWLClassExpression right = ((OWLSubClassOfAxiom) ax).getSuperClass();
+
+				leftTracked.add(left.toString());
+				if (!leftTracked.contains(((OWLObjectComplementOf) right).getOperand().toString())) {
+					ProcessAxiomSubclassOf(ax);
+				}
 			});
+
+		/*	subClassOfAxioms.forEach(ax -> {
+				ProcessAxiomSubclassOf(ax);
+			}); */
 		}
 
 		// OBJECT PROPERTY AXIOMS: DOMAIN AND RANGE ///////////////////////////
