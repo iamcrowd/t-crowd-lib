@@ -47,11 +47,9 @@
         <NamedIndividual IRI="#Pipo"/>
         <NamedIndividual IRI="#School1"/>
     </ObjectPropertyAssertion>
-    <ObjectPropertyAssertion>
+    <FunctionalObjectProperty>
         <ObjectProperty IRI="#isEnrolled"/>
-        <NamedIndividual IRI="#Pipo"/>
-        <NamedIndividual IRI="#School2"/>
-    </ObjectPropertyAssertion>
+    </FunctionalObjectProperty>
     <ObjectPropertyDomain>
         <ObjectProperty IRI="#isEnrolled"/>
         <Class IRI="#Student"/>
