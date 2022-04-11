@@ -79,6 +79,22 @@ public class OWLImportTest {
     }
 
     @Test
+    public void testDisjoint() {
+        try {
+            String path = new String(OWLImport.class.getClassLoader().getResource("ontologies/disjoint.owl").toString());
+            String[] owlfilepath = path.split(":", 2);
+            OWLImport importer = new OWLImport();
+            importer.loadFromPath(owlfilepath[1]);
+            importer.dlliteCI();
+            try{
+				(new LatexOutputDocument(importer.getTBox())).toFile("disjoint.tex");
+			} catch (Exception e) {}
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Test
     public void testDisjointUnion() {
         try {
             String path = new String(OWLImport.class.getClassLoader().getResource("ontologies/disjointUnion.owl").toString());
