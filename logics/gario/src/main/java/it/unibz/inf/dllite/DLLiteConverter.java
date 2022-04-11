@@ -9,9 +9,7 @@ import it.unibz.inf.qtl1.formulae.Formula;
 import it.unibz.inf.qtl1.formulae.ImplicationFormula;
 import it.unibz.inf.qtl1.formulae.NegatedFormula;
 import it.unibz.inf.qtl1.formulae.quantified.UniversalFormula;
-import it.unibz.inf.qtl1.formulae.temporal.Always;
 import it.unibz.inf.qtl1.terms.Constant;
-import it.unibz.inf.qtl1.terms.Variable;
 import it.unibz.inf.tdllitefpx.TDLLiteNFPXConverter;
 import it.unibz.inf.tdllitefpx.concepts.AtomicConcept;
 import it.unibz.inf.tdllitefpx.concepts.BottomConcept;
@@ -51,7 +49,6 @@ public class DLLiteConverter extends TDLLiteNFPXConverter{
 	ConjunctiveFormula cardinalities = new ConjunctiveFormula();
 	ConjunctiveFormula rigidR = new ConjunctiveFormula();
 	ConjunctiveFormula epsX = new ConjunctiveFormula();
-	ConjunctiveFormula eps = new ConjunctiveFormula();
 	
 	public DLLiteConverter(TBox tbox){
 		super(tbox);		
@@ -68,14 +65,14 @@ public class DLLiteConverter extends TDLLiteNFPXConverter{
 	 * 
 	 * where
 	 * 
-	 * T = /\ \boxF \forall x ( C1(x) -> C2(x) )  			(1)
+	 * T = /\ \forall x ( C1(x) -> C2(x) )  			(1)
 	 * 		(For each concept inclusion in T*)
 	 * 
-	 * 	   /\ \boxF \forall x ( Eq'S(x) -> EqS(x) )  		(2)
-	 * 		(for each q,q' \in Qrt with q' > q. 
+	 * 	   /\ \forall x ( Eq'S(x) -> EqS(x) )  		(2)
+	 * 		(for each q,q' \in Qrt with q <! q'. 
 	 * 		 there is no q'' in Qrt with q < q'' < q')
 	 * 
-	 * 	   /\ \forall x ( \diamondF EqS(x) -> \boxF EqS(x) )  (3)
+	 * 	   /\ \forall x ( EqS(x) -> EqS(x) )  (3)
 	 * 		(for each global/ridig role s \in Qrt) 
 	 * 
 	 * e = /\ epsilon(s)    (For each role S) 				(4)
@@ -96,8 +93,126 @@ public class DLLiteConverter extends TDLLiteNFPXConverter{
 										new ConjunctiveFormula(epsX, 
 															   rigidR)),
 						 super.x); 
-		F = new ConjunctiveFormula(F, eps);
 		return F;
+	}
+
+	/* 
+	 *  \forall x ((E1R(x)-> E1Rinv(drinv)) (4)
+	 *
+	*/
+	private void getFactorizedEpsilon(){
+
+		for(Role s : super.tbox.getRoles()){
+
+			if(s instanceof PositiveRole){
+				
+				//Proposition pS = (Proposition) super.a.get("P"+s.toString(),0);
+				//Proposition pinvS = (Proposition) super.a.get("Pinv"+s.toString(),0);
+				Role SInv = s.getInverse();
+
+				Concept E1S = new QuantifiedRole(s, 1);
+				Concept E1SInv = new QuantifiedRole(SInv, 1);
+
+				Constant ds = new Constant("d"+s.toString());
+				Constant dsinv = new Constant("d"+SInv.toString());
+
+				Formula fE1S_ds = conceptToFormula(E1S);
+				fE1S_ds.substitute(super.x, ds);
+
+				Formula fE1SInv_ds = conceptToFormula(E1SInv);
+				fE1SInv_ds.substitute(super.x, dsinv);
+
+	
+				epsX.add(new ImplicationFormula(
+											conceptToFormula(E1S),
+											fE1SInv_ds)
+						);
+
+				epsX.add(new ImplicationFormula(
+											conceptToFormula(E1SInv),
+											fE1S_ds)
+						);
+
+				}
+			}
+		}
+
+	/***
+	 * Reduction to QTL1
+	 * Assert cardinality axioms (2)
+	 * 
+	 *     /\ \forall x ( Eq'R(x) -> EqR(x) )  		(2)
+	 * 		(for each q,q' \in Qrt with q <! q'. 
+	 * 		 there is no q'' in Qrt with q < q'' < q')
+	 * 
+	 */
+	public void getExtendedFormula(){
+		Set<QuantifiedRole> qRoles= super.tbox.getQuantifiedRoles1();
+		
+		/* 
+		 * (2)
+		 */
+		Map<Role,List<QuantifiedRole>> qRMap = new HashMap<Role, List<QuantifiedRole>>();
+
+		for(QuantifiedRole qR : qRoles){
+
+			List<QuantifiedRole> list = qRMap.get(qR.getRole());
+
+			if(list == null){
+				list = new ArrayList<QuantifiedRole>();
+				qRMap.put(qR.getRole(),list);
+			}
+			list.add(qR);
+		}
+		
+		for(Entry<Role, List<QuantifiedRole>> e: qRMap.entrySet()){
+			List<QuantifiedRole> qrL = e.getValue();
+
+			Collections.sort(qrL, new Comparator<QuantifiedRole>() {
+				@Override
+				public int compare(QuantifiedRole o1, QuantifiedRole o2) {
+					return o2.getQ()-o1.getQ();
+				}
+			});
+			
+			for(int i = 0;i < qrL.size() - 1;i++){
+				cardinalities.add(new ImplicationFormula(
+						conceptToFormula(qrL.get(i)),
+						conceptToFormula(qrL.get(i + 1))));
+			}
+		}
+		
+		/* 
+		 * (3)
+		 * @TODO: Avoid duplications
+		 */
+
+/*		Set<Role> roles = super.tbox.getRoles();
+
+		for(QuantifiedRole qR : qRoles){
+			if(qR.getRole().getRefersTo() instanceof AtomicRigidRole){
+				roles.remove(qR.getRole());
+
+				rigidR.add(new ImplicationFormula(
+							conceptToFormula(qR), 
+							conceptToFormula(qR)
+							)
+						);   
+			}
+		} 
+		
+		for (Role role : roles) {
+			if(role.getRefersTo() instanceof AtomicRigidRole){
+				QuantifiedRole qRoleRem = new QuantifiedRole(role, 1);
+
+				rigidR.add(new ImplicationFormula(
+								conceptToFormula(qRoleRem), 
+								conceptToFormula(qRoleRem)
+								)
+							);
+			}				
+		} */
+		
 	}
 	
 	private Formula getFactorizedT(){
@@ -124,6 +239,7 @@ public class DLLiteConverter extends TDLLiteNFPXConverter{
 
 		return out;
 	}
+
 
 	/**
 	 * Converting TDLLite concetps into QTL1 formulas
@@ -184,158 +300,6 @@ public class DLLiteConverter extends TDLLiteNFPXConverter{
 		return null;
 			
 			
-	}
-
-	/** 
-	 * Gathering formula with the variable "x"
-	*/
-	public Formula getEpsilonX(){
-		Formula F = new ConjunctiveFormula(getFactorizedT(), epsX);
-		return F;
-	}
-	
-	/**
-	 * Gathering the formula with the variable "x" to avoid redundancy 
-	 * formula when make it propositional
-	*/
-	public Formula getEpsilonWithoutX(){
-		return eps;
-	}
-	
-	/* A reduced version (with less modal operators) :
-		*
-		*  with epsilon'(S) = (\box \forall x ((E1S(x)-> \box pS ))) /\ (pinvS E1SInv(x) -> E1S(ds))
-		*
-		* epsilon''(S) =(\box \forall x (E1SInv(x)-> \box pSinv )) /\ (pS -> E1SInv(dsinv))
-	*/
-	private void getFactorizedEpsilon(){
-
-		for(Role s : super.tbox.getRoles()){
-
-			if(s instanceof PositiveRole){
-				
-				Proposition pS = (Proposition) super.a.get("P"+s.toString(),0);
-				Proposition pinvS = (Proposition) super.a.get("Pinv"+s.toString(),0);
-				Role SInv = s.getInverse();
-
-				Concept E1S = new QuantifiedRole(s, 1);
-				Concept E1SInv = new QuantifiedRole(SInv, 1);
-
-				Constant ds = new Constant("d"+s.toString());
-				Constant dsinv = new Constant("d"+SInv.toString());
-
-
-
-				Formula fE1S_ds = conceptToFormula(E1S);
-				fE1S_ds.substitute(super.x, ds);
-
-				Formula fE1SInv_ds = conceptToFormula(E1SInv);
-				fE1SInv_ds.substitute(super.x, dsinv);
-
-	
-
-				epsX.add(new ImplicationFormula(
-											conceptToFormula(E1S),
-					 						pS
-										   )
-					);
-
-				epsX.add(new ImplicationFormula(
-											conceptToFormula(E1SInv),
-					 						pinvS
-										   )
-					);
-
-				eps.add(new ImplicationFormula(
-											pinvS,
-											fE1S_ds));
-			
-				eps.add(new ImplicationFormula(
-											pS,
-											fE1SInv_ds));
-
-				}
-			}
-		}
-	
-	/***
-	 * Reduction to QTL1
-	 * Assert cardinality axioms (2) and rigid roles axioms (3) as explained in the report.
-	 * 
-	 *     /\ \boxPF \forall x ( Eq'S(x) -> EqS(x) )  		(2)
-	 * 		(for each q,q' \in Qrt with q' > q. 
-	 * 		 there is no q'' in Qrt with q < q'' < q')
-	 * 
-	 * 	   /\ \boxPF \forall x ( EqS(x) -> \boxPF EqS(x) )  (3)
-	 * 		(for each global/ridig role s \in Qrt) 
-	 */
-	public void getExtendedFormula(){
-		Set<QuantifiedRole> qRoles= super.tbox.getQuantifiedRoles1();
-		
-		/* 
-		 * (2)
-		 */
-		Map<Role,List<QuantifiedRole>> qRMap = new HashMap<Role, List<QuantifiedRole>>();
-
-		for(QuantifiedRole qR : qRoles){
-
-			List<QuantifiedRole> list = qRMap.get(qR.getRole());
-
-			if(list == null){
-				list = new ArrayList<QuantifiedRole>();
-				qRMap.put(qR.getRole(),list);
-			}
-			list.add(qR);
-		}
-		
-		for(Entry<Role, List<QuantifiedRole>> e: qRMap.entrySet()){
-			List<QuantifiedRole> qrL = e.getValue();
-
-			Collections.sort(qrL, new Comparator<QuantifiedRole>() {
-				@Override
-				public int compare(QuantifiedRole o1, QuantifiedRole o2) {
-					return o2.getQ()-o1.getQ();
-				}
-			});
-			
-			for(int i = 0;i < qrL.size() - 1;i++){
-				cardinalities.add(new ImplicationFormula(
-						conceptToFormula(qrL.get(i)),
-						conceptToFormula(qrL.get(i + 1))));
-			}
-		}
-		
-		/* 
-		 * (3)
-		 * @TODO: Avoid duplications
-		 */
-
-		Set<Role> roles = super.tbox.getRoles();
-
-		for(QuantifiedRole qR : qRoles){
-			if(qR.getRole().getRefersTo() instanceof AtomicRigidRole){
-				roles.remove(qR.getRole());
-
-				rigidR.add(new ImplicationFormula(
-							conceptToFormula(qR), 
-							conceptToFormula(qR)
-							)
-						);   
-			}
-		}
-		
-		for (Role role : roles) {
-			if(role.getRefersTo() instanceof AtomicRigidRole){
-				QuantifiedRole qRoleRem = new QuantifiedRole(role, 1);
-
-				rigidR.add(new ImplicationFormula(
-								conceptToFormula(qRoleRem), 
-								conceptToFormula(qRoleRem)
-								)
-							);
-			}				
-		}
-		
 	}
 	
 	
