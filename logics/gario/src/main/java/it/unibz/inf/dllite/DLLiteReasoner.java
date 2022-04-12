@@ -128,6 +128,7 @@ public class DLLiteReasoner {
 		// Get constants
 		Set<Constant> constsABox = a.getConstantsABox();
 		Set<Constant> consts = qtl_N.getConstants();
+		System.out.println("QTL1 constants: " + consts.toString());
 		consts.addAll(constsABox);
 
 		// Parse ABox
