@@ -14,7 +14,8 @@ public class AbstractionTestRandom {
 		ABox a = new ABox();
 		
 		//int NbAssertion, int I, int N, int T
-		a = ABS.getABox(100500, 100, 2, 5);
+		a = ABS.getABox(461800, 100, 2, 5);
+		//a = ABS.getABox(325000, 100, 2, 5);
 		
 		Map<String, Integer> statsABox = a.getStatsABox();
 		System.out.println("");

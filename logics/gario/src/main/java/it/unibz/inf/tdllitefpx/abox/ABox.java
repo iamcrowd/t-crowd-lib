@@ -568,6 +568,7 @@ public class ABox extends ConjunctiveFormula implements FormattableObj {
 			System.out.println("Indv:"+To.size());
 			System.out.println("New Indv:"+ToHash.size());
 	   
+			int i = 1;
 			if (To.size() != ToHash.size()){
 				for(Integer indexToHash : ToHash.keySet()){
    					Set <String> values = ToHash.get(indexToHash);
@@ -577,10 +578,13 @@ public class ABox extends ConjunctiveFormula implements FormattableObj {
 					for(String instance : values){
 						ConceptsAbstract = To.get(instance);
 					}
-		
+
+					System.out.println("type" + i + ": " + concatinstance);
+					
 					for(Concept c : ConceptsAbstract){
 						AbstractABox.add(new ABoxConceptAssertion(c, concatinstance));
 					}
+					i++;
 				}
 	   		}
 	   		else {
@@ -946,8 +950,11 @@ public class ABox extends ConjunctiveFormula implements FormattableObj {
 		System.out.println("");
 		System.out.println("------ Shifted TDLITE ABOX");
 		System.out.println("**RolesAssertion:"+RolesAssertion.size());
+
 		//PrintABoxRoleAssertions(RolesAssertion);
 		//PrintABoxRoleAssertions(ShiftedRolesAssertion);
+
+
 	//	System.out.println("**NegatedRolesAssertion:");
 		int GainP = RolesAssertion.size() - (ShiftedRolesAssertion.size());
 	//	int GainN= NegatedRolesAssertion.size()-ShiftedNegatedRolesAssertion.size();

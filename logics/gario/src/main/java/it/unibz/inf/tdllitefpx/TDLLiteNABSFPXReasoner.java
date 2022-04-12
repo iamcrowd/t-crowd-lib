@@ -54,15 +54,6 @@ import javax.security.auth.callback.Callback;
 
 
 /**
- * TBox SAT
- * 			LTL: TBox -> QTL -> QTLN -> LTL (NuSMV|NuXMV|Aalta|pltl|TRP++)
- * 			PLTL: TBox -> QTL -> PLTL (NuSMV|NuXMV)
- * TBox Concept SAT
- * 			LTL: TBox -> QTL -> QTLN -> LTL (NuSMV|NuXMV|Aalta|pltl|TRP++)
- * 			PLTL: TBox -> QTL -> PLTL (NuSMV|NuXMV)
- * TBox, ABox SAT
- * 			LTL: TBox|ABox -> QTL -> QTLN -> LTL (NuSMV|NuXMV|Aalta|pltl|TRP++)
- * 			PLTL: TBox|ABox -> QTL -> PLTL (NuSMV|NuXMV)
  * @author gab
  *
  */
@@ -271,45 +262,6 @@ public class TDLLiteNABSFPXReasoner {
 			Formula qtlFOA = new ConjunctiveFormula(qtl, oAbs);
 			if(verbose) 
 				(new LatexDocumentCNF(qtlFOA)).toFile(prefix+"qtlNAbsABox.tex");
-				
-/*			System.out.print("Qtl N -> LTL:\n");
-		
-			long start_timeLTLAA = System.currentTimeMillis();
-			long end_timeLTLAA;
-		
-			// LTL formula by grounding the qlt formula with consts after abstraction
-			Formula ltlAbs = qtl.makePropositional(constsAbs);
-			oAbs = oAbs.makePropositional(constsAbs);
-			ltlAbs = new ConjunctiveFormula(ltlAbs, oAbs);
-		
-			end_timeLTLAA = System.currentTimeMillis()-start_timeLTLAA;
-			System.out.println("QTL->LTL AA:"+(System.currentTimeMillis()-start_timeLTLAA) + "ms");	
-		
-			System.out.println("tr-timeAA:"+ (end_timeNA_QTL + end_time_abs + end_timeLTLAA) + "ms");
-		
-			long start_file = 0;
-		
-			start_file = System.currentTimeMillis();
-			
-			System.out.println("------Generating NuSMV files...");
-			
-			start_file = System.currentTimeMillis();
-			
-			(new NuSMVOutput(ltlAbs)).toFile(prefix+"ABSTRACT.smv");
-			
-			System.out.println("time file SMV AA:"+ (System.currentTimeMillis() - start_file) + "ms");
-			
-			start_file = System.currentTimeMillis();
-
-			System.out.println("------Generating Black files...");
-			
-			start_file = System.currentTimeMillis();
-			
-			(new PltlOutput(ltlAbs)).toFile(prefix+"ABSTRACT.pltl");
-			
-			System.out.println("time file pltl AA:"+ (System.currentTimeMillis() - start_file) + "ms");
-			System.out.println("Num of Propositions ABSTRACT: "+ltlAbs.getPropositions().size());
-*/
 
 		} else
 			throw new Exception("qtlN formula is not a ConjunctiveFormula");
@@ -327,6 +279,8 @@ public class TDLLiteNABSFPXReasoner {
 		System.out.println("");
 		System.out.println("------ABox -> FO :");	
 		Formula o = ABox.getABoxFormula(false);
+
+		System.out.println("ABox: " + o.toString());
 		
 		System.out.println(System.currentTimeMillis()-start_time + "ms");	
 		System.out.println("");
@@ -336,6 +290,8 @@ public class TDLLiteNABSFPXReasoner {
 		ABox.AbstractABox();
 		System.out.println(System.currentTimeMillis()-start_time + "ms");
 		Formula oAbs =ABox.getAbstractABoxFormula(false); 
+
+		System.out.println("Abstracted ABox: " + oAbs.toString());
 
 		System.out.println("");
 		System.out.println("Done! Total time:" + (System.currentTimeMillis()-total_time) + "ms");
