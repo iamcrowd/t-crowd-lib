@@ -12,6 +12,9 @@ import it.unibz.inf.tdllitefpx.Constants;
 import it.unibz.inf.tdllitefpx.TDLLiteNFPXConverter;
 import it.unibz.inf.tdllitefpx.abox.ABox;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.Set;
 
 
@@ -165,6 +168,12 @@ public class DLLiteReasoner {
 				(new NuSMVOutput(ltl_KB)).toFile(prefix+".smv");
 				System.out.println("Solver" + Constants.black);
 				(new PltlOutput(ltl_KB)).toFile(prefix+".pltl");
+				
+				int i = 1;
+				while (i <= 10){
+					String output = runSolver(prefix + ".smv");
+					System.out.println("output" + i + ": " + output);
+				}
 			break;
 		
 			default:
@@ -181,6 +190,45 @@ public class DLLiteReasoner {
 			(new LatexOutputDocument(t)).toFile(prefix+"tbox.tex");
 			(new LatexDocumentCNF(qtl_N)).toFile(prefix+"qtlN.tex");
 			(new LatexDocumentCNF(ltl_KB)).toFile(prefix+"ltl.tex");
+		}
+	}
+
+
+	private static String runSolver(String file) throws InterruptedException{
+		ProcessBuilder processBuilder = new ProcessBuilder();
+		System.out.println(file);
+		processBuilder.command("/home/gbraun/Documentos/TemporalDLlite/NuXMV/nuXmv",
+								"-source", "/home/gbraun/Documentos/TemporalDLlite/NuXMV/script.txt", file);
+		try {
+			System.out.println("NUxmv process!");
+			Process process = processBuilder.start();
+			StringBuilder output = new StringBuilder();
+
+			BufferedReader reader = new BufferedReader(
+					new InputStreamReader(process.getInputStream()));
+
+			String line;
+			while ((line = reader.readLine()) != null) {
+				output.append(line + "\n");
+			}
+
+			int exitVal = process.waitFor();
+			if (exitVal == 0) {
+				System.out.println("Success!");
+				System.out.println(output);
+				if (output.toString().contains("false")){
+					System.out.println("SAT");
+				} else if (output.toString().contains("true")){
+					System.out.println("UNSAT");
+				}
+				//System.exit(0);
+			} else {
+				//abnormal...
+			}
+			process.destroy();
+
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
 	}
 	
