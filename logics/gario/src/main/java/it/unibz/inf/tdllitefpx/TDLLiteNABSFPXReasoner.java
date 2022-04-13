@@ -280,7 +280,7 @@ public class TDLLiteNABSFPXReasoner {
 		System.out.println("------ABox -> FO :");	
 		Formula o = ABox.getABoxFormula(false);
 
-		System.out.println("ABox: " + o.toString());
+		//System.out.println("ABox: " + o.toString());
 		
 		System.out.println(System.currentTimeMillis()-start_time + "ms");	
 		System.out.println("");
@@ -291,7 +291,7 @@ public class TDLLiteNABSFPXReasoner {
 		System.out.println(System.currentTimeMillis()-start_time + "ms");
 		Formula oAbs =ABox.getAbstractABoxFormula(false); 
 
-		System.out.println("Abstracted ABox: " + oAbs.toString());
+		//System.out.println("Abstracted ABox: " + oAbs.toString());
 
 		System.out.println("");
 		System.out.println("Done! Total time:" + (System.currentTimeMillis()-total_time) + "ms");

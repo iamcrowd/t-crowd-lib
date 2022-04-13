@@ -421,6 +421,7 @@ public class ABox extends ConjunctiveFormula implements FormattableObj {
 	 */
 	public Formula getABoxFormula(boolean r){
 		ConjunctiveFormula qtl = new ConjunctiveFormula();
+		System.out.println("Concepts="+ConceptsAssertion.size());
 		System.out.println("FO Local="+FOLocal.size());
 		System.out.println("FO Global="+FORigid.size());
 	//	ABox.addAll(ConceptsAssertion);

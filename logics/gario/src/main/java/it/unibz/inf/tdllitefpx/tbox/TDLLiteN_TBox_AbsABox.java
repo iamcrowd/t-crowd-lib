@@ -171,7 +171,7 @@ public class TDLLiteN_TBox_AbsABox {
 			int j = new Random().nextInt(max); //Timestamp
 			int f, g;
 		
-			if (p <= (N*sizeInd*10)){	 
+			if (p <= (N*sizeInd*max)){	 
 			  //	Concept assertion;
 
 			  	Concept Basic = getABoxConcept();
