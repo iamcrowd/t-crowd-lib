@@ -245,17 +245,27 @@ import it.unibz.inf.tdllitefpx.tbox.RoleInclusionAssertion;
 
         	// iterate each axiom
         	aboxAxioms.forEach(axiom -> {	
+
             	try {
-                	// PROCESSING ONLY CONCEPT INCLUSIONS
-
-					//System.out.println(axiom.toString());
-
 					if (axiom.isOfType(AxiomType.CLASS_ASSERTION)) {
-						OWLClassExpression owl_class = ((OWLClassAssertionAxiom) axiom).getClassExpression();
-						OWLIndividual individual = ((OWLClassAssertionAxiom) axiom).getIndividual();
+						OWLClassExpression e = ((OWLClassAssertionAxiom) axiom).getClassExpression();
+						OWLIndividual ind = ((OWLClassAssertionAxiom) axiom).getIndividual();
 
-						this.myABox.addConceptsAssertion(new ABoxConceptAssertion(new AtomicConcept(owl_class.asOWLClass().getIRI().getFragment()), 
-																									individual.asOWLNamedIndividual().getIRI().getFragment()));
+						if (e.getClassExpressionType() == ClassExpressionType.OWL_CLASS) {
+							AddAtomicConceptAssertion(e, ind);
+						} else if (e.getClassExpressionType() == ClassExpressionType.OBJECT_COMPLEMENT_OF) {
+							AddNegatedConceptAssertion(e, ind);
+						} else if (e.getClassExpressionType() == ClassExpressionType.OBJECT_INTERSECTION_OF) {
+							Set<OWLClassExpression> conjuncts = e.asConjunctSet();
+
+							for (OWLClassExpression c : conjuncts) {
+								if (c.getClassExpressionType() == ClassExpressionType.OWL_CLASS) {
+									AddAtomicConceptAssertion(c, ind);
+								} else if (c.getClassExpressionType() == ClassExpressionType.OBJECT_COMPLEMENT_OF) {
+									AddNegatedConceptAssertion(c, ind);
+								}
+							}
+						}
 
 					} else if (axiom.isOfType(AxiomType.OBJECT_PROPERTY_ASSERTION)) {
 						OWLObjectPropertyExpression property = 
@@ -269,11 +279,27 @@ import it.unibz.inf.tdllitefpx.tbox.RoleInclusionAssertion;
 						this.myABox.addABoxRoleAssertion(new ABoxRoleAssertion(role, 
 																			   subject.asOWLNamedIndividual().getIRI().getFragment(), 
 																			   object.asOWLNamedIndividual().getIRI().getFragment(), 0));
+					} else if (axiom.isOfType(AxiomType.NEGATIVE_OBJECT_PROPERTY_ASSERTION)) {
+						// How to import?
 					}
 				} catch (Exception e) {
 
             	}
 			});
+		}
+
+		private void AddNegatedConceptAssertion(OWLClassExpression e, OWLIndividual ind) {
+			OWLClassExpression operand = ((OWLObjectComplementOf)e).getOperand();
+			
+			if (operand.getClassExpressionType() == ClassExpressionType.OWL_CLASS) {
+				this.myABox.addConceptsAssertion(new ABoxConceptAssertion(new NegatedConcept(new AtomicConcept(operand.asOWLClass().getIRI().getFragment())), 
+				ind.asOWLNamedIndividual().getIRI().getFragment()));
+			}
+		}
+
+		private void AddAtomicConceptAssertion(OWLClassExpression e, OWLIndividual ind) {
+			this.myABox.addConceptsAssertion(new ABoxConceptAssertion(new AtomicConcept(e.asOWLClass().getIRI().getFragment()), 
+																					ind.asOWLNamedIndividual().getIRI().getFragment()));
 		}
 
 		// AXIOM PROCESSORS ///////////////////////////////////////////////////
