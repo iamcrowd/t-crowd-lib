@@ -25,7 +25,6 @@ import it.unibz.inf.tdllitefpx.concepts.temporal.SometimeFuture;
 import it.unibz.inf.tdllitefpx.concepts.temporal.SometimePast;
 import it.unibz.inf.tdllitefpx.concepts.temporal.TemporalConcept;
 import it.unibz.inf.tdllitefpx.roles.PositiveRole;
-import it.unibz.inf.tdllitefpx.roles.AtomicRigidRole;
 import it.unibz.inf.tdllitefpx.roles.Role;
 import it.unibz.inf.tdllitefpx.tbox.ConceptInclusionAssertion;
 import it.unibz.inf.tdllitefpx.tbox.TBox;
@@ -34,6 +33,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -49,9 +49,24 @@ public class DLLiteConverter extends TDLLiteNFPXConverter{
 	ConjunctiveFormula cardinalities = new ConjunctiveFormula();
 	ConjunctiveFormula rigidR = new ConjunctiveFormula();
 	ConjunctiveFormula epsX = new ConjunctiveFormula();
+	HashMap<Role, Formula> RolesAndConstsMap = new HashMap<Role, Formula>();
 	
 	public DLLiteConverter(TBox tbox){
 		super(tbox);		
+	}
+
+
+	/**
+	 * Gets the Constants 'dr' associated to a Role
+	 * 
+	 * For each role R, two constants are created: dR (role domain) and dRInv (role range)
+	 * 
+	 * @param role
+	 * @return
+	 */
+	public Formula getConstantsByRole(Role role){
+		System.out.println("Constants by Role: " + RolesAndConstsMap.get(role).toString());
+		return RolesAndConstsMap.get(role);
 	}
 
 	/**
@@ -110,6 +125,8 @@ public class DLLiteConverter extends TDLLiteNFPXConverter{
 				//Proposition pinvS = (Proposition) super.a.get("Pinv"+s.toString(),0);
 				Role SInv = s.getInverse();
 
+				System.out.println("Role: " + s.toString());
+
 				Concept E1S = new QuantifiedRole(s, 1);
 				Concept E1SInv = new QuantifiedRole(SInv, 1);
 
@@ -119,9 +136,11 @@ public class DLLiteConverter extends TDLLiteNFPXConverter{
 				Formula fE1S_ds = conceptToFormula(E1S);
 				fE1S_ds.substitute(super.x, ds);
 
+				RolesAndConstsMap.putIfAbsent(s, fE1S_ds);
+				System.out.println("fE1S_ds: " + fE1S_ds.toString());
+
 				Formula fE1SInv_ds = conceptToFormula(E1SInv);
 				fE1SInv_ds.substitute(super.x, dsinv);
-
 	
 				epsX.add(new ImplicationFormula(
 											conceptToFormula(E1S),

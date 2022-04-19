@@ -7,6 +7,8 @@ import it.unibz.inf.qtl1.output.NuSMVOutput;
 import it.unibz.inf.qtl1.output.pltl.PltlOutput;
 import it.unibz.inf.qtl1.terms.Constant;
 import it.unibz.inf.tdllitefpx.output.LatexOutputDocument;
+import it.unibz.inf.tdllitefpx.roles.PositiveRole;
+import it.unibz.inf.tdllitefpx.roles.Role;
 import it.unibz.inf.tdllitefpx.tbox.TBox;
 import it.unibz.inf.tdllitefpx.Constants;
 import it.unibz.inf.tdllitefpx.TDLLiteNFPXConverter;
@@ -128,6 +130,21 @@ public class DLLiteReasoner {
 		long end_tbox2QTL = System.currentTimeMillis() - start_tbox2QTL;
 		long start_QTLN2LTL = System.currentTimeMillis();
 
+		Formula ltl_for_role = qtl_N.makePropositional(qtl_N.getConstants());
+		for(Role role : t.getRoles()){
+			if (role instanceof PositiveRole){
+				System.out.println("Getting roles: " + role.toString());
+				Formula formRole = conv.getConstantsByRole(role);
+				System.out.println("Getting formula: " + formRole.toString());
+				Formula ltlR = new ConjunctiveFormula(ltl_for_role, formRole);
+				(new NuSMVOutput(ltlR)).toFile(prefix + role.toString() + ".smv");
+				String output = runSolver(prefix + role.toString() + ".smv");
+				System.out.println("output" + role.toString() + ": " + output);
+			}
+		}
+
+		System.exit(0);
+
 		// Get constants
 		Set<Constant> constsABox = a.getConstantsABox();
 		Set<Constant> consts = qtl_N.getConstants();
@@ -173,6 +190,7 @@ public class DLLiteReasoner {
 				while (i <= 10){
 					String output = runSolver(prefix + ".smv");
 					System.out.println("output" + i + ": " + output);
+					i++;
 				}
 			break;
 		
@@ -202,10 +220,15 @@ public class DLLiteReasoner {
 		try {
 			System.out.println("NUxmv process!");
 			Process process = processBuilder.start();
+
+			while (process.isAlive()){
+				System.out.println("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx PID: " + process.pid());
+			}
+
 			StringBuilder output = new StringBuilder();
 
 			BufferedReader reader = new BufferedReader(
-					new InputStreamReader(process.getInputStream()));
+				new InputStreamReader(process.getInputStream()));
 
 			String line;
 			while ((line = reader.readLine()) != null) {
@@ -218,8 +241,10 @@ public class DLLiteReasoner {
 				System.out.println(output);
 				if (output.toString().contains("false")){
 					System.out.println("SAT");
+					return "SAT";
 				} else if (output.toString().contains("true")){
 					System.out.println("UNSAT");
+					return "UNSAT";
 				}
 				//System.exit(0);
 			} else {
@@ -230,6 +255,7 @@ public class DLLiteReasoner {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		return null;
 	}
 	
 }
