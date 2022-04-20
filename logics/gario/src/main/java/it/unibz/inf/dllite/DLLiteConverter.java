@@ -64,8 +64,7 @@ public class DLLiteConverter extends TDLLiteNFPXConverter{
 	 * @param role
 	 * @return
 	 */
-	public Formula getConstantsByRole(Role role){
-		System.out.println("Constants by Role: " + RolesAndConstsMap.get(role).toString());
+	public Formula getFormulaByRole(Role role){
 		return RolesAndConstsMap.get(role);
 	}
 
@@ -124,9 +123,6 @@ public class DLLiteConverter extends TDLLiteNFPXConverter{
 				//Proposition pS = (Proposition) super.a.get("P"+s.toString(),0);
 				//Proposition pinvS = (Proposition) super.a.get("Pinv"+s.toString(),0);
 				Role SInv = s.getInverse();
-
-				System.out.println("Role: " + s.toString());
-
 				Concept E1S = new QuantifiedRole(s, 1);
 				Concept E1SInv = new QuantifiedRole(SInv, 1);
 
@@ -136,11 +132,10 @@ public class DLLiteConverter extends TDLLiteNFPXConverter{
 				Formula fE1S_ds = conceptToFormula(E1S);
 				fE1S_ds.substitute(super.x, ds);
 
-				RolesAndConstsMap.putIfAbsent(s, fE1S_ds);
-				System.out.println("fE1S_ds: " + fE1S_ds.toString());
-
 				Formula fE1SInv_ds = conceptToFormula(E1SInv);
 				fE1SInv_ds.substitute(super.x, dsinv);
+
+				RolesAndConstsMap.putIfAbsent(s, new ConjunctiveFormula(fE1S_ds, fE1SInv_ds));
 	
 				epsX.add(new ImplicationFormula(
 											conceptToFormula(E1S),

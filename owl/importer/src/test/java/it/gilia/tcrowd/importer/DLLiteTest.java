@@ -160,13 +160,15 @@ public class DLLiteTest {
 			OWLImport importer = new OWLImport();
 			importer.load(ontoiri);
 			importer.dlliteCI();
+			importer.dlliteAbox();
 
 			try{
 				(new LatexOutputDocument(importer.getTBox())).toFile("pizzaDLLlite.tex");
 			} catch (Exception e) {}
 
-			DLLiteReasoner.checkTBoxSat(
-				importer.getTBox(), 
+			DLLiteReasoner.checkKB(
+				importer.getTBox(),
+				importer.getABox(), 
 				true, 
 				"Pizza",
 				"all");
