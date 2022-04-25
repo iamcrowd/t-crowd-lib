@@ -1,4 +1,4 @@
-package it.unibz.inf.qtl1.output.fo;
+package it.unibz.inf.qtl1.output.FO;
 
 import it.unibz.inf.qtl1.output.FormulaOutputFormat;
 import it.unibz.inf.qtl1.atoms.Atom;

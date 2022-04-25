@@ -3,27 +3,17 @@ package it.unibz.inf.tdllitefpx;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
 import java.util.Map;
-import java.util.Set;
 
-import it.unibz.inf.qtl1.formulae.Formula;
-import it.unibz.inf.qtl1.terms.Constant;
-import it.unibz.inf.tdllitefpx.TDLLiteFPXReasoner;
 import it.unibz.inf.tdllitefpx.abox.ABox;
 import it.unibz.inf.tdllitefpx.abox.ABoxConceptAssertion;
 import it.unibz.inf.tdllitefpx.abox.ABoxRoleAssertion;
 import it.unibz.inf.tdllitefpx.concepts.AtomicConcept;
-import it.unibz.inf.tdllitefpx.concepts.BottomConcept;
+
 import it.unibz.inf.tdllitefpx.concepts.Concept;
 import it.unibz.inf.tdllitefpx.concepts.NegatedConcept;
 import it.unibz.inf.tdllitefpx.concepts.QuantifiedRole;
-import it.unibz.inf.tdllitefpx.concepts.temporal.AlwaysFuture;
-import it.unibz.inf.tdllitefpx.concepts.temporal.AlwaysPast;
-import it.unibz.inf.tdllitefpx.concepts.temporal.NextFuture;
-import it.unibz.inf.tdllitefpx.concepts.temporal.SometimeFuture;
-import it.unibz.inf.tdllitefpx.concepts.temporal.SometimePast;
-import it.unibz.inf.tdllitefpx.roles.AtomicLocalRole;
+
 import it.unibz.inf.tdllitefpx.roles.AtomicRigidRole;
 import it.unibz.inf.tdllitefpx.roles.PositiveRole;
 import it.unibz.inf.tdllitefpx.roles.Role;
@@ -53,7 +43,7 @@ public class RigidRoleQ {
 		key="CIs:";
 		System.out.println(key+ stats.get(key));
 		System.out.println("------ABOX------");
-		Map<String, String> statsA = exTDL.getABox().getStatsABox();
+		Map<String, Integer> statsA = exTDL.getABox().getStatsABox();
 		key="Concept_Assertion:";
 		System.out.println(key+ statsA.get(key));
 		key="Roles_Assertion:";

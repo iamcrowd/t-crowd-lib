@@ -18,7 +18,7 @@ import it.unibz.inf.qtl1.output.aalta.AaltaOutput;
 import it.unibz.inf.qtl1.output.pltl.PltlOutput;
 import it.unibz.inf.qtl1.output.trpuc.TrpucOutput;
 
-import it.unibz.inf.qtl1.output.fo.FOOutput;
+import it.unibz.inf.qtl1.output.FO.FOOutput;
 
 
 
@@ -118,7 +118,6 @@ public class TDLLiteNFPXReasoner {
 		if (!reflexive) {
 			qtl_N = qtl_N.makeTemporalStrict();	
 		}
-		
 		
 		Set<Constant> consts = qtl_N.getConstants();
 		

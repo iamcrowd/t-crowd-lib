@@ -19,7 +19,7 @@ import it.unibz.inf.qtl1.output.aalta.AaltaOutput;
 import it.unibz.inf.qtl1.output.pltl.PltlOutput;
 import it.unibz.inf.qtl1.output.trpuc.TrpucOutput;
 
-import it.unibz.inf.qtl1.output.fo.FOOutput;
+import it.unibz.inf.qtl1.output.FO.FOOutput;
 
 
 
@@ -632,8 +632,12 @@ public class TDLLiteFPXReasoner {
 				
 				System.out.println("No Abstract");
 
-			    ABox.addExtensionConstraintsABox(t, Abstract);
-			    
+				if (!Abstract){
+					ABox.addExtensionConstraintsABox(t);
+				} else{
+					ABox.addExtensionConstraintsAbsABox(t);
+				}
+
 			    Formula o = ABox.getABoxFormula(true);
 			
 				qtlABox= new ConjunctiveFormula(qtl_N,o);
