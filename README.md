@@ -71,7 +71,7 @@ OPTIONS
 ```
 $ mvn clean compile
 
-$ dependency:copy-dependencies -DskipTests -Dmaven.javadoc.skip package
+$ mvn dependency:copy-dependencies -DskipTests -Dmaven.javadoc.skip package
 
 ```
 ### Tests
