@@ -23,9 +23,8 @@ public abstract class AtomicRole implements FormattableObj{
 		return false;
 	}
 	
-	@Override
+ 	@Override
 	public String toString(OutputFormat fmt) throws SymbolUndefinedException {		
-		return this.name; 
-		
+		return this.name; 	
 	}
 }

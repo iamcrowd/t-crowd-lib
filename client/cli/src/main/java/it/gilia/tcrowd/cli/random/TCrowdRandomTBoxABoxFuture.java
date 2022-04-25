@@ -1,4 +1,4 @@
-package it.gilia.tcrowd.cli;
+package it.gilia.tcrowd.cli.random;
 
 import com.github.rvesse.airline.annotations.Command;
 //import com.github.rvesse.airline.annotations.Option;
@@ -52,7 +52,7 @@ description = " TBox|ABox on N -> QTL1 -> LTL. No past to future translation is 
 			  + "\t \t \t \t Both TBox and ABox with only future operators are randomly generated given the required parameters."
 			  + "\n")
 
-public class TCrowdRandomTBoxABoxFuture extends TCrowdRandomTDLRelatedCommand {
+public class TCrowdRandomTBoxABoxFuture extends TCrowdRandomRelatedCommand {
 	
 	@Option(type = OptionType.COMMAND, name = {"-aS", "--aboxS"}, title = "Size",
 			description = "Size of ABox")

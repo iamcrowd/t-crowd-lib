@@ -1,4 +1,4 @@
-package it.unibz.inf.qtl1.output.fo;
+package it.unibz.inf.qtl1.output.FO;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -10,7 +10,7 @@ import it.unibz.inf.qtl1.formulae.*;
 
 import it.unibz.inf.qtl1.output.OutputDocument;
 
-import it.unibz.inf.qtl1.output.fo.FOFormat;
+import it.unibz.inf.qtl1.output.FO.FOFormat;
 
 
 /***
