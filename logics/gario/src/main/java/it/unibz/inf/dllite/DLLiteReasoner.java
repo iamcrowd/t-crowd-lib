@@ -29,8 +29,19 @@ import java.util.concurrent.Flow.Processor;
  */
 public class DLLiteReasoner {
 
+
+	/**
+	 * Gets the QTL_N formula for a given DL-Lite TBox
+	 * @param t
+	 * @return
+	 */
+	private static Formula get_QTLN(TBox t){
+		DLLiteConverter conv = new DLLiteConverter(t);
+		Formula qtl_N = conv.getFormula();
+		return qtl_N;
+
+	}
 	// Considering TBox and ABox
-	
 	/**
 	 * TBox, ABox SAT
 	 * LTL: TBox|ABox -> QTL -> LTL (NuSMV|NuXMV|Aalta|pltl|TRP++)
@@ -256,6 +267,128 @@ public class DLLiteReasoner {
 			e.printStackTrace();
 		}
 		return null;
+	}
+
+	// Considering TBox and ABox
+	/**
+	 * TBox, ABox SAT
+	 * LTL: TBox|ABox -> QTL -> LTL (NuSMV|NuXMV|Aalta|pltl|TRP++)
+	 * Check TBox and ABox SAT using only LTL pure future formulae
+	 * @param t an TBox
+	 * @param a an ABox
+	 * @param verbose true/false 
+	 * @param prefix a String
+	 * @param solver a String (Black|NuSMV|all)
+	 * @throws Exception
+	 */
+	public static void abstractedKB(
+			TBox t,
+			ABox a, 
+			boolean verbose, 
+			String prefix,
+			String solver) 
+					throws Exception{
+
+		long start_timeNA;
+		start_timeNA = System.currentTimeMillis();
+
+		long total_time = System.currentTimeMillis();
+		long start_tbox2QTL = System.currentTimeMillis();
+		
+		// Convert TBox to QTL
+		Formula qtl_N = get_QTLN(t);
+		
+		long end_tbox2QTL = System.currentTimeMillis() - start_tbox2QTL;
+
+		// Get constants
+		Set<Constant> constsABox = a.getConstantsABox();
+		Set<Constant> consts = qtl_N.getConstants();
+		Set<Constant> constsAbs = qtl_N.getConstants();
+		System.out.println("QTL1 constants: " + consts.toString());
+		consts.addAll(constsABox);
+
+		// Parse ABox
+		a.addExtensionConstraintsAbsABox(t);
+		System.out.println("");
+		System.out.println("------ABox -> FO :");
+			
+		/* Removed because we should ground considering only the abstracted set of individuals
+		Formula o = ABox.getABoxFormula(false);*/
+		System.out.println("Size FO ABox: " + a.getABoxSize());
+			
+		long end_timeNA_QTL =  System.currentTimeMillis()-start_timeNA;
+		System.out.println("QTL NA/AA:"+(System.currentTimeMillis()-start_timeNA) + "ms");	
+			
+		System.out.println("");
+		System.out.println("------FO -> Abstract FO :");
+			
+		long start_time_abs = System.currentTimeMillis();
+			
+		//calculate the abstraction
+		a.AbstractABox();
+		Set<Constant> constsABoxAbs = a.getConstantsABoxAbs();
+		constsAbs.addAll(constsABoxAbs); 
+		Formula aABox = a.getAbstractABoxFormula(false);
+			
+		long end_time_abs = System.currentTimeMillis()-start_time_abs;
+			
+		System.out.println("TIME ABS:"+(System.currentTimeMillis()-start_time_abs) + "ms");	
+		System.out.print("Qtl N -> LTL:\n");
+
+		long start_timeLTLAA = System.currentTimeMillis();
+		long end_timeLTLAA;
+	
+		// LTL formula by grounding the qlt formula with consts after abstraction
+		Formula aKB;
+
+		long end_timeGroundTBox = System.currentTimeMillis();
+		Formula aTBox = qtl_N.makePropositional(constsAbs);
+		System.out.println("MP TBox:"+(System.currentTimeMillis()-end_timeGroundTBox) + "ms");	
+
+		long end_timeGroundABox = System.currentTimeMillis();
+		aABox = aABox.makePropositional(constsAbs);
+		System.out.println("MP ABox:"+(System.currentTimeMillis()-end_timeGroundABox) + "ms");	
+
+		aKB = new ConjunctiveFormula(aTBox, aABox);
+	
+		end_timeLTLAA = System.currentTimeMillis()-start_timeLTLAA;
+		System.out.println("QTL->LTL AA:"+(System.currentTimeMillis()-start_timeLTLAA) + "ms");	
+	
+		System.out.println("tr-timeAA:"+ (end_timeNA_QTL + end_time_abs + end_timeLTLAA) + "ms");
+
+		switch (solver) {
+			case Constants.NuSMV:
+				System.out.println("Solver..." + Constants.NuSMV);
+				(new NuSMVOutput(aKB)).toFile(prefix+".smv");
+			break;
+
+			case Constants.black:
+				System.out.println("Solver" + Constants.black);
+				(new PltlOutput(aKB)).toFile(prefix+".pltl");
+			break;
+			
+			case Constants.all:
+				System.out.println("Solver..." + Constants.NuSMV);
+				(new NuSMVOutput(aKB)).toFile(prefix+".smv");
+				System.out.println("Solver" + Constants.black);
+				(new PltlOutput(aKB)).toFile(prefix+".pltl");
+			break;
+		
+			default:
+				break;
+		}
+		
+		System.out.println("Num of Propositions: " + aKB.getPropositions().size());
+		System.out.println("DLLite to QTL: " + end_tbox2QTL);
+		System.out.println("QTL to LTL: " + end_timeLTLAA);
+
+		System.out.println("Done! Total time:" + (System.currentTimeMillis()-total_time) + "ms");
+		
+		if( verbose) {
+			(new LatexOutputDocument(t)).toFile(prefix+"tbox.tex");
+			(new LatexDocumentCNF(qtl_N)).toFile(prefix+"qtlN.tex");
+			(new LatexDocumentCNF(aKB)).toFile(prefix+"ltl.tex");
+		}
 	}
 	
 }

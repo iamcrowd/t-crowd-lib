@@ -10,7 +10,9 @@ import it.unibz.inf.qtl1.formulae.ImplicationFormula;
 import it.unibz.inf.qtl1.formulae.NegatedFormula;
 import it.unibz.inf.qtl1.formulae.quantified.UniversalFormula;
 import it.unibz.inf.qtl1.terms.Constant;
+import it.unibz.inf.qtl1.terms.Variable;
 import it.unibz.inf.tdllitefpx.TDLLiteNFPXConverter;
+import it.unibz.inf.tdllitefpx.abox.ABox;
 import it.unibz.inf.tdllitefpx.concepts.AtomicConcept;
 import it.unibz.inf.tdllitefpx.concepts.BottomConcept;
 import it.unibz.inf.tdllitefpx.concepts.Concept;
@@ -43,6 +45,8 @@ import java.util.Map.Entry;
 public class DLLiteConverter extends TDLLiteNFPXConverter{
 	
 //	TBox tbox;
+//	ABox abox;
+//	Boolean abs;
 //	Alphabet a;
 //	Variable x;
 	
