@@ -269,6 +269,7 @@ public class DLLiteReasoner {
 		return null;
 	}
 
+	
 	// Considering TBox and ABox
 	/**
 	 * TBox, ABox SAT

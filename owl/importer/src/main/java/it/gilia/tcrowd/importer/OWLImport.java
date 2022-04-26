@@ -191,7 +191,7 @@ import it.unibz.inf.tdllitefpx.tbox.RoleInclusionAssertion;
 
     	public void dlliteCI() {
         	// get all tbox axioms
-        	Set<OWLAxiom> tboxAxioms = this.ontology.tboxAxioms(Imports.EXCLUDED).collect(Collectors.toSet());
+        	Set<OWLAxiom> tboxAxioms = this.ontology.tboxAxioms(Imports.INCLUDED).collect(Collectors.toSet());
 
         	// iterate each axiom
         	tboxAxioms.forEach(axiom -> {
@@ -241,7 +241,7 @@ import it.unibz.inf.tdllitefpx.tbox.RoleInclusionAssertion;
 		}
 
 		public void dlliteAbox() {
-			Set<OWLAxiom> aboxAxioms = this.ontology.aboxAxioms(Imports.EXCLUDED).collect(Collectors.toSet());
+			Set<OWLAxiom> aboxAxioms = this.ontology.aboxAxioms(Imports.INCLUDED).collect(Collectors.toSet());
 
         	// iterate each axiom
         	aboxAxioms.forEach(axiom -> {	

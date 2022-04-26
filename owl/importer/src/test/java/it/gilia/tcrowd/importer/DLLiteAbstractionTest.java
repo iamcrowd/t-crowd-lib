@@ -55,7 +55,6 @@ public class DLLiteAbstractionTest {
         	String[] owlfilepath = path.split(":", 2);
         	OWLImport importer = new OWLImport();
 			importer.loadFromPath(owlfilepath[1]);
-			//importer.dlliteCI();
 			importer.dlliteAbox();
 
 			DLLiteReasoner.buildAbstract(
@@ -145,7 +144,6 @@ public class DLLiteAbstractionTest {
         	String[] owlfilepath = path.split(":", 2);
         	OWLImport importer = new OWLImport();
 			importer.loadFromPath(owlfilepath[1]);
-			//importer.dlliteCI();
 			importer.dlliteAbox();
 
 			DLLiteReasoner.buildAbstract(
@@ -189,6 +187,37 @@ public class DLLiteAbstractionTest {
 			System.out.println(key + stats.get(key));
 			key = "CIs:";
 			System.out.println(key + stats.get(key));
+		} catch (Exception e) {}
+	}
+
+	@Test
+	public void PizzaDLLiteAbstractedABoxTest(){
+		try{
+			IRI ontoiri = IRI.create("https://protege.stanford.edu/ontologies/pizza/pizza.owl");
+			OWLImport importer = new OWLImport();
+			importer.load(ontoiri);
+			importer.dlliteAbox();
+
+			DLLiteReasoner.buildAbstract(
+				importer.getABox(), 
+				10);
+
+		} catch (Exception e) {}
+	}
+
+	@Test
+	public void NDPAbstractedABoxTest(){
+		try{
+			String path = new String(OWLImport.class.getClassLoader().getResource("ontologies/npd-main-complete.rdf.owl").toString());
+        	String[] owlfilepath = path.split(":", 2);
+        	OWLImport importer = new OWLImport();
+			importer.loadFromPath(owlfilepath[1]);
+			importer.dlliteAbox();
+
+			DLLiteReasoner.buildAbstract(
+				importer.getABox(),
+				10);
+
 		} catch (Exception e) {}
 	}
 
