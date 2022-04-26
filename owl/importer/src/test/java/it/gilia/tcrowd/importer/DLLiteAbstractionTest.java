@@ -14,7 +14,7 @@ import it.unibz.inf.dllite.DLLiteReasoner;
 public class DLLiteAbstractionTest {
 
 	@Test
-	public void AdultDLLiteAbstractionTest(){
+	public void AdultDLLiteSATAbsTest(){
 		try{
 			String path = new String(OWLImport.class.getClassLoader().getResource("ontologies/AdultExampleDLLiteSAT.owl").toString());
         	String[] owlfilepath = path.split(":", 2);
@@ -49,7 +49,7 @@ public class DLLiteAbstractionTest {
 	}
 
 	@Test
-	public void AdultDLLiteUNSATTest(){
+	public void AdultDLLiteUNSATAbsTest(){
 		try{
 			String path = new String(OWLImport.class.getClassLoader().getResource("ontologies/AdultExampleDLLiteUNSAT.owl").toString());
         	String[] owlfilepath = path.split(":", 2);
@@ -85,7 +85,7 @@ public class DLLiteAbstractionTest {
 	}
 
 	@Test
-	public void StudentDLLiteSATTest(){
+	public void StudentDLLiteSATAbsTest(){
 		try{
 			String path = new String(OWLImport.class.getClassLoader().getResource("ontologies/toyDomainRangeSAT.owl").toString());
         	String[] owlfilepath = path.split(":", 2);
@@ -98,12 +98,13 @@ public class DLLiteAbstractionTest {
 				(new LatexOutputDocument(importer.getTBox())).toFile("StudentDLLiteSAT.tex");
 			} catch (Exception e) {}
 
-			DLLiteReasoner.checkKB(
+			DLLiteReasoner.abstractedKB(
 				importer.getTBox(),
 				importer.getABox(),
 				true, 
-				"StudentSAT",
-				"all");
+				"StudentSATAbs", 
+				"all"
+				);
 
 
 			Map<String, String> stats = importer.getTBox().getStats();
@@ -133,12 +134,13 @@ public class DLLiteAbstractionTest {
 				(new LatexOutputDocument(importer.getTBox())).toFile("StudentDLLiteUNSAT.tex");
 			} catch (Exception e) {}
 
-			DLLiteReasoner.checkKB(
+			DLLiteReasoner.abstractedKB(
 				importer.getTBox(),
 				importer.getABox(),
 				true, 
-				"StudentUNSAT",
-				"all");
+				"StudentUNSATAbs", 
+				"all"
+				);
 
 
 			Map<String, String> stats = importer.getTBox().getStats();

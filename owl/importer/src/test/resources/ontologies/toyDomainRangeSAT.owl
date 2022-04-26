@@ -22,6 +22,12 @@
         <ObjectProperty IRI="#isEnrolled"/>
     </Declaration>
     <Declaration>
+        <NamedIndividual IRI="#Alessandro"/>
+    </Declaration>
+    <Declaration>
+        <NamedIndividual IRI="#Charles"/>
+    </Declaration>
+    <Declaration>
         <NamedIndividual IRI="#Pipo"/>
     </Declaration>
     <Declaration>
@@ -30,6 +36,17 @@
     <Declaration>
         <NamedIndividual IRI="#School2"/>
     </Declaration>
+    <Declaration>
+        <NamedIndividual IRI="#School3"/>
+    </Declaration>
+    <ClassAssertion>
+        <Class IRI="#Student"/>
+        <NamedIndividual IRI="#Alessandro"/>
+    </ClassAssertion>
+    <ClassAssertion>
+        <Class IRI="#Student"/>
+        <NamedIndividual IRI="#Charles"/>
+    </ClassAssertion>
     <ClassAssertion>
         <Class IRI="#Student"/>
         <NamedIndividual IRI="#Pipo"/>
@@ -42,6 +59,20 @@
         <Class IRI="#School"/>
         <NamedIndividual IRI="#School2"/>
     </ClassAssertion>
+    <ClassAssertion>
+        <Class IRI="#School"/>
+        <NamedIndividual IRI="#School3"/>
+    </ClassAssertion>
+    <ObjectPropertyAssertion>
+        <ObjectProperty IRI="#isEnrolled"/>
+        <NamedIndividual IRI="#Alessandro"/>
+        <NamedIndividual IRI="#School3"/>
+    </ObjectPropertyAssertion>
+    <ObjectPropertyAssertion>
+        <ObjectProperty IRI="#isEnrolled"/>
+        <NamedIndividual IRI="#Charles"/>
+        <NamedIndividual IRI="#School2"/>
+    </ObjectPropertyAssertion>
     <ObjectPropertyAssertion>
         <ObjectProperty IRI="#isEnrolled"/>
         <NamedIndividual IRI="#Pipo"/>
