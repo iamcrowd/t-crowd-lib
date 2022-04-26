@@ -102,7 +102,7 @@ public class DLLiteAbstractionTest {
 	}
 
 	@Test
-	public void StudentDLLiteSATAbsTest(){
+	public void StudentDLLiteSATAbsTest() {
 		try{
 			String path = new String(OWLImport.class.getClassLoader().getResource("ontologies/toyDomainRangeSAT.owl").toString());
         	String[] owlfilepath = path.split(":", 2);
@@ -221,6 +221,21 @@ public class DLLiteAbstractionTest {
 		} catch (Exception e) {}
 	}
 
+	@Test
+	public void UOBMOneAbstractedABoxTest(){
+		try{
+			String path = new String(OWLImport.class.getClassLoader().getResource("ontologies/uobmOne.owl").toString());
+        	String[] owlfilepath = path.split(":", 2);
+        	OWLImport importer = new OWLImport();
+			importer.loadFromPath(owlfilepath[1]);
+			importer.dlliteAbox();
+
+			DLLiteReasoner.buildAbstract(
+				importer.getABox(),
+				10);
+
+		} catch (Exception e) {}
+	}
 }
 
 
