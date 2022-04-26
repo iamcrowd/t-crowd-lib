@@ -165,13 +165,12 @@ public class OWLImportTest {
     @Test
     public void testUobmOne() {
         try {
-            String path = new String(OWLImport.class.getClassLoader().getResource("ontologies/npd-main-complete.rdf.owl").toString());
+            String path = new String(OWLImport.class.getClassLoader().getResource("ontologies/uobmOne.owl").toString());
             String[] owlfilepath = path.split(":", 2);
             OWLImport importer = new OWLImport();
 			importer.loadFromPath(owlfilepath[1]);
 			importer.dlliteCI();
             importer.dlliteAbox();
-            importer.importIndividuals();
 
             Map<String, Integer> statsABox = importer.getABox().getStatsABox();
             System.out.println("");
@@ -185,7 +184,6 @@ public class OWLImportTest {
             
             System.out.println("Constants ABox: " + importer.getABox().getConstantsABox().size());
 
-            System.out.println("Imported individuals: " + importer.getIndividuals().count());
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -200,7 +198,6 @@ public class OWLImportTest {
 			importer.loadFromPath(owlfilepath[1]);
 			importer.dlliteCI();
             importer.dlliteAbox();
-            importer.importIndividuals();
 
             Map<String, Integer> statsABox = importer.getABox().getStatsABox();
             System.out.println("");
@@ -214,7 +211,6 @@ public class OWLImportTest {
             
             System.out.println("Constants ABox: " + importer.getABox().getConstantsABox().size());
 
-            System.out.println("Imported individuals: " + importer.getIndividuals().count());
         } catch (Exception e) {
             e.printStackTrace();
         }

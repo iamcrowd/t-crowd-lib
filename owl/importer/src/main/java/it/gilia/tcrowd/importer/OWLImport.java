@@ -2,12 +2,6 @@ package it.gilia.tcrowd.importer;
 
 import static it.gilia.tcrowd.importer.ImportUtils.validateOWL;
 
-import org.json.JSONArray;
-import org.json.JSONObject;
-import org.json.JSONStringer;
-import org.json.JSONTokener;
-import org.json.JSONException;
-
 import java.util.*;
 import java.text.*;
 
@@ -20,45 +14,25 @@ import org.semanticweb.owlapi.model.*;
 import org.semanticweb.owlapi.model.parameters.*;
 import org.semanticweb.owlapi.util.*;
 
-import uk.ac.manchester.cs.owl.owlapi.OWLClassImpl;
 import uk.ac.manchester.cs.owl.owlapi.OWLDataFactoryImpl;
 import uk.ac.manchester.cs.owl.owlapi.OWLObjectCardinalityRestrictionImpl;
 import uk.ac.manchester.cs.owl.owlapi.OWLObjectMinCardinalityImpl;
 import uk.ac.manchester.cs.owl.owlapi.OWLObjectPropertyCharacteristicAxiomImpl;
-import uk.ac.manchester.cs.owl.owlapi.OWLObjectSomeValuesFromImpl;
-import uk.ac.manchester.cs.owl.owlapi.OWLQuantifiedRestrictionImpl;
-import uk.ac.manchester.cs.owl.owlapi.OWLSubClassOfAxiomImpl;
-import uk.ac.manchester.cs.owl.owlapi.OWLSubClassOfAxiomImpl;
 
-import it.unibz.inf.qtl1.NaturalTranslator;
-import it.unibz.inf.qtl1.formulae.Formula;
-import it.unibz.inf.qtl1.output.LatexDocumentCNF;
-import it.unibz.inf.qtl1.output.NuSMVOutput;
-import it.unibz.inf.tdllitefpx.TDLLiteFPXConverter;
-import it.unibz.inf.tdllitefpx.output.LatexOutputDocument;
 import it.unibz.inf.tdllitefpx.concepts.AtomicConcept;
 import it.unibz.inf.tdllitefpx.concepts.ConjunctiveConcept;
 import it.unibz.inf.tdllitefpx.concepts.BottomConcept;
 import it.unibz.inf.tdllitefpx.concepts.Concept;
 import it.unibz.inf.tdllitefpx.concepts.NegatedConcept;
 import it.unibz.inf.tdllitefpx.concepts.QuantifiedRole;
-import it.unibz.inf.tdllitefpx.concepts.temporal.AlwaysFuture;
-import it.unibz.inf.tdllitefpx.concepts.temporal.AlwaysPast;
-import it.unibz.inf.tdllitefpx.concepts.temporal.NextFuture;
-import it.unibz.inf.tdllitefpx.concepts.temporal.SometimeFuture;
-import it.unibz.inf.tdllitefpx.concepts.temporal.SometimePast;
-import it.unibz.inf.tdllitefpx.roles.AtomicLocalRole;
 import it.unibz.inf.tdllitefpx.roles.AtomicRigidRole;
 import it.unibz.inf.tdllitefpx.roles.PositiveRole;
 import it.unibz.inf.tdllitefpx.roles.Role;
-import it.unibz.inf.tdllitefpx.roles.AtomicRole;
 import it.unibz.inf.tdllitefpx.tbox.ConceptInclusionAssertion;
-import it.unibz.inf.tdllitefpx.tbox.RBox;
 import it.unibz.inf.tdllitefpx.tbox.TBox;
 import it.unibz.inf.tdllitefpx.abox.ABox;
 import it.unibz.inf.tdllitefpx.abox.ABoxConceptAssertion;
 import it.unibz.inf.tdllitefpx.abox.ABoxRoleAssertion;
-import it.unibz.inf.tdllitefpx.tbox.RoleInclusionAssertion;
 
 
 	/**
@@ -76,7 +50,6 @@ import it.unibz.inf.tdllitefpx.tbox.RoleInclusionAssertion;
 
 		TBox myTBox = new TBox();
 		ABox myABox = new ABox();
-		Stream<OWLNamedIndividual> individuals;
 		
 		public OWLImport() {
 			this.manager = OWLManager.createOWLOntologyManager();
@@ -107,14 +80,6 @@ import it.unibz.inf.tdllitefpx.tbox.RoleInclusionAssertion;
 		 */
 		public ABox getABox() {
 			return this.myABox;
-		}
-
-		/**
-		 * Returns the set of individuals in the imported ontology
-		 * @return
-		 */
-		public Stream<OWLNamedIndividual> getIndividuals(){
-			return individuals;
 		}
 
 		/**
@@ -283,11 +248,11 @@ import it.unibz.inf.tdllitefpx.tbox.RoleInclusionAssertion;
 						OWLIndividual subject = ((OWLObjectPropertyAssertionAxiom) axiom).getSubject();
 						OWLIndividual object = ((OWLObjectPropertyAssertionAxiom) axiom).getObject();
 
-						PositiveRole role = new PositiveRole(new AtomicRigidRole(property.asOWLObjectProperty().getIRI().getFragment()));
+						PositiveRole role = new PositiveRole(new AtomicRigidRole(property.asOWLObjectProperty().getIRI().getIRIString()));
 
 						this.myABox.addABoxRoleAssertion(new ABoxRoleAssertion(role, 
-																			   subject.asOWLNamedIndividual().getIRI().getFragment(), 
-																			   object.asOWLNamedIndividual().getIRI().getFragment(), 0));
+																			   subject.asOWLNamedIndividual().getIRI().getIRIString(), 
+																			   object.asOWLNamedIndividual().getIRI().getIRIString(), 0));
 					} else if (axiom.isOfType(AxiomType.NEGATIVE_OBJECT_PROPERTY_ASSERTION)) {
 						// How to import?
 					}
@@ -297,26 +262,19 @@ import it.unibz.inf.tdllitefpx.tbox.RoleInclusionAssertion;
 			});
 		}
 
-		public void importIndividuals(){
-			individuals = this.ontology.individualsInSignature(Imports.INCLUDED);
-			/*individuals.forEach(ind -> {
-				System.out.println("individual xxxx: " + ind.toString());
-			});*/
-		}
-
 
 		private void AddNegatedConceptAssertion(OWLClassExpression e, OWLIndividual ind) {
 			OWLClassExpression operand = ((OWLObjectComplementOf)e).getOperand();
 			
 			if (operand.getClassExpressionType() == ClassExpressionType.OWL_CLASS) {
-				this.myABox.addConceptsAssertion(new ABoxConceptAssertion(new NegatedConcept(new AtomicConcept(operand.asOWLClass().getIRI().getFragment())), 
-				ind.asOWLNamedIndividual().getIRI().getFragment()));
+				this.myABox.addConceptsAssertion(new ABoxConceptAssertion(new NegatedConcept(new AtomicConcept(operand.asOWLClass().getIRI().getIRIString())), 
+				ind.asOWLNamedIndividual().getIRI().getIRIString()));
 			}
 		}
 
 		private void AddAtomicConceptAssertion(OWLClassExpression e, OWLIndividual ind) {
-			this.myABox.addConceptsAssertion(new ABoxConceptAssertion(new AtomicConcept(e.asOWLClass().getIRI().getFragment()), 
-																					ind.asOWLNamedIndividual().getIRI().getFragment()));
+			this.myABox.addConceptsAssertion(new ABoxConceptAssertion(new AtomicConcept(e.asOWLClass().getIRI().getIRIString()), 
+																					ind.asOWLNamedIndividual().getIRI().getIRIString()));
 		}
 
 		// AXIOM PROCESSORS ///////////////////////////////////////////////////
