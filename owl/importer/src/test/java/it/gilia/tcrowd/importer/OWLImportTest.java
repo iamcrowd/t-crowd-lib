@@ -159,5 +159,20 @@ public class OWLImportTest {
         }
     }
 
+    @Test
+    public void testUobmOne() {
+        try {
+            String path = new String(OWLImport.class.getClassLoader().getResource("ontologies/uobmOne.owl").toString());
+            String[] owlfilepath = path.split(":", 2);
+            OWLImport importer = new OWLImport();
+			importer.loadFromPath(owlfilepath[1]);
+			importer.dlliteCI();
+            importer.dlliteAbox();
+            System.out.println("Assertions: " + importer.myABox.getABoxSize());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
 }
 
