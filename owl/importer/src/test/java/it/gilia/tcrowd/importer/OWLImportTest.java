@@ -3,6 +3,9 @@ package it.gilia.tcrowd.importer;
 //import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.junit.jupiter.api.Test;
+
+import java.util.Map;
+
 import org.junit.jupiter.api.*;
 
 
@@ -162,13 +165,56 @@ public class OWLImportTest {
     @Test
     public void testUobmOne() {
         try {
-            String path = new String(OWLImport.class.getClassLoader().getResource("ontologies/uobmOne.owl").toString());
+            String path = new String(OWLImport.class.getClassLoader().getResource("ontologies/npd-main-complete.rdf.owl").toString());
             String[] owlfilepath = path.split(":", 2);
             OWLImport importer = new OWLImport();
 			importer.loadFromPath(owlfilepath[1]);
 			importer.dlliteCI();
             importer.dlliteAbox();
-            System.out.println("Assertions: " + importer.myABox.getABoxSize());
+            importer.importIndividuals();
+
+            Map<String, Integer> statsABox = importer.getABox().getStatsABox();
+            System.out.println("");
+            System.out.println("------DLITE ABOX");
+            
+            String keyA;
+            keyA="Concept_Assertions:";
+            System.out.println(keyA+ statsABox.get(keyA));
+            keyA="Role_Assertions:";
+            System.out.println(keyA+ statsABox.get(keyA));
+            
+            System.out.println("Constants ABox: " + importer.getABox().getConstantsABox().size());
+
+            System.out.println("Imported individuals: " + importer.getIndividuals().count());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Test
+    public void testToyABoxIndividuals() {
+        try {
+            String path = new String(OWLImport.class.getClassLoader().getResource("ontologies/toyDomainRangeSAT.owl").toString());
+            String[] owlfilepath = path.split(":", 2);
+            OWLImport importer = new OWLImport();
+			importer.loadFromPath(owlfilepath[1]);
+			importer.dlliteCI();
+            importer.dlliteAbox();
+            importer.importIndividuals();
+
+            Map<String, Integer> statsABox = importer.getABox().getStatsABox();
+            System.out.println("");
+            System.out.println("------DLITE ABOX");
+            
+            String keyA;
+            keyA="Concept_Assertions:";
+            System.out.println(keyA+ statsABox.get(keyA));
+            keyA="Role_Assertions:";
+            System.out.println(keyA+ statsABox.get(keyA));
+            
+            System.out.println("Constants ABox: " + importer.getABox().getConstantsABox().size());
+
+            System.out.println("Imported individuals: " + importer.getIndividuals().count());
         } catch (Exception e) {
             e.printStackTrace();
         }

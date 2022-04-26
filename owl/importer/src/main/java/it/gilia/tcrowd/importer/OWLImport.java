@@ -76,6 +76,7 @@ import it.unibz.inf.tdllitefpx.tbox.RoleInclusionAssertion;
 
 		TBox myTBox = new TBox();
 		ABox myABox = new ABox();
+		Stream<OWLNamedIndividual> individuals;
 		
 		public OWLImport() {
 			this.manager = OWLManager.createOWLOntologyManager();
@@ -106,6 +107,14 @@ import it.unibz.inf.tdllitefpx.tbox.RoleInclusionAssertion;
 		 */
 		public ABox getABox() {
 			return this.myABox;
+		}
+
+		/**
+		 * Returns the set of individuals in the imported ontology
+		 * @return
+		 */
+		public Stream<OWLNamedIndividual> getIndividuals(){
+			return individuals;
 		}
 
 		/**
@@ -287,6 +296,14 @@ import it.unibz.inf.tdllitefpx.tbox.RoleInclusionAssertion;
             	}
 			});
 		}
+
+		public void importIndividuals(){
+			individuals = this.ontology.individualsInSignature(Imports.INCLUDED);
+			/*individuals.forEach(ind -> {
+				System.out.println("individual xxxx: " + ind.toString());
+			});*/
+		}
+
 
 		private void AddNegatedConceptAssertion(OWLClassExpression e, OWLIndividual ind) {
 			OWLClassExpression operand = ((OWLObjectComplementOf)e).getOperand();

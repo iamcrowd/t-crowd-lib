@@ -25,7 +25,19 @@
         <NamedIndividual IRI="#Alessandro"/>
     </Declaration>
     <Declaration>
+        <NamedIndividual IRI="#Anton"/>
+    </Declaration>
+    <Declaration>
+        <NamedIndividual IRI="#Carolina"/>
+    </Declaration>
+    <Declaration>
         <NamedIndividual IRI="#Charles"/>
+    </Declaration>
+    <Declaration>
+        <NamedIndividual IRI="#German"/>
+    </Declaration>
+    <Declaration>
+        <NamedIndividual IRI="#Nicola"/>
     </Declaration>
     <Declaration>
         <NamedIndividual IRI="#Pipo"/>

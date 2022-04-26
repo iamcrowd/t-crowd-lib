@@ -749,7 +749,7 @@ public class ABox extends ConjunctiveFormula implements FormattableObj {
 		return stats;
 	}
 
-		/**
+	/**
 	 * Stats for ABox
 	 * 
 	 * @return Map<String, Integer>
