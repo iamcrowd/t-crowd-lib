@@ -49,6 +49,24 @@ public class DLLiteAbstractionTest {
 	}
 
 	@Test
+	public void AdultDLLiteSATAbsEmptyTBoxTest(){
+		try{
+			String path = new String(OWLImport.class.getClassLoader().getResource("ontologies/AdultExampleDLLiteSAT.owl").toString());
+        	String[] owlfilepath = path.split(":", 2);
+        	OWLImport importer = new OWLImport();
+			importer.loadFromPath(owlfilepath[1]);
+			//importer.dlliteCI();
+			importer.dlliteAbox();
+
+			DLLiteReasoner.buildAbstract(
+				importer.getABox(),
+				1
+				);
+
+		} catch (Exception e) {}
+	}
+
+	@Test
 	public void AdultDLLiteUNSATAbsTest(){
 		try{
 			String path = new String(OWLImport.class.getClassLoader().getResource("ontologies/AdultExampleDLLiteUNSAT.owl").toString());
@@ -117,6 +135,24 @@ public class DLLiteAbstractionTest {
 			System.out.println(key + stats.get(key));
 			key = "CIs:";
 			System.out.println(key + stats.get(key));
+		} catch (Exception e) {}
+	}
+
+	@Test
+	public void StudentDLLiteSATAbsEmptyTBoxTest(){
+		try{
+			String path = new String(OWLImport.class.getClassLoader().getResource("ontologies/toyDomainRangeSAT.owl").toString());
+        	String[] owlfilepath = path.split(":", 2);
+        	OWLImport importer = new OWLImport();
+			importer.loadFromPath(owlfilepath[1]);
+			//importer.dlliteCI();
+			importer.dlliteAbox();
+
+			DLLiteReasoner.buildAbstract(
+				importer.getABox(),
+				1
+				);
+
 		} catch (Exception e) {}
 	}
 

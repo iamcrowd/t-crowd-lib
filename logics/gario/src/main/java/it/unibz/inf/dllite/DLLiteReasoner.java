@@ -390,5 +390,39 @@ public class DLLiteReasoner {
 			(new LatexDocumentCNF(aKB)).toFile(prefix+"ltl.tex");
 		}
 	}
+
+	/**
+	 * Builds an abstracted ABox (TBox is empty) given a max cardinality Q
+	 * @param ABox
+	 * @param Q
+	 * @throws Exception
+	 */
+	public static void buildAbstract(ABox ABox, int Q) throws Exception {
+		
+		long total_time = System.currentTimeMillis();
+		long start_time;
+	
+		start_time = System.currentTimeMillis();
+		ABox.addExtensionConstraintsAbsABox(Q);
+		System.out.println("");
+		System.out.println("------ABox -> FO :");	
+		//Formula o = ABox.getABoxFormula(false);
+
+		//System.out.println("ABox: " + o.toString());
+		
+		System.out.println(System.currentTimeMillis()-start_time + "ms");	
+		System.out.println("");
+		System.out.println("------FO -> Abstract FO :");
+		   
+		start_time = System.currentTimeMillis();
+		ABox.AbstractABox();
+		System.out.println(System.currentTimeMillis()-start_time + "ms");
+		Formula oAbs = ABox.getAbstractABoxFormula(false); 
+
+		System.out.println("Abstracted ABox: " + oAbs.toString());
+
+		System.out.println("");
+		System.out.println("Done! Total time:" + (System.currentTimeMillis()-total_time) + "ms");
+	}
 	
 }
