@@ -222,9 +222,9 @@ public class DLLiteAbstractionTest {
 	}
 
 	@Test
-	public void UOBMOneAbstractedABoxTest(){
+	public void MovieAbstractedABoxTest(){
 		try{
-			String path = new String(OWLImport.class.getClassLoader().getResource("ontologies/uobmOne.owl").toString());
+			String path = new String(OWLImport.class.getClassLoader().getResource("ontologies/movieontology.owl").toString());
         	String[] owlfilepath = path.split(":", 2);
         	OWLImport importer = new OWLImport();
 			importer.loadFromPath(owlfilepath[1]);
@@ -238,9 +238,57 @@ public class DLLiteAbstractionTest {
 	}
 
 	@Test
-	public void MovieAbstractedABoxTest(){
+	public void LubmOneDeptAbstractedABoxTest(){
 		try{
-			String path = new String(OWLImport.class.getClassLoader().getResource("ontologies/movieontology.owl").toString());
+			String path = new String(OWLImport.class.getClassLoader().getResource("ontologies/benchmarks/lubm-onedept.owl").toString());
+        	String[] owlfilepath = path.split(":", 2);
+        	OWLImport importer = new OWLImport();
+			importer.loadFromPath(owlfilepath[1]);
+			importer.dlliteAbox();
+
+			DLLiteReasoner.buildAbstract(
+				importer.getABox(),
+				10);
+
+		} catch (Exception e) {}
+	}
+
+	@Test
+	public void UobmOneAbstractedABoxTest(){
+		try{
+			String path = new String(OWLImport.class.getClassLoader().getResource("ontologies/benchmarks/uobm-one.owl").toString());
+        	String[] owlfilepath = path.split(":", 2);
+        	OWLImport importer = new OWLImport();
+			importer.loadFromPath(owlfilepath[1]);
+			importer.dlliteAbox();
+
+			DLLiteReasoner.buildAbstract(
+				importer.getABox(),
+				10);
+
+		} catch (Exception e) {}
+	}
+
+	@Test
+	public void Owl2BenchOneAbstractedABoxTest(){
+		try{
+			String path = new String(OWLImport.class.getClassLoader().getResource("ontologies/benchmarks/owl2bench-one.owl").toString());
+        	String[] owlfilepath = path.split(":", 2);
+        	OWLImport importer = new OWLImport();
+			importer.loadFromPath(owlfilepath[1]);
+			importer.dlliteAbox();
+
+			DLLiteReasoner.buildAbstract(
+				importer.getABox(),
+				10);
+
+		} catch (Exception e) {}
+	}
+
+	@Test
+	public void Owl2BenchTenAbstractedABoxTest(){
+		try{
+			String path = new String(OWLImport.class.getClassLoader().getResource("ontologies/benchmarks/owl2bench-ten.owl").toString());
         	String[] owlfilepath = path.split(":", 2);
         	OWLImport importer = new OWLImport();
 			importer.loadFromPath(owlfilepath[1]);
