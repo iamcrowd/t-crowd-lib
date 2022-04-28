@@ -41,11 +41,9 @@ public class ProcessTask implements Callable<String> {
         ProcessBuilder pb = new ProcessBuilder();
         pb.command("/home/gbraun/Documentos/TemporalDLlite/NuXMV/nuXmv", "-dcx", "-bmc", "-bmc_length", "60", file);
         pb.redirectErrorStream(true);
-        pb.redirectOutput(ProcessBuilder.Redirect.to(new File(file + ".log")));
+        //pb.redirectOutput(ProcessBuilder.Redirect.to(new File(file + ".log")));
 
         Process p5 = pb.start();
-        
-        System.out.println("Current process: " + p5.info());
 
         StringBuilder output = new StringBuilder();
 
@@ -68,9 +66,9 @@ public class ProcessTask implements Callable<String> {
             }
         }
         p5.exitValue();
-        service.shutdownNow();
-        service.awaitTermination(30, TimeUnit.SECONDS);
         throw new Exception();
+        /*service.shutdownNow();
+        service.awaitTermination(30, TimeUnit.SECONDS);*/
     }
 
 }
