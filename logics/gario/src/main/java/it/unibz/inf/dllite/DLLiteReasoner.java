@@ -17,8 +17,16 @@ import it.unibz.inf.tdllitefpx.abox.ABox;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Set;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 import java.util.concurrent.Flow.Processor;
+
+import javax.sql.RowSetMetaData;
 
 
 /**
@@ -28,6 +36,8 @@ import java.util.concurrent.Flow.Processor;
  *
  */
 public class DLLiteReasoner {
+
+	static HashMap<Role, String> RolesSAT = new HashMap<Role, String>();
 
 
 	/**
@@ -132,6 +142,7 @@ public class DLLiteReasoner {
 			String solver) 
 					throws Exception{
 
+		int nOfThreads = 3;
 		long total_time = System.currentTimeMillis();
 		long start_tbox2QTL = System.currentTimeMillis();
 		
@@ -142,18 +153,12 @@ public class DLLiteReasoner {
 		long end_tbox2QTL = System.currentTimeMillis() - start_tbox2QTL;
 		long start_QTLN2LTL = System.currentTimeMillis();
 
-		/*Formula ltl_for_role = qtl_N.makePropositional(qtl_N.getConstants());
-		for(Role role : t.getRoles()){
-			if (role instanceof PositiveRole){
-				Formula formRole = conv.getFormulaByRole(role);
-				Formula ltlR = new ConjunctiveFormula(ltl_for_role, formRole.makePropositional());
-				(new NuSMVOutput(ltlR)).toFile(prefix + role.toString() + ".smv");
-				String output = runSolver(prefix + role.toString() + ".smv");
-				System.out.println("output" + role.toString() + ": " + output);
-			}
-		}
+		Formula ltl_for_role = qtl_N.makePropositional(qtl_N.getConstants());
 
-		System.exit(0); */
+		rolesSAT(t, conv, ltl_for_role, nOfThreads);
+
+		System.exit(0);
+
 
 		// Get constants
 		Set<Constant> constsABox = a.getConstantsABox();
@@ -195,13 +200,6 @@ public class DLLiteReasoner {
 				(new NuSMVOutput(ltl_KB)).toFile(prefix+".smv");
 				System.out.println("Solver" + Constants.black);
 				(new PltlOutput(ltl_KB)).toFile(prefix+".pltl");
-				
-			/*	int i = 1;
-				while (i <= 10){
-					String output = runSolver(prefix + ".smv");
-					System.out.println("output" + i + ": " + output);
-					i++;
-				}*/
 			break;
 		
 			default:
@@ -222,51 +220,32 @@ public class DLLiteReasoner {
 	}
 
 
-	private static String runSolver(String file) throws InterruptedException{
-		ProcessBuilder processBuilder = new ProcessBuilder();
-		System.out.println(file);
-		processBuilder.command("/home/gbraun/Documentos/TemporalDLlite/NuXMV/nuXmv", "-dcx", "-bmc", "-bmc_length", "60", file);
-		System.out.println("Commando" + processBuilder.command());
-	//	processBuilder.command("/home/gbraun/Documentos/TemporalDLlite/NuXMV/nuXmv","-source", "/home/gbraun/Documentos/TemporalDLlite/NuXMV/script.txt", file);
-		StringBuilder output;
-		try {
-			System.out.println("NUxmv process!");
-			Process process = processBuilder.start();
+	private static void rolesSAT(TBox t, DLLiteConverter conv, Formula ltl_roles, Integer nOfThreads) throws Exception{
+		ExecutorService service = Executors.newFixedThreadPool(nOfThreads);
 
-/*			while (process.isAlive()){
-				output = new StringBuilder();
+		Set<Callable<String>> callables = new HashSet<Callable<String>>();  
 
-				BufferedReader reader = new BufferedReader(
-				new InputStreamReader(process.getInputStream()));
-
-				String line;
-				while ((line = reader.readLine()) != null) {
-					output.append(line + "\n");
-				}
-			} */
-
-
-
-			int exitVal = process.waitFor();
-			if (exitVal == 0) {
-				System.out.println("Success!");
-			/*	if (output.toString().contains("false")){
-					System.out.println("SAT");
-					return "SAT";
-				} else if (output.toString().contains("true")){
-					System.out.println("UNSAT");
-					return "UNSAT";
-				} */
-				//System.exit(0);
-			} else {
-				System.out.println("Process failed!");
+		for(Role role : t.getRoles()){
+			if (role instanceof PositiveRole){
+				callables.add(new ProcessTask(ltl_roles, conv, role, service));
 			}
-			process.destroy();
-
-		} catch (IOException e) {
-			e.printStackTrace();
 		}
-		return null;
+
+		try{
+			java.util.List<Future<String>> futures = service.invokeAll(callables);
+
+			for(Future<String> future : futures){  
+				System.out.println("future.get = " + future.get());  
+			}
+		}
+		catch (Exception e){
+			System.out.println("Process failed");
+			service.shutdownNow();  
+			throw new InterruptedException();
+		}	
+
+        service.shutdownNow();  
+
 	}
 
 	

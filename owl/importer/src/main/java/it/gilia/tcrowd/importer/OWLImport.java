@@ -172,8 +172,6 @@ import it.unibz.inf.tdllitefpx.abox.ABoxRoleAssertion;
             	try {
                 	// PROCESSING ONLY CONCEPT INCLUSIONS
 
-					System.out.println(axiom.toString());
-
 					// CLASS AXIOMS
 
                 	if (axiom.isOfType(AxiomType.SUBCLASS_OF)) {

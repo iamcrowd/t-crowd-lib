@@ -236,6 +236,22 @@ public class DLLiteAbstractionTest {
 
 		} catch (Exception e) {}
 	}
+
+	@Test
+	public void MovieAbstractedABoxTest(){
+		try{
+			String path = new String(OWLImport.class.getClassLoader().getResource("ontologies/movieontology.owl").toString());
+        	String[] owlfilepath = path.split(":", 2);
+        	OWLImport importer = new OWLImport();
+			importer.loadFromPath(owlfilepath[1]);
+			importer.dlliteAbox();
+
+			DLLiteReasoner.buildAbstract(
+				importer.getABox(),
+				10);
+
+		} catch (Exception e) {}
+	}
 }
 
 
