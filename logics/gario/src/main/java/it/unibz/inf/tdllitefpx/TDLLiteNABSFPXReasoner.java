@@ -114,8 +114,8 @@ public class TDLLiteNABSFPXReasoner {
 			System.out.println("");
 			System.out.println("------ABox -> FO :");
 				
-			/* Removed because we should ground considering only the abstracted set of individuals
-			Formula o = ABox.getABoxFormula(false);*/
+			
+			Formula o = ABox.getABoxFormula(false);
 			System.out.println("Size FO ABox: " + ABox.getABoxSize());
 				
 			long end_timeNA_QTL =  System.currentTimeMillis()-start_timeNA;
@@ -137,17 +137,18 @@ public class TDLLiteNABSFPXReasoner {
 			System.out.println("TIME ABS:"+(System.currentTimeMillis()-start_time_abs) + "ms");	
 			System.out.print("Qtl N -> LTL:\n");
 		
-			/* We remove this. Now we only ground the formula with the abstracted set of individuals
+			
 			long start_timeLTLNA = System.currentTimeMillis();
 			long end_timeLTLNA;
-			LTL formula by grounding the qtl formula with consts before abstraction
+			
+			//LTL formula by grounding the qtl formula with consts before abstraction
 
 			Formula ltl = qtl.makePropositional(consts);
 			o = o.makePropositional(consts);
 			ltl = new ConjunctiveFormula(ltl, o);
 		
 			end_timeLTLNA = System.currentTimeMillis() - start_timeLTLNA;
-			System.out.println("QTL->LTL NA:"+(System.currentTimeMillis() - start_timeLTLNA) + "ms");	*/
+			System.out.println("QTL->LTL NA:"+(System.currentTimeMillis() - start_timeLTLNA) + "ms");
 		
 			long start_timeLTLAA = System.currentTimeMillis();
 			long end_timeLTLAA;
