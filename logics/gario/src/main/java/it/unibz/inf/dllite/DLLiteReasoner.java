@@ -17,15 +17,20 @@ import it.unibz.inf.tdllitefpx.abox.ABox;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.EmptyStackException;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.Flow.Processor;
 
+import javax.management.relation.RoleList;
 import javax.sql.RowSetMetaData;
 
 
@@ -155,7 +160,12 @@ public class DLLiteReasoner {
 
 		Formula ltl_for_role = qtl_N.makePropositional(qtl_N.getConstants());
 
-		rolesSAT(t, conv, ltl_for_role, nOfThreads);
+		try{
+			rolesSAT(t, conv, ltl_for_role, nOfThreads);
+		}
+		catch (Exception e){
+			throw e;
+		}
 
 		System.exit(0);
 
@@ -220,6 +230,10 @@ public class DLLiteReasoner {
 	}
 
 
+	/**
+	 * In this method, we use service invokeAll(). First, we put all of the instances into a collable set and then
+	 * we run concurrently all of them. The methods ends after executing all of the instances.
+	 */
 	private static void rolesSAT(TBox t, DLLiteConverter conv, Formula ltl_roles, Integer nOfThreads) throws Exception{
 		ExecutorService service = Executors.newFixedThreadPool(nOfThreads);
 
@@ -244,12 +258,13 @@ public class DLLiteReasoner {
 			throw new InterruptedException();
 		}	
 
-        service.shutdownNow();  
+        service.shutdownNow();
+		service.awaitTermination(30, TimeUnit.SECONDS);  
 
 	}
 
 	
-	// Considering TBox and ABox
+	// Abstraction ABox
 	/**
 	 * TBox, ABox SAT
 	 * LTL: TBox|ABox -> QTL -> LTL (NuSMV|NuXMV|Aalta|pltl|TRP++)
