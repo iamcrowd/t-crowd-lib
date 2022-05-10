@@ -1,5 +1,6 @@
 package it.unibz.inf.tdllitefpx.tbox;
 
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Random;
 import java.util.Set;
@@ -34,6 +35,12 @@ public class TDLLiteN_TBox_AbsABox {
 	public static Set<Role> RolesSet = new HashSet<Role>();
 	public static Set<Role> RolesSetG = new HashSet<Role>();
 	public static Set<Role> RolesSetL = new HashSet<Role>();
+
+	public static HashMap<String, Set<Concept>> countConceptAssertions = new HashMap<String, Set<Concept>>();
+
+	public HashMap<String, Set<Concept>> getCountCA(){
+		return countConceptAssertions;
+	}
 	
 	public static Concept getABoxConcept( ){
 		Concept[] ArrayC = new Concept[ConceptsSet.size()];
@@ -171,7 +178,7 @@ public class TDLLiteN_TBox_AbsABox {
 			int j = new Random().nextInt(max); //Timestamp
 			int f, g;
 		
-			if (p <= (N*sizeInd*max)){	 
+			if (p <= (N*sizeInd*10)){	 
 			  //	Concept assertion;
 
 			  	Concept Basic = getABoxConcept();
@@ -186,8 +193,24 @@ public class TDLLiteN_TBox_AbsABox {
 				f = new Random().nextInt(sizeInd) + 1;
 			  	hs_1.remove(f);
 			  	ABoxConceptAssertion a= new ABoxConceptAssertion(Ca,"a"+f); 
-			  	A.addConceptsAssertion(a);
+			  	//boolean insert = 
+				A.addConceptsAssertion(a);
+
 				i++;
+
+				/*  if (insert){
+					Set<Concept> list;
+					if (countConceptAssertions.containsKey("a"+f)){
+						list = countConceptAssertions.get("a"+f);
+						list.add(Basic);
+					}
+					else {
+						Set<Concept> listnew = new HashSet<Concept>();
+						listnew.add(Basic);
+						countConceptAssertions.put("a"+f, listnew);
+					}
+				  } */
+
 		 	}else {
 			  	countR++;
 			  //Role assertion;	

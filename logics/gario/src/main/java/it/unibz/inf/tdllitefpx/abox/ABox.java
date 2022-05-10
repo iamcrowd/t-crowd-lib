@@ -580,7 +580,7 @@ public class ABox extends ConjunctiveFormula implements FormattableObj {
 						ConceptsAbstract = To.get(instance);
 					}
 
-					System.out.println("type" + i + ": " + concatinstance);
+					//System.out.println("type" + i + ": " + concatinstance);
 					
 					for(Concept c : ConceptsAbstract){
 						AbstractABox.add(new ABoxConceptAssertion(c, concatinstance));

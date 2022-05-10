@@ -198,7 +198,7 @@ public class TDLLiteNABSFPXReasoner {
 			
 			System.out.println("time file pltl AA:"+ (System.currentTimeMillis() - start_file) + "ms");
 
-		//	System.out.println("Num of Propositions: "+ltl.getPropositions().size());
+			System.out.println("Num of Propositions: "+ltl.getPropositions().size());
 			System.out.println("Num of Propositions ABSTRACT: "+aKB.getPropositions().size());
 
 		} else

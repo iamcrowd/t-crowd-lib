@@ -55,11 +55,41 @@ public class TCrowdRandomTBoxAbsABox extends TCrowdRandomAbstractionCommand {
 	int pr;
 
 	// ABox
-	@Option(type = OptionType.COMMAND, name = {"-a", "--assertions"}, title = "Assertions",
+	@Option(type = OptionType.COMMAND, name = {"-a40", "--assertions40"}, title = "Assertions",
 			description = "Number of ABox Assertions")
 	@Required
 	@BashCompletion(behaviour = CompletionBehaviour.NONE)
-	Integer assertions;
+	Integer assertions40;
+
+	@Option(type = OptionType.COMMAND, name = {"-a50", "--assertions50"}, title = "Assertions",
+			description = "Number of ABox Assertions")
+	@Required
+	@BashCompletion(behaviour = CompletionBehaviour.NONE)
+	Integer assertions50;
+
+	@Option(type = OptionType.COMMAND, name = {"-a60", "--assertions60"}, title = "Assertions",
+			description = "Number of ABox Assertions")
+	@Required
+	@BashCompletion(behaviour = CompletionBehaviour.NONE)
+	Integer assertions60;
+
+	@Option(type = OptionType.COMMAND, name = {"-a70", "--assertions70"}, title = "Assertions",
+			description = "Number of ABox Assertions")
+	@Required
+	@BashCompletion(behaviour = CompletionBehaviour.NONE)
+	Integer assertions70;
+
+	@Option(type = OptionType.COMMAND, name = {"-a80", "--assertions80"}, title = "Assertions",
+			description = "Number of ABox Assertions")
+	@Required
+	@BashCompletion(behaviour = CompletionBehaviour.NONE)
+	Integer assertions80;
+
+	@Option(type = OptionType.COMMAND, name = {"-a90", "--assertions90"}, title = "Assertions",
+			description = "Number of ABox Assertions")
+	@Required
+	@BashCompletion(behaviour = CompletionBehaviour.NONE)
+	Integer assertions90;
 	
 	@Option(type = OptionType.COMMAND, name = {"-i", "--individuals"}, title = "Individual Names",
 			description = "Number of ABox Individuals")
@@ -96,7 +126,12 @@ public class TCrowdRandomTBoxAbsABox extends TCrowdRandomAbstractionCommand {
             Objects.requireNonNull(pr, "Probability of generating Rigid Roles must not be null");
 
 			// ABox
-            Objects.requireNonNull(assertions, "Number of Assertions must not be null");
+            Objects.requireNonNull(assertions40, "Number of Assertions must not be null");
+			Objects.requireNonNull(assertions50, "Number of Assertions must not be null");
+			Objects.requireNonNull(assertions60, "Number of Assertions must not be null");
+			Objects.requireNonNull(assertions70, "Number of Assertions must not be null");
+			Objects.requireNonNull(assertions80, "Number of Assertions must not be null");
+			Objects.requireNonNull(assertions90, "Number of Assertions must not be null");
             Objects.requireNonNull(I, "Number of Individuals Names must not be null");
             Objects.requireNonNull(N, "Number of Concepts and Roles must not be null");
             Objects.requireNonNull(T, "Maximum Time must not be null");
@@ -109,7 +144,7 @@ public class TCrowdRandomTBoxAbsABox extends TCrowdRandomAbstractionCommand {
 				ABox a = new ABox();
 
 				t = tboxAbsABox.getFTBox(ltbox, lc, N, qm, pr, pt);
-				a = tboxAbsABox.getABox(assertions, N, I, T);
+				a = tboxAbsABox.getABox(assertions40, N, I, T);
 			
 				Map<String, Integer> statsABox = a.getStatsABox();
 				System.out.println("");
@@ -128,11 +163,12 @@ public class TCrowdRandomTBoxAbsABox extends TCrowdRandomAbstractionCommand {
 				TBox t = new TBox();
 				t = tboxAbsABox.getFTBox(ltbox, lc, N, qm, pr, pt);
 
+				System.out.println("------Number of Assertions: " + assertions40);
 				for (int i = 1; i <= B; i++) {
 					System.out.println("-------------------------Starting iteration N° " + i);
 
 					ABox a = new ABox();
-					a = tboxAbsABox.getABox(assertions, N, I, T);
+					a = tboxAbsABox.getABox(assertions40, N, I, T);
 				
 					Map<String, Integer> statsABox = a.getStatsABox();
 					System.out.println("");
@@ -143,7 +179,117 @@ public class TCrowdRandomTBoxAbsABox extends TCrowdRandomAbstractionCommand {
 					System.out.println(keyA+ statsABox.get(keyA));
 					keyA="Role_Assertions:";
 					System.out.println(keyA+ statsABox.get(keyA));
-					String prefix = assertions.toString() + "_" + i;
+					String prefix = assertions40.toString() + "_" + i;
+								
+					TDLLiteNABSFPXReasoner.buildCheckTBoxAbsABoxSAT(t, true, prefix, a);
+					System.out.println("-------------------------Ending iteration N° " + i);
+				}
+
+				System.out.println("------Number of Assertions: " + assertions50);
+				for (int i = 1; i <= B; i++) {
+					System.out.println("-------------------------Starting iteration N° " + i);
+
+					ABox a = new ABox();
+					a = tboxAbsABox.getABox(assertions50, N, I, T);
+				
+					Map<String, Integer> statsABox = a.getStatsABox();
+					System.out.println("");
+					System.out.println("------TDLITE ABOX");
+				
+					String keyA;
+					keyA="Concept_Assertions:";
+					System.out.println(keyA+ statsABox.get(keyA));
+					keyA="Role_Assertions:";
+					System.out.println(keyA+ statsABox.get(keyA));
+					String prefix = assertions50.toString() + "_" + i;
+								
+					TDLLiteNABSFPXReasoner.buildCheckTBoxAbsABoxSAT(t, true, prefix, a);
+					System.out.println("-------------------------Ending iteration N° " + i);
+				}
+
+				System.out.println("------Number of Assertions: " + assertions60);
+				for (int i = 1; i <= B; i++) {
+					System.out.println("-------------------------Starting iteration N° " + i);
+
+					ABox a = new ABox();
+					a = tboxAbsABox.getABox(assertions60, N, I, T);
+				
+					Map<String, Integer> statsABox = a.getStatsABox();
+					System.out.println("");
+					System.out.println("------TDLITE ABOX");
+				
+					String keyA;
+					keyA="Concept_Assertions:";
+					System.out.println(keyA+ statsABox.get(keyA));
+					keyA="Role_Assertions:";
+					System.out.println(keyA+ statsABox.get(keyA));
+					String prefix = assertions60.toString() + "_" + i;
+								
+					TDLLiteNABSFPXReasoner.buildCheckTBoxAbsABoxSAT(t, true, prefix, a);
+					System.out.println("-------------------------Ending iteration N° " + i);
+				}
+
+				System.out.println("------Number of Assertions: " + assertions70);
+				for (int i = 1; i <= B; i++) {
+					System.out.println("-------------------------Starting iteration N° " + i);
+
+					ABox a = new ABox();
+					a = tboxAbsABox.getABox(assertions70, N, I, T);
+				
+					Map<String, Integer> statsABox = a.getStatsABox();
+					System.out.println("");
+					System.out.println("------TDLITE ABOX");
+				
+					String keyA;
+					keyA="Concept_Assertions:";
+					System.out.println(keyA+ statsABox.get(keyA));
+					keyA="Role_Assertions:";
+					System.out.println(keyA+ statsABox.get(keyA));
+					String prefix = assertions70.toString() + "_" + i;
+								
+					TDLLiteNABSFPXReasoner.buildCheckTBoxAbsABoxSAT(t, true, prefix, a);
+					System.out.println("-------------------------Ending iteration N° " + i);
+				}
+
+				System.out.println("------Number of Assertions: " + assertions80);
+				for (int i = 1; i <= B; i++) {
+					System.out.println("-------------------------Starting iteration N° " + i);
+
+					ABox a = new ABox();
+					a = tboxAbsABox.getABox(assertions80, N, I, T);
+				
+					Map<String, Integer> statsABox = a.getStatsABox();
+					System.out.println("");
+					System.out.println("------TDLITE ABOX");
+				
+					String keyA;
+					keyA="Concept_Assertions:";
+					System.out.println(keyA+ statsABox.get(keyA));
+					keyA="Role_Assertions:";
+					System.out.println(keyA+ statsABox.get(keyA));
+					String prefix = assertions80.toString() + "_" + i;
+								
+					TDLLiteNABSFPXReasoner.buildCheckTBoxAbsABoxSAT(t, true, prefix, a);
+					System.out.println("-------------------------Ending iteration N° " + i);
+				}
+
+				System.out.println("------Number of Assertions: " + assertions90);
+				for (int i = 1; i <= B; i++) {
+					System.out.println("-------------------------Starting iteration N° " + i);
+
+					ABox a = new ABox();
+					a = tboxAbsABox.getABox(assertions90, N, I, T);
+				
+					Map<String, Integer> statsABox = a.getStatsABox();
+					System.out.println("");
+					System.out.println("------TDLITE ABOX");
+				
+					String keyA;
+					keyA="Concept_Assertions:";
+					System.out.println(keyA+ statsABox.get(keyA));
+					keyA="Role_Assertions:";
+					System.out.println(keyA+ statsABox.get(keyA));
+					String prefix = assertions90.toString() + "_" + i;
 								
 					TDLLiteNABSFPXReasoner.buildCheckTBoxAbsABoxSAT(t, true, prefix, a);
 					System.out.println("-------------------------Ending iteration N° " + i);
