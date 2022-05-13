@@ -12,6 +12,10 @@ import it.unibz.inf.qtl1.formulae.Formula;
 import it.unibz.inf.qtl1.output.NuSMVOutput;
 import it.unibz.inf.tdllitefpx.roles.Role;
 
+/**
+ * It implements the ProcessTask for sat checking Roles.
+ * It returns only the UNSAT roles (SAT roles will be removed from the QTL formula)
+ */
 public class ProcessTask implements Callable<String> {
 
     private Formula ltl_tbox;
@@ -59,10 +63,10 @@ public class ProcessTask implements Callable<String> {
 
         if (exitVal == 0) {
             System.out.println("Success!");
-            if (output.toString().contains("false")){
-                return role.toString() + ": SAT";
-            } else if (output.toString().contains("true")){
-                return role.toString() + ": UNSAT";
+            if (output.toString().contains("true") || output.toString().contains("UNSAT")){
+                return role.toString();
+            } else {
+                return null;
             }
         }
         p5.exitValue();

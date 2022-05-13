@@ -35,11 +35,11 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.Map.Entry;
+import java.util.concurrent.Future;
 
 
 public class DLLiteConverter extends TDLLiteNFPXConverter{
@@ -114,6 +114,48 @@ public class DLLiteConverter extends TDLLiteNFPXConverter{
 		return F;
 	}
 
+	/**
+	 * Returns a K+ given an TBox T. 
+	 * If factorize is set to true, the formula returned will
+	 * have only 1 outermost universal quantifier, and the rest
+	 * will be quantifier free. Moreover less box operators will be used
+	 * 
+	 * The result formula has the following structure
+	 * F = T /\ e
+	 * 
+	 * where
+	 * 
+	 * T = /\ \forall x ( C1(x) -> C2(x) )  			(1)
+	 * 		(For each concept inclusion in T*)
+	 * 
+	 * 	   /\ \forall x ( Eq'S(x) -> EqS(x) )  		(2)
+	 * 		(for each q,q' \in Qrt with q <! q'. 
+	 * 		 there is no q'' in Qrt with q < q'' < q')
+	 * 
+	 * 	   /\ \forall x ( EqS(x) -> EqS(x) )  (3)
+	 * 		(for each global/ridig role s \in Qrt) 
+	 * 
+	 * e = /\ epsilon(s)    (For each role S) 				(4)
+	 *    
+	 *
+	 * @param factorize
+	 * @return
+	 */
+	public Formula getFormula(Set<String> unsatRoles){
+		Formula F;
+
+		this.getFactorizedEpsilon(unsatRoles);
+		this.getExtendedFormula();
+
+		F = new ConjunctiveFormula(this.getFactorizedT(), cardinalities);
+		F = new UniversalFormula(
+								new ConjunctiveFormula(F,
+										new ConjunctiveFormula(epsX, 
+															   rigidR)),
+						 super.x); 
+		return F;
+	}
+
 	/* 
 	 *  \forall x ((E1R(x)-> E1Rinv(drinv)) (4)
 	 *
@@ -151,9 +193,41 @@ public class DLLiteConverter extends TDLLiteNFPXConverter{
 											fE1S_ds)
 						);
 
+			}
+		}
+	}
+
+	/*  
+	 * It removes \forall x ((E1R(x)-> E1Rinv(drinv)) (4) for SAT roles
+	 * and adds \forall x ((\not E1R(x) && not E1Rinv(x)) for UNSAT roles
+	 *
+	*/
+	private void getFactorizedEpsilon(Set<String> unsatRoles){
+
+		epsX = new ConjunctiveFormula();
+
+		if (!unsatRoles.isEmpty()){
+
+			for(Role s : super.tbox.getRoles()){
+
+				if(s instanceof PositiveRole){
+
+					if (unsatRoles.contains(s.toString())) {
+				
+						Role SInv = s.getInverse();
+						Concept E1S = new QuantifiedRole(s, 1);
+						Concept E1SInv = new QuantifiedRole(SInv, 1);
+	
+						epsX.add(new ConjunctiveFormula(
+											new NegatedFormula(conceptToFormula(E1S)),
+											new NegatedFormula(conceptToFormula(E1SInv)))
+							);
+
+					}
 				}
 			}
 		}
+	}
 
 	/***
 	 * Reduction to QTL1

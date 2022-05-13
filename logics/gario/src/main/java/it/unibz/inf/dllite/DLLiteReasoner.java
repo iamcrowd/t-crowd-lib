@@ -161,7 +161,17 @@ public class DLLiteReasoner {
 		Formula ltl_for_role = qtl_N.makePropositional(qtl_N.getConstants());
 
 		try{
-			rolesSAT(t, conv, ltl_for_role, nOfThreads);
+			List<Future<String>> unsatRoles = rolesSAT(t, conv, ltl_for_role, nOfThreads);
+			Set<String> setOfUNSATroles = new HashSet<String>();
+
+			for(Future<String> role : unsatRoles){
+				if (role.get() != null){
+					setOfUNSATroles.add(role.get());
+				}
+			}
+			qtl_N = conv.getFormula(setOfUNSATroles);
+			if(verbose)
+				(new LatexDocumentCNF(qtl_N)).toFile(prefix+"afterRolesSAT.tex");	
 		}
 		catch (Exception e){
 			throw e;
@@ -234,7 +244,8 @@ public class DLLiteReasoner {
 	 * In this method, we use service invokeAll(). First, we put all of the instances into a collable set and then
 	 * we run concurrently all of them. The methods ends after executing all of the instances.
 	 */
-	private static void rolesSAT(TBox t, DLLiteConverter conv, Formula ltl_roles, Integer nOfThreads) throws Exception{
+	private static List<Future<String>> rolesSAT(TBox t, DLLiteConverter conv, Formula ltl_roles, Integer nOfThreads) throws Exception{
+
 		ExecutorService service = Executors.newFixedThreadPool(nOfThreads);
 
 		Set<Callable<String>> callables = new HashSet<Callable<String>>();  
@@ -247,19 +258,18 @@ public class DLLiteReasoner {
 
 		try{
 			java.util.List<Future<String>> futures = service.invokeAll(callables);
+			return futures;
 
-			for(Future<String> future : futures){  
-				System.out.println("future.get = " + future.get());  
-			}
+			/*for(Future<String> future : futures){  
+				System.out.println(future.get());
+			}*/
 		}
 		catch (Exception e){
 			System.out.println("Process failed");
-			service.shutdownNow();  
+			service.shutdownNow(); 
+			service.awaitTermination(30, TimeUnit.SECONDS);  
 			throw new InterruptedException();
-		}	
-
-        service.shutdownNow();
-		service.awaitTermination(30, TimeUnit.SECONDS);  
+		}
 
 	}
 
