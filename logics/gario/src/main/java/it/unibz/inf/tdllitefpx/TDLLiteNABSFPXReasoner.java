@@ -158,18 +158,18 @@ public class TDLLiteNABSFPXReasoner {
 
 			long end_timeGroundTBox = System.currentTimeMillis();
 			Formula aTBox = qtl.makePropositional(constsAbs);
-			System.out.println("MP TBox:"+(System.currentTimeMillis()-end_timeGroundTBox) + "ms");	
+			//System.out.println("MP TBox:"+(System.currentTimeMillis()-end_timeGroundTBox) + "ms");	
 
 			long end_timeGroundABox = System.currentTimeMillis();
 			aABox = aABox.makePropositional(constsAbs);
-			System.out.println("MP ABox:"+(System.currentTimeMillis()-end_timeGroundABox) + "ms");	
+			//System.out.println("MP ABox:"+(System.currentTimeMillis()-end_timeGroundABox) + "ms");	
 
 			aKB = new ConjunctiveFormula(aTBox, aABox);
 		
 			end_timeLTLAA = System.currentTimeMillis()-start_timeLTLAA;
 			System.out.println("QTL->LTL AA:"+(System.currentTimeMillis()-start_timeLTLAA) + "ms");	
 		
-			//System.out.println("tr-timeNA:"+ (end_timeNA_QTL + end_timeLTLNA) + "ms");
+			System.out.println("tr-timeNA:"+ (end_timeNA_QTL + end_timeLTLNA) + "ms");
 		
 			System.out.println("tr-timeAA:"+ (end_timeNA_QTL + end_time_abs + end_timeLTLAA) + "ms");
 		
@@ -178,8 +178,8 @@ public class TDLLiteNABSFPXReasoner {
 			start_file = System.currentTimeMillis();
 			
 			System.out.println("------Generating NuSMV files...");
-			//(new NuSMVOutput(ltl)).toFile(prefix+".smv");
-			//System.out.println("time file SMV NA:"+ (System.currentTimeMillis() - start_file) + "ms");
+			(new NuSMVOutput(ltl)).toFile(prefix+".smv");
+			System.out.println("time file SMV NA:"+ (System.currentTimeMillis() - start_file) + "ms");
 			
 			start_file = System.currentTimeMillis();
 			
@@ -189,8 +189,8 @@ public class TDLLiteNABSFPXReasoner {
 			start_file = System.currentTimeMillis();
 
 			System.out.println("------Generating Black files...");
-			//(new PltlOutput(ltl)).toFile(prefix+".pltl");
-			//System.out.println("time file pltl NA:"+ (System.currentTimeMillis() - start_file) + "ms");
+			(new PltlOutput(ltl)).toFile(prefix+".pltl");
+			System.out.println("time file pltl NA:"+ (System.currentTimeMillis() - start_file) + "ms");
 			
 			start_file = System.currentTimeMillis();
 			
