@@ -74,8 +74,8 @@ public class ABox extends ConjunctiveFormula implements FormattableObj {
 	Set<ABoxRoleAssertion> NegatedRolesAssertion = new HashSet<ABoxRoleAssertion>();
 	Set<ABoxRoleAssertion> ShiftedNegatedRolesAssertion = new HashSet<ABoxRoleAssertion>();
 	
-	HashMap<String, Set<Concept>> To = new HashMap<String, Set<Concept>>();
-	HashMap<Integer, Set<String>> ToHash = new HashMap<Integer, Set<String>>();
+	TypeKeeper typeKeeper;
+
 
 	Alphabet a = new Alphabet();
 	Variable x = new Variable("x");
@@ -89,12 +89,7 @@ public class ABox extends ConjunctiveFormula implements FormattableObj {
 	public boolean addConceptsAssertion(ABoxConceptAssertion c) {
 
 		boolean s = ConceptsAssertion.add(c);
-
-		Set<Concept>ToList = new HashSet<Concept>();
-		To.putIfAbsent(c.value, ToList);
-		ToList = To.get(c.value);
-		ToList.add(c.getConceptAssertion());
-		To.replace(c.value, ToList);
+		typeKeeper.addAssertion(c);
 
 		return s;
 	}
@@ -557,36 +552,13 @@ public class ABox extends ConjunctiveFormula implements FormattableObj {
 
 	public void AbstractABox() {
 		if (inconsistent == false) {
-			for(String indexTo : To.keySet()){
-				Set<String> Hashvalue = new HashSet<String>();
-				Integer newindex = To.get(indexTo).hashCode();
-				ToHash.putIfAbsent(newindex, Hashvalue);
-				Hashvalue = ToHash.get(newindex);
-				Hashvalue.add(indexTo);
-				ToHash.replace(newindex, Hashvalue);
-			}
+			typeKeeper.computeAbstraction();
 
-			System.out.println("Indv:"+To.size());
-			System.out.println("New Indv:"+ToHash.size());
+			System.out.println("Indv:"+typeKeeper.nIndividuals());
+			System.out.println("New Indv:"+typeKeeper.nTypes());
 	   
-			int i = 1;
-			if (To.size() != ToHash.size()){
-				for(Integer indexToHash : ToHash.keySet()){
-   					Set <String> values = ToHash.get(indexToHash);
-					Set<Concept> ConceptsAbstract = new HashSet <Concept>();
-					String concatinstance = String.join("_", values);
-		
-					for(String instance : values){
-						ConceptsAbstract = To.get(instance);
-					}
-
-					//System.out.println("type" + i + ": " + concatinstance);
-					
-					for(Concept c : ConceptsAbstract){
-						AbstractABox.add(new ABoxConceptAssertion(c, concatinstance));
-					}
-					i++;
-				}
+			if (typeKeeper.nIndividuals() != typeKeeper.nTypes()) {
+				AbstractABox = typeKeeper.getAbstractAbox();
 	   		}
 	   		else {
 		   		AbstractABox = ABox;
@@ -831,10 +803,7 @@ public class ABox extends ConjunctiveFormula implements FormattableObj {
 		    			FORigid.add(new ABoxConceptAssertion (cr,keyLi[1]));
 		    					
 		    			//	ToList.add(cr);
-		    			To.putIfAbsent(keyLi[1], ToList);
-		    			ToList=To.get(keyLi[1]);
-		    			ToList.add(cr);
-		    			To.replace(keyLi[1], ToList);
+						typeKeeper.updateType(keyLi[1], cr);
 		    					
 		    					
 		    			/*		int t= Integer.parseInt(keyLi[2]); //get the timeStamp of the assertion
@@ -861,10 +830,8 @@ public class ABox extends ConjunctiveFormula implements FormattableObj {
 		    				FORigid.add(new ABoxConceptAssertion (cinvr,keyLi[1]));
 		    					
 		    					//ToList.add(cinvr);
-		    				To.putIfAbsent(keyLi[1], ToList);
-		    				ToList = To.get(keyLi[1]);
-		    				ToList.add(cinvr);
-		    				To.replace(keyLi[1], ToList);
+							typeKeeper.updateType(keyLi[1], cinvr);
+
 		    					
 		    				/*	int t= Integer.parseInt(keyLi[2]); THIS VERSION IS WHEN WE HANDLE RIGID ON FO LEVEL
 		    					while (t!=0 )//States
@@ -905,10 +872,7 @@ public class ABox extends ConjunctiveFormula implements FormattableObj {
 	    			FOLocal.add(new ABoxConceptAssertion (cr,keyLi[1]));
 	    					
 	    			ToList.add(cr);
-	    			To.putIfAbsent(keyLi[1], ToList);
-	    			ToList = To.get(keyLi[1]);
-	    			ToList.add(cr);
-	    			To.replace(keyLi[1], ToList);
+					typeKeeper.updateType(keyLi[1], cr);
 			   	} else if (r.getInverse().toString().equals(keyLi[0])){
 						qRolesQ.putIfAbsent(r.getInverse().toString(), 1);
 						int Qtbox = qRolesQ.get(r.toString());
@@ -931,10 +895,7 @@ public class ABox extends ConjunctiveFormula implements FormattableObj {
 	    				FOLocal.add(new ABoxConceptAssertion (cinvr,keyLi[1]));
 	    					
 	    				ToList.add(cinvr);
-	    				To.putIfAbsent(keyLi[1], ToList);
-	    				ToList = To.get(keyLi[1]);
-	    				ToList.add(cinvr);
-	    				To.replace(keyLi[1], ToList);
+						typeKeeper.updateType(keyLi[1], cinvr);
 					}
 			}
 		}
@@ -1014,11 +975,8 @@ public class ABox extends ConjunctiveFormula implements FormattableObj {
 							if (ass = false){
 								System.out.println("duplicate: "+ cr.toString()+"("+keyLi[1]);
 							}
-	
-							To.putIfAbsent(keyLi[1], ToList);
-							ToList=To.get(keyLi[1]);
-							ToList.add(cr);
-							To.replace(keyLi[1], ToList);
+							
+							typeKeeper.updateType(keyLi[1], cr);
 						}
 						else if (r.getInverse().toString().equals(keyLi[0])){
 								//	qRolesQ.putIfAbsent(r.getInverse().toString(), 1);
@@ -1034,11 +992,8 @@ public class ABox extends ConjunctiveFormula implements FormattableObj {
 								if (ass=false){
 									System.out.println("duplicate: "+ cinvr.toString()+"("+keyLi[1]);
 								}
-							
-								To.putIfAbsent(keyLi[1], ToList);
-								ToList=To.get(keyLi[1]);
-								ToList.add(cinvr);
-								To.replace(keyLi[1], ToList);  					    					
+								
+								typeKeeper.updateType(keyLi[1], cinvr);				    					
 						}
 					}
 							
@@ -1074,10 +1029,7 @@ public class ABox extends ConjunctiveFormula implements FormattableObj {
 						//		ShiftABox(new AboxConceptAssertion (cr,keyLi[1]));//the abstract is the same element
 								
 						ToList.add(cr);
-						To.putIfAbsent(keyLi[1], ToList);
-						ToList=To.get(keyLi[1]);
-						ToList.add(cr);
-						To.replace(keyLi[1], ToList);			
+						typeKeeper.updateType(keyLi[1], cr);		
 					} else if (r.getInverse().toString().equals(keyLi[0])){
 						//		qRolesQ.putIfAbsent(r.getInverse().toString(), 1);
 						//		int q=1;qRolesQ.get(r.toString());	
@@ -1103,10 +1055,7 @@ public class ABox extends ConjunctiveFormula implements FormattableObj {
 							//	ShiftABox(new AboxConceptAssertion (cinvr,keyLi[1])); //the abstract is the same element
 							
 								ToList.add(cinvr);
-								To.putIfAbsent(keyLi[1], ToList);
-								ToList = To.get(keyLi[1]);
-								ToList.add(cinvr);
-								To.replace(keyLi[1], ToList);
+								typeKeeper.updateType(keyLi[1], cinvr);
 					}  
 				}
 			}

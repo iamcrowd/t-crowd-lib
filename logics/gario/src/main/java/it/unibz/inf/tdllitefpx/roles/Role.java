@@ -5,6 +5,8 @@ import org.gario.code.output.FormattableObj;
 public abstract class Role implements FormattableObj {
 	AtomicRole refersTo;
 	Role inverseOf;
+
+	int hash = this.toString().hashCode();
 	
 	public Role getInverse(){ return this.inverseOf; }
 	
@@ -27,7 +29,7 @@ public abstract class Role implements FormattableObj {
 	}
 	
 	public int hashCode(){
-		return this.toString().hashCode();
+		return hash;
 	}
 	
 }

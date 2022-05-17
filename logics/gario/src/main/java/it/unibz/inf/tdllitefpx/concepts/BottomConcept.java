@@ -17,6 +17,10 @@ public class BottomConcept extends BasicConcept {
 	public String toString(OutputFormat fmt) throws SymbolUndefinedException {
 		return fmt.getSymbol(this);
 	}
-	
-	
+
+	@Override
+	public int hashCode() {
+		return 0;
+	}
+
 }

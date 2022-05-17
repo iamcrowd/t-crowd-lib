@@ -110,4 +110,9 @@ public class ConjunctiveConcept extends Concept {
 		}
 		return res;
 	}
+
+	@Override
+	public int hashCode() {
+		return conjuncts.hashCode();
+	}
 }

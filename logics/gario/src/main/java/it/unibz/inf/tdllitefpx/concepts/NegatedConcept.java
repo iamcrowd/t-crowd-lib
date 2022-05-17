@@ -34,4 +34,9 @@ public class NegatedConcept extends Concept {
 	public Set<Concept> getBasicConcepts() {
 		return refersTo.getBasicConcepts();
 	}
+
+	@Override
+	public int hashCode() {
+		return (refersTo.hashCode() + 3079) % 1572869;
+	}
 }

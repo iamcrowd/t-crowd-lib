@@ -251,8 +251,6 @@ import it.unibz.inf.tdllitefpx.abox.ABoxRoleAssertion;
 						this.myABox.addABoxRoleAssertion(new ABoxRoleAssertion(role, 
 																			   subject.asOWLNamedIndividual().getIRI().getIRIString(), 
 																			   object.asOWLNamedIndividual().getIRI().getIRIString(), 0));
-					} else if (axiom.isOfType(AxiomType.NEGATIVE_OBJECT_PROPERTY_ASSERTION)) {
-						// How to import?
 					}
 				} catch (Exception e) {
 

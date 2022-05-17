@@ -19,7 +19,7 @@ public abstract class Concept implements FormattableObj{
 	
 	public abstract Set<Concept> getBasicConcepts();
 	
-	public int hashCode(){
+	public int hashCode() {
 		return this.toString().hashCode();
 	}
 }

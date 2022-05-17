@@ -35,4 +35,9 @@ public class QuantifiedRole extends BasicConcept {
 	public String toString(OutputFormat fmt) throws SymbolUndefinedException {
 		return fmt.getSymbol(this) + q+"."+role.toString();
 	}
+
+	@Override
+	public int hashCode() {
+		return (q * role.hashCode()) % 1572869;
+	}
 }
