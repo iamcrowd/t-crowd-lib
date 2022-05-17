@@ -7,18 +7,22 @@ import java.util.Set;
 import it.unibz.inf.tdllitefpx.concepts.Concept;
 
 public class TypeKeeper {
-    HashMap<Individual, Type> IndividualToType;
-    HashMap<Type, Individual> TypeToRepresentative;
-    HashMap<Individual, Set<Individual>> RepresentativeToIndividuals;
+    HashMap<Individual, Type> IndividualToType = new HashMap<Individual, Type>();
+    HashMap<Type, Individual> TypeToRepresentative = new HashMap<Type, Individual>();
+    HashMap<Individual, Set<Individual>> RepresentativeToIndividuals = new HashMap<Individual, Set<Individual>>();
     
     int typeCount = 0;
 
     public void addAssertion(ABoxConceptAssertion c) {
-        Individual ind = new Individual(c.value);
-		IndividualToType.putIfAbsent(ind, new Type());
-		Type type = IndividualToType.get(ind);
-		type.addConcept(c.getConceptAssertion());
-		IndividualToType.replace(ind, type);
+        try {
+            Individual ind = new Individual(c.value);
+		    IndividualToType.putIfAbsent(ind, new Type());
+		    Type type = IndividualToType.get(ind);
+		    type.addConcept(c.getConceptAssertion());
+		    IndividualToType.replace(ind, type);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public void updateType (String name, Concept concept) {
@@ -30,19 +34,26 @@ public class TypeKeeper {
     }
 
     public void computeAbstraction() {
+        Type tmp = new Type();
         for(Individual ind : IndividualToType.keySet()) {
             Type type = IndividualToType.get(ind);
             if (TypeToRepresentative.containsKey(type)) {
-                RepresentativeToIndividuals.get(
-                    TypeToRepresentative.get(type)
-                ).add(ind);
+                Individual repr = TypeToRepresentative.get(type);
+                Set<Individual> indSet = RepresentativeToIndividuals.get(repr);
+
+                indSet.add(ind);
+                RepresentativeToIndividuals.replace(repr, indSet);
             } else {
                 Individual repr = new Individual("t" + String.valueOf(typeCount));
                 TypeToRepresentative.put(type, repr);
-                RepresentativeToIndividuals.put(repr, new HashSet<Individual>());
-                RepresentativeToIndividuals.get(repr).add(ind);
+
+                Set<Individual> indSet = new HashSet<Individual>();
+                indSet.add(ind);
+                RepresentativeToIndividuals.put(repr, indSet);
+
                 typeCount++;
             }
+            tmp = type;
         }
     }
 

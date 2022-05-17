@@ -74,7 +74,7 @@ public class ABox extends ConjunctiveFormula implements FormattableObj {
 	Set<ABoxRoleAssertion> NegatedRolesAssertion = new HashSet<ABoxRoleAssertion>();
 	Set<ABoxRoleAssertion> ShiftedNegatedRolesAssertion = new HashSet<ABoxRoleAssertion>();
 	
-	TypeKeeper typeKeeper;
+	TypeKeeper typeKeeper = new TypeKeeper();
 
 
 	Alphabet a = new Alphabet();
