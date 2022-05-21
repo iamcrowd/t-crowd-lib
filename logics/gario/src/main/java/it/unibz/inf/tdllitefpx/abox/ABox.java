@@ -556,6 +556,7 @@ public class ABox extends ConjunctiveFormula implements FormattableObj {
 
 			System.out.println("Indv:"+typeKeeper.nIndividuals());
 			System.out.println("New Indv:"+typeKeeper.nTypes());
+			System.out.println("Types:"+typeKeeper.TypeToRepresentative.keySet().toString());
 	   
 			if (typeKeeper.nIndividuals() != typeKeeper.nTypes()) {
 				AbstractABox = typeKeeper.getAbstractAbox();

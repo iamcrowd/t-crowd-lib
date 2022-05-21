@@ -13,11 +13,34 @@
     <!-- 
     ///////////////////////////////////////////////////////////////////////////////////////
     //
+    // Object Properties
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- http://www.semanticweb.org/prh/ontologies/2022/4/untitled-ontology-38#Eats -->
+
+    <owl:ObjectProperty rdf:about="http://www.semanticweb.org/prh/ontologies/2022/4/untitled-ontology-38#Eats"/>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
     // Classes
     //
     ///////////////////////////////////////////////////////////////////////////////////////
      -->
 
+    
+
+
+    <!-- http://www.semanticweb.org/prh/ontologies/2022/4/untitled-ontology-38#Green -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/prh/ontologies/2022/4/untitled-ontology-38#Green"/>
     
 
 
@@ -46,10 +69,27 @@
     
 
 
+    <!-- http://www.semanticweb.org/prh/ontologies/2022/4/untitled-ontology-38#crocodile -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/prh/ontologies/2022/4/untitled-ontology-38#crocodile">
+        <rdf:type rdf:resource="http://www.semanticweb.org/prh/ontologies/2022/4/untitled-ontology-38#Green"/>
+        <Eats rdf:resource="http://www.semanticweb.org/prh/ontologies/2022/4/untitled-ontology-38#ball"/>
+    </owl:NamedIndividual>
+    
+
+
     <!-- http://www.semanticweb.org/prh/ontologies/2022/4/untitled-ontology-38#dall -->
 
     <owl:NamedIndividual rdf:about="http://www.semanticweb.org/prh/ontologies/2022/4/untitled-ontology-38#dall">
         <rdf:type rdf:resource="http://www.semanticweb.org/prh/ontologies/2022/4/untitled-ontology-38#Red"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/prh/ontologies/2022/4/untitled-ontology-38#tree -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/prh/ontologies/2022/4/untitled-ontology-38#tree">
+        <rdf:type rdf:resource="http://www.semanticweb.org/prh/ontologies/2022/4/untitled-ontology-38#Green"/>
     </owl:NamedIndividual>
 </rdf:RDF>
 

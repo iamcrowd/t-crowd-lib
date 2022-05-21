@@ -403,7 +403,6 @@ public class DLLiteReasoner {
 	 * @throws Exception
 	 */
 	public static void buildAbstract(ABox ABox, int Q) throws Exception {
-		
 		long total_time = System.currentTimeMillis();
 		long start_time;
 	

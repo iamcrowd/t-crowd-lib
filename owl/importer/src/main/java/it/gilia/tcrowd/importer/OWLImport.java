@@ -217,9 +217,9 @@ import it.unibz.inf.tdllitefpx.abox.ABoxRoleAssertion;
 
         	// iterate each axiom
         	aboxAxioms.forEach(axiom -> {	
-
             	try {
 					if (axiom.isOfType(AxiomType.CLASS_ASSERTION)) {
+						System.out.println("CLASS");
 						OWLClassExpression e = ((OWLClassAssertionAxiom) axiom).getClassExpression();
 						OWLIndividual ind = ((OWLClassAssertionAxiom) axiom).getIndividual();
 
@@ -240,20 +240,26 @@ import it.unibz.inf.tdllitefpx.abox.ABoxRoleAssertion;
 						}
 
 					} else if (axiom.isOfType(AxiomType.OBJECT_PROPERTY_ASSERTION)) {
+						System.out.println("PROP");
 						OWLObjectPropertyExpression property = 
 							((OWLObjectPropertyAssertionAxiom) axiom).getProperty();
 
 						OWLIndividual subject = ((OWLObjectPropertyAssertionAxiom) axiom).getSubject();
 						OWLIndividual object = ((OWLObjectPropertyAssertionAxiom) axiom).getObject();
 
-						PositiveRole role = new PositiveRole(new AtomicRigidRole(property.asOWLObjectProperty().getIRI().getIRIString()));
+						AtomicRigidRole atomic = new AtomicRigidRole(property.asOWLObjectProperty().getIRI().getIRIString());
+						System.out.println("*");
+
+						PositiveRole role = new PositiveRole(atomic);
+
+						System.out.println("**");
 
 						this.myABox.addABoxRoleAssertion(new ABoxRoleAssertion(role, 
 																			   subject.asOWLNamedIndividual().getIRI().getIRIString(), 
 																			   object.asOWLNamedIndividual().getIRI().getIRIString(), 0));
 					}
 				} catch (Exception e) {
-
+					System.out.println("Here! " + e.getStackTrace());
             	}
 			});
 		}
