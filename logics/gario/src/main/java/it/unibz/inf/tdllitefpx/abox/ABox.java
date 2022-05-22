@@ -47,9 +47,7 @@ public class ABox extends ConjunctiveFormula implements FormattableObj {
 	Set<ABoxConceptAssertion> ConceptsAssertion = new HashSet<ABoxConceptAssertion>();
 	Set<ABoxRoleAssertion> RolesAssertion = new HashSet<ABoxRoleAssertion>();
 	Set<Formula> ABoxFormula = new HashSet<Formula>();
-	HashMap<String, Set<String>> QRigid = new HashMap<String, Set<String>>();
-	HashMap<String, Set<String>> QRigidL = new HashMap<String, Set<String>>();
-	HashMap<String, Set<String>> QLocal = new HashMap<String, Set<String>>();
+
 	//HashMap<String, Set<String>> QRigidinv = new HashMap<String, Set<String>>();
 
 	// Global added for the abstraction
@@ -74,6 +72,7 @@ public class ABox extends ConjunctiveFormula implements FormattableObj {
 	Set<ABoxRoleAssertion> ShiftedNegatedRolesAssertion = new HashSet<ABoxRoleAssertion>();
 	
 	TypeKeeper typeKeeper = new TypeKeeper();
+	RoleMap roleMap = new RoleMap();
 
 
 	Alphabet a = new Alphabet();
@@ -184,64 +183,21 @@ public class ABox extends ConjunctiveFormula implements FormattableObj {
 	 * 
 	 * @implNote check repetitions
 	 * 
-	 * @param r an ABox Role Assertion
+	 * @param ra an ABox Role Assertion
 	 */
-	public void addABoxRoleAssertion(ABoxRoleAssertion r) {
-		RolesAssertion.add(r);
-		Set<String>successorR = new HashSet<String>();
-		Set<String>successorL = new HashSet<String>();
-		Set<String>successorLG = new HashSet<String>();
-		Set<String>PredecessorR = new HashSet<String>();
-		Set<String>PredecessorL = new HashSet<String>();
-		Set<String>PredecessorLG = new HashSet<String>();
+	public void addABoxRoleAssertion(ABoxRoleAssertion ra) {
+		RolesAssertion.add(ra);
 			
-		if (r.ro.getRefersTo() instanceof AtomicRigidRole ) {
-			successorR.add(r.y);
-			PredecessorR.add(r.x);
-			QRigid.putIfAbsent(r.ro.toString()+"_"+r.x, successorR);
-			QRigid.putIfAbsent(r.ro.getInverse().toString()+"_"+r.y, PredecessorR);
-			
-			successorR = QRigid.get(r.ro.toString()+"_"+r.x);
-			PredecessorR = QRigid.get(r.ro.getInverse().toString()+"_"+r.y);
-			
-			successorR.add(r.y);
-			PredecessorR.add(r.x);
-			QRigid.replace(r.ro.toString()+"_"+r.x,successorR);
-			QRigid.replace(r.ro.getInverse().toString()+"_"+r.y,PredecessorR);
-			
-			//Rigid TimeStamps				
-			successorLG.add(r.y);
-			PredecessorLG.add(r.x);
-			QRigidL.putIfAbsent(r.ro.toString()+"_"+r.x+"_"+r.t, successorLG);
-			QRigidL.putIfAbsent(r.ro.getInverse().toString()+"_"+r.y+"_"+r.t, PredecessorLG);
-			
-			successorLG = QRigidL.get(r.ro.toString()+"_"+r.x+"_"+r.t);
-			PredecessorLG = QRigidL.get(r.ro.getInverse().toString()+"_"+r.y+"_"+r.t);
-			
-			successorLG.add(r.y);
-			PredecessorLG.add(r.x);
-			QRigidL.replace(r.ro.toString()+"_"+r.x+"_"+r.t,successorLG); // XE1G1(a2) <=> G1_a2_1 (1: timeStamp)
-			QRigidL.replace(r.ro.getInverse().toString()+"_"+r.x+"_"+r.t,PredecessorLG);			
-		}	
-		
-		else {
-			successorL.add(r.y);
-			PredecessorL.add(r.x);
-			QLocal.putIfAbsent(r.ro.toString()+"_"+r.x+"_"+r.t, successorL);
-			QLocal.putIfAbsent(r.ro.getInverse().toString()+"_"+r.y+"_"+r.t, PredecessorL);
-			
-			successorL=QLocal.get(r.ro.toString()+"_"+r.x+"_"+r.t);
-			PredecessorL=QLocal.get(r.ro.getInverse().toString()+"_"+r.y+"_"+r.t);
-			
-			successorL.add(r.y);
-			PredecessorL.add(r.x);
-			QLocal.replace(r.ro.toString()+"_"+r.x+"_"+r.t,successorL); // XE1G1(a2) <=> G1_a2_1 (1: timeStamp)
-			QLocal.replace(r.ro.getInverse().toString()+"_"+r.x+"_"+r.t,PredecessorL);
-		}
-		//System.out.println("QRigid:"+QRigid.toString());
-		//System.out.println("QRigidL:"+QRigidL.toString());
-		//System.out.println("QLocal:"+QLocal.toString());
+		if (ra.ro.getRefersTo() instanceof AtomicRigidRole ) {
+			roleMap.AddRigidTarget(new Source(ra.x, ra.ro), new Individual(ra.y));
+			roleMap.AddRigidLocalizedTarget(new Source(ra.x, ra.ro, ra.t), new Individual(ra.y));
 
+			roleMap.AddRigidTarget(new Source(ra.y, ra.ro.getInverse()), new Individual(ra.x));
+			roleMap.AddRigidLocalizedTarget(new Source(ra.y, ra.ro.getInverse(), ra.t), new Individual(ra.x));
+		} else {
+			roleMap.AddLocalTarget(new Source(ra.x, ra.ro, ra.t), new Individual(ra.y));
+			roleMap.AddLocalTarget(new Source(ra.y, ra.ro.getInverse(), ra.t), new Individual(ra.x));
+		}
 	}
 
 	/**
@@ -310,91 +266,43 @@ public class ABox extends ConjunctiveFormula implements FormattableObj {
 
 		Set<QuantifiedRole> qRoles = tbox.getQuantifiedRoles();
 		Map<String, Integer> qRolesQ = tbox.getQuantifiedRolesQ(qRoles);
-		// Set <Role> Roles=getRolesAbox();
-		/*
-		 * >= 2.Name(John) >= 1.Name(John) /*>= 2.NameInv(Kennedy) >= 1.NameInv(Kennedy)
-		 */
-		Set<Role> Roles = getRolesABox();
-		for (Role r : Roles) {
-			if (r.getRefersTo() instanceof AtomicRigidRole) {
 
-				for (String keyL : QRigidL.keySet()) {
-					String[] keyLi = keyL.split("_");
-					String index = keyLi[0].concat("_" + keyLi[1]);
+		boolean ass;
+		for (Source source : roleMap.SourceToTargetsRigid.keySet()) {
+			int q = Math.min(roleMap.SourceToTargetsRigid.get(source).size(), qRolesQ.get(source.role.toString()));
 
-					int Qtabox = QRigid.get(index).size();
-					if (r.toString().equals(keyLi[0])) {
-						int Qtbox = qRolesQ.get(keyLi[0]);
-						int j = Math.min(Qtbox, Qtabox);
+			Concept EqR = new QuantifiedRole(source.role, q);
 
-			//			For ABox just take max cardinality of each role
-						QuantifiedRole qL = new QuantifiedRole(r, j);
-						Concept cr = (Concept) qL;
+			ass = addABox(new ABoxConceptAssertion(EqR, source.ind.name));
+			FORigid.add(new ABoxConceptAssertion(EqR, source.ind.name));
 
-						int t = Integer.parseInt(keyLi[2]);
-						while (t != 0) { // States
-							Concept tqL1 = new NextFuture(cr);
-							cr = tqL1;
-							t--;
-						}
-						addConceptsAssertion(new ABoxConceptAssertion(cr, keyLi[1]));
-
-					} else if (r.getInverse().toString().equals(keyLi[0])) {
-						int Qtbox = qRolesQ.get(r.toString());
-						int j = Math.min(Qtbox, Qtabox);
-						
-						QuantifiedRole qLinv = new QuantifiedRole(r.getInverse(), j);
-						Concept cinvr = (Concept) qLinv;
-
-						int t = Integer.parseInt(keyLi[2]);
-						while (t != 0){ // States
-							Concept tqL2 = new NextFuture(cinvr);
-							cinvr = tqL2;
-							t--;
-						}
-						addConceptsAssertion(new ABoxConceptAssertion(cinvr, keyLi[1]));
-					}
-				}
-			} // Local Roles
-			else {
-				for (String keyL : QLocal.keySet()) {
-					String[] keyLi = keyL.split("_");
-					int Qtaboxi = QLocal.get(keyL).size();
-
-					if (r.toString().equals(keyLi[0])) {
-						int Qtbox = qRolesQ.get(keyLi[0]);
-						int j = Math.min(Qtbox, Qtaboxi);
-							
-						QuantifiedRole qL = new QuantifiedRole(r, j);
-						Concept cr = (Concept) qL;
-						int t = Integer.parseInt(keyLi[2]);
-							
-						while (t != 0) { // States
-							Concept tqL1 = new NextFuture(cr);
-							cr = tqL1;
-							t--;
-						}
-						addConceptsAssertion(new ABoxConceptAssertion(cr, keyLi[1]));
-
-					} else if (r.getInverse().toString().equals(keyLi[0])) {
-						qRolesQ.putIfAbsent(r.getInverse().toString(), 1);
-						int Qtbox = qRolesQ.get(r.toString());
-						int j = Math.min(Qtbox, Qtaboxi);
-
-						QuantifiedRole qLinv = new QuantifiedRole(r.getInverse(), j);
-						Concept cinvr = (Concept) qLinv;
-						int t = Integer.parseInt(keyLi[2]);
-							
-						while (t != 0) { // States
-							Concept tqL2 = new NextFuture(cinvr);
-							cinvr = tqL2;
-							t--;
-						}
-						addConceptsAssertion(new ABoxConceptAssertion(cinvr, keyLi[1]));
-
-					}
-				}
+			if (ass == false) {
+				System.out.println("duplicate: "+ EqR.toString() + "(" + source.ind.name);
 			}
+
+			typeKeeper.addAssertion(source.ind.name, EqR);
+		}
+
+		for (Source source : roleMap.SourceToTargetsLocal.keySet()) {
+			int q = Math.min(roleMap.SourceToTargetsLocal.get(source).size(), qRolesQ.get(source.role.toString()));
+
+			Concept EqR = new QuantifiedRole(source.role, q);
+			int timestamp = source.timestamp;
+
+			while (timestamp != 0) {
+				Concept tqL1 = new NextFuture(EqR);
+				EqR = tqL1;
+				timestamp--;
+			}
+
+			ass = addABox(new ABoxConceptAssertion(EqR, source.ind.name));
+			FORigid.add(new ABoxConceptAssertion(EqR, source.ind.name));
+
+			if (ass == false) {
+				System.out.println("duplicate: "+ EqR.toString() + "(" + source.ind.name);
+			}
+
+			typeKeeper.addAssertion(source.ind.name, EqR);
 		}
 	}
 	
@@ -565,75 +473,30 @@ public class ABox extends ConjunctiveFormula implements FormattableObj {
 		}
 	}
 
-
 	/**
 	 * Role assertion in Abstracted ABox
 	 * 
 	 * @implNote should we check if role is rigid or local here?
-	 * 
-	 * @param ABoxRoleAssertion r
+	 *
 	 */
-	public void addAbsABoxRoleAssertion(ABoxRoleAssertion r){
-		ShiftedRolesAssertion.add(r);
-		Set<String>successorR=new HashSet<String>();
-		Set<String>successorL=new HashSet<String>();
-	//	Set<String>successorLG=new HashSet<String>();
-		Set<String>PredecessorR=new HashSet<String>();
-		Set<String>PredecessorL=new HashSet<String>();
-	//	Set<String>PredecessorLG=new HashSet<String>();
-		
-			
-		if (r.ro.getRefersTo() instanceof AtomicRigidRole){
-					
-			QRigid.putIfAbsent(r.ro.toString()+"_"+r.x, successorR);
-			QRigid.putIfAbsent(r.ro.getInverse().toString()+"_"+r.y, PredecessorR);
-			
-			successorR = QRigid.get(r.ro.toString()+"_"+r.x);
-			PredecessorR = QRigid.get(r.ro.getInverse().toString()+"_"+r.y);
-			
-			successorR.add(r.y);
-			PredecessorR.add(r.x);
-			QRigid.replace(r.ro.toString()+"_"+r.x,successorR);
-			QRigid.replace(r.ro.getInverse().toString()+"_"+r.y,PredecessorR);
-			
-			//Rigid TimeStamps				
-	/*		successorLG.add(r.y);
-			PredecessorLG.add(r.x);
-			QRigidL.putIfAbsent(r.ro.toString()+"_"+r.x+"_"+r.t, successorLG);
-			QRigidL.putIfAbsent(r.ro.getInverse().toString()+"_"+r.y+"_"+r.t, PredecessorLG);
-			
-			successorLG=QRigidL.get(r.ro.toString()+"_"+r.x+"_"+r.t);
-			PredecessorLG=QRigidL.get(r.ro.getInverse().toString()+"_"+r.y+"_"+r.t);
-			
-			successorLG.add(r.y);
-			PredecessorLG.add(r.x);
-			QRigidL.replace(r.ro.toString()+"_"+r.x+"_"+r.t,successorLG); // XE1G1(a2) <=> G1_a2_1 (1: timeStamp)
-			QRigidL.replace(r.ro.getInverse().toString()+"_"+r.x+"_"+r.t,PredecessorLG);			
-		*/
+	public void addAbsABoxRoleAssertion(ABoxRoleAssertion ra){
+		ShiftedRolesAssertion.add(ra);
+		if (ra.ro.getRefersTo() instanceof AtomicRigidRole){
+			roleMap.AddRigidTarget(new Source(ra.x, ra.ro), new Individual(ra.y));
+			roleMap.AddRigidLocalizedTarget(new Source(ra.x, ra.ro, ra.t), new Individual(ra.y));
+			roleMap.AddRigidTarget(new Source(ra.y, ra.ro.getInverse()), new Individual(ra.x));
+			roleMap.AddRigidLocalizedTarget(new Source(ra.y, ra.ro.getInverse(), ra.t), new Individual(ra.x));
+		} else {
+			roleMap.AddLocalTarget(new Source(ra.x, ra.ro, ra.t), new Individual(ra.y));
+			roleMap.AddLocalTarget(new Source(ra.y, ra.ro.getInverse(), ra.t), new Individual(ra.x));
 		}
-		else {
-				QLocal.putIfAbsent(r.ro.toString()+"_"+r.x+"_"+r.t, successorL);
-				QLocal.putIfAbsent(r.ro.getInverse().toString()+"_"+r.y+"_"+r.t, PredecessorL);
-				
-				successorL = QLocal.get(r.ro.toString()+"_"+r.x+"_"+r.t);
-				PredecessorL = QLocal.get(r.ro.getInverse().toString()+"_"+r.y+"_"+r.t);
-				
-				successorL.add(r.y);
-				PredecessorL.add(r.x);
-				QLocal.replace(r.ro.toString()+"_"+r.x+"_"+r.t,successorL); // XE1G1(a2) <=> G1_a2_1 (1: timeStamp)
-				QLocal.replace(r.ro.getInverse().toString()+"_"+r.x+"_"+r.t,PredecessorL);
-			}
-	//	System.out.println("QRigid:"+QRigid.toString());
-	//	System.out.println("QRigidL:"+QRigidL.toString());
-	//	System.out.println("QLocal:"+QLocal.toString());
 	}
 
 
 
 	/**
 	 * Negated Role assertion in Abstracted ABox
-	 * 
-	 * @param ABoxRoleAssertion r
+	 *
 	 */		
 	public void addAbsABoxNegatedRoleAssertion(ABoxRoleAssertion r){
 		//	Create the list of Role Assertions
@@ -741,170 +604,63 @@ public class ABox extends ConjunctiveFormula implements FormattableObj {
 			
 		Set<QuantifiedRole> qRoles = tbox.getQuantifiedRoles();
 		Map<String, Integer> qRolesQ = tbox.getQuantifiedRolesQ(qRoles);
-		
-			//Set <Role> Roles=getRolesAbox();
-			/* >= 2.Name(John)
-			 * >= 1.Name(John)
-			 /*>= 2.NameInv(Kennedy)
-			 * >= 1.NameInv(Kennedy)
-			 */
 			
 		System.out.println("");
 		System.out.println("------ Shifted TDLITE ABOX");
-//			System.out.println("**RolesAssertion:"+RolesAssertion.size());
-//			PrintAboxRoleAssertions(RolesAssertion);
-//			PrintAboxRoleAssertions(ShiftedRolesAssertion);
-//			System.out.println("**NegatedRolesAssertion:");
+
 		int GainP = RolesAssertion.size() - (ShiftedRolesAssertion.size());
-//			int GainN= NegatedRolesAssertion.size()-ShiftedNegatedRolesAssertion.size();
+
 		System.out.println("Gain_Rigid= "+GainP); //+"+GainN+"="+(GainP+GainN));
-//			System.out.println("ShiftedRolesAssertion:"+ShiftedRolesAssertion.size());
-//			PrintAboxRoleAssertions(ShiftedRolesAssertion);
-//			System.out.println("**NegatedRolesAssertion:");
-//			PrintAboxRoleAssertions(NegatedRolesAssertion);
-//			System.out.println("**ShiftedNegatedRolesAssertion:");
-//			PrintAboxRoleAssertions(ShiftedNegatedRolesAssertion);
-//			System.out.println("");
-//			System.out.println("*Local Assertions:"+ABoxLocal.size());
-//			System.out.println("*Global Assertions:"+ABoxShiftGlobal.size());
-			
-			
-			
-//			boolean inconsistentL =RolesAssertion.removeAll(NegatedRolesAssertion);
+
 		Set<ABoxRoleAssertion> Inconsist = new HashSet<ABoxRoleAssertion>();
 		Inconsist = ShiftedRolesAssertion;
-//			System.out.println("list inconsistent");
-		Inconsist.retainAll(ShiftedNegatedRolesAssertion);
-//			PrintAboxRoleAssertions(Inconsist);
-			
-//			inconsistent =ShiftedRolesAssertion.removeAll(ShiftedNegatedRolesAssertion);
-//			System.out.println("Inconsistent: "+inconsistent);
-		Set<Role> Roles = getRolesABox();
-		for (Role r: Roles){
-			if (r.getRefersTo() instanceof AtomicRigidRole){
-				for(String keyL : QRigid.keySet()){
-				    String[]keyLi = keyL.split("_"); //keyL:G1_a2_1
-				    String index = keyLi[0].concat("_"+keyLi[1]); //index:G1_a2
-				    	
-					int Qtabox = QRigid.get(index).size();// exp: get(G1_a8)=size([b2, b1])=2				
-							
-					if (r.toString().equals(keyLi[0])){
-						int Qtbox = qRolesQ.get(keyLi[0]); //get the max cardinality of the Role from the TBox
-						int j = Math.min(Qtbox, Qtabox);
-						Set<Concept>ToList = new HashSet<Concept>();
-								
-						//Cardinality						
-						QuantifiedRole qL = new QuantifiedRole(r, j);	
-		    			Concept cr = (Concept)qL;
-		    			//	ShiftABox(new AboxConceptAssertion (cr,keyLi[1])); //abstract assertion rigid at 0
-		    			addABox(new ABoxConceptAssertion (cr,keyLi[1]));
-		    			FORigid.add(new ABoxConceptAssertion (cr,keyLi[1]));
-		    					
-		    			//	ToList.add(cr);
-						typeKeeper.addAssertion(keyLi[1], cr);
-		    					
-		    					
-		    			/*		int t= Integer.parseInt(keyLi[2]); //get the timeStamp of the assertion
-		    					while (t!=0 )//States      //exp: XG1(a2)= add(XG1, a2)
-		    					{ 
-		    						Concept tqL1= new NextFuture(cr);  THIS VERSION IS WHEN WE HANDLE RIGID ON FO LEVEL
-		    						cr= tqL1;
-					    			t--;	
-		    					}
-								
-		    					addABox(new AboxConceptAssertion (cr,keyLi[1])); 
-		    					System.out.println("To:"+To.toString());*/
-				    } else if (r.getInverse().toString().equals(keyLi[0])) {
-							qRolesQ.putIfAbsent(r.getInverse().toString(), 1);
-							int Qtbox = qRolesQ.get(r.getInverse().toString());
-							int j = Math.min(Qtbox, Qtabox);
-							Set<Concept>ToList = new HashSet<Concept>();
-								
-								//Cardinality
-		    				QuantifiedRole qLinv = new QuantifiedRole(r.getInverse(), j);
-		    				Concept cinvr = (Concept)qLinv;
-		    			//		ShiftABox(new AboxConceptAssertion (cinvr,keyLi[1])); //abstract assertion rigid at 0
-		    				addABox(new ABoxConceptAssertion (cinvr,keyLi[1]));
-		    				FORigid.add(new ABoxConceptAssertion (cinvr,keyLi[1]));
-		    					
-		    					//ToList.add(cinvr);
-							typeKeeper.addAssertion(keyLi[1], cinvr);
 
-		    					
-		    				/*	int t= Integer.parseInt(keyLi[2]); THIS VERSION IS WHEN WE HANDLE RIGID ON FO LEVEL
-		    					while (t!=0 )//States
-		    					{ 
-		    						Concept tqL2= new NextFuture(cinvr);
-		    						cinvr= tqL2;
-					    			t--;	
-		    					}
-		    					addABox(new AboxConceptAssertion (cinvr,keyLi[1]));	    */					    					
-				    }
-				}
-						
+		Inconsist.retainAll(ShiftedNegatedRolesAssertion);
+
+		boolean ass;
+		for (Source source : roleMap.SourceToTargetsRigid.keySet()) {
+			int q = Math.min(roleMap.SourceToTargetsRigid.get(source).size(), qRolesQ.get(source.role.toString()));
+
+			Concept EqR = new QuantifiedRole(source.role, q);
+
+			ass = addABox(new ABoxConceptAssertion(EqR, source.ind.name));
+			FORigid.add(new ABoxConceptAssertion(EqR, source.ind.name));
+
+			if (ass == false) {
+				System.out.println("duplicate: "+ EqR.toString() + "(" + source.ind.name);
 			}
-						
-					//Local Roles
-			for(String keyL : QLocal.keySet()){
-			   	String[]keyLi = keyL.split("_");
-				int Qtaboxi = QLocal.get(keyL).size();
-									
-				if (r.toString().equals(keyLi[0])){
-					int Qtbox = qRolesQ.get(keyLi[0]);
-					int j = Math.min(Qtbox, Qtaboxi);
-					Set<Concept>ToList = new HashSet<Concept>();
-						
-                        //Cardinality
-					QuantifiedRole qL = new QuantifiedRole(r, j);	
-	    			Concept cr = (Concept)qL;
-	    					
-	    			int t = Integer.parseInt(keyLi[2]);
-	    			while (t != 0 ){ 
-	    				Concept tqL1 = new NextFuture(cr);
-	    				cr = tqL1;
-	    				t--;	
-	    			}
-	    				
-	    			addABox(new ABoxConceptAssertion (cr,keyLi[1]));
-	    			//	ShiftABox(new AboxConceptAssertion (cr,keyLi[1]));//the abstract is the same element
-	    			FOLocal.add(new ABoxConceptAssertion (cr,keyLi[1]));
-	    					
-	    			ToList.add(cr);
-					typeKeeper.addAssertion(keyLi[1], cr);
-			   	} else if (r.getInverse().toString().equals(keyLi[0])){
-						qRolesQ.putIfAbsent(r.getInverse().toString(), 1);
-						int Qtbox = qRolesQ.get(r.toString());
-						int j = Math.min(Qtbox, Qtaboxi);
-						Set<Concept>ToList = new HashSet<Concept>();
-							
-					 //Cardinality
-	    				QuantifiedRole qLinv = new QuantifiedRole(r.getInverse(), j);
-	    				Concept cinvr = (Concept)qLinv;
-	    					
-	    				int t = Integer.parseInt(keyLi[2]);
-	    				while (t != 0){ 
-	    					Concept tqL2 = new NextFuture(cinvr);
-	    					cinvr = tqL2;
-			    			t--;	
-	    				}
-	    					
-	    				addABox(new ABoxConceptAssertion (cinvr,keyLi[1]));
-	    				//	ShiftABox(new AboxConceptAssertion (cinvr,keyLi[1])); //the abstract is the same element
-	    				FOLocal.add(new ABoxConceptAssertion (cinvr,keyLi[1]));
-	    					
-	    				ToList.add(cinvr);
-						typeKeeper.addAssertion(keyLi[1], cinvr);
-					}
-			}
+
+			typeKeeper.addAssertion(source.ind.name, EqR);
 		}
-			//  System.out.println("To:"+To.toString());
+
+		for (Source source : roleMap.SourceToTargetsLocal.keySet()) {
+			int q = Math.min(roleMap.SourceToTargetsLocal.get(source).size(), qRolesQ.get(source.role.toString()));
+
+			Concept EqR = new QuantifiedRole(source.role, q);
+			int timestamp = source.timestamp;
+
+			while (timestamp != 0) {
+				Concept tqL1 = new NextFuture(EqR);
+				EqR = tqL1;
+				timestamp--;
+			}
+
+			ass = addABox(new ABoxConceptAssertion(EqR, source.ind.name));
+			FORigid.add(new ABoxConceptAssertion(EqR, source.ind.name));
+
+			if (ass == false) {
+				System.out.println("duplicate: "+ EqR.toString() + "(" + source.ind.name);
+			}
+
+			typeKeeper.addAssertion(source.ind.name, EqR);
+		}
+
 		ABox.addAll(ConceptsAssertion);
 	}
 
 	/**
 	 * Extend the Abstracted ABox constraints given a Q
- 	 * 
-	 * @param int Q
+ 	 *
 	 */
 	public void addExtensionConstraintsAbsABox(int Q){
 		System.out.println("");
@@ -943,115 +699,43 @@ public class ABox extends ConjunctiveFormula implements FormattableObj {
 	
 		boolean ass;	
 		if (inconsistent == false) {
-			//Map<String, Integer> qRolesQ = getQuantifiedRolesABox(Q);
+			for (Source source : roleMap.SourceToTargetsRigid.keySet()) {
+				int q = Math.min(roleMap.SourceToTargetsRigid.get(source).size(), Q);
 
-			Set<Role> Roles = getRolesABox();
-			for (Role r: Roles) {
+				Concept EqR = new QuantifiedRole(source.role, q);
 
-				if (r.getRefersTo() instanceof AtomicRigidRole) {
-					for(String keyL : QRigid.keySet()) {
+				ass = addABox(new ABoxConceptAssertion(EqR, source.ind.name));
+				FORigid.add(new ABoxConceptAssertion(EqR, source.ind.name));
 
-						String[]keyLi = keyL.split("_"); //keyL:G1_a2_1
-						String index = keyLi[0].concat("_"+keyLi[1]); //index:G1_a2			
-						int Qtabox = QRigid.get(index).size();// exp: get(G1_a8)=size([b2, b1])=2	
-						int q = Math.min(Qtabox,Q);
-						
-						if (r.toString().equals(keyLi[0])){
-									  //qRolesQ.get(keyLi[0]); //get the random  cardinality for the Role in the ABox		
-							Set<Concept>ToList = new HashSet<Concept>();
-							QuantifiedRole qL = new QuantifiedRole(r, q);	//Cardinality
-							Concept cr = (Concept)qL;
-							ass = addABox(new ABoxConceptAssertion(cr, keyLi[1])); 
-							FORigid.add(new ABoxConceptAssertion(cr, keyLi[1]));
-							
-							if (ass == false){
-								System.out.println("duplicate: "+ cr.toString()+"("+keyLi[1]);
-							}
-							
-							typeKeeper.addAssertion(keyLi[1], cr);
-						}
-						else if (r.getInverse().toString().equals(keyLi[0])){
-								//	qRolesQ.putIfAbsent(r.getInverse().toString(), 1);
-								//	int q=1;//qRolesQ.get(r.getInverse().toString());
-						
-								Set<Concept>ToList = new HashSet<Concept>();	
-									//Cardinality
-								QuantifiedRole qLinv = new QuantifiedRole(r.getInverse(), q);
-								Concept cinvr = (Concept)qLinv;
-								ass = addABox(new ABoxConceptAssertion (cinvr,keyLi[1]));
-								FORigid.add(new ABoxConceptAssertion (cinvr,keyLi[1]));
-								
-								if (ass=false){
-									System.out.println("duplicate: "+ cinvr.toString()+"("+keyLi[1]);
-								}
-								
-								typeKeeper.addAssertion(keyLi[1], cinvr);
-						}
-					}
-							
-				} else {
-					for (String keyL : QLocal.keySet()) {
-						//	System.out.println("local role:"+r.toString());
-						String[] keyLi = keyL.split("_");
-						int Qtaboxi = QLocal.get(keyL).size();
-						int q = Math.min(Qtaboxi, Q);
-
-						if (r.toString().equals(keyLi[0])) {
-							Set<Concept> ToList = new HashSet<Concept>();
-
-							//Cardinality
-							QuantifiedRole qL = new QuantifiedRole(r, q);
-							Concept cr = (Concept) qL;
-
-							int t = Integer.parseInt(keyLi[2]);
-
-							while (t != 0) {
-								Concept tqL1 = new NextFuture(cr);
-								cr = tqL1;
-								t--;
-							}
-
-							ass = addABox(new ABoxConceptAssertion(cr, keyLi[1]));
-							FOLocal.add(new ABoxConceptAssertion(cr, keyLi[1]));
-
-							if (ass == false) {
-								System.out.println("duplicate: " + cr.toString() + "(" + keyLi[1]);
-							}
-							//		ShiftABox(new AboxConceptAssertion (cr,keyLi[1]));//the abstract is the same element
-
-							ToList.add(cr);
-							typeKeeper.addAssertion(keyLi[1], cr);
-						} else if (r.getInverse().toString().equals(keyLi[0])) {
-							//		qRolesQ.putIfAbsent(r.getInverse().toString(), 1);
-							//		int q=1;qRolesQ.get(r.toString());
-							Set<Concept> ToList = new HashSet<Concept>();
-
-							//Cardinality
-							QuantifiedRole qLinv = new QuantifiedRole(r.getInverse(), q);
-							Concept cinvr = (Concept) qLinv;
-
-							int t = Integer.parseInt(keyLi[2]);
-							while (t != 0) {
-								Concept tqL2 = new NextFuture(cinvr);
-								cinvr = tqL2;
-								t--;
-							}
-
-							ass = addABox(new ABoxConceptAssertion(cinvr, keyLi[1]));
-							FOLocal.add(new ABoxConceptAssertion(cinvr, keyLi[1]));
-
-							if (ass == false) {
-								System.out.println("duplicate: " + cinvr.toString() + "(" + keyLi[1]);
-							}
-							//	ShiftABox(new AboxConceptAssertion (cinvr,keyLi[1])); //the abstract is the same element
-
-							ToList.add(cinvr);
-							typeKeeper.addAssertion(keyLi[1], cinvr);
-						}
-					}
+				if (ass == false) {
+					System.out.println("duplicate: "+ EqR.toString() + "(" + source.ind.name);
 				}
+
+				typeKeeper.addAssertion(source.ind.name, EqR);
 			}
-			//ABox.addAll(ConceptsAssertion);
+
+			for (Source source : roleMap.SourceToTargetsLocal.keySet()) {
+				int q = Math.min(roleMap.SourceToTargetsLocal.get(source).size(), Q);
+
+				Concept EqR = new QuantifiedRole(source.role, q);
+				int timestamp = source.timestamp;
+
+				while (timestamp != 0) {
+					Concept tqL1 = new NextFuture(EqR);
+					EqR = tqL1;
+					timestamp--;
+				}
+
+				ass = addABox(new ABoxConceptAssertion(EqR, source.ind.name));
+				FORigid.add(new ABoxConceptAssertion(EqR, source.ind.name));
+
+				if (ass == false) {
+					System.out.println("duplicate: "+ EqR.toString() + "(" + source.ind.name);
+				}
+
+				typeKeeper.addAssertion(source.ind.name, EqR);
+			}
+			ABox.addAll(ConceptsAssertion);
 		} else {
 				ABox = null;
 				System.out.println("Inconsistency on role assertions");

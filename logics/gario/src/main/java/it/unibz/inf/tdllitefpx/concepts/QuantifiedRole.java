@@ -38,6 +38,6 @@ public class QuantifiedRole extends BasicConcept {
 
 	@Override
 	public int hashCode() {
-		return (q * role.hashCode()) % 1572869;
+		return q * role.hashCode();
 	}
 }

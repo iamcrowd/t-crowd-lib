@@ -37,6 +37,6 @@ public class NegatedConcept extends Concept {
 
 	@Override
 	public int hashCode() {
-		return (refersTo.hashCode() + 3079) % 1572869;
+		return (refersTo.hashCode() + 3079);
 	}
 }

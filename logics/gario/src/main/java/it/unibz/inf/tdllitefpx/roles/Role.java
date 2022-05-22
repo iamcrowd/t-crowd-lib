@@ -25,5 +25,9 @@ public abstract class Role implements FormattableObj {
 		else
 			return false;
 	}
+
+	public int hashCode(){
+		return refersTo.hashCode();
+	}
 	
 }
