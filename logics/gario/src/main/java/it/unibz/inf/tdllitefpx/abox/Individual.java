@@ -16,4 +16,17 @@ public class Individual {
     public String toString() {
         return name;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == this) {
+            return true;
+        }
+
+        if (!(o instanceof Individual)) {
+            return false;
+        }
+
+        return this.name.equals(((Individual) o).name);
+    }
 }

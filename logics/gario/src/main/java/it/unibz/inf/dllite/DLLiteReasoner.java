@@ -28,7 +28,6 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.Flow.Processor;
 
 import javax.management.relation.RoleList;
 import javax.sql.RowSetMetaData;
@@ -423,7 +422,7 @@ public class DLLiteReasoner {
 		System.out.println(System.currentTimeMillis()-start_time + "ms");
 		Formula oAbs = ABox.getAbstractABoxFormula(false); 
 
-		System.out.println("Abstracted ABox: " + oAbs.toString());
+		//System.out.println("Abstracted ABox: " + oAbs.toString());
 
 		System.out.println("");
 		System.out.println("Done! Total time:" + (System.currentTimeMillis()-total_time) + "ms");

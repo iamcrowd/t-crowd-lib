@@ -11,10 +11,11 @@ public class PositiveRole extends Role {
 	}
 	
 	public PositiveRole(AtomicRole refersTo) {
-		System.out.println("#");
 		this.refersTo = refersTo;
 		this.inverseOf = new NegativeRole(refersTo,this);
 	}
+
+	public PositiveRole() {}
 	
 	public String toString(){
 		return refersTo.name;

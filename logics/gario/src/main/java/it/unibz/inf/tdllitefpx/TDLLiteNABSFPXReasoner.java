@@ -36,8 +36,6 @@ import it.unibz.inf.tdllitefpx.tbox.TBox;
 import it.unibz.inf.tdllitefpx.abox.ABox;
 import it.unibz.inf.tdllitefpx.abox.ABoxConceptAssertion;
 
-import java.lang.System.Logger;
-import java.lang.System.Logger.Level;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;

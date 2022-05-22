@@ -25,7 +25,7 @@ public class TypeKeeper {
         }
     }
 
-    public void updateType (String name, Concept concept) {
+    public void addAssertion(String name, Concept concept) {
         Individual ind = new Individual(name);
         IndividualToType.putIfAbsent(ind, new Type());
         Type type = IndividualToType.get(ind);

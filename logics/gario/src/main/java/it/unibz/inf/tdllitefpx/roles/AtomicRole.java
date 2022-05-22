@@ -12,7 +12,7 @@ public abstract class AtomicRole implements FormattableObj{
 	}
 	
 	public int hashCode(){
-		return this.name.hashCode();
+		return name.hashCode();
 	}
 	
 	public boolean equals(Object o){
