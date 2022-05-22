@@ -667,37 +667,18 @@ public class ABox extends ConjunctiveFormula implements FormattableObj {
 		System.out.println("------ Shifted TDLITE ABOX");
 		System.out.println("**RolesAssertion:"+RolesAssertion.size());
 
-		//PrintABoxRoleAssertions(RolesAssertion);
-		//PrintABoxRoleAssertions(ShiftedRolesAssertion);
-
-
-	//	System.out.println("**NegatedRolesAssertion:");
 		int GainP = RolesAssertion.size() - (ShiftedRolesAssertion.size());
-	//	int GainN= NegatedRolesAssertion.size()-ShiftedNegatedRolesAssertion.size();
-		System.out.println("Gain_Rigid= "+GainP); //+"+"+GainN+"="+(GainP+GainN));
-	//	System.out.println("ShiftedRolesAssertion:"+ShiftedRolesAssertion.size());
-	//	PrintAboxRoleAssertions(ShiftedRolesAssertion);
-	//	System.out.println("**NegatedRolesAssertion:");
-	//	PrintAboxRoleAssertions(NegatedRolesAssertion);
-	//	System.out.println("**ShiftedNegatedRolesAssertion:");
-	//	PrintAboxRoleAssertions(ShiftedNegatedRolesAssertion);
+		System.out.println("Gain_Rigid= "+GainP);
+
 		System.out.println("");
-	//	System.out.println("*Local Assertions:"+ABoxLocal.size());
-	//	System.out.println("*Global Assertions:"+ABoxShiftGlobal.size());
-		
-		
-		
-	//	boolean inconsistentL =RolesAssertion.removeAll(NegatedRolesAssertion);
+
 		Set<ABoxRoleAssertion> Inconsist = new HashSet<ABoxRoleAssertion>();
 		Inconsist=ShiftedRolesAssertion;
-	//	System.out.println("list inconsistent");
+
 		Inconsist.retainAll(ShiftedNegatedRolesAssertion);
-	//	PrintAboxRoleAssertions(Inconsist);
-		
-	//	inconsistent =ShiftedRolesAssertion.removeAll(ShiftedNegatedRolesAssertion);
-	//	System.out.println("Inconsistent: "+inconsistent);
+
 	
-		boolean ass;	
+		boolean ass=true;
 		if (inconsistent == false) {
 			for (Source source : roleMap.SourceToTargetsRigid.keySet()) {
 				int q = Math.min(roleMap.SourceToTargetsRigid.get(source).size(), Q);

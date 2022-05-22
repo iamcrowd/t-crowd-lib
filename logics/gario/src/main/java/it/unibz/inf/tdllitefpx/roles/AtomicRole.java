@@ -6,14 +6,17 @@ import org.gario.code.output.SymbolUndefinedException;
 
 public abstract class AtomicRole implements FormattableObj{
 	String name;
-	int hash;
+	int hash = 0;
 	
 	public AtomicRole(String name){
 		this.name = name;
-		this.hash = name.hashCode();
 	}
 	
 	public int hashCode(){
+		if (hash == 0) {
+			hash = name.hashCode();
+		}
+
 		return hash;
 	}
 	

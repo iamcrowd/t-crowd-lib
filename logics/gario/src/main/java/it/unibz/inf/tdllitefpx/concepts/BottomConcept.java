@@ -20,7 +20,7 @@ public class BottomConcept extends BasicConcept {
 
 	@Override
 	public int hashCode() {
-		return 0;
+		return 1;
 	}
 
 }

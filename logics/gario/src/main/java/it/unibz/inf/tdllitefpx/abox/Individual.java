@@ -2,14 +2,17 @@ package it.unibz.inf.tdllitefpx.abox;
 
 public class Individual {
     String name;
-    int hash;
+    int hash = 0;
 
     public Individual(String name) {
         this.name = name;
-        this.hash = name.hashCode();
     }
 
     public int hashCode() {
+        if (hash == 0) {
+            hash = name.hashCode();
+        }
+
         return hash;
     }
 

@@ -9,11 +9,10 @@ import org.gario.code.output.OutputFormat;
 
 public class AtomicConcept extends BasicConcept {
 	String name;
-	int hash;
+	int hash = 0;
 	
 	public AtomicConcept(String name){
 		this.name = name;
-		hash = name.hashCode();
 	}
 	
 	public String toString(){return name;}
@@ -27,6 +26,10 @@ public class AtomicConcept extends BasicConcept {
 
 	@Override
 	public int hashCode() {
+		if (hash == 0) {
+			hash = name.hashCode();
+		}
+
 		return hash;
 	}
 }
