@@ -13,6 +13,8 @@ import it.unibz.inf.tdllitefpx.concepts.Concept;
 public class ABoxConceptAssertion implements FormattableObj{
 	Concept c;
 	String value;
+
+	int hash = 0;
 	
 	/**
 	 * An ABox concept is a Concept instance and a String value as constant
@@ -57,8 +59,12 @@ public class ABoxConceptAssertion implements FormattableObj{
 			return false;	
 	}
 	
-	public int hashCode(){
-		return this.getConceptAssertion().hashCode();
+	public int hashCode() {
+		if (hash == 0) {
+			hash = c.hashCode() + value.hashCode();
+		}
+
+		return hash;
 	}
 
 	@Override

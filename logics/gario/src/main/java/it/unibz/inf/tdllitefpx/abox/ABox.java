@@ -296,7 +296,7 @@ public class ABox extends ConjunctiveFormula implements FormattableObj {
 			}
 
 			ass = addABox(new ABoxConceptAssertion(EqR, source.ind.name));
-			FORigid.add(new ABoxConceptAssertion(EqR, source.ind.name));
+			FOLocal.add(new ABoxConceptAssertion(EqR, source.ind.name));
 
 			if (ass == false) {
 				System.out.println("duplicate: "+ EqR.toString() + "(" + source.ind.name);
@@ -646,7 +646,7 @@ public class ABox extends ConjunctiveFormula implements FormattableObj {
 			}
 
 			ass = addABox(new ABoxConceptAssertion(EqR, source.ind.name));
-			FORigid.add(new ABoxConceptAssertion(EqR, source.ind.name));
+			FOLocal.add(new ABoxConceptAssertion(EqR, source.ind.name));
 
 			if (ass == false) {
 				System.out.println("duplicate: "+ EqR.toString() + "(" + source.ind.name);
@@ -676,7 +676,6 @@ public class ABox extends ConjunctiveFormula implements FormattableObj {
 		Inconsist=ShiftedRolesAssertion;
 
 		Inconsist.retainAll(ShiftedNegatedRolesAssertion);
-
 	
 		boolean ass=true;
 		if (inconsistent == false) {
@@ -708,7 +707,7 @@ public class ABox extends ConjunctiveFormula implements FormattableObj {
 				}
 
 				ass = addABox(new ABoxConceptAssertion(EqR, source.ind.name));
-				FORigid.add(new ABoxConceptAssertion(EqR, source.ind.name));
+				FOLocal.add(new ABoxConceptAssertion(EqR, source.ind.name));
 
 				if (ass == false) {
 					System.out.println("duplicate: "+ EqR.toString() + "(" + source.ind.name);
