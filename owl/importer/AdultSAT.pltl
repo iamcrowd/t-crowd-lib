@@ -1,1 +1,0 @@
-( ((Adult_t1 => Person_t1) & (Adult_t0 =>  ~ Minor_t0) & (Minor_t0 => Person_t0) & (Adult_t1 =>  ~ Minor_t1) & (Adult_t0 => Person_t0) & (Minor_t1 => Person_t1) & http://www.semanticweb.org/gbraun/ontologies/2022/2/untitled-ontology-35#Adult_t1 & http://www.semanticweb.org/gbraun/ontologies/2022/2/untitled-ontology-35#Minor_t0))
