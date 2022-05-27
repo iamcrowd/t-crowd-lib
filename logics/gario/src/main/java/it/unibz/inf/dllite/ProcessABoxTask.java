@@ -46,9 +46,11 @@ public class ProcessABoxTask implements Callable<String> {
 
         // Ground the final formula
 		Formula ltl = this.tbox_f.makePropositional(this.pieceOfIndiv);
-		this.abox_f = this.abox_f.makePropositional(this.pieceOfIndiv);
+		Formula ltl_a = this.abox_f.makePropositional(this.pieceOfIndiv);
 
-		Formula ltl_KB = new ConjunctiveFormula(ltl, this.abox_f);
+        //System.out.println("**********ABOX: " + this.abox_f.toCNF().toString());
+
+		Formula ltl_KB = new ConjunctiveFormula(ltl, ltl_a);
 
         String file = RandomStringUtils.randomAlphanumeric(5) + ".smv";
         (new NuSMVOutput(ltl_KB)).toFile(file);

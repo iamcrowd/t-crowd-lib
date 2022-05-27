@@ -87,9 +87,7 @@ public class ABox extends ConjunctiveFormula implements FormattableObj {
 	 * @param c an ABox Concept Assertion
 	 */
 	public boolean addConceptsAssertion(ABoxConceptAssertion c) {
-
 		boolean s = ConceptsAssertion.add(c);
-
 		Set<Concept>ToList = new HashSet<Concept>();
 		To.putIfAbsent(c.value, ToList);
 		ToList = To.get(c.value);
@@ -317,6 +315,7 @@ public class ABox extends ConjunctiveFormula implements FormattableObj {
 
 		Set<QuantifiedRole> qRoles = tbox.getQuantifiedRoles();
 		Map<String, Integer> qRolesQ = tbox.getQuantifiedRolesQ(qRoles);
+		System.out.println("qRolesQ: " + qRolesQ.size());
 		// Set <Role> Roles=getRolesAbox();
 		/*
 		 * >= 2.Name(John) >= 1.Name(John) /*>= 2.NameInv(Kennedy) >= 1.NameInv(Kennedy)
@@ -325,14 +324,30 @@ public class ABox extends ConjunctiveFormula implements FormattableObj {
 		for (Role r : Roles) {
 			if (r.getRefersTo() instanceof AtomicRigidRole) {
 
+				System.out.println("The role here in extended: " + r.toString());
+
 				for (String keyL : QRigidL.keySet()) {
+					System.out.println("The role here in extended: " + r.toString());
+
 					String[] keyLi = keyL.split("_");
+					System.out.println("The role here in extended: " + r.toString());
+
 					String index = keyLi[0].concat("_" + keyLi[1]);
+					System.out.println("The role here in extended: " + r.toString());
+
 
 					int Qtabox = QRigid.get(index).size();
+					System.out.println("The role here in extended: " + r.toString());
+
 					if (r.toString().equals(keyLi[0])) {
+						System.out.println("The role here in extended keyLI: " + keyLi[0].toString());
+
 						int Qtbox = qRolesQ.get(keyLi[0]);
+						System.out.println("The role here in extended********: " + Qtbox);
+
 						int j = Math.min(Qtbox, Qtabox);
+						System.out.println("The role here in extended: " + r.toString());
+
 
 			//			For ABox just take max cardinality of each role
 						QuantifiedRole qL = new QuantifiedRole(r, j);
@@ -424,10 +439,10 @@ public class ABox extends ConjunctiveFormula implements FormattableObj {
 		System.out.println("Concepts="+ConceptsAssertion.size());
 		System.out.println("FO Local="+FOLocal.size());
 		System.out.println("FO Global="+FORigid.size());
-	//	ABox.addAll(ConceptsAssertion);
+		ABox.addAll(ConceptsAssertion);
 		int i = 0;
 		if (inconsistent == false){
-			for(ABoxConceptAssertion c: ABox){ //previous ConceptsAssertion
+			for(ABoxConceptAssertion c: ABox){
 				Formula cf = conceptToFormula(c.c, r);
 				cf.substitute(x, new Constant(c.value));
 				qtl.addConjunct(cf);

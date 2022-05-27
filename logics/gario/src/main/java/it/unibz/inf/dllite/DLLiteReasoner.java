@@ -165,6 +165,16 @@ public class DLLiteReasoner {
 		// Convert TBox to QTL
 		DLLiteConverter conv = new DLLiteConverter(t);
 		Formula qtl_N = conv.getFormula();
+
+		// Parse ABox
+		a.addExtensionConstraintsABox(t);
+		Formula o = a.getABoxFormula(false);
+
+		System.out.println("*******ABOX:" + o.toString());
+		
+		Formula KB = new ConjunctiveFormula(qtl_N, o);
+		if(verbose)
+			(new LatexDocumentCNF(KB)).toFile(prefix+"KB.tex");		
 		
 		long end_tbox2QTL = System.currentTimeMillis() - start_tbox2QTL;
 		long start_QTLN2LTL = System.currentTimeMillis();
@@ -207,14 +217,6 @@ public class DLLiteReasoner {
 				theSets.get(index++ % nOfThreads).add(value);
 			}
 
-			// Parse ABox
-			a.addExtensionConstraintsABox(t);
-			Formula o = a.getABoxFormula(false);
-		
-			Formula KB = new ConjunctiveFormula(qtl_N, o);
-			if(verbose)
-				(new LatexDocumentCNF(KB)).toFile(prefix+"KB.tex");
-
 			List<Future<String>> piecesUNSAT = satInPieces(o, qtl_N, theSets, nOfThreads);
 
 			for(Future<String> future : piecesUNSAT){  
@@ -223,7 +225,7 @@ public class DLLiteReasoner {
 				}
 			}
 
-			System.exit(0);
+			//System.exit(0);
 
 		}
 		catch (Exception e){
@@ -231,36 +233,7 @@ public class DLLiteReasoner {
 		}
 
 
-/*
-		Formula ltl = qtl_N.makePropositional(consts);
-		o = o.makePropositional(consts);
-
-		Formula ltl_KB = new ConjunctiveFormula(ltl, o);
-		
-		long end_QTLN2LTL = System.currentTimeMillis() - start_QTLN2LTL;
-
-		switch (solver) {
-			case Constants.NuSMV:
-				System.out.println("Solver..." + Constants.NuSMV);
-				(new NuSMVOutput(ltl_KB)).toFile(prefix+".smv");
-			break;
-
-			case Constants.black:
-				System.out.println("Solver" + Constants.black);
-				(new PltlOutput(ltl_KB)).toFile(prefix+".pltl");
-			break;
-			
-			case Constants.all:
-				System.out.println("Solver..." + Constants.NuSMV);
-				(new NuSMVOutput(ltl_KB)).toFile(prefix+".smv");
-				System.out.println("Solver" + Constants.black);
-				(new PltlOutput(ltl_KB)).toFile(prefix+".pltl");
-			break;
-		
-			default:
-				break;
-		}
-		
+/*		
 		System.out.println("Num of Propositions: " + ltl_KB.getPropositions().size());
 		System.out.println("DLLite to QTL: " + end_tbox2QTL);
 		System.out.println("QTL to LTL: " + end_QTLN2LTL);
