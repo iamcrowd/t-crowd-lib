@@ -407,6 +407,7 @@ public class DLLiteReasoner {
 	
 		start_time = System.currentTimeMillis();
 		ABox.addExtensionConstraintsAbsABox(Q);
+
 		System.out.println("");
 		System.out.println("------ABox -> FO :");	
 		//Formula o = ABox.getABoxFormula(false);
@@ -419,8 +420,15 @@ public class DLLiteReasoner {
 		   
 		start_time = System.currentTimeMillis();
 		ABox.AbstractABox();
+
 		System.out.println(System.currentTimeMillis()-start_time + "ms");
-		Formula oAbs = ABox.getAbstractABoxFormula(false); 
+		System.out.println("");
+		System.out.println("------Abstract FO -> Formula :");
+
+		start_time = System.currentTimeMillis();
+		Formula oAbs = ABox.getAbstractABoxFormula(false);
+
+		System.out.println(System.currentTimeMillis()-start_time + "ms");
 
 		//System.out.println("Abstracted ABox: " + oAbs.toString());
 

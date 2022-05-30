@@ -50,7 +50,7 @@ public class ConjunctiveFormula extends Formula {
 	 * Duplicates are mantained if Formula.removeDuplicates = false (default)
 	 * @param f1
 	 */
-	public void addConjunct(Formula f1){
+	public void addConjunct(Formula f1) {
 		addConjunct(f1,Formula.verifyTopBot);
 	}
 	
