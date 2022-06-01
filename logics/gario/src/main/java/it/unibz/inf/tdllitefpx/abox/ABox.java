@@ -328,7 +328,7 @@ public class ABox extends ConjunctiveFormula implements FormattableObj {
 	//	ABox.addAll(ConceptsAssertion);
 		int i = 0;
 		if (inconsistent == false){
-			for(ABoxConceptAssertion c: ABox){ //previous ConceptsAssertion
+			for(ABoxConceptAssertion c: ABox){
 				Formula cf = conceptToFormula(c.concept, r);
 				cf.substitute(x, new Constant(c.individual.toString()));
 				qtl.addConjunct(cf);

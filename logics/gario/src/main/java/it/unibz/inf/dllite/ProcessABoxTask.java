@@ -7,50 +7,63 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.TimeUnit;
 
+import org.apache.commons.lang3.RandomStringUtils;
+
 import it.unibz.inf.qtl1.formulae.ConjunctiveFormula;
 import it.unibz.inf.qtl1.formulae.Formula;
+import it.unibz.inf.qtl1.terms.Constant;
 import it.unibz.inf.qtl1.output.NuSMVOutput;
+import it.unibz.inf.qtl1.output.pltl.PltlOutput;
+import it.unibz.inf.tdllitefpx.abox.ABox;
 import it.unibz.inf.tdllitefpx.roles.Role;
+
+import java.util.Set;
 
 /**
  * It implements the ProcessTask for sat checking Roles.
  * It returns only the UNSAT roles (SAT roles will be removed from the QTL formula)
  */
-public class ProcessTask implements Callable<String> {
+public class ProcessABoxTask implements Callable<String> {
 
-    private Formula ltl_tbox;
-    private DLLiteConverter converter;
-    private Role role;
+    private Formula tbox_f;
+    private Formula abox_f;
+    private Set<Constant> pieceOfIndiv;
     private ExecutorService service;
 
     //processBuilder.command("/home/gbraun/Documentos/TemporalDLlite/NuXMV/nuXmv", "-dcx", "-bmc", "-bmc_length", "60", file);
 	//processBuilder.command("/home/gbraun/Documentos/TemporalDLlite/NuXMV/nuXmv","-source", "/home/gbraun/Documentos/TemporalDLlite/NuXMV/script.txt", file);
 
-    public ProcessTask(Formula ltl, DLLiteConverter conv, Role role, ExecutorService service) {
-        this.ltl_tbox = ltl;
-        this.converter = conv;
-        this.role = role;
+    public ProcessABoxTask(Formula abox_f, Formula tbox_f, Set<Constant> piece, ExecutorService service) {
+        this.abox_f = abox_f;
+        this.tbox_f = tbox_f;
+        this.pieceOfIndiv = piece;
         this.service = service;
     }
 
     @Override
     public String call() throws Exception {
-        System.out.println("Started " + role.toString());
+        System.out.println("Started " + this.pieceOfIndiv.toString());
 
-        Formula formRole = converter.getFormulaByRole(role);
-        Formula ltlR = new ConjunctiveFormula(ltl_tbox, formRole.makePropositional());
-        String file = role.toString() + ".smv";
-        (new NuSMVOutput(ltlR)).toFile(file);
+        // Ground the final formula
+		Formula ltl = this.tbox_f.makePropositional(this.pieceOfIndiv);
+		Formula ltl_a = this.abox_f.makePropositional(this.pieceOfIndiv);
+
+        //System.out.println("**********ABOX: " + this.abox_f.toCNF().toString());
+
+		Formula ltl_KB = new ConjunctiveFormula(ltl, ltl_a);
+
+        String file = RandomStringUtils.randomAlphanumeric(5) + ".smv";
+        (new NuSMVOutput(ltl_KB)).toFile(file);
+        String file2 = RandomStringUtils.randomAlphanumeric(5) + ".pltl";
+        (new PltlOutput(ltl_KB)).toFile(file2);
 
         ProcessBuilder pb = new ProcessBuilder();
         pb.command("/home/gbraun/Documentos/TemporalDLlite/NuXMV/nuXmv", "-dcx", "-bmc", "-bmc_length", "60", file);
         pb.redirectErrorStream(true);
-        //pb.redirectOutput(ProcessBuilder.Redirect.to(new File(file + ".log")));
 
         Process p5 = pb.start();
 
         StringBuilder output = new StringBuilder();
-
         BufferedReader reader = new BufferedReader(
                                 new InputStreamReader(p5.getInputStream()));
 
@@ -64,15 +77,14 @@ public class ProcessTask implements Callable<String> {
         if (exitVal == 0) {
             System.out.println("Success!");
             if (output.toString().contains("true") || output.toString().contains("UNSAT")){
-                return role.toString();
+                return "UNSAT";
             } else {
                 return null;
             }
         }
         p5.exitValue();
         service.shutdownNow();
-        //System.out.println("The process: " + p5.pid() + " for the Role: " + role.toString() +
-        //                   " finished abnormally along with the remaining running processes");
+        System.out.println("The process: " + p5.pid() + " finished abnormally along with the remaining running processes");
         System.exit(-1);
         throw new Exception();
     }

@@ -23,6 +23,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.Map.Entry;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -31,6 +32,8 @@ import java.util.concurrent.TimeUnit;
 
 import javax.management.relation.RoleList;
 import javax.sql.RowSetMetaData;
+
+import org.apache.commons.lang3.RandomStringUtils;
 
 
 /**
@@ -42,6 +45,7 @@ import javax.sql.RowSetMetaData;
 public class DLLiteReasoner {
 
 	static HashMap<Role, String> RolesSAT = new HashMap<Role, String>();
+	static HashMap<Constant, Constant> Individuals = new HashMap<Constant, Constant>();
 
 
 	/**
@@ -55,6 +59,13 @@ public class DLLiteReasoner {
 		return qtl_N;
 
 	}
+
+	private static void mapIndividuls(Set<Constant> indivFullSet){
+		for (Constant indiv : indivFullSet){
+			Individuals.putIfAbsent(indiv, new Constant(RandomStringUtils.randomAlphanumeric(50)));
+		}
+	}
+
 	// Considering TBox and ABox
 	/**
 	 * TBox, ABox SAT
@@ -153,6 +164,16 @@ public class DLLiteReasoner {
 		// Convert TBox to QTL
 		DLLiteConverter conv = new DLLiteConverter(t);
 		Formula qtl_N = conv.getFormula();
+
+		// Parse ABox
+		a.addExtensionConstraintsABox(t);
+		Formula o = a.getABoxFormula(false);
+
+		System.out.println("*******ABOX:" + o.toString());
+		
+		Formula KB = new ConjunctiveFormula(qtl_N, o);
+		if(verbose)
+			(new LatexDocumentCNF(KB)).toFile(prefix+"KB.tex");		
 		
 		long end_tbox2QTL = System.currentTimeMillis() - start_tbox2QTL;
 		long start_QTLN2LTL = System.currentTimeMillis();
@@ -170,61 +191,48 @@ public class DLLiteReasoner {
 			}
 			qtl_N = conv.getFormula(setOfUNSATroles);
 			if(verbose)
-				(new LatexDocumentCNF(qtl_N)).toFile(prefix+"afterRolesSAT.tex");	
+				(new LatexDocumentCNF(qtl_N)).toFile(prefix+"afterRolesSAT.tex");
+
+			// Get constants
+			Set<Constant> constsABox = a.getConstantsABox();
+			Set<Constant> consts = qtl_N.getConstants();
+			consts.addAll(constsABox);
+			
+			System.out.println("********Constants: " + consts.toString());
+
+			mapIndividuls(consts);
+
+			List<Set<Constant>> theSets = new ArrayList<Set<Constant>>(nOfThreads);
+			for (int i = 0; i < nOfThreads; i++) {
+				theSets.add(new HashSet<Constant>());
+			}
+		
+			int index = 0;
+			for (Entry<Constant, Constant> entry : Individuals.entrySet()) {
+				Constant key = entry.getKey();
+				System.out.println("**************key: " + key.toString());
+				Constant value = entry.getValue();
+				System.out.println("**************value: " + value.toString());
+				theSets.get(index++ % nOfThreads).add(value);
+			}
+
+			List<Future<String>> piecesUNSAT = satInPieces(o, qtl_N, theSets, nOfThreads);
+
+			for(Future<String> future : piecesUNSAT){  
+				if (future.get().equals("UNSAT")){
+					System.out.println("UNSAT");
+				}
+			}
+
+			//System.exit(0);
+
 		}
 		catch (Exception e){
 			throw e;
 		}
 
-		System.exit(0);
 
-
-		// Get constants
-		Set<Constant> constsABox = a.getConstantsABox();
-		Set<Constant> consts = qtl_N.getConstants();
-		System.out.println("QTL1 constants: " + consts.toString());
-		consts.addAll(constsABox);
-
-		// Parse ABox
-		a.addExtensionConstraintsABox(t);
-
-		Formula o = a.getABoxFormula(false);
-		
-		Formula KB = new ConjunctiveFormula(qtl_N, o);
-				
-		if(verbose)
-				(new LatexDocumentCNF(KB)).toFile(prefix+"KB.tex");	
-
-		// Ground the final formula
-		Formula ltl = qtl_N.makePropositional(consts);
-		o = o.makePropositional(consts);
-
-		Formula ltl_KB = new ConjunctiveFormula(ltl, o);
-		
-		long end_QTLN2LTL = System.currentTimeMillis() - start_QTLN2LTL;
-
-		switch (solver) {
-			case Constants.NuSMV:
-				System.out.println("Solver..." + Constants.NuSMV);
-				(new NuSMVOutput(ltl_KB)).toFile(prefix+".smv");
-			break;
-
-			case Constants.black:
-				System.out.println("Solver" + Constants.black);
-				(new PltlOutput(ltl_KB)).toFile(prefix+".pltl");
-			break;
-			
-			case Constants.all:
-				System.out.println("Solver..." + Constants.NuSMV);
-				(new NuSMVOutput(ltl_KB)).toFile(prefix+".smv");
-				System.out.println("Solver" + Constants.black);
-				(new PltlOutput(ltl_KB)).toFile(prefix+".pltl");
-			break;
-		
-			default:
-				break;
-		}
-		
+/*		
 		System.out.println("Num of Propositions: " + ltl_KB.getPropositions().size());
 		System.out.println("DLLite to QTL: " + end_tbox2QTL);
 		System.out.println("QTL to LTL: " + end_QTLN2LTL);
@@ -235,7 +243,7 @@ public class DLLiteReasoner {
 			(new LatexOutputDocument(t)).toFile(prefix+"tbox.tex");
 			(new LatexDocumentCNF(qtl_N)).toFile(prefix+"qtlN.tex");
 			(new LatexDocumentCNF(ltl_KB)).toFile(prefix+"ltl.tex");
-		}
+		} */
 	}
 
 
@@ -251,7 +259,7 @@ public class DLLiteReasoner {
 
 		for(Role role : t.getRoles()){
 			if (role instanceof PositiveRole){
-				callables.add(new ProcessTask(ltl_roles, conv, role, service));
+				callables.add(new ProcessRolesTask(ltl_roles, conv, role, service));
 			}
 		}
 
@@ -262,6 +270,35 @@ public class DLLiteReasoner {
 			/*for(Future<String> future : futures){  
 				System.out.println(future.get());
 			}*/
+		}
+		catch (Exception e){
+			System.out.println("Process failed");
+			service.shutdownNow(); 
+			service.awaitTermination(30, TimeUnit.SECONDS);  
+			throw new InterruptedException();
+		}
+
+	}
+
+		/**
+	 * In this method, we use service invokeAll(). First, we put all of the instances into a collable set and then
+	 * we run concurrently all of them. The methods ends after executing all of the instances.
+	 */
+	private static List<Future<String>> satInPieces(Formula abox_f, Formula tbox_f, List<Set<Constant>> setsOfIndiv, Integer nOfThreads) throws Exception{
+
+		ExecutorService service = Executors.newFixedThreadPool(nOfThreads);
+
+		Set<Callable<String>> callables = new HashSet<Callable<String>>();
+
+		for (Set<Constant> piece: setsOfIndiv){
+			System.out.println("An set of constants: " + piece.toString());
+			callables.add(new ProcessABoxTask(abox_f, tbox_f, piece, service));
+		}
+
+		try{
+			java.util.List<Future<String>> futures = service.invokeAll(callables);
+			return futures;
+
 		}
 		catch (Exception e){
 			System.out.println("Process failed");
