@@ -147,7 +147,7 @@ public class ABox extends ConjunctiveFormula implements FormattableObj {
 	public Set<Role> getRolesABox() {
 		HashSet<Role> roles = new HashSet<Role>();
 		for (ABoxRoleAssertion r : RolesAssertion) {
-			roles.add(r.ro);
+			roles.add(r.role);
 		}
 		return roles;
 	}
@@ -160,7 +160,7 @@ public class ABox extends ConjunctiveFormula implements FormattableObj {
 	public Set<Role> getNegatedRolesAbox(){
 		HashSet<Role> roles = new HashSet<Role>();
 		for(ABoxRoleAssertion r: NegatedRolesAssertion){
-			roles.add(r.ro);
+			roles.add(r.role);
 		
 		}
 		return roles;
@@ -188,15 +188,15 @@ public class ABox extends ConjunctiveFormula implements FormattableObj {
 	public void addABoxRoleAssertion(ABoxRoleAssertion ra) {
 		RolesAssertion.add(ra);
 			
-		if (ra.ro.getRefersTo() instanceof AtomicRigidRole ) {
-			roleMap.AddRigidTarget(new Source(ra.x, ra.ro), new Individual(ra.y));
-			roleMap.AddRigidLocalizedTarget(new Source(ra.x, ra.ro, ra.t), new Individual(ra.y));
+		if (ra.role.getRefersTo() instanceof AtomicRigidRole ) {
+			roleMap.AddRigidTarget(new Source(ra.source, ra.role), ra.target);
+			roleMap.AddRigidLocalizedTarget(new Source(ra.source, ra.role, ra.timestamp), ra.target);
 
-			roleMap.AddRigidTarget(new Source(ra.y, ra.ro.getInverse()), new Individual(ra.x));
-			roleMap.AddRigidLocalizedTarget(new Source(ra.y, ra.ro.getInverse(), ra.t), new Individual(ra.x));
+			roleMap.AddRigidTarget(new Source(ra.target, ra.role.getInverse()), ra.source);
+			roleMap.AddRigidLocalizedTarget(new Source(ra.target, ra.role.getInverse(), ra.timestamp), ra.source);
 		} else {
-			roleMap.AddLocalTarget(new Source(ra.x, ra.ro, ra.t), new Individual(ra.y));
-			roleMap.AddLocalTarget(new Source(ra.y, ra.ro.getInverse(), ra.t), new Individual(ra.x));
+			roleMap.AddLocalTarget(new Source(ra.source, ra.role, ra.timestamp), ra.target);
+			roleMap.AddLocalTarget(new Source(ra.target, ra.role.getInverse(), ra.timestamp), ra.source);
 		}
 	}
 
@@ -273,14 +273,14 @@ public class ABox extends ConjunctiveFormula implements FormattableObj {
 
 			Concept EqR = new QuantifiedRole(source.role, q);
 
-			ass = addABox(new ABoxConceptAssertion(EqR, source.ind.name));
-			FORigid.add(new ABoxConceptAssertion(EqR, source.ind.name));
+			ass = addABox(new ABoxConceptAssertion(EqR, source.individual.name));
+			FORigid.add(new ABoxConceptAssertion(EqR, source.individual.name));
 
 			if (ass == false) {
-				System.out.println("duplicate: "+ EqR.toString() + "(" + source.ind.name);
+				System.out.println("duplicate: "+ EqR.toString() + "(" + source.individual.name);
 			}
 
-			typeKeeper.addAssertion(source.ind.name, EqR);
+			typeKeeper.addAssertion(source.individual.name, EqR);
 		}
 
 		for (Source source : roleMap.SourceToTargetsLocal.keySet()) {
@@ -295,14 +295,14 @@ public class ABox extends ConjunctiveFormula implements FormattableObj {
 				timestamp--;
 			}
 
-			ass = addABox(new ABoxConceptAssertion(EqR, source.ind.name));
-			FOLocal.add(new ABoxConceptAssertion(EqR, source.ind.name));
+			ass = addABox(new ABoxConceptAssertion(EqR, source.individual.name));
+			FOLocal.add(new ABoxConceptAssertion(EqR, source.individual.name));
 
 			if (ass == false) {
-				System.out.println("duplicate: "+ EqR.toString() + "(" + source.ind.name);
+				System.out.println("duplicate: "+ EqR.toString() + "(" + source.individual.name);
 			}
 
-			typeKeeper.addAssertion(source.ind.name, EqR);
+			typeKeeper.addAssertion(source.individual.name, EqR);
 		}
 	}
 	
@@ -329,8 +329,8 @@ public class ABox extends ConjunctiveFormula implements FormattableObj {
 		int i = 0;
 		if (inconsistent == false){
 			for(ABoxConceptAssertion c: ABox){ //previous ConceptsAssertion
-				Formula cf = conceptToFormula(c.c, r);
-				cf.substitute(x, new Constant(c.value));
+				Formula cf = conceptToFormula(c.concept, r);
+				cf.substitute(x, new Constant(c.individual.toString()));
 				qtl.addConjunct(cf);
 				i++;
 			}
@@ -481,14 +481,14 @@ public class ABox extends ConjunctiveFormula implements FormattableObj {
 	 */
 	public void addAbsABoxRoleAssertion(ABoxRoleAssertion ra){
 		ShiftedRolesAssertion.add(ra);
-		if (ra.ro.getRefersTo() instanceof AtomicRigidRole){
-			roleMap.AddRigidTarget(new Source(ra.x, ra.ro), new Individual(ra.y));
-			roleMap.AddRigidLocalizedTarget(new Source(ra.x, ra.ro, ra.t), new Individual(ra.y));
-			roleMap.AddRigidTarget(new Source(ra.y, ra.ro.getInverse()), new Individual(ra.x));
-			roleMap.AddRigidLocalizedTarget(new Source(ra.y, ra.ro.getInverse(), ra.t), new Individual(ra.x));
+		if (ra.role.getRefersTo() instanceof AtomicRigidRole){
+			roleMap.AddRigidTarget(new Source(ra.source, ra.role), ra.target);
+			roleMap.AddRigidLocalizedTarget(new Source(ra.source, ra.role, ra.timestamp), ra.target);
+			roleMap.AddRigidTarget(new Source(ra.target, ra.role.getInverse()), ra.source);
+			roleMap.AddRigidLocalizedTarget(new Source(ra.target, ra.role.getInverse(), ra.timestamp), ra.source);
 		} else {
-			roleMap.AddLocalTarget(new Source(ra.x, ra.ro, ra.t), new Individual(ra.y));
-			roleMap.AddLocalTarget(new Source(ra.y, ra.ro.getInverse(), ra.t), new Individual(ra.x));
+			roleMap.AddLocalTarget(new Source(ra.source, ra.role, ra.timestamp), ra.target);
+			roleMap.AddLocalTarget(new Source(ra.target, ra.role.getInverse(), ra.timestamp), ra.source);
 		}
 	}
 
@@ -508,17 +508,17 @@ public class ABox extends ConjunctiveFormula implements FormattableObj {
 		Set<String>PredecessorL=new HashSet<String>();
 		//	Set<String>PredecessorLG=new HashSet<String>();
 						
-		if (r.ro.getRefersTo() instanceof AtomicRigidRole){
-			QNegRigid.putIfAbsent(r.ro.toString()+"_"+r.x, successorR);
-			QNegRigid.putIfAbsent(r.ro.getInverse().toString()+"_"+r.y, PredecessorR);
+		if (r.role.getRefersTo() instanceof AtomicRigidRole){
+			QNegRigid.putIfAbsent(r.role.toString()+"_"+r.source, successorR);
+			QNegRigid.putIfAbsent(r.role.getInverse().toString()+"_"+r.target, PredecessorR);
 				
-			successorR = QNegRigid.get(r.ro.toString()+"_"+r.x);
-			PredecessorR = QNegRigid.get(r.ro.getInverse().toString()+"_"+r.y);
+			successorR = QNegRigid.get(r.role.toString()+"_"+r.source);
+			PredecessorR = QNegRigid.get(r.role.getInverse().toString()+"_"+r.target);
 				
-			successorR.add(r.y);
-			PredecessorR.add(r.x);
-			QNegRigid.replace(r.ro.toString()+"_"+r.x,successorR);
-			QNegRigid.replace(r.ro.getInverse().toString()+"_"+r.y,PredecessorR);
+			successorR.add(r.target.toString());
+			PredecessorR.add(r.source.toString());
+			QNegRigid.replace(r.role.toString()+"_"+r.source,successorR);
+			QNegRigid.replace(r.role.getInverse().toString()+"_"+r.target,PredecessorR);
 				
 			//Rigid TimeStamps				
 	/*			successorLG.add(r.y);
@@ -536,16 +536,16 @@ public class ABox extends ConjunctiveFormula implements FormattableObj {
 		*/	
 		} else {
 			
-			QNegLocal.putIfAbsent(r.ro.toString()+"_"+r.x+"_"+r.t, successorL);
-			QNegLocal.putIfAbsent(r.ro.getInverse().toString()+"_"+r.y+"_"+r.t, PredecessorL);
+			QNegLocal.putIfAbsent(r.role.toString()+"_"+r.source +"_"+r.timestamp, successorL);
+			QNegLocal.putIfAbsent(r.role.getInverse().toString()+"_"+r.target +"_"+r.timestamp, PredecessorL);
 			
-			successorL = QNegLocal.get(r.ro.toString()+"_"+r.x+"_"+r.t);
-			PredecessorL = QNegLocal.get(r.ro.getInverse().toString()+"_"+r.y+"_"+r.t);
+			successorL = QNegLocal.get(r.role.toString()+"_"+r.source +"_"+r.timestamp);
+			PredecessorL = QNegLocal.get(r.role.getInverse().toString()+"_"+r.target +"_"+r.timestamp);
 			
-			successorL.add(r.y);
-			PredecessorL.add(r.x);
-			QNegLocal.replace(r.ro.toString()+"_"+r.x+"_"+r.t,successorL); // XE1G1(a2) <=> G1_a2_1 (1: timeStamp)
-			QNegLocal.replace(r.ro.getInverse().toString()+"_"+r.x+"_"+r.t,PredecessorL);
+			successorL.add(r.target.toString());
+			PredecessorL.add(r.source.toString());
+			QNegLocal.replace(r.role.toString()+"_"+r.source +"_"+r.timestamp,successorL); // XE1G1(a2) <=> G1_a2_1 (1: timeStamp)
+			QNegLocal.replace(r.role.getInverse().toString()+"_"+r.source +"_"+r.timestamp,PredecessorL);
 		}
 	//	System.out.println("QNegRigid:"+QRigid.toString());
 	//	System.out.println("QNegRigidL:"+QRigidL.toString());
@@ -623,14 +623,14 @@ public class ABox extends ConjunctiveFormula implements FormattableObj {
 
 			Concept EqR = new QuantifiedRole(source.role, q);
 
-			ass = addABox(new ABoxConceptAssertion(EqR, source.ind.name));
-			FORigid.add(new ABoxConceptAssertion(EqR, source.ind.name));
+			ass = addABox(new ABoxConceptAssertion(EqR, source.individual.name));
+			FORigid.add(new ABoxConceptAssertion(EqR, source.individual.name));
 
 			if (ass == false) {
-				System.out.println("duplicate: "+ EqR.toString() + "(" + source.ind.name);
+				System.out.println("duplicate: "+ EqR.toString() + "(" + source.individual.name);
 			}
 
-			typeKeeper.addAssertion(source.ind.name, EqR);
+			typeKeeper.addAssertion(source.individual.name, EqR);
 		}
 
 		for (Source source : roleMap.SourceToTargetsLocal.keySet()) {
@@ -645,14 +645,14 @@ public class ABox extends ConjunctiveFormula implements FormattableObj {
 				timestamp--;
 			}
 
-			ass = addABox(new ABoxConceptAssertion(EqR, source.ind.name));
-			FOLocal.add(new ABoxConceptAssertion(EqR, source.ind.name));
+			ass = addABox(new ABoxConceptAssertion(EqR, source.individual.name));
+			FOLocal.add(new ABoxConceptAssertion(EqR, source.individual.name));
 
 			if (ass == false) {
-				System.out.println("duplicate: "+ EqR.toString() + "(" + source.ind.name);
+				System.out.println("duplicate: "+ EqR.toString() + "(" + source.individual.name);
 			}
 
-			typeKeeper.addAssertion(source.ind.name, EqR);
+			typeKeeper.addAssertion(source.individual.name, EqR);
 		}
 
 		ABox.addAll(ConceptsAssertion);
@@ -684,14 +684,14 @@ public class ABox extends ConjunctiveFormula implements FormattableObj {
 
 				Concept EqR = new QuantifiedRole(source.role, q);
 
-				ass = addABox(new ABoxConceptAssertion(EqR, source.ind.name));
-				FORigid.add(new ABoxConceptAssertion(EqR, source.ind.name));
+				ass = addABox(new ABoxConceptAssertion(EqR, source.individual.name));
+				FORigid.add(new ABoxConceptAssertion(EqR, source.individual.name));
 
 				if (ass == false) {
-					System.out.println("duplicate: "+ EqR.toString() + "(" + source.ind.name);
+					System.out.println("duplicate: "+ EqR.toString() + "(" + source.individual.name);
 				}
 
-				typeKeeper.addAssertion(source.ind.name, EqR);
+				typeKeeper.addAssertion(source.individual.name, EqR);
 			}
 
 			for (Source source : roleMap.SourceToTargetsLocal.keySet()) {
@@ -706,14 +706,14 @@ public class ABox extends ConjunctiveFormula implements FormattableObj {
 					timestamp--;
 				}
 
-				ass = addABox(new ABoxConceptAssertion(EqR, source.ind.name));
-				FOLocal.add(new ABoxConceptAssertion(EqR, source.ind.name));
+				ass = addABox(new ABoxConceptAssertion(EqR, source.individual.name));
+				FOLocal.add(new ABoxConceptAssertion(EqR, source.individual.name));
 
 				if (ass == false) {
-					System.out.println("duplicate: "+ EqR.toString() + "(" + source.ind.name);
+					System.out.println("duplicate: "+ EqR.toString() + "(" + source.individual.name);
 				}
 
-				typeKeeper.addAssertion(source.ind.name, EqR);
+				typeKeeper.addAssertion(source.individual.name, EqR);
 			}
 			ABox.addAll(ConceptsAssertion);
 		} else {
@@ -731,8 +731,8 @@ public class ABox extends ConjunctiveFormula implements FormattableObj {
 		ConjunctiveFormula qtl = new ConjunctiveFormula();
 		
 		for(ABoxConceptAssertion c: AbstractABox){
-			Formula cf = conceptToFormula(c.c, r);
-			cf.substitute(x, new Constant(c.value));
+			Formula cf = conceptToFormula(c.concept, r);
+			cf.substitute(x, new Constant(c.individual.toString()));
 			qtl.addConjunct(cf);
 		}
 
@@ -762,13 +762,13 @@ public class ABox extends ConjunctiveFormula implements FormattableObj {
 
 		if (qR.getRole().getRefersTo() instanceof AtomicRigidRole) {
 			for (ABoxRoleAssertion ri : rigidAs) {
-				if (ri.ro.equals(qR.getRole()))
+				if (ri.role.equals(qR.getRole()))
 					qrigid++;
 			}
 		}
 		if (qR.getRole().getRefersTo() instanceof AtomicLocalRole) {
 			for (ABoxRoleAssertion ri : rigidAs) {
-				if (ri.ro.equals(qR.getRole()))
+				if (ri.role.equals(qR.getRole()))
 					qrigid++;
 			}
 		}

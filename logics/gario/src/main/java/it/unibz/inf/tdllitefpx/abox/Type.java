@@ -6,14 +6,14 @@ import java.util.Set;
 import it.unibz.inf.tdllitefpx.concepts.Concept;
 
 public class Type {
-    Set<Concept> value = new HashSet<Concept>();
+    Set<Concept> conceptSet = new HashSet<Concept>();
 
     public int hashCode() {
-        return value.hashCode();
+        return conceptSet.hashCode();
     }
 
     public void addConcept(Concept c) {
-        value.add(c);
+        conceptSet.add(c);
     }
 
     @Override
@@ -26,6 +26,6 @@ public class Type {
             return false;
         }
          
-        return this.value.equals(((Type) o).value);
+        return this.conceptSet.equals(((Type) o).conceptSet);
     }
 }

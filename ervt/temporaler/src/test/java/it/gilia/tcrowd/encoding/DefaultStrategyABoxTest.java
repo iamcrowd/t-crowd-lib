@@ -6,16 +6,13 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.*;
 import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang3.ArrayUtils;
 import org.json.*;
 
 import it.unibz.inf.tdllitefpx.tbox.TBox;
 import it.unibz.inf.tdllitefpx.abox.ABox;
-import it.unibz.inf.tdllitefpx.tbox.ConceptInclusionAssertion;
 import it.unibz.inf.tdllitefpx.abox.ABoxRoleAssertion;
 import it.unibz.inf.tdllitefpx.abox.ABoxConceptAssertion;
 
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 import java.io.BufferedReader;
@@ -83,7 +80,7 @@ public class DefaultStrategyABoxTest {
 		
 	    while(iterator.hasNext()){
 	    	ABoxConceptAssertion ci = iterator.next();
-	    	String actual = new String(ci.getConceptAssertion() + "(" + ci.getConstant() + ")");
+	    	String actual = new String(ci.getConcept() + "(" + ci.getConstant() + ")");
 	    	assertTrue(expected.contains(actual), "'" + actual + "'" + " not expected");		
 	    }
 	}
@@ -100,7 +97,7 @@ public class DefaultStrategyABoxTest {
 
 	    while(iterator.hasNext()){
 	    	ABoxConceptAssertion ci = iterator.next();
-	    	String actual = new String(ci.getConceptAssertion() + "(" + ci.getConstant() + ")");
+	    	String actual = new String(ci.getConcept() + "(" + ci.getConstant() + ")");
 	    	assertTrue(expected.contains(actual),
 	    			"'" + actual + "'" + " not expected");	
 	    }
@@ -118,7 +115,7 @@ public class DefaultStrategyABoxTest {
 		
 	    while(iterator.hasNext()){
 	    	ABoxConceptAssertion ci = iterator.next();
-	    	String actual = new String(ci.getConceptAssertion() + "(" + ci.getConstant() + ")");
+	    	String actual = new String(ci.getConcept() + "(" + ci.getConstant() + ")");
 	    	assertTrue(expected.contains(actual),
 	    			"'" + actual + "'" + " not expected");	
 	    }   
@@ -139,7 +136,7 @@ public class DefaultStrategyABoxTest {
 		
 	    while(iterator.hasNext()){
 	    	ABoxConceptAssertion ci = iterator.next();
-	    	String actual = new String(ci.getConceptAssertion() + "(" + ci.getConstant() + ")");
+	    	String actual = new String(ci.getConcept() + "(" + ci.getConstant() + ")");
 	    	assertTrue(expected.contains(actual),
 	    			"'" + actual + "'" + " not expected");	
 	    }   
@@ -181,7 +178,7 @@ public class DefaultStrategyABoxTest {
 
 	    while(iteratorc.hasNext()){
 	    	ABoxConceptAssertion ci = iteratorc.next();
-	        String actual = new String(ci.getConceptAssertion()+ "(" + ci.getConstant().toString() + ")");
+	        String actual = new String(ci.getConcept()+ "(" + ci.getConstant().toString() + ")");
 	    	assertTrue(expected.contains(actual), "'" + actual + "'" + " not expected");	
 	    }
 	}
@@ -204,7 +201,7 @@ public class DefaultStrategyABoxTest {
 
 	    while(iteratorc.hasNext()){
 	    	ABoxConceptAssertion ci = iteratorc.next();
-	        String actual = new String(ci.getConceptAssertion()+ "(" + ci.getConstant().toString() + ")");
+	        String actual = new String(ci.getConcept()+ "(" + ci.getConstant().toString() + ")");
 	    	assertTrue(expected.contains(actual), "'" + actual + "'" + " not expected");	
 	    }
 	}

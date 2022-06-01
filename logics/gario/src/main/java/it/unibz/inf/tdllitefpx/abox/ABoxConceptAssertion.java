@@ -11,8 +11,8 @@ import it.unibz.inf.qtl1.terms.Variable;
 import it.unibz.inf.tdllitefpx.concepts.Concept;
 
 public class ABoxConceptAssertion implements FormattableObj{
-	Concept c;
-	String value;
+	Concept concept;
+	Individual individual;
 
 	int hash = 0;
 	
@@ -23,23 +23,26 @@ public class ABoxConceptAssertion implements FormattableObj{
 	 * @param v a String
 	 */
 	public ABoxConceptAssertion(Concept c, String v){
-		this.c = c;
-		this.value = v;
-		// A(x) A(y) G A(maria)
+		this.concept = c;
+		this.individual = new Individual(v);
 	}
 	
-	public Concept getConceptAssertion(){
-		return this.c;
+	public Concept getConcept(){
+		return this.concept;
+	}
+
+	public Individual getIndividual() {
+		return individual;
 	}
 	
 	public Constant getConstant(){
-		return new Constant (this.value);
+		return new Constant (this.individual.toString());
 	}
 	
 	
 	public Formula getFormula(){
 		Variable x = new Variable("x");
-		Formula fa = new Atom(c.toString(), x);
+		Formula fa = new Atom(concept.toString(), x);
 		return fa;
 	}
 	
@@ -47,22 +50,24 @@ public class ABoxConceptAssertion implements FormattableObj{
 	public Formula makeAssertionPropositional(){
 		Variable x = new Variable("x");
 		Formula fa = this.getFormula();
-		fa.substitute(x, new Constant(value));
+		fa.substitute(x, new Constant(individual.toString()));
 		return fa;
 	}
 	
 	public boolean equals(Object obj){
 		if(obj instanceof ABoxConceptAssertion){
 			ABoxConceptAssertion co = (ABoxConceptAssertion) obj;
-			return (co.c.equals(this.c) & co.value.equals(this.value));
+			return (co.concept.equals(this.concept) & co.individual.equals(this.individual));
 		} else
 			return false;	
 	}
-	
+
+	@Override
 	public int hashCode() {
-		if (hash == 0) {
-			hash = c.hashCode() + value.hashCode();
-		}
+		final int prime = 31;
+		int hash = 1;
+		hash = prime * hash + ((concept == null) ? 0 : concept.hashCode());
+		hash = prime * hash + ((individual == null) ? 0 : individual.hashCode());
 
 		return hash;
 	}

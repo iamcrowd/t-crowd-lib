@@ -9,7 +9,7 @@ import org.gario.code.output.SymbolUndefinedException;
 import it.unibz.inf.tdllitefpx.roles.*;
 
 public class QuantifiedRole extends BasicConcept {
-	int q;
+	Integer q;
 	Role role;
 	
 	public QuantifiedRole(Role role,int value){
@@ -38,6 +38,11 @@ public class QuantifiedRole extends BasicConcept {
 
 	@Override
 	public int hashCode() {
-		return q * role.hashCode();
+		final int prime = 31;
+		int hash = 1;
+		hash = prime * hash + ((role == null) ? 0 : role.hashCode());
+		hash = prime * hash + ((q == null) ? 0 : q.hashCode());
+
+		return hash;
 	}
 }

@@ -3,26 +3,32 @@ package it.unibz.inf.tdllitefpx.abox;
 import it.unibz.inf.tdllitefpx.roles.Role;
 
 public class Source {
-    Individual ind;
+    Individual individual;
     Role role;
 
-    int timestamp;
+    Integer timestamp;
 
-    public Source(String ind_name, Role role) {
-        this.ind = new Individual(ind_name);
+    public Source(Individual ind, Role role) {
+        this.individual = ind;
         this.role = role;
-        this.timestamp = 0;
+        this.timestamp = null;
     }
 
-    public Source(String ind_name, Role role, int timestamp) {
-        this.ind = new Individual(ind_name);
+    public Source(Individual ind, Role role, int timestamp) {
+        this.individual = ind;
         this.role = role;
         this.timestamp = timestamp;
     }
 
     @Override
     public int hashCode() {
-        return ind.hashCode() * role.hashCode();
+        final int prime = 31;
+        int hash = 1;
+        hash = prime * hash + ((role == null) ? 0 : role.hashCode());
+        hash = prime * hash + ((timestamp == null) ? 0 : timestamp.hashCode());
+        hash = prime * hash + ((individual == null) ? 0 : individual.hashCode());
+
+        return hash;
     }
 
     @Override
@@ -35,6 +41,6 @@ public class Source {
             return false;
         }
 
-        return this.ind.equals(((Source) o).ind) && this.role.equals(((Source) o).role);
+        return this.individual.equals(((Source) o).individual) && this.role.equals(((Source) o).role);
     }
 }

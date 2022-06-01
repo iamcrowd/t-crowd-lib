@@ -1,7 +1,7 @@
 package it.unibz.inf.tdllitefpx.abox;
 
 public class Individual {
-    String name;
+    final String name;
     int hash = 0;
 
     public Individual(String name) {

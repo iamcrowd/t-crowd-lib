@@ -11,11 +11,13 @@ import it.unibz.inf.qtl1.terms.Constant;
 import it.unibz.inf.tdllitefpx.roles.Role;
 
 public class ABoxRoleAssertion implements FormattableObj{
-	Role ro;
-	String x;
-	String y;
-	Integer t;
-	
+	Role role;
+	Individual source;
+	Individual target;
+	Integer timestamp;
+
+	int hash = 0;
+
 	/**
 	 * An ABox role is a Role instance, x and y String values as constants and an i Integer
 	 * as timestamp.
@@ -27,44 +29,45 @@ public class ABoxRoleAssertion implements FormattableObj{
 	 */
 	public ABoxRoleAssertion (Role ro, String valuex, String valuey, Integer i){
 		// R(x,y)^{i}
-		this.ro = ro;
-		this.x = valuex;
-		this.y = valuey;
-		this.t = i;
+		this.role = ro;
+		this.source = new Individual(valuex);
+		this.target = new Individual(valuey);
+		this.timestamp = i;
 	}
 	
 	public  Set<Constant> getConstant(){
 		Set<Constant> consts = new HashSet<Constant>();
-		consts.add(new Constant(x));
-		consts.add(new Constant(y));
+		consts.add(new Constant(source.toString()));
+		consts.add(new Constant(target.toString()));
 		return consts;
 	}
 
 	public Role getRole() {
-		return this.ro;
+		return this.role;
 	}
 	
 	public Constant getx(){
-		return new Constant(this.x);
+		return new Constant(this.source.toString());
 	}
 
 	public Constant gety(){
-		return new Constant(this.y);
+		return new Constant(this.target.toString());
 	}
 	
 	public Integer getStamp() {
-		return this.t;
+		return this.timestamp;
 	}
 
 	@Override
 	public int hashCode() {
 		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((ro == null) ? 0 : ro.hashCode());
-		result = prime * result + ((t == null) ? 0 : t.hashCode());
-		result = prime * result + ((x == null) ? 0 : x.hashCode());
-		result = prime * result + ((y == null) ? 0 : y.hashCode());
-		return result;
+		int hash = 1;
+		hash = prime * hash + ((role == null) ? 0 : role.hashCode());
+		hash = prime * hash + ((timestamp == null) ? 0 : timestamp.hashCode());
+		hash = prime * hash + ((source == null) ? 0 : source.hashCode());
+		hash = prime * hash + ((target == null) ? 0 : target.hashCode());
+
+		return hash;
 	}
 
 	@Override
@@ -76,47 +79,25 @@ public class ABoxRoleAssertion implements FormattableObj{
 		if (getClass() != obj.getClass())
 			return false;
 		ABoxRoleAssertion other = (ABoxRoleAssertion) obj;
-		if (ro == null) {
-			if (other.ro != null)
+		if (role == null) {
+			if (other.role != null)
 				return false;
-		} else if (!ro.equals(other.ro))
+		} else if (!role.equals(other.role))
 			return false;
-		if (t == null) {
-			if (other.t != null)
+		if (timestamp == null) {
+			if (other.timestamp != null)
 				return false;
-		} else if (!t.equals(other.t))
+		} else if (!timestamp.equals(other.timestamp))
 			return false;
-		if (x == null) {
-			if (other.x != null)
+		if (source == null) {
+			if (other.source != null)
 				return false;
-		} else if (!x.equals(other.x))
+		} else if (!source.equals(other.source))
 			return false;
-		if (y == null) {
-			if (other.y != null)
-				return false;
-		} else if (!y.equals(other.y))
-			return false;
-		return true;
+		if (target == null) {
+			return other.target == null;
+		} else return target.equals(other.target);
 	}
-
-	public boolean equals2(Object obj){
-		if(obj instanceof ABoxConceptAssertion){
-			ABoxRoleAssertion r = (ABoxRoleAssertion) obj;
-			return (r.ro.toString() == (this.ro.toString()) && r.x == (this.x) && r.y == (this.y) && r.t == (this.t) );
-		} else
-			return false;
-			
-	}
-
-	public int hashCode2(){
-		return this.ro.hashCode();
-	}
-	
-//	@Override
-//	public String toString(OutputFormat fmt) throws SymbolUndefinedException {	
-//		return getRole().getRefersTo().toString(fmt) + "(" + 
-//		getx() + "," + gety() + ")\\";
-//	}
 
 	@Override
 	public String toString(OutputFormat fmt) throws SymbolUndefinedException {
@@ -124,9 +105,7 @@ public class ABoxRoleAssertion implements FormattableObj{
 	}
 
 	public String toString() {
-		String c = "(" + this.ro.toString() + "," + this.x + "," + this.y + "," +this.t +"), ";
-		return c; 
-	
+		return "(" + this.role.toString() + "," + this.source + "," + this.target + "," + this.timestamp +"), ";
 	}
 
 }

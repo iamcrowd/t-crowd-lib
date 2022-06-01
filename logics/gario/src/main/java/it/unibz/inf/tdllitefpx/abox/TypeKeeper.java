@@ -15,10 +15,10 @@ public class TypeKeeper {
 
     public void addAssertion(ABoxConceptAssertion c) {
         try {
-            Individual ind = new Individual(c.value);
+            Individual ind = c.getIndividual();
 		    IndividualToType.putIfAbsent(ind, new Type());
 		    Type type = IndividualToType.get(ind);
-		    type.addConcept(c.getConceptAssertion());
+		    type.addConcept(c.getConcept());
 		    IndividualToType.replace(ind, type);
         } catch (Exception e) {
             e.printStackTrace();
@@ -70,7 +70,7 @@ public class TypeKeeper {
 
         for (Type type : TypeToRepresentative.keySet()) {
             Individual repr = TypeToRepresentative.get(type);
-            for (Concept concept : type.value) {
+            for (Concept concept : type.conceptSet) {
                 AbstractAbox.add(new ABoxConceptAssertion(concept, repr.name));
             }
         }

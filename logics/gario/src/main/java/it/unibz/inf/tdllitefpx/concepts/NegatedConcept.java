@@ -37,6 +37,9 @@ public class NegatedConcept extends Concept {
 
 	@Override
 	public int hashCode() {
-		return (refersTo.hashCode() + 3079);
+		final int prime = 31;
+		final int anotherPrime = 3079;
+
+		return 31 * refersTo.hashCode() + 3079;
 	}
 }
