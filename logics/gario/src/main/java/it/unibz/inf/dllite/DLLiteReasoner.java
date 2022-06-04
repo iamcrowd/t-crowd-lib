@@ -142,60 +142,69 @@ public class DLLiteReasoner {
 	 * TBox, ABox SAT
 	 * LTL: TBox|ABox -> QTL -> LTL (NuSMV|NuXMV|Aalta|pltl|TRP++)
 	 * Check TBox and ABox SAT using only LTL pure future formulae
-	 * @param t an TBox
-	 * @param a an ABox
+	 * @param tbox an TBox
+	 * @param abox an ABox
 	 * @param verbose true/false 
 	 * @param prefix a String
 	 * @param solver a String (Black|NuSMV|all)
 	 * @throws Exception
 	 */
 	public static void checkKB(
-			TBox t,
-			ABox a, 
+			TBox tbox,
+			ABox abox,
 			boolean verbose, 
 			String prefix,
-			String solver) 
-					throws Exception{
+			String solver)
+	throws Exception {
 
-		int nOfThreads = 3;
+		int nOfThreads = Runtime.getRuntime().availableProcessors();
 		long total_time = System.currentTimeMillis();
 		long start_tbox2QTL = System.currentTimeMillis();
 		
 		// Convert TBox to QTL
-		DLLiteConverter conv = new DLLiteConverter(t);
-		Formula qtl_N = conv.getFormula();
+		DLLiteConverter conv = new DLLiteConverter(tbox);
+		Formula tbox_formula = conv.getFormula();
 
 		// Parse ABox
-		a.addExtensionConstraintsABox(t);
-		Formula o = a.getABoxFormula(false);
+		abox.addExtensionConstraintsABox(tbox);
+		abox.AbstractABox();
 
-		System.out.println("*******ABOX:" + o.toString());
-		
-		Formula KB = new ConjunctiveFormula(qtl_N, o);
-		if(verbose)
-			(new LatexDocumentCNF(KB)).toFile(prefix+"KB.tex");		
-		
+		Formula abox_formula = abox.getAbstractABoxFormula(false);
+
+		// System.out.println("*******ABOX:" + abox_formula.toString());
+
+		/*
+		Formula KB = new ConjunctiveFormula(tbox_formula, abox_formula);
+
+		if (verbose) {
+			(new LatexDocumentCNF(KB)).toFile(prefix + "KB.tex");
+		}
+		*/
+
 		long end_tbox2QTL = System.currentTimeMillis() - start_tbox2QTL;
 		long start_QTLN2LTL = System.currentTimeMillis();
 
-		Formula ltl_for_role = qtl_N.makePropositional(qtl_N.getConstants());
+		Formula ltl_for_role = tbox_formula.makePropositional(tbox_formula.getConstants());
 
-		try{
-			List<Future<String>> unsatRoles = rolesSAT(t, conv, ltl_for_role, nOfThreads);
+		try {
+			List<Future<String>> unsatRoles = rolesSAT(tbox, conv, ltl_for_role, nOfThreads);
 			Set<String> setOfUNSATroles = new HashSet<String>();
 
-			for(Future<String> role : unsatRoles){
+			for(Future<String> role : unsatRoles) {
 				if (role.get() != null){
 					setOfUNSATroles.add(role.get());
 				}
 			}
-			qtl_N = conv.getFormula(setOfUNSATroles);
-			if(verbose)
-				(new LatexDocumentCNF(qtl_N)).toFile(prefix+"afterRolesSAT.tex");
+
+			tbox_formula = conv.getFormula(setOfUNSATroles);
+
+			if (verbose) {
+				(new LatexDocumentCNF(tbox_formula)).toFile(prefix + "afterRolesSAT.tex");
+			}
 
 			// Get constants
-			Set<Constant> constsABox = a.getConstantsABox();
-			Set<Constant> consts = qtl_N.getConstants();
+			Set<Constant> constsABox = abox.getConstantsABox();
+			Set<Constant> consts = tbox_formula.getConstants();
 			consts.addAll(constsABox);
 			
 			System.out.println("********Constants: " + consts.toString());
@@ -216,15 +225,13 @@ public class DLLiteReasoner {
 				theSets.get(index++ % nOfThreads).add(value);
 			}
 
-			List<Future<String>> piecesUNSAT = satInPieces(o, qtl_N, theSets, nOfThreads);
+			List<Future<String>> piecesUNSAT = satInPieces(abox_formula, tbox_formula, theSets, nOfThreads);
 
 			for(Future<String> future : piecesUNSAT){  
-				if (future.get().equals("UNSAT")){
+				if (future.get().equals("UNSAT")) {
 					System.out.println("UNSAT");
 				}
 			}
-
-			//System.exit(0);
 
 		}
 		catch (Exception e){
@@ -263,7 +270,7 @@ public class DLLiteReasoner {
 			}
 		}
 
-		try{
+		try {
 			java.util.List<Future<String>> futures = service.invokeAll(callables);
 			return futures;
 
@@ -271,7 +278,7 @@ public class DLLiteReasoner {
 				System.out.println(future.get());
 			}*/
 		}
-		catch (Exception e){
+		catch (Exception e) {
 			System.out.println("Process failed");
 			service.shutdownNow(); 
 			service.awaitTermination(30, TimeUnit.SECONDS);  
@@ -459,15 +466,6 @@ public class DLLiteReasoner {
 		ABox.AbstractABox();
 
 		System.out.println(System.currentTimeMillis()-start_time + "ms");
-		System.out.println("");
-		System.out.println("------Abstract FO -> Formula :");
-
-		start_time = System.currentTimeMillis();
-		Formula oAbs = ABox.getAbstractABoxFormula(false);
-
-		System.out.println(System.currentTimeMillis()-start_time + "ms");
-
-		//System.out.println("Abstracted ABox: " + oAbs.toString());
 
 		System.out.println("");
 		System.out.println("Done! Total time:" + (System.currentTimeMillis()-total_time) + "ms");

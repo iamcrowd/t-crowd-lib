@@ -15,7 +15,7 @@ public class DLLiteTest {
 
 	@Test
 	public void AdultDLLiteSATTest(){
-		try{
+		try {
 			String path = new String(OWLImport.class.getClassLoader().getResource("ontologies/AdultExampleDLLiteSAT.owl").toString());
         	String[] owlfilepath = path.split(":", 2);
         	OWLImport importer = new OWLImport();
@@ -23,7 +23,7 @@ public class DLLiteTest {
 			importer.dlliteCI();
 			importer.dlliteAbox();
 
-			try{
+			try {
 				(new LatexOutputDocument(importer.getTBox())).toFile("AdultExampleDLLiteSAT.tex");
 			} catch (Exception e) {}
 

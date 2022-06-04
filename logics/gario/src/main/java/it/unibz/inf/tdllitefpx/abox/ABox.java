@@ -327,7 +327,7 @@ public class ABox extends ConjunctiveFormula implements FormattableObj {
 		System.out.println("FO Global="+FORigid.size());
 	//	ABox.addAll(ConceptsAssertion);
 		int i = 0;
-		if (inconsistent == false){
+		if (!inconsistent){
 			for(ABoxConceptAssertion c: ABox){
 				Formula cf = conceptToFormula(c.concept, r);
 				cf.substitute(x, new Constant(c.individual.toString()));
@@ -340,7 +340,7 @@ public class ABox extends ConjunctiveFormula implements FormattableObj {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param c
 	 * @param futur
 	 * @return
@@ -365,51 +365,36 @@ public class ABox extends ConjunctiveFormula implements FormattableObj {
 				
 				atom.setArg(0, x);
 				return atom ;
-			}
-			else if( c instanceof QuantifiedRole) {
-				QuantifiedRole qE = (QuantifiedRole)c;
-				Atom atom;
-				if (futur){
-					atom = a.get("E"+qE.getQ()+qE.getRole().getInverse().toString()+"F",1); //Modif
-				} else {
-					atom = a.get("E"+qE.getQ()+qE.getRole().getInverse().toString(),1);	
-				}
-				
-				atom.setArg(0, x);
-				return atom;
-			}
-			else if(c instanceof BottomConcept)
+			} else if (c instanceof BottomConcept) {
 				return Bot.getStatic();
-			else if(c instanceof NegatedConcept){
+			} else if (c instanceof NegatedConcept) {
 				NegatedConcept nc = (NegatedConcept) c;
 				return new NegatedFormula(conceptToFormula(nc.getRefersTo(), futur));
-			}
-			else if(c instanceof ConjunctiveConcept){
+			} else if (c instanceof ConjunctiveConcept) {
 				ConjunctiveConcept cc = (ConjunctiveConcept)c;
 				ConjunctiveFormula cf = new ConjunctiveFormula();
-				for(Concept d : cc.getConjuncts()){
+				for (Concept d : cc.getConjuncts()) {
 					cf.addConjunct(conceptToFormula(d, futur));
 				}
 				return cf;
-			}
-			else if(c instanceof TemporalConcept){
+			} else if (c instanceof TemporalConcept) {
 				TemporalConcept d = (TemporalConcept) c;
-				if(c instanceof NextFuture){
+				if (c instanceof NextFuture) {
 					return new it.unibz.inf.qtl1.formulae.temporal.NextFuture(
 							conceptToFormula(d.getRefersTo(), futur));
-				}else if(c instanceof NextPast){
+				} else if (c instanceof NextPast) {
 					return new it.unibz.inf.qtl1.formulae.temporal.NextPast(
 							conceptToFormula(d.getRefersTo(), futur));
-				}else if(c instanceof AlwaysPast){
+				} else if (c instanceof AlwaysPast) {
 					return new it.unibz.inf.qtl1.formulae.temporal.AlwaysPast(
 							conceptToFormula(d.getRefersTo(), futur));
-				}else if(c instanceof AlwaysFuture){
+				} else if (c instanceof AlwaysFuture) {
 					return new it.unibz.inf.qtl1.formulae.temporal.AlwaysFuture(
 							conceptToFormula(d.getRefersTo(), futur));
-				}else if(c instanceof SometimePast){
+				} else if (c instanceof SometimePast) {
 					return new it.unibz.inf.qtl1.formulae.temporal.SometimePast(
 							conceptToFormula(d.getRefersTo(), futur));
-				}else if(c instanceof SometimeFuture){
+				} else if (c instanceof SometimeFuture) {
 					return new it.unibz.inf.qtl1.formulae.temporal.SometimeFuture(
 							conceptToFormula(d.getRefersTo(), futur));
 				}

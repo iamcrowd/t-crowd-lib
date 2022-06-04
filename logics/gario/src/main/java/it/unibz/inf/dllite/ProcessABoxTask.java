@@ -84,7 +84,7 @@ public class ProcessABoxTask implements Callable<String> {
         }
         p5.exitValue();
         service.shutdownNow();
-        System.out.println("The process: " + p5.pid() + " finished abnormally along with the remaining running processes");
+        //System.out.println("The process: " + p5.pid() + " finished abnormally along with the remaining running processes");
         System.exit(-1);
         throw new Exception();
     }

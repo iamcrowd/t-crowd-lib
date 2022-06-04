@@ -245,7 +245,7 @@ public abstract class Formula implements Cloneable{
 		return makeGround(this.getConstants());
 	}
 	
-	public Formula makeGround(Set<Constant> constants) throws ExistentialFormulaException,Exception{
+	public Formula makeGround(Set<Constant> constants) throws ExistentialFormulaException, Exception {
 		if(this.hasExistential())
 			throw new ExistentialFormulaException();
 		
