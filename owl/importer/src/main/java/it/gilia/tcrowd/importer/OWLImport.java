@@ -3,6 +3,7 @@ package it.gilia.tcrowd.importer;
 import static it.gilia.tcrowd.importer.ImportUtils.validateOWL;
 
 import java.util.*;
+import java.util.Map.Entry;
 import java.text.*;
 
 import java.io.*;
@@ -125,6 +126,19 @@ import it.unibz.inf.tdllitefpx.abox.ABoxRoleAssertion;
 		public void printTBox() {
 			Stream<OWLAxiom> tBoxAxioms = this.ontology.tboxAxioms(Imports.EXCLUDED);
 			tBoxAxioms.forEach((ax) -> System.out.println(ax.toString()));
+		}
+
+
+		public void printNamespaces(){
+			for (Entry<String, HashSet<Constant>> entry : prefix.entrySet()) {
+				String key = entry.getKey();
+				Set<Constant> value = entry.getValue();
+
+				System.out.println("Namespace: " + key);
+				for (Constant c : value){
+					System.out.println("Name: " + c.toString());
+				}
+			}
 		}
 
 
