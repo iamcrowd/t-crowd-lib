@@ -47,6 +47,8 @@ public class ProcessRolesTask implements Callable<String> {
         String file2 = role.toString() + ".pltl";
         (new PltlOutput(ltlR)).toFile(file2);
 
+        System.out.println("Number of Propositional Variables in the RoleSAT instance: " + ltlR.getPropositions().size());
+
         ProcessBuilder pb = new ProcessBuilder();
         pb.command("/home/gbraun/Documentos/TemporalDLlite/NuXMV/nuXmv", "-dcx", "-dynamic", file);
         pb.redirectErrorStream(true);

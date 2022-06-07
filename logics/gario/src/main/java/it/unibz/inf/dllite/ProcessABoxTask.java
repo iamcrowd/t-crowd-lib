@@ -55,6 +55,8 @@ public class ProcessABoxTask implements Callable<String> {
         String file2 = RandomStringUtils.randomAlphanumeric(5) + ".pltl";
         (new PltlOutput(ltl_KB)).toFile(file2);
 
+        System.out.println("Number of Propositional Variables in the piece of ABox: " + ltl_KB.getPropositions().size());
+
         ProcessBuilder pb = new ProcessBuilder();
         pb.command("/home/gbraun/Documentos/TemporalDLlite/NuXMV/nuXmv", "-dcx", "-dynamic", file);
         pb.redirectErrorStream(true);

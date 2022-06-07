@@ -268,10 +268,6 @@ public class DLLiteReasoner {
 		try {
 			java.util.List<Future<String>> futures = service.invokeAll(callables);
 			return futures;
-
-			/*for(Future<String> future : futures){  
-				System.out.println(future.get());
-			}*/
 		}
 		catch (Exception e) {
 			System.out.println("Process failed");
