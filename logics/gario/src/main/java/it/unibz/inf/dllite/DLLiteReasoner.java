@@ -166,19 +166,24 @@ public class DLLiteReasoner {
 		DLLiteConverter conv = new DLLiteConverter(tbox);
 		Formula tbox_formula = conv.getFormula();
 
-		// Parse ABox
-		abox.addExtensionConstraintsABox(tbox);
-
 		// No abstraction
-		Formula abox_formula = abox.getABoxFormula(false);
+		// abox.addExtensionConstraintsABox(tbox);
+		// Formula abox_formula = abox.getABoxFormula(false);
 		
 		// Abstraction
-		//abox.AbstractABox();
-		//Formula abox_formula = abox.getAbstractABoxFormula(false);
+		abox.addExtensionConstraintsAbsABox(tbox);
+		abox.AbstractABox();
+		Formula abox_formula = abox.getAbstractABoxFormula(false);
 
 
 		long end_tbox2QTL = System.currentTimeMillis() - start_tbox2QTL;
 		long start_QTLN2LTL = System.currentTimeMillis();
+
+
+		Formula qtlf = new ConjunctiveFormula(tbox_formula, abox_formula);
+				
+		if(verbose)
+			(new LatexDocumentCNF(qtlf)).toFile(prefix+"qtl.tex");	
 
 		Formula ltl_for_role = tbox_formula.makePropositional(tbox_formula.getConstants());
 
@@ -199,7 +204,7 @@ public class DLLiteReasoner {
 			}
 
 			// Get constants
-			Set<Constant> constsABox = abox.getConstantsABox();
+			Set<Constant> constsABox = abox.getConstantsABoxAbs();
 			Set<Constant> consts = tbox_formula.getConstants();
 			consts.addAll(constsABox);
 			
@@ -288,7 +293,9 @@ public class DLLiteReasoner {
 		Set<Callable<String>> callables = new HashSet<Callable<String>>();
 
 		for (Set<Constant> piece: setsOfIndiv){
-			callables.add(new ProcessABoxTask(abox_f, tbox_f, piece, service));
+			if (!piece.isEmpty()){
+				callables.add(new ProcessABoxTask(abox_f, tbox_f, piece, service));
+			}
 		}
 
 		try{

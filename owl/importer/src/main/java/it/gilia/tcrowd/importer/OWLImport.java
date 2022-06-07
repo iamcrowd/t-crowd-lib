@@ -128,13 +128,20 @@ import it.unibz.inf.tdllitefpx.abox.ABoxRoleAssertion;
 		}
 
 
+		/**
+		 * It generates a prefix for each different namespace in the IRIs and also
+		 * encodes each (concept|role|individual) name as the shorter "prefix + name" (whitout the namespace)
+		 * 
+		 * @param aIRI a full IRI
+		 * @return
+		 */
 		public Constant getPrefixed(IRI aIRI){
 			String iri_prefix = aIRI.getNamespace();
 			String pf = null;
 
 			if (namespaces.get(iri_prefix) == null) {
 				new RandomStringUtils();
-				pf = RandomStringUtils.randomAlphanumeric(20);
+				pf = RandomStringUtils.randomAlphanumeric(3);
 				namespaces.put(iri_prefix, pf);
 			} else {
 				pf = namespaces.get(iri_prefix); 
