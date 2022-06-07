@@ -10,6 +10,7 @@ import java.util.concurrent.TimeUnit;
 import it.unibz.inf.qtl1.formulae.ConjunctiveFormula;
 import it.unibz.inf.qtl1.formulae.Formula;
 import it.unibz.inf.qtl1.output.NuSMVOutput;
+import it.unibz.inf.qtl1.output.pltl.PltlOutput;
 import it.unibz.inf.tdllitefpx.roles.Role;
 
 /**
@@ -35,15 +36,19 @@ public class ProcessRolesTask implements Callable<String> {
 
     @Override
     public String call() throws Exception {
-        System.out.println("Started " + role.toString());
+        System.out.println("Started checking SAT for Role " + role.toString());
 
         Formula formRole = converter.getFormulaByRole(role);
         Formula ltlR = new ConjunctiveFormula(ltl_tbox, formRole.makePropositional());
+        
         String file = role.toString() + ".smv";
         (new NuSMVOutput(ltlR)).toFile(file);
 
+        String file2 = role.toString() + ".pltl";
+        (new PltlOutput(ltlR)).toFile(file2);
+
         ProcessBuilder pb = new ProcessBuilder();
-        pb.command("/home/gbraun/Documentos/TemporalDLlite/NuXMV/nuXmv", "-dcx", "-bmc", "-bmc_length", "60", file);
+        pb.command("/home/gbraun/Documentos/TemporalDLlite/NuXMV/nuXmv", "-dcx", "-dynamic", file);
         pb.redirectErrorStream(true);
         //pb.redirectOutput(ProcessBuilder.Redirect.to(new File(file + ".log")));
 
