@@ -23,6 +23,8 @@ public class DLLiteTest {
 			importer.dlliteCI();
 			importer.dlliteAbox();
 
+			//System.exit(0);
+
 			try {
 				(new LatexOutputDocument(importer.getTBox())).toFile("AdultExampleDLLiteSAT.tex");
 			} catch (Exception e) {}

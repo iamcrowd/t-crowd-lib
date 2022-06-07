@@ -42,13 +42,11 @@ public class ProcessABoxTask implements Callable<String> {
 
     @Override
     public String call() throws Exception {
-        System.out.println("Started " + this.pieceOfIndiv.toString());
+        System.out.println("**** Started checking SAT for the piece " + this.pieceOfIndiv.toString());
 
         // Ground the final formula
 		Formula ltl = this.tbox_f.makePropositional(this.pieceOfIndiv);
 		Formula ltl_a = this.abox_f.makePropositional(this.pieceOfIndiv);
-
-        //System.out.println("**********ABOX: " + this.abox_f.toCNF().toString());
 
 		Formula ltl_KB = new ConjunctiveFormula(ltl, ltl_a);
 
@@ -58,7 +56,7 @@ public class ProcessABoxTask implements Callable<String> {
         (new PltlOutput(ltl_KB)).toFile(file2);
 
         ProcessBuilder pb = new ProcessBuilder();
-        pb.command("/home/gbraun/Documentos/TemporalDLlite/NuXMV/nuXmv", "-dcx", "-bmc", "-bmc_length", "60", file);
+        pb.command("/home/gbraun/Documentos/TemporalDLlite/NuXMV/nuXmv", "-dcx", "-dynamic", file);
         pb.redirectErrorStream(true);
 
         Process p5 = pb.start();
@@ -77,6 +75,7 @@ public class ProcessABoxTask implements Callable<String> {
         if (exitVal == 0) {
             System.out.println("Success!");
             if (output.toString().contains("true") || output.toString().contains("UNSAT")){
+                //System.out.println("*****UNSAT");
                 return "UNSAT";
             } else {
                 return null;

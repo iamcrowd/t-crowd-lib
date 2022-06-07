@@ -9,6 +9,8 @@ import java.io.*;
 import java.util.*;
 import java.util.stream.*;
 
+import org.apache.commons.lang3.RandomStringUtils;
+import org.apache.commons.lang3.RandomUtils;
 import org.semanticweb.owlapi.apibinding.*;
 import org.semanticweb.owlapi.model.*;
 import org.semanticweb.owlapi.model.parameters.*;
@@ -30,6 +32,7 @@ import it.unibz.inf.tdllitefpx.roles.PositiveRole;
 import it.unibz.inf.tdllitefpx.roles.Role;
 import it.unibz.inf.tdllitefpx.tbox.ConceptInclusionAssertion;
 import it.unibz.inf.tdllitefpx.tbox.TBox;
+import it.unibz.inf.qtl1.terms.Constant;
 import it.unibz.inf.tdllitefpx.abox.ABox;
 import it.unibz.inf.tdllitefpx.abox.ABoxConceptAssertion;
 import it.unibz.inf.tdllitefpx.abox.ABoxRoleAssertion;
@@ -47,6 +50,9 @@ import it.unibz.inf.tdllitefpx.abox.ABoxRoleAssertion;
 
 		private static final OWLClassExpression TOP = new OWLDataFactoryImpl().getOWLThing();
 		private static final OWLClassExpression BOT = new OWLDataFactoryImpl().getOWLNothing();
+
+		public HashMap<String, HashSet<Constant>> prefix = new HashMap<String, HashSet<Constant>>();
+		public HashMap<String, String> namespaces = new HashMap<String, String>();
 
 		TBox myTBox = new TBox();
 		ABox myABox = new ABox();
@@ -119,6 +125,30 @@ import it.unibz.inf.tdllitefpx.abox.ABoxRoleAssertion;
 		public void printTBox() {
 			Stream<OWLAxiom> tBoxAxioms = this.ontology.tboxAxioms(Imports.EXCLUDED);
 			tBoxAxioms.forEach((ax) -> System.out.println(ax.toString()));
+		}
+
+
+		public Constant getPrefixed(IRI aIRI){
+			String iri_prefix = aIRI.getNamespace();
+			String pf = null;
+
+			if (namespaces.get(iri_prefix) == null) {
+				new RandomStringUtils();
+				pf = RandomStringUtils.randomAlphanumeric(20);
+				namespaces.put(iri_prefix, pf);
+			} else {
+				pf = namespaces.get(iri_prefix); 
+			}
+			
+			String name = aIRI.getFragment();
+			
+			if (prefix.get(iri_prefix) == null) {
+				prefix.put(iri_prefix, new HashSet<Constant>());
+			}
+
+			Constant prefixed_constant = new Constant(pf + "_" + name);
+			prefix.get(iri_prefix).add(prefixed_constant);
+			return prefixed_constant;
 		}
 
 
@@ -245,13 +275,12 @@ import it.unibz.inf.tdllitefpx.abox.ABoxRoleAssertion;
 						OWLIndividual subject = ((OWLObjectPropertyAssertionAxiom) axiom).getSubject();
 						OWLIndividual object = ((OWLObjectPropertyAssertionAxiom) axiom).getObject();
 
-						AtomicRigidRole atomic = new AtomicRigidRole(property.asOWLObjectProperty().getIRI().getIRIString());
+						AtomicRigidRole atomic = new AtomicRigidRole(getPrefixed(property.asOWLObjectProperty().getIRI()).toString());
 
 						PositiveRole role = new PositiveRole(atomic);
-
 						this.myABox.addABoxRoleAssertion(new ABoxRoleAssertion(role, 
-																			   subject.asOWLNamedIndividual().getIRI().getIRIString(), 
-																			   object.asOWLNamedIndividual().getIRI().getIRIString(), 0));
+																			   getPrefixed(subject.asOWLNamedIndividual().getIRI()).toString(), 
+																			   getPrefixed(object.asOWLNamedIndividual().getIRI()).toString(), 0));
 					}
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -264,14 +293,17 @@ import it.unibz.inf.tdllitefpx.abox.ABoxRoleAssertion;
 			OWLClassExpression operand = ((OWLObjectComplementOf)e).getOperand();
 			
 			if (operand.getClassExpressionType() == ClassExpressionType.OWL_CLASS) {
-				this.myABox.addConceptsAssertion(new ABoxConceptAssertion(new NegatedConcept(new AtomicConcept(operand.asOWLClass().getIRI().getIRIString())), 
+				this.myABox.addConceptsAssertion(new ABoxConceptAssertion(
+												  	new NegatedConcept(
+														new AtomicConcept(getPrefixed(operand.asOWLClass().getIRI()).toString())),														
 				ind.asOWLNamedIndividual().getIRI().getIRIString()));
 			}
 		}
 
 		private void AddAtomicConceptAssertion(OWLClassExpression e, OWLIndividual ind) {
-			this.myABox.addConceptsAssertion(new ABoxConceptAssertion(new AtomicConcept(e.asOWLClass().getIRI().getIRIString()), 
-																					ind.asOWLNamedIndividual().getIRI().getIRIString()));
+			this.myABox.addConceptsAssertion(new ABoxConceptAssertion(
+												new AtomicConcept(getPrefixed(e.asOWLClass().getIRI()).toString()), 
+																  getPrefixed(ind.asOWLNamedIndividual().getIRI()).toString()));
 		}
 
 		// AXIOM PROCESSORS ///////////////////////////////////////////////////
@@ -381,7 +413,7 @@ import it.unibz.inf.tdllitefpx.abox.ABoxRoleAssertion;
 		 */
 		private Concept ConvertConceptToDllite(OWLClassExpression e) {
 			if (isAtomic(e)) {
-				return new AtomicConcept(e.asOWLClass().getIRI().getFragment());
+				return new AtomicConcept(getPrefixed(e.asOWLClass().getIRI()).toString());
 			}
 
 			if (isNegated(e)) {
@@ -420,7 +452,7 @@ import it.unibz.inf.tdllitefpx.abox.ABoxRoleAssertion;
 					OWLPropertyExpression namedProperty = ((OWLObjectCardinalityRestrictionImpl) e).getProperty().getNamedProperty();
 					OWLPropertyExpression property = ((OWLObjectCardinalityRestrictionImpl) e).getProperty().getInverseProperty();
 
-					Role positive_role = new PositiveRole(new AtomicRigidRole(namedProperty.asOWLObjectProperty().getIRI().getFragment()));
+					Role positive_role = new PositiveRole(new AtomicRigidRole(getPrefixed(namedProperty.asOWLObjectProperty().getIRI()).toString()));
 					int cardinality = ((OWLObjectCardinalityRestrictionImpl)e).getCardinality();
 					
 					// if prop is inverse

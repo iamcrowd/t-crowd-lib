@@ -158,6 +158,7 @@ public class DLLiteReasoner {
 	throws Exception {
 
 		int nOfThreads = Runtime.getRuntime().availableProcessors();
+
 		long total_time = System.currentTimeMillis();
 		long start_tbox2QTL = System.currentTimeMillis();
 		
@@ -167,19 +168,14 @@ public class DLLiteReasoner {
 
 		// Parse ABox
 		abox.addExtensionConstraintsABox(tbox);
-		abox.AbstractABox();
 
-		Formula abox_formula = abox.getAbstractABoxFormula(false);
+		// No abstraction
+		Formula abox_formula = abox.getABoxFormula(false);
+		
+		// Abstraction
+		//abox.AbstractABox();
+		//Formula abox_formula = abox.getAbstractABoxFormula(false);
 
-		// System.out.println("*******ABOX:" + abox_formula.toString());
-
-		/*
-		Formula KB = new ConjunctiveFormula(tbox_formula, abox_formula);
-
-		if (verbose) {
-			(new LatexDocumentCNF(KB)).toFile(prefix + "KB.tex");
-		}
-		*/
 
 		long end_tbox2QTL = System.currentTimeMillis() - start_tbox2QTL;
 		long start_QTLN2LTL = System.currentTimeMillis();
@@ -209,20 +205,14 @@ public class DLLiteReasoner {
 			
 			System.out.println("********Constants: " + consts.toString());
 
-			mapIndividuls(consts);
-
 			List<Set<Constant>> theSets = new ArrayList<Set<Constant>>(nOfThreads);
 			for (int i = 0; i < nOfThreads; i++) {
 				theSets.add(new HashSet<Constant>());
 			}
 		
 			int index = 0;
-			for (Entry<Constant, Constant> entry : Individuals.entrySet()) {
-				Constant key = entry.getKey();
-				System.out.println("**************key: " + key.toString());
-				Constant value = entry.getValue();
-				System.out.println("**************value: " + value.toString());
-				theSets.get(index++ % nOfThreads).add(value);
+			for (Constant entry : consts) {
+				theSets.get(index++ % nOfThreads).add(entry);
 			}
 
 			List<Future<String>> piecesUNSAT = satInPieces(abox_formula, tbox_formula, theSets, nOfThreads);
@@ -287,7 +277,7 @@ public class DLLiteReasoner {
 
 	}
 
-		/**
+	/**
 	 * In this method, we use service invokeAll(). First, we put all of the instances into a collable set and then
 	 * we run concurrently all of them. The methods ends after executing all of the instances.
 	 */
@@ -298,7 +288,6 @@ public class DLLiteReasoner {
 		Set<Callable<String>> callables = new HashSet<Callable<String>>();
 
 		for (Set<Constant> piece: setsOfIndiv){
-			System.out.println("An set of constants: " + piece.toString());
 			callables.add(new ProcessABoxTask(abox_f, tbox_f, piece, service));
 		}
 

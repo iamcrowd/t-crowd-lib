@@ -325,7 +325,7 @@ public class ABox extends ConjunctiveFormula implements FormattableObj {
 		System.out.println("Concepts="+ConceptsAssertion.size());
 		System.out.println("FO Local="+FOLocal.size());
 		System.out.println("FO Global="+FORigid.size());
-	//	ABox.addAll(ConceptsAssertion);
+		ABox.addAll(ConceptsAssertion);
 		int i = 0;
 		if (!inconsistent){
 			for(ABoxConceptAssertion c: ABox){
