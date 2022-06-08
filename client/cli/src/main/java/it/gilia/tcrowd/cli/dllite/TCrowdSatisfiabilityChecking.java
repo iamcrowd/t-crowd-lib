@@ -2,6 +2,7 @@ package it.gilia.tcrowd.cli.dllite;
 
 import com.github.rvesse.airline.annotations.Command;
 import com.github.rvesse.airline.annotations.help.Copyright;
+import com.google.common.base.Strings;
 
 import it.unibz.inf.dllite.DLLiteReasoner;
 import it.unibz.inf.tdllitefpx.output.LatexOutputDocument;
@@ -24,16 +25,17 @@ public class TCrowdSatisfiabilityChecking extends TCrowdRandomRelatedCommand {
     public void run() {
 
         try {
-            Objects.requireNonNull(iri, "Ontology IRI must not be null");
             Objects.requireNonNull(solver, "Name of the backend SAT solver must not be null (BLACK or nuXmv)");
-            //Objects.(abs, "Abstraction step must be specify for true or false");
             Objects.requireNonNull(pr, "A string for output files must be given");
 
-			System.out.println("abs: " + abs);
-            		
-			IRI ontoiri = IRI.create(iri);
 			OWLImport importer = new OWLImport();
-			importer.load(ontoiri);
+			if (!Strings.isNullOrEmpty(iri)){	
+				IRI ontoiri = IRI.create(iri);
+				importer.load(ontoiri);
+			} else if (!Strings.isNullOrEmpty(owlFile)){
+				importer.loadFromPath(owlFile);
+			}
+
 			importer.dlliteCI();
 			importer.dlliteAbox();
 	
