@@ -60,6 +60,38 @@ OPTIONS
             JSON file input containing an ERvt temporal model
 
 ```
+### DL-Lite Reasoner
+
+`java -cp t-crowd-cli-4.0.0-SNAPSHOT.jar it.gilia.tcrowd.cli.TCrowd help SatisfiabilityChecking`
+
+```
+NAME
+        tcrowd SatisfiabilityChecking - Main mode of the tool
+
+SYNOPSIS
+        tcrowd SatisfiabilityChecking [ {-abs | --abstraction} ]
+                {-IRI | --ontologyIRI} <Ontology IRI>
+                {-p | --pref} <Prefix of the output files>
+                {-s | --solver} <SAT Solver>
+
+OPTIONS
+        -abs, --abstraction
+            Enable/Disable the ABox abstraction step. Default: true
+
+        -IRI <Ontology IRI>, --ontologyIRI <Ontology IRI>
+            International Resource Identifier (IRI) of the input ontology
+
+        -p <Prefix of the output files>, --pref <Prefix of the output files>
+            A String to identify output files
+
+        -s <SAT Solver>, --solver <SAT Solver>
+            Name of the SAT solver in the backend of the DL Reasoner
+            (BLACK|nuXmv)
+
+COPYRIGHT
+        Copyright (c) Free University of Bozen-Bolzano and Universidad Nacional
+        del Comahue 2019
+```
 
 ## For Developers
 
