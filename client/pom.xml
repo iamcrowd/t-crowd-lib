@@ -26,5 +26,10 @@
             <artifactId>t-crowd-temporaler</artifactId>
             <version>${project.version}</version>
         </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>t-crowd-importer</artifactId>
+            <version>${project.version}</version>
+        </dependency>
     </dependencies>
 </project>

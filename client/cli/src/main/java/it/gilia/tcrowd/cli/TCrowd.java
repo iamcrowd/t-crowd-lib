@@ -4,6 +4,7 @@ import com.github.rvesse.airline.Cli;
 import com.github.rvesse.airline.builder.CliBuilder;
 import com.github.rvesse.airline.parser.errors.*;
 
+import it.gilia.tcrowd.cli.dllite.TCrowdSatisfiabilityChecking;
 import it.gilia.tcrowd.cli.random.*;
 
 public class TCrowd {
@@ -38,7 +39,7 @@ public class TCrowd {
 	static Cli<TCrowdCommand> getTCrowdCommandCLI() {
         //noinspection unchecked
         CliBuilder<TCrowdCommand> builder = Cli.<TCrowdCommand>builder("tcrowd")
-                .withDescription("t-crowd api for Reasoning over Temporal Conceptual Models")
+                .withDescription("t-crowd api for Reasoning over DL-Lite and Temporal DL-Lite")
                 .withCommands(
                         /**
                          * visible commands
@@ -46,15 +47,10 @@ public class TCrowd {
                         TCrowdVersion.class,
                         TCrowdHelp.class,
                         TCrowdTDLLiteFPX.class,
-                        /* TCrowdQTLZ.class,
-                        TCrowdQTLN.class,
-                        TCrowdLTL.class,
-                        TCrowdAboxSat.class, */
                         TCrowdERvtTBoxABoxSatLTL.class,
                         TCrowdERvtTBoxABoxSatPLTL.class,
                         TCrowdERvtTBoxConceptSat.class,
                         TCrowdERvtTBoxABoxSatFO.class,
-                        
                         TCrowdRandomTBoxABoxPLTL.class,
                         //past and future random
                         TCrowdRandomTBox.class,
@@ -65,7 +61,9 @@ public class TCrowd {
                         //Abs
                         TCrowdRandomAbsABox.class,
                         TCrowdRandomTBoxJUSTAbsABox.class,
-                        TCrowdRandomTBoxAbsABox.class
+                        TCrowdRandomTBoxAbsABox.class,
+                        // DL-Lite
+                        TCrowdSatisfiabilityChecking.class
 
                 );
         return builder.build();
