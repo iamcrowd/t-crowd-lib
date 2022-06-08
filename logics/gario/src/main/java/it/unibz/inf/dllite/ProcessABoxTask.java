@@ -42,12 +42,11 @@ public class ProcessABoxTask implements Callable<String> {
 
     @Override
     public String call() throws Exception {
-        System.out.println("**** Started checking SAT for the piece " + this.pieceOfIndiv.toString());
+        System.out.println("(*) Started checking SAT for the piece " + this.pieceOfIndiv.toString());
 
         // Ground the final formula
 		Formula ltl = this.tbox_f.makePropositional(this.pieceOfIndiv);
 		Formula ltl_a = this.abox_f.makePropositional(this.pieceOfIndiv);
-
 		Formula ltl_KB = new ConjunctiveFormula(ltl, ltl_a);
 
         String file = RandomStringUtils.randomAlphanumeric(5) + ".smv";
@@ -58,7 +57,7 @@ public class ProcessABoxTask implements Callable<String> {
         System.out.println("Number of Propositional Variables in the piece of ABox: " + ltl_KB.getPropositions().size());
 
         ProcessBuilder pb = new ProcessBuilder();
-        pb.command("/home/gbraun/Documentos/TemporalDLlite/NuXMV/nuXmv", "-dcx", "-dynamic", file);
+        pb.command("black", "-B", "mathsat", file2);
         pb.redirectErrorStream(true);
 
         Process p5 = pb.start();
@@ -75,12 +74,11 @@ public class ProcessABoxTask implements Callable<String> {
         int exitVal = p5.waitFor();
 
         if (exitVal == 0) {
-            System.out.println("Success!");
+            //System.out.println("Success!");
             if (output.toString().contains("true") || output.toString().contains("UNSAT")){
-                //System.out.println("*****UNSAT");
                 return "UNSAT";
             } else {
-                return null;
+                return "SAT";
             }
         }
         p5.exitValue();

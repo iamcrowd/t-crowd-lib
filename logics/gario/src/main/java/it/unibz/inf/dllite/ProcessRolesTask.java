@@ -36,7 +36,7 @@ public class ProcessRolesTask implements Callable<String> {
 
     @Override
     public String call() throws Exception {
-        System.out.println("Started checking SAT for Role " + role.toString());
+        System.out.println("(*) Started checking SAT for Role " + role.toString());
 
         Formula formRole = converter.getFormulaByRole(role);
         Formula ltlR = new ConjunctiveFormula(ltl_tbox, formRole.makePropositional());
@@ -50,9 +50,8 @@ public class ProcessRolesTask implements Callable<String> {
         System.out.println("Number of Propositional Variables in the RoleSAT instance: " + ltlR.getPropositions().size());
 
         ProcessBuilder pb = new ProcessBuilder();
-        pb.command("/home/gbraun/Documentos/TemporalDLlite/NuXMV/nuXmv", "-dcx", "-dynamic", file);
+        pb.command("black", "-B", "mathsat", file2);
         pb.redirectErrorStream(true);
-        //pb.redirectOutput(ProcessBuilder.Redirect.to(new File(file + ".log")));
 
         Process p5 = pb.start();
 

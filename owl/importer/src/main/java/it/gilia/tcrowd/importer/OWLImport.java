@@ -4,18 +4,13 @@ import static it.gilia.tcrowd.importer.ImportUtils.validateOWL;
 
 import java.util.*;
 import java.util.Map.Entry;
-import java.text.*;
-
 import java.io.*;
-import java.util.*;
 import java.util.stream.*;
 
 import org.apache.commons.lang3.RandomStringUtils;
-import org.apache.commons.lang3.RandomUtils;
 import org.semanticweb.owlapi.apibinding.*;
 import org.semanticweb.owlapi.model.*;
 import org.semanticweb.owlapi.model.parameters.*;
-import org.semanticweb.owlapi.util.*;
 
 import uk.ac.manchester.cs.owl.owlapi.OWLDataFactoryImpl;
 import uk.ac.manchester.cs.owl.owlapi.OWLObjectCardinalityRestrictionImpl;

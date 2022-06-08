@@ -454,7 +454,7 @@ public class ABox extends ConjunctiveFormula implements FormattableObj {
 	   		else {
 		   		AbstractABox = ABox;
 	   		}
-	   		System.out.println("Size FO ABstract ABox: "+AbstractABox.size());
+	   		System.out.println("Size FO Abstract ABox: "+AbstractABox.size());
 		}
 	}
 
@@ -590,12 +590,11 @@ public class ABox extends ConjunctiveFormula implements FormattableObj {
 		Set<QuantifiedRole> qRoles = tbox.getQuantifiedRoles();
 		Map<String, Integer> qRolesQ = tbox.getQuantifiedRolesQ(qRoles);
 			
-		System.out.println("");
-		System.out.println("------ Shifted TDLITE ABOX");
+		System.out.println("(*) Abstraction");
 
 		int GainP = RolesAssertion.size() - (ShiftedRolesAssertion.size());
 
-		System.out.println("Gain_Rigid= "+GainP); //+"+GainN+"="+(GainP+GainN));
+		//System.out.println("Gain_Rigid= "+GainP); //+"+GainN+"="+(GainP+GainN));
 
 		Set<ABoxRoleAssertion> Inconsist = new HashSet<ABoxRoleAssertion>();
 		Inconsist = ShiftedRolesAssertion;

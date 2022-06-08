@@ -1,6 +1,5 @@
 package it.unibz.inf.dllite;
 
-import it.unibz.inf.qtl1.atoms.Proposition;
 import it.unibz.inf.qtl1.formulae.ConjunctiveFormula;
 import it.unibz.inf.qtl1.formulae.Formula;
 import it.unibz.inf.qtl1.output.LatexDocumentCNF;
@@ -14,26 +13,16 @@ import it.unibz.inf.tdllitefpx.tbox.TBox;
 import it.unibz.inf.tdllitefpx.Constants;
 import it.unibz.inf.tdllitefpx.abox.ABox;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
-import java.util.EmptyStackException;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.Map.Entry;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
-
-import javax.management.relation.RoleList;
-import javax.sql.RowSetMetaData;
-
-import org.apache.commons.lang3.RandomStringUtils;
 
 
 /**
@@ -58,12 +47,6 @@ public class DLLiteReasoner {
 		Formula qtl_N = conv.getFormula();
 		return qtl_N;
 
-	}
-
-	private static void mapIndividuls(Set<Constant> indivFullSet){
-		for (Constant indiv : indivFullSet){
-			Individuals.putIfAbsent(indiv, new Constant(RandomStringUtils.randomAlphanumeric(50)));
-		}
 	}
 
 	// Considering TBox and ABox
@@ -137,25 +120,22 @@ public class DLLiteReasoner {
 		}
 	}
 
-	// Considering TBox and ABox
 	/**
-	 * TBox, ABox SAT
-	 * LTL: TBox|ABox -> QTL -> LTL (NuSMV|NuXMV|Aalta|pltl|TRP++)
-	 * Check TBox and ABox SAT using only LTL pure future formulae
-	 * @param tbox an TBox
-	 * @param abox an ABox
-	 * @param verbose true/false 
+	 * DL-Lite Satisfiability Checking
+	 * 
+	 * @param tbox a DL-Lite TBox
+	 * @param abox a DL-Lite ABox
+	 * @param abs true/false 
 	 * @param prefix a String
-	 * @param solver a String (Black|NuSMV|all)
+	 * @param solver a String (BLACK|nuXmv)
 	 * @throws Exception
 	 */
 	public static void checkKB(
 			TBox tbox,
 			ABox abox,
-			boolean verbose, 
+			boolean abs, 
 			String prefix,
-			String solver)
-	throws Exception {
+			String solver) throws Exception {
 
 		int nOfThreads = Runtime.getRuntime().availableProcessors();
 
@@ -166,27 +146,32 @@ public class DLLiteReasoner {
 		DLLiteConverter conv = new DLLiteConverter(tbox);
 		Formula tbox_formula = conv.getFormula();
 
-		// No abstraction
-		// abox.addExtensionConstraintsABox(tbox);
-		// Formula abox_formula = abox.getABoxFormula(false);
-		
-		// Abstraction
-		abox.addExtensionConstraintsAbsABox(tbox);
-		abox.AbstractABox();
-		Formula abox_formula = abox.getAbstractABoxFormula(false);
-
-
 		long end_tbox2QTL = System.currentTimeMillis() - start_tbox2QTL;
-		long start_QTLN2LTL = System.currentTimeMillis();
+		long start_abox2QTL = System.currentTimeMillis();
 
+		Formula abox_formula;
+
+		if (!abs){
+			// No abstraction
+			abox.addExtensionConstraintsABox(tbox);
+			abox_formula = abox.getABoxFormula(false);
+		} else {
+			// Abstraction
+			abox.addExtensionConstraintsAbsABox(tbox);
+			abox.AbstractABox();
+			abox_formula = abox.getAbstractABoxFormula(false);
+		}
+
+		long end_abox2QTL = System.currentTimeMillis() - start_abox2QTL;
 
 		Formula qtlf = new ConjunctiveFormula(tbox_formula, abox_formula);
-				
-		if(verbose)
-			(new LatexDocumentCNF(qtlf)).toFile(prefix+"qtl.tex");	
+		(new LatexDocumentCNF(qtlf)).toFile(prefix+"qtl.tex");
+		
+		long start_RoleSAT = System.currentTimeMillis();
+		long end_RoleSAT;
+		long end_SATPieces;
 
 		Formula ltl_for_role = tbox_formula.makePropositional(tbox_formula.getConstants());
-
 		try {
 			List<Future<String>> unsatRoles = rolesSAT(tbox, conv, ltl_for_role, nOfThreads);
 			Set<String> setOfUNSATroles = new HashSet<String>();
@@ -199,16 +184,24 @@ public class DLLiteReasoner {
 
 			tbox_formula = conv.getFormula(setOfUNSATroles);
 
-			if (verbose) {
-				(new LatexDocumentCNF(tbox_formula)).toFile(prefix + "afterRolesSAT.tex");
-			}
+			end_RoleSAT = System.currentTimeMillis() - start_RoleSAT;
+
+			(new LatexDocumentCNF(tbox_formula)).toFile(prefix + "afterRolesSAT.tex");
+
+			long start_SATPieces = System.currentTimeMillis();
 
 			// Get constants
-			Set<Constant> constsABox = abox.getConstantsABoxAbs();
+			Set<Constant> constsABox;
+			if (!abs){
+				constsABox = abox.getConstantsABox();
+			} else {
+				constsABox = abox.getConstantsABoxAbs();
+			}
+			
 			Set<Constant> consts = tbox_formula.getConstants();
 			consts.addAll(constsABox);
 			
-			System.out.println("********Constants: " + consts.toString());
+			System.out.println("(*) Objects: " + consts.toString());
 
 			List<Set<Constant>> theSets = new ArrayList<Set<Constant>>(nOfThreads);
 			for (int i = 0; i < nOfThreads; i++) {
@@ -222,30 +215,21 @@ public class DLLiteReasoner {
 
 			List<Future<String>> piecesUNSAT = satInPieces(abox_formula, tbox_formula, theSets, nOfThreads);
 
-			for(Future<String> future : piecesUNSAT){  
-				if (future.get().equals("UNSAT")) {
-					System.out.println("UNSAT");
-				}
+			for(Future<String> future : piecesUNSAT){
+				System.out.println(future.get());
 			}
+			end_SATPieces = System.currentTimeMillis() - start_SATPieces;
+
+			System.out.println("DLLite TBox to QTL: " + end_tbox2QTL + "ms");
+			System.out.println("DLLite ABox to QTL: " + end_abox2QTL + "ms");
+			System.out.println("DLLite SAT checking for Roles in parallel: " + end_RoleSAT + "ms");
+			System.out.println("DLLite SAT checking in parallel: " + end_SATPieces + "ms");
+			System.out.println("Done! Total time:" + (System.currentTimeMillis() - total_time) + "ms");
 
 		}
 		catch (Exception e){
 			throw e;
-		}
-
-
-/*		
-		System.out.println("Num of Propositions: " + ltl_KB.getPropositions().size());
-		System.out.println("DLLite to QTL: " + end_tbox2QTL);
-		System.out.println("QTL to LTL: " + end_QTLN2LTL);
-
-		System.out.println("Done! Total time:" + (System.currentTimeMillis()-total_time) + "ms");
-		
-		if( verbose) {
-			(new LatexOutputDocument(t)).toFile(prefix+"tbox.tex");
-			(new LatexDocumentCNF(qtl_N)).toFile(prefix+"qtlN.tex");
-			(new LatexDocumentCNF(ltl_KB)).toFile(prefix+"ltl.tex");
-		} */
+		}	
 	}
 
 
@@ -253,8 +237,8 @@ public class DLLiteReasoner {
 	 * In this method, we use service invokeAll(). First, we put all of the instances into a collable set and then
 	 * we run concurrently all of them. The methods ends after executing all of the instances.
 	 */
-	private static List<Future<String>> rolesSAT(TBox t, DLLiteConverter conv, Formula ltl_roles, Integer nOfThreads) throws Exception{
-
+	private static List<Future<String>> rolesSAT(TBox t, DLLiteConverter conv, 
+												 Formula ltl_roles, Integer nOfThreads) throws Exception{
 		ExecutorService service = Executors.newFixedThreadPool(nOfThreads);
 
 		Set<Callable<String>> callables = new HashSet<Callable<String>>();  
@@ -282,8 +266,9 @@ public class DLLiteReasoner {
 	 * In this method, we use service invokeAll(). First, we put all of the instances into a collable set and then
 	 * we run concurrently all of them. The methods ends after executing all of the instances.
 	 */
-	private static List<Future<String>> satInPieces(Formula abox_f, Formula tbox_f, List<Set<Constant>> setsOfIndiv, Integer nOfThreads) throws Exception{
-
+	private static List<Future<String>> satInPieces(Formula abox_f, Formula tbox_f, 
+													List<Set<Constant>> setsOfIndiv, 
+													Integer nOfThreads) throws Exception{
 		ExecutorService service = Executors.newFixedThreadPool(nOfThreads);
 
 		Set<Callable<String>> callables = new HashSet<Callable<String>>();
