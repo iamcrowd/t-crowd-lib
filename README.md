@@ -70,7 +70,8 @@ NAME
 
 SYNOPSIS
         tcrowd SatisfiabilityChecking [ {-abs | --abstraction} ]
-                {-IRI | --ontologyIRI} <Ontology IRI>
+                [ {-f | --ontology} <ontology.owl> ]
+                [ {-IRI | --ontologyIRI} <Ontology IRI> ]
                 {-p | --pref} <Prefix of the output files>
                 {-s | --solver} <SAT Solver>
 
@@ -78,8 +79,19 @@ OPTIONS
         -abs, --abstraction
             Enable/Disable the ABox abstraction step. Default: true
 
+        -f <ontology.owl>, --ontology <ontology.owl>
+            OWL ontology file
+
+            This option is part of the group 'input' from which only one option
+            may be specified
+
+
         -IRI <Ontology IRI>, --ontologyIRI <Ontology IRI>
             International Resource Identifier (IRI) of the input ontology
+
+            This option is part of the group 'input' from which only one option
+            may be specified
+
 
         -p <Prefix of the output files>, --pref <Prefix of the output files>
             A String to identify output files
@@ -91,6 +103,7 @@ OPTIONS
 COPYRIGHT
         Copyright (c) Free University of Bozen-Bolzano and Universidad Nacional
         del Comahue 2019
+
 ```
 
 ## For Developers
