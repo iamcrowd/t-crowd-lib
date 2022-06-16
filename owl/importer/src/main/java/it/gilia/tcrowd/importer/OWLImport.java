@@ -150,7 +150,7 @@ import it.unibz.inf.tdllitefpx.abox.ABoxRoleAssertion;
 
 			if (namespaces.get(iri_prefix) == null) {
 				new RandomStringUtils();
-				pf = RandomStringUtils.randomAlphanumeric(3);
+				pf = RandomStringUtils.randomAlphabetic(5);
 				namespaces.put(iri_prefix, pf);
 			} else {
 				pf = namespaces.get(iri_prefix); 
