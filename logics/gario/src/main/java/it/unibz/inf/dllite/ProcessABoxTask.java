@@ -57,7 +57,7 @@ public class ProcessABoxTask implements Callable<String> {
         System.out.println("Number of Propositional Variables in the piece of ABox: " + ltl_KB.getPropositions().size());
 
         ProcessBuilder pb = new ProcessBuilder();
-        pb.command("black", "-B", "mathsat", file2);
+        pb.command("black", "solve", file2);
         pb.redirectErrorStream(true);
 
         Process p5 = pb.start();
@@ -83,7 +83,7 @@ public class ProcessABoxTask implements Callable<String> {
         }
         p5.exitValue();
         service.shutdownNow();
-        //System.out.println("The process: " + p5.pid() + " finished abnormally along with the remaining running processes");
+        System.out.println("The process: " + p5.pid() + " finished abnormally along with the remaining running processes");
         System.exit(-1);
         throw new Exception();
     }
