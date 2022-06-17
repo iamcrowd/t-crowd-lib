@@ -1,0 +1,1 @@
+( ((sAj_Minor_t0 => sAj_Person_t0) & (sAj_Adult_t0 =>  ~ sAj_Minor_t0) & (sAj_Adult_t0 => sAj_Person_t0) & sAj_Adult_t0 & sAj_Minor_t1))

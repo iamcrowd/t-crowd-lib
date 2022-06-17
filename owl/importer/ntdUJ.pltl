@@ -1,0 +1,1 @@
+( ((AeP_Adult_t1 => AeP_Person_t1) & (AeP_Adult_t1 =>  ~ AeP_Minor_t1) & (AeP_Minor_t1 => AeP_Person_t1) & AeP_Adult_t0 & AeP_Minor_t1))

@@ -1,0 +1,13 @@
+MODULE main
+VAR
+	E0S_Person_t1 :boolean;
+	E0S_Minor_t1 :boolean;
+	E0S_Minor_t0 :boolean;
+	E0S_Adult_t1 :boolean;
+
+
+LTLSPEC !( ((E0S_Minor_t1 -> E0S_Person_t1) & 
+	(E0S_Adult_t1 ->  !E0S_Minor_t1) & 
+	(E0S_Adult_t1 -> E0S_Person_t1) & 
+	E0S_Adult_t1 & 
+	E0S_Minor_t0))

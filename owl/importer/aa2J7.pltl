@@ -1,0 +1,1 @@
+( ((eGzvF_Adult_t0 =>  ~ eGzvF_Minor_t0) & (eGzvF_Minor_t0 => eGzvF_Person_t0) & (eGzvF_Adult_t0 => eGzvF_Person_t0) & eGzvF_Adult_t0 & eGzvF_Minor_t1))

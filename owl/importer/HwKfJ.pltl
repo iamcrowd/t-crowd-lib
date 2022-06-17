@@ -1,0 +1,1 @@
+( ((6h4_Adult_t0 =>  ~ 6h4_Minor_t0) & (6h4_Adult_t0 => 6h4_Person_t0) & (6h4_Minor_t0 => 6h4_Person_t0) & 6h4_Adult_t0 & 6h4_Minor_t1))

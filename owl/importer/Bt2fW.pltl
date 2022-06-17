@@ -1,0 +1,1 @@
+( ((kOQ_Adult_t1 => kOQ_Person_t1) & (kOQ_Minor_t1 => kOQ_Person_t1) & (kOQ_Adult_t1 =>  ~ kOQ_Minor_t1) & kOQ_Minor_t1 & kOQ_Adult_t0))

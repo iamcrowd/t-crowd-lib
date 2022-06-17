@@ -1,0 +1,1 @@
+( ((MWFYO_Adult_t1 => MWFYO_Person_t1) & (MWFYO_Minor_t1 => MWFYO_Person_t1) & (MWFYO_Adult_t1 =>  ~ MWFYO_Minor_t1) & MWFYO_Minor_t0 & MWFYO_Adult_t1))

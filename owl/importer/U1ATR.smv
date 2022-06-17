@@ -1,0 +1,13 @@
+MODULE main
+VAR
+	eGzvF_Person_t1 :boolean;
+	eGzvF_Minor_t1 :boolean;
+	eGzvF_Adult_t1 :boolean;
+	eGzvF_Adult_t0 :boolean;
+
+
+LTLSPEC !( ((eGzvF_Minor_t1 -> eGzvF_Person_t1) & 
+	(eGzvF_Adult_t1 ->  !eGzvF_Minor_t1) & 
+	(eGzvF_Adult_t1 -> eGzvF_Person_t1) & 
+	eGzvF_Adult_t0 & 
+	eGzvF_Minor_t1))

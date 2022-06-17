@@ -1,0 +1,13 @@
+MODULE main
+VAR
+	xo5_Person_t1 :boolean;
+	xo5_Minor_t1 :boolean;
+	xo5_Minor_t0 :boolean;
+	xo5_Adult_t1 :boolean;
+
+
+LTLSPEC !( ((xo5_Adult_t1 -> xo5_Person_t1) & 
+	(xo5_Adult_t1 ->  !xo5_Minor_t1) & 
+	(xo5_Minor_t1 -> xo5_Person_t1) & 
+	xo5_Adult_t1 & 
+	xo5_Minor_t0))

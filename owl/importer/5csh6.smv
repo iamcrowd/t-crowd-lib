@@ -1,0 +1,13 @@
+MODULE main
+VAR
+	MWFYO_Person_t0 :boolean;
+	MWFYO_Minor_t0 :boolean;
+	MWFYO_Adult_t1 :boolean;
+	MWFYO_Adult_t0 :boolean;
+
+
+LTLSPEC !( ((MWFYO_Adult_t0 -> MWFYO_Person_t0) & 
+	(MWFYO_Adult_t0 ->  !MWFYO_Minor_t0) & 
+	(MWFYO_Minor_t0 -> MWFYO_Person_t0) & 
+	MWFYO_Minor_t0 & 
+	MWFYO_Adult_t1))

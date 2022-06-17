@@ -1,0 +1,13 @@
+MODULE main
+VAR
+	kOQ_Person_t0 :boolean;
+	kOQ_Minor_t1 :boolean;
+	kOQ_Minor_t0 :boolean;
+	kOQ_Adult_t0 :boolean;
+
+
+LTLSPEC !( ((kOQ_Adult_t0 ->  !kOQ_Minor_t0) & 
+	(kOQ_Adult_t0 -> kOQ_Person_t0) & 
+	(kOQ_Minor_t0 -> kOQ_Person_t0) & 
+	kOQ_Minor_t1 & 
+	kOQ_Adult_t0))

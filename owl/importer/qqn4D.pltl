@@ -1,0 +1,1 @@
+( ((xo5_Adult_t1 => xo5_Person_t1) & (xo5_Adult_t1 =>  ~ xo5_Minor_t1) & (xo5_Minor_t1 => xo5_Person_t1) & xo5_Adult_t1 & xo5_Minor_t0))

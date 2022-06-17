@@ -1,0 +1,13 @@
+MODULE main
+VAR
+	aVMvG_Person_t1 :boolean;
+	aVMvG_Minor_t1 :boolean;
+	aVMvG_Minor_t0 :boolean;
+	aVMvG_Adult_t1 :boolean;
+
+
+LTLSPEC !( ((aVMvG_Minor_t1 -> aVMvG_Person_t1) & 
+	(aVMvG_Adult_t1 -> aVMvG_Person_t1) & 
+	(aVMvG_Adult_t1 ->  !aVMvG_Minor_t1) & 
+	aVMvG_Minor_t0 & 
+	aVMvG_Adult_t1))

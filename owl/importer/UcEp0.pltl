@@ -1,0 +1,1 @@
+( ((Fqv_Minor_t1 => Fqv_Person_t1) & (Fqv_Adult_t1 => Fqv_Person_t1) & (Fqv_Adult_t1 =>  ~ Fqv_Minor_t1) & Fqv_Minor_t0 & Fqv_Adult_t1))

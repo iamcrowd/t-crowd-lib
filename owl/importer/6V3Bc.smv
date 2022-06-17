@@ -1,0 +1,13 @@
+MODULE main
+VAR
+	Aze_Person_t0 :boolean;
+	Aze_Minor_t0 :boolean;
+	Aze_Adult_t1 :boolean;
+	Aze_Adult_t0 :boolean;
+
+
+LTLSPEC !( ((Aze_Adult_t0 ->  !Aze_Minor_t0) & 
+	(Aze_Adult_t0 -> Aze_Person_t0) & 
+	(Aze_Minor_t0 -> Aze_Person_t0) & 
+	Aze_Minor_t0 & 
+	Aze_Adult_t1))
