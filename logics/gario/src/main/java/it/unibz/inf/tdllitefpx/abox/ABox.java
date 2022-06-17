@@ -269,7 +269,11 @@ public class ABox extends ConjunctiveFormula implements FormattableObj {
 
 		boolean ass;
 		for (Source source : roleMap.SourceToTargetsRigid.keySet()) {
-			int q = Math.min(roleMap.SourceToTargetsRigid.get(source).size(), qRolesQ.get(source.role.toString()));
+			int q = roleMap.SourceToTargetsRigid.get(source).size();
+
+			if (qRolesQ.containsKey(source.role.toString())) {
+				q = Math.min(q, qRolesQ.get(source.role.toString()));
+			}
 
 			Concept EqR = new QuantifiedRole(source.role, q);
 
@@ -284,7 +288,12 @@ public class ABox extends ConjunctiveFormula implements FormattableObj {
 		}
 
 		for (Source source : roleMap.SourceToTargetsLocal.keySet()) {
-			int q = Math.min(roleMap.SourceToTargetsLocal.get(source).size(), qRolesQ.get(source.role.toString()));
+
+			int q = roleMap.SourceToTargetsLocal.get(source).size();
+
+			if (qRolesQ.containsKey(source.role.toString())) {
+				q = Math.min(q, qRolesQ.get(source.role.toString()));
+			}
 
 			Concept EqR = new QuantifiedRole(source.role, q);
 			int timestamp = source.timestamp;
@@ -603,7 +612,11 @@ public class ABox extends ConjunctiveFormula implements FormattableObj {
 
 		boolean ass;
 		for (Source source : roleMap.SourceToTargetsRigid.keySet()) {
-			int q = Math.min(roleMap.SourceToTargetsRigid.get(source).size(), qRolesQ.get(source.role.toString()));
+			int q = roleMap.SourceToTargetsRigid.get(source).size();
+
+			if (qRolesQ.containsKey(source.role.toString())) {
+				q = Math.min(q, qRolesQ.get(source.role.toString()));
+			}
 
 			Concept EqR = new QuantifiedRole(source.role, q);
 
@@ -618,7 +631,11 @@ public class ABox extends ConjunctiveFormula implements FormattableObj {
 		}
 
 		for (Source source : roleMap.SourceToTargetsLocal.keySet()) {
-			int q = Math.min(roleMap.SourceToTargetsLocal.get(source).size(), qRolesQ.get(source.role.toString()));
+			int q = roleMap.SourceToTargetsRigid.get(source).size();
+
+			if (qRolesQ.containsKey(source.role.toString())) {
+				q = Math.min(q, qRolesQ.get(source.role.toString()));
+			}
 
 			Concept EqR = new QuantifiedRole(source.role, q);
 			int timestamp = source.timestamp;
