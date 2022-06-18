@@ -12,6 +12,40 @@ import it.unibz.inf.dllite.DLLiteReasoner;
 
 @DisplayName("Test Suite")
 public class DLLiteTest {
+	@Test
+	public void TinyTest(){
+		try {
+			String path = new String(OWLImport.class.getClassLoader().getResource("ontologies/tiny.owl").toString());
+			String[] owlfilepath = path.split(":", 2);
+			OWLImport importer = new OWLImport();
+			importer.loadFromPath(owlfilepath[1]);
+			importer.dlliteCI();
+			importer.dlliteAbox();
+
+			try {
+				(new LatexOutputDocument(importer.getTBox())).toFile("AdultExampleDLLiteSAT.tex");
+			} catch (Exception e) {}
+
+			DLLiteReasoner.checkKB(
+					importer.getTBox(),
+					importer.getABox(),
+					true,
+					"AdultSAT",
+					"all");
+
+
+			Map<String, String> stats = importer.getTBox().getStats();
+			System.out.println("");
+			System.out.println("------TBOX------");
+			String key;
+			key = "Basic Concepts:";
+			System.out.println(key + stats.get(key));
+			key = "Roles:";
+			System.out.println(key + stats.get(key));
+			key = "CIs:";
+			System.out.println(key + stats.get(key));
+		} catch (Exception e) {}
+	}
 
 	@Test
 	public void AdultDLLiteSATTest(){
@@ -242,6 +276,41 @@ public class DLLiteTest {
 				true, 
 				"movie",
 				"all");
+
+
+			Map<String, String> stats = importer.getTBox().getStats();
+			System.out.println("");
+			System.out.println("------TBOX------");
+			String key;
+			key = "Basic Concepts:";
+			System.out.println(key + stats.get(key));
+			key = "Roles:";
+			System.out.println(key + stats.get(key));
+			key = "CIs:";
+			System.out.println(key + stats.get(key));
+		} catch (Exception e) {}
+	}
+
+	@Test
+	public void Owl2BenchOneTest(){
+		try{
+			String path = new String(OWLImport.class.getClassLoader().getResource("ontologies/benchmarks/owl2bench-one.owl").toString());
+			String[] owlfilepath = path.split(":", 2);
+			OWLImport importer = new OWLImport();
+			importer.loadFromPath(owlfilepath[1]);
+			importer.dlliteCI();
+			importer.dlliteAbox();
+
+			try{
+				(new LatexOutputDocument(importer.getTBox())).toFile("movie.tex");
+			} catch (Exception e) {}
+
+			DLLiteReasoner.checkKB(
+					importer.getTBox(),
+					importer.getABox(),
+					true,
+					"movie",
+					"all");
 
 
 			Map<String, String> stats = importer.getTBox().getStats();

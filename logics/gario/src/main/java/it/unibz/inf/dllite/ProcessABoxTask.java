@@ -57,7 +57,8 @@ public class ProcessABoxTask implements Callable<String> {
         System.out.println("Number of Propositional Variables in the piece of ABox: " + ltl_KB.getPropositions().size());
 
         ProcessBuilder pb = new ProcessBuilder();
-        pb.command("black", "solve", file2);
+        //pb.command("black", "solve", file2);
+        pb.command("/opt/homebrew/Cellar/black-sat/0.8.0/bin/black", "solve", file2);
         pb.redirectErrorStream(true);
 
         Process p5 = pb.start();

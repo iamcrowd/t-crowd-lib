@@ -21,7 +21,7 @@ public abstract class Role implements FormattableObj {
 */
 	public boolean equals(Object obj){
 		if(obj instanceof Role)
-			return ((Role)obj).refersTo.name.equals(this.refersTo.name);
+			return ((Role)obj).toString().equals(this.toString());
 		else
 			return false;
 	}
