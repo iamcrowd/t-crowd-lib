@@ -54,9 +54,11 @@ public class DLLiteConverter extends TDLLiteNFPXConverter{
 	ConjunctiveFormula rigidR = new ConjunctiveFormula();
 	ConjunctiveFormula epsX = new ConjunctiveFormula();
 	HashMap<Role, Formula> RolesAndConstsMap = new HashMap<Role, Formula>();
-	
+
+
 	public DLLiteConverter(TBox tbox){
-		super(tbox);		
+		super(tbox);
+		x = new Variable("x");		
 	}
 
 
